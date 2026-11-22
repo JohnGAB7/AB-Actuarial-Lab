@@ -1,0 +1,50 @@
+# Plan du parcours personnel de JG. L'ossature suit les modules A1 à A8 du « Parcours Actuariat »
+# d'Actu-Basics (docs/actuariat/PARCOURS-ACTUARIAT-v3.md). Les approfondissements marqués « + »
+# vont au-delà du programme Actu-Basics (niveau examens, pensions, IAS 19).
+# Chaque module maîtrisé devient ensuite une fiche et une vidéo Actu-Basics.
+titre: "Parcours actuariel"
+sous_titre: "Une séance courte à la fois, des mathématiques financières à la solvabilité."
+blocs:
+  - id: fondamentaux
+    titre: "Fondamentaux"
+    en: "Foundations"
+    periode: "A1 à A2b"
+    modules:
+      - {id: a1, titre: "A1 · Mathématiques financières", en: "Financial mathematics"}
+      - {id: a2, titre: "A2 · Probabilités pour l'assurance", en: "Probability for insurance"}
+      - {id: a2b, titre: "A2b · Statistique pour l'assurance", en: "Statistics for insurance"}
+  - id: vie
+    titre: "Vie"
+    en: "Life"
+    periode: "A3, A4 et approfondissements"
+    modules:
+      - {id: a3, titre: "A3 · Vie et mortalité", en: "Life insurance and mortality", seances: [a3/s01]}
+      - {id: a3-plus, titre: "A3+ · Temps continu, plusieurs têtes, tables prospectives (CPM-2014)", en: "Continuous time, multiple lives, mortality improvement"}
+      - {id: a4, titre: "A4 · Provisions vie", en: "Life reserves"}
+      - {id: a4-plus, titre: "A4+ · Variable de perte, Zillmer, profit testing", en: "Loss random variable, Zillmer reserves, profit testing"}
+      - {id: a4-pens, titre: "A4+ · Décréments multiples, plans DB et IAS 19", en: "Multiple decrements, DB plans and IAS 19"}
+  - id: non-vie
+    titre: "Non-vie"
+    en: "Property and casualty"
+    periode: "A5 à A7"
+    modules:
+      - {id: a5, titre: "A5 · Sinistres non-vie", en: "Non-life claims"}
+      - {id: a6, titre: "A6 · Tarification", en: "Pricing"}
+      - {id: a6-plus, titre: "A6+ · GAM, GBM, élasticité et tarification sous contrainte", en: "GAM, GBM, price elasticity, constrained pricing"}
+      - {id: a7, titre: "A7 · Provisionnement non-vie", en: "Non-life reserving"}
+      - {id: a7-plus, titre: "A7+ · Bornhuetter-Ferguson, Cape Cod, bootstrap", en: "Bornhuetter-Ferguson, Cape Cod, bootstrap"}
+  - id: risque
+    titre: "Risque et solvabilité"
+    en: "Risk and solvency"
+    periode: "A8"
+    modules:
+      - {id: a8, titre: "A8 · Risque et solvabilité", en: "Risk and solvency"}
+      - {id: a8-plus, titre: "A8+ · IFRS 17, capital canadien (LICAT, MCT), normes de l'ICA", en: "IFRS 17, Canadian capital (LICAT, MCT), CIA standards"}
+  - id: outils
+    titre: "Outils du métier"
+    en: "Tools of the trade"
+    periode: "en continu, une séance sur trois"
+    modules:
+      - {id: o1, titre: "O1 · Python : NumPy, pandas, tests", en: "Python: NumPy, pandas, testing"}
+      - {id: o2, titre: "O2 · SQL sur un portefeuille fictif", en: "SQL on a fictional portfolio"}
+      - {id: o3, titre: "O3 · Excel et VBA de l'actuaire", en: "Excel and VBA for actuaries"}
