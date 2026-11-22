@@ -1,0 +1,12 @@
+_site/
+__pycache__/
+.pytest_cache/
+.venv/
+# Supports de cours : jamais dans ce dépôt public
+supports/
+*.pdf
+*.tex
+*.docx
+*.pptx
+*cv*
+*CV*
