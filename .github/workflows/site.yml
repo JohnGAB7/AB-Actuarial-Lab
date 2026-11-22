@@ -1,0 +1,36 @@
+# Construit le site à chaque PR (artefact à télécharger) et le publie sur GitHub Pages après fusion sur main.
+# Prérequis, une seule fois : Settings > Pages > Source = « GitHub Actions ».
+name: site
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  construire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements.txt
+      - run: python tools/construire.py
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+  publier:
+    needs: construire
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - id: deploiement
+        uses: actions/deploy-pages@v4

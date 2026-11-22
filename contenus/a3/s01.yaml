@@ -1,0 +1,117 @@
+# Séance 1 du module A3 (Vie et mortalité).
+# Chiffres : table MK (loi de Makeham), paramètres repris de Belgian-pension-simulator,
+# config/tables/makeham.toml. Les valeurs sont recalculées par tests/test_contenus.py.
+id: a3/s01
+module: a3
+titre: "Force de mortalité et espérance de vie"
+en: "Force of mortality and life expectancy"
+duree: 25
+table: {nom: MK, k: 1000450.59, s: 0.999106875782, g: 0.999549614043, c: 1.103798111448, omega: 116}
+
+actu_basics:
+  # Module A3 du parcours Actuariat d'Actu-Basics (docs/actuariat/PARCOURS-ACTUARIAT-v3.md). Voir docs/ACTU-BASICS.md.
+  episode: "A3 · Life insurance and mortality"
+  statut: "à proposer"
+  accroche_fr: "À 65 ans, combien d'années vous reste-t-il, en moyenne ?"
+  accroche_en: "At 65, how many years do you have left, on average?"
+
+etapes:
+  - type: video
+    titre: "L'intuition en vidéo"
+    minutes: 3
+    texte: >-
+      La vidéo Actu-Basics de ce thème donne l'intuition : lire une table, passer de lₓ à une probabilité,
+      puis à une espérance de vie. Elle n'existe pas encore. Quand elle sera publiée, elle s'affichera ici.
+
+  - type: rappel
+    titre: "Le rappel"
+    minutes: 6
+    blocs:
+      - p: >-
+          Ton simulateur travaille à âge entier : il connaît lₓ, pₓ et qₓ. Un cours complet, et les examens
+          de la SOA, regardent aussi <b>l'instant</b> du décès. L'outil pour cela est la
+          <b>force de mortalité</b> <i>(force of mortality)</i> μₓ, le taux instantané de décès à l'âge exact x.
+      - formule: "μₓ = − d/dx ln lₓ\n⇒  ₜpₓ = lₓ₊ₜ / lₓ = exp( − ∫₀ᵗ μₓ₊ₛ ds )"
+      - p: >-
+          Pour la loi de Makeham de ton dépôt, lₓ = k · sˣ · g^(cˣ). En dérivant ln lₓ, on obtient une force
+          qui croît de façon exponentielle avec l'âge.
+      - formule: "μₓ = − ln s − ln g · ln c · cˣ\n(forme A + B·cˣ ; Gompertz si A = 0)"
+      - graphique: mu_makeham
+      - p: >-
+          L'<b>espérance de vie abrégée</b> <i>(curtate life expectancy)</i> compte les années entières encore
+          vécues. L'<b>espérance complète</b> <i>(complete life expectancy)</i> ajoute la fraction de l'année du décès.
+      - formule: "eₓ = Σₖ≥₁ ₖpₓ\ne̊ₓ = ∫₀^∞ ₜpₓ dt  ≈  eₓ + ½  (hypothèse UDD)"
+      - note: >-
+          Lien avec ton travail : en IAS 19, le choix de la table de mortalité modifie directement la DBO d'un plan
+          de rentes. Tu le mesureras toi-même dans l'approfondissement A4+.
+
+  - type: quiz
+    titre: "Vérifie"
+    minutes: 4
+    intro: "Quatre questions. Réponds sans relire le rappel."
+    questions:
+      - q: "Pour la loi de Makeham, comment évolue μₓ avec l'âge ?"
+        options: ["Linéairement", "Exponentiellement, à une constante près", "Elle est constante"]
+        reponse: 1
+        pourquoi: "μₓ = A + B·cˣ avec c > 1 : la partie B·cˣ croît de façon exponentielle. A est la part de mortalité indépendante de l'âge."
+      - q: "Avec ₁p₆₅ = 0,97, ₂p₆₅ = 0,94 et une table qui s'arrête là, que vaut e₆₅ ?"
+        options: ["0,97", "1,91", "2,91"]
+        reponse: 1
+        pourquoi: "eₓ = Σ ₖpₓ pour k ≥ 1 : 0,97 + 0,94 = 1,91. Le terme k = 0 n'entre pas dans l'espérance abrégée."
+      - q: "Sous l'hypothèse UDD, quel lien entre e̊ₓ et eₓ ?"
+        options: ["e̊ₓ = eₓ", "e̊ₓ ≈ eₓ + ½", "e̊ₓ ≈ eₓ − ½"]
+        reponse: 1
+        pourquoi: "Les décès sont répartis uniformément dans l'année : l'année du décès compte en moyenne pour une demi-année vécue."
+      - q: "Une table plus prudente pour un plan de rentes doit…"
+        options: ["augmenter les qₓ", "diminuer les qₓ", "ne rien changer"]
+        reponse: 1
+        pourquoi: "Pour une rente, le risque est la longévité : des qₓ plus faibles allongent les paiements et augmentent la réserve ou la DBO. Pour un capital décès, c'est l'inverse."
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: "Table MK, lₓ arrondis à l'unité. Calcule avec une calculatrice, puis saisis tes résultats à 4 décimales."
+    donnees:
+      entetes: ["x", "65", "66", "67", "68"]
+      lignes: [["lₓ", "716 046", "695 175", "672 905", "649 211"]]
+    champs:
+      - {cle: p1, libelle: "₁p₆₅", valeur: 0.9708524, tolerance: 0.00015}
+      - {cle: p2, libelle: "₂p₆₅", valeur: 0.9397511, tolerance: 0.00015}
+      - {cle: p3, libelle: "₃p₆₅", valeur: 0.9066611, tolerance: 0.00015}
+      - {cle: e3, libelle: "Σ ₖp₆₅, k = 1 à 3", valeur: 2.8172646, tolerance: 0.00015}
+    solution: >-
+      ₁p₆₅ = 695 175 / 716 046 = 0,9709 · ₂p₆₅ = 672 905 / 716 046 = 0,9398 ·
+      ₃p₆₅ = 649 211 / 716 046 = 0,9067 · somme : 2,8174. Sur la table complète, e₆₅ = 12,32 ans.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 6
+    intro: "Écris le corps des deux fonctions, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a3/s01_survie.py
+    depart: |
+      K, S, G, C, OMEGA = 1000450.59, 0.999106875782, 0.999549614043, 1.103798111448, 116
+
+      def l(x):
+          """Number of survivors at integer age x, Makeham law: k * s**x * g**(c**x)."""
+          raise NotImplementedError
+
+      def curtate_life_expectancy(x):
+          """e_x = sum of k_p_x for k = 1 .. OMEGA - x."""
+          raise NotImplementedError
+    tests:
+      - {nom: "l(65) vaut 716 046 à l'unité près", expr: "abs(l(65) - 716046) < 1"}
+      - {nom: "e₄₀ vaut 32,138", expr: "abs(curtate_life_expectancy(40) - 32.138) < 0.001"}
+      - {nom: "e₆₅ vaut 12,316", expr: "abs(curtate_life_expectancy(65) - 12.316) < 0.001"}
+      - {nom: "e₆₅ est plus petit que e₄₀", expr: "curtate_life_expectancy(65) < curtate_life_expectancy(40)"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Force de mortalité", "force of mortality", "The force of mortality increases exponentially with age under Makeham's law."]
+      - ["Espérance de vie abrégée", "curtate life expectancy", "The curtate expectation only counts complete years lived."]
+      - ["Probabilité de survie", "survival probability", "I computed the ten-year survival probability from the life table."]
+      - ["Table de mortalité", "mortality table, life table", "In Canada, pension valuations often use the CPM-2014 table."]
+      - ["Répartition uniforme des décès", "uniform distribution of deaths (UDD)", "Under UDD, the complete expectation is about half a year higher."]
+      - ["Risque de longévité", "longevity risk", "Lower mortality rates increase the DBO of an annuity plan."]
