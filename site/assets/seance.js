@@ -3,10 +3,50 @@
 const S = JSON.parse(document.getElementById("seance").textContent);
 const SCRIPT_URL = document.currentScript ? document.currentScript.src : location.href;
 const $ = (s, r = document) => r.querySelector(s);
+
+// YAML text is untrusted at the rendering boundary. Keep only the tiny inline
+// formatting vocabulary used by the course; all attributes and active elements
+// are discarded. Unknown harmless wrappers are unwrapped, preserving their text.
+const RICH_TAGS = new Set(["B", "STRONG", "I", "EM", "SUB", "SUP", "CODE", "BR"]);
+const DROP_TAGS = new Set([
+  "SCRIPT", "STYLE", "SVG", "MATH", "IFRAME", "OBJECT", "EMBED", "TEMPLATE",
+  "NOSCRIPT", "IMG", "VIDEO", "AUDIO", "FORM", "INPUT", "LINK", "META", "BASE",
+]);
+function rich(value) {
+  const template = document.createElement("template");
+  template.innerHTML = String(value ?? "");
+  const fragment = document.createDocumentFragment();
+  const copy = (node, parent) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      parent.append(document.createTextNode(node.nodeValue || ""));
+      return;
+    }
+    if (node.nodeType !== Node.ELEMENT_NODE) return;
+    if (DROP_TAGS.has(node.tagName)) return;
+    if (RICH_TAGS.has(node.tagName)) {
+      const safe = document.createElement(node.tagName.toLowerCase());
+      parent.append(safe);
+      node.childNodes.forEach((child) => copy(child, safe));
+      return;
+    }
+    node.childNodes.forEach((child) => copy(child, parent));
+  };
+  template.content.childNodes.forEach((node) => copy(node, fragment));
+  return fragment;
+}
+function sourceUrl(value) {
+  if (typeof value !== "string" || !value.trim()) return null;
+  try {
+    const url = new URL(value, location.href);
+    return url.protocol === "https:" && !url.username && !url.password ? url.href : null;
+  } catch {
+    return null;
+  }
+}
 const el = (tag, attrs = {}, ...kids) => {
   const e = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) {
-    if (k === "html") e.innerHTML = v; else if (k === "class") e.className = v; else e.setAttribute(k, v);
+    if (k === "html") e.append(rich(v)); else if (k === "class") e.className = v; else e.setAttribute(k, v);
   }
   e.append(...kids.filter((k) => k !== null && k !== undefined && k !== ""));
   return e;
@@ -145,17 +185,23 @@ const R = {
       if (b.interactif) return interactif();
       if (b.sources) return el("section", { class: "sources" }, el("span", { class: "eyebrow" }, "Pour aller plus loin"),
         el("ol", {}, ...b.sources.map((s) => el("li", {},
-          s.url ? el("a", { href: s.url, target: "_blank", rel: "noopener" }, s.titre) : el("span", { class: "src-t" }, s.titre),
+          sourceUrl(s.url) ? el("a", { href: sourceUrl(s.url), target: "_blank", rel: "noopener noreferrer" }, s.titre) : el("span", { class: "src-t" }, s.titre),
           el("span", { class: "src-d" }, s.detail)))));
       return "";
     });
   },
   quiz(e, i) {
     const explication = (p) => {
-      if (typeof p === "string") return `<p>${p}</p>`;
-      const ligne = (k, lib) => p[k] ? `<p class="why-l"><span class="why-k">${lib}</span>${p[k]}</p>` : "";
-      return ligne("rappel", "Rappel") + (p.formule ? `<div class="why-f">$$${p.formule}$$</div>` : "")
-        + ligne("exemple", "Exemple") + ligne("piege", "Piège");
+      if (typeof p === "string") return [el("p", {}, rich(p))];
+      const lignes = [];
+      const ligne = (k, lib) => {
+        if (p[k]) lignes.push(el("p", { class: "why-l" }, el("span", { class: "why-k" }, lib), rich(p[k])));
+      };
+      ligne("rappel", "Rappel");
+      if (p.formule) lignes.push(el("div", { class: "why-f" }, `$${p.formule}$`));
+      ligne("exemple", "Exemple");
+      ligne("piege", "Piège");
+      return lignes;
     };
     const ok = new Set();
     const score = el("p", { class: "score" });
@@ -169,7 +215,7 @@ const R = {
           const good = j === it.reponse;
           b.classList.add(good ? "right" : "wrong");
           why.hidden = false;
-          why.innerHTML = `<p class="why-v ${good ? "ok" : "ko"}">${good ? "Juste." : "Pas tout à fait."}</p>` + explication(it.pourquoi);
+          why.replaceChildren(el("p", { class: `why-v ${good ? "ok" : "ko"}` }, good ? "Juste." : "Pas tout à fait."), ...explication(it.pourquoi));
           math(why);
           if (good) ok.add(qi); else ok.delete(qi);
           upd(); if (ok.size === e.questions.length) markDone(i);
