@@ -4,8 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
-<title>$titre · Parcours actuariel</title>
+<title>$titre · $site_title</title>
+<link rel="icon" type="image/png" href="$favicon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://raw.githubusercontent.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="${base}assets/vendor/katex/katex.min.css">
 <link rel="stylesheet" href="${base}assets/vendor/codemirror/codemirror.css">
@@ -15,7 +17,7 @@
 </head>
 <body>
 <header class="bar gutter"><div class="bar-in">
-  <a class="brand" href="$accueil">Parcours <b>actuariel</b></a>
+  $marque
   <span class="where" id="where"></span>
   <div class="segs" id="segs" aria-label="$progression"></div>
   $bascule
