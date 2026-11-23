@@ -69,7 +69,7 @@ etapes:
         options: ['Because death is closer, so less discounted', 'Because the benefit is larger', 'It is not']
         pourquoi:
           rappel: >-
-            For whole life insurance, the payment of 1 is certain; only its date is random. The older the insured, the closer death is and the less it is discounted.
+            For the Makeham table used here, mortality increases with age. The payment of 1 is certain; only its date is random. At age 65, it therefore occurs earlier on average than at age 40 and is discounted less.
           formule: |-
             \begin{gathered} A_x = \mathbb{E}\!\left[v^{K_x + 1}\right] \;\ge\; v^{\,e_x + 1} \\[4pt] \text{(Jensen's inequality)} \end{gathered}
           exemple: >-
