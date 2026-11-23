@@ -66,3 +66,25 @@ def simulate_mean_cost(n, p, claim, seed=1):
     import random
     rng = random.Random(seed)
     return sum(claim for _ in range(n) if rng.random() < p) / n
+
+
+# Session a2/s05
+def aggregate_mean_var(mean_n, var_n, mean_x, var_x):
+    return mean_n * mean_x, mean_n * var_x + var_n * mean_x**2
+
+
+def compound_poisson_var(lam, second_moment_x):
+    return lam * second_moment_x
+
+
+def aggregate_pmf(freq, sev):
+    result, conv = {}, {0: 1.0}
+    for n in range(max(freq) + 1):
+        for s, q in conv.items():
+            result[s] = result.get(s, 0) + freq.get(n, 0) * q
+        nxt = {}
+        for s, q in conv.items():
+            for x, r in sev.items():
+                nxt[s + x] = nxt.get(s + x, 0) + q * r
+        conv = nxt
+    return result

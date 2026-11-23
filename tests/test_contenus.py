@@ -188,6 +188,18 @@ def test_calcul_a2_s04():
     assert round((sigma / (0.05 * mu)) ** 2) == 39600 and round(sigma / (0.05 * mu), 3) == 198.997
     assert round(sn / mu * 100, 2) == 9.95
 
+
+def test_calcul_a2_s05():
+    _, champs = _calcul("a2/s05")
+    phi = lambda z: 0.5 * (1 + math.erf(z / math.sqrt(2)))
+    lam, theta = 50, 2000
+    var = lam * 2 * theta**2
+    _proche(champs, {"es": lam * theta, "vs": var / 1e6, "sd": math.sqrt(var), "p": 1 - phi(30000 / math.sqrt(var))})
+    assert round(math.sqrt(lam * theta**2)) == 14142 and round(1 - phi(1.5), 4) == 0.0668
+    var_nb = 50 * theta**2 + 100 * theta**2
+    assert var_nb == 6e8 and round(math.sqrt(var_nb), 2) == 24494.90 and round(math.sqrt(var_nb / var) - 1, 2) == 0.22
+    assert round(math.sqrt(2 * var)) == 28284 and round(0.1 * 2 * 0.5 * 0.5, 10) == 0.05
+
 def test_aucun_support_de_cours_ni_cv_dans_le_depot():
     """Supports de cours et CV restent dans la bibliothèque du projet, jamais sur un dépôt."""
     interdits = {".pdf", ".pptx", ".ppt", ".docx", ".doc", ".tex", ".xlsx"}
