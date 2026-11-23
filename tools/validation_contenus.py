@@ -62,6 +62,131 @@ def _safe_exercise_path(value: Any) -> Path | None:
     return path if path.is_relative_to(exercise_root) else None
 
 
+
+# Fields whose meaning is not linguistic and must remain in the French source.
+# "formule" is the sole exception: only its \text{...} labels may be translated.
+NON_TRADUISIBLES = {
+    "id", "module", "en", "actu_basics", "type", "minutes", "duree", "table", "taux",
+    "reponse", "valeur", "tolerance", "cle", "expr", "fichier", "depart", "interactif",
+    "url", "cartes", "statut", "formule",
+}
+
+
+def _nombres_texte(texte: str, langue: str) -> list[str]:
+    """Extract numeric tokens while normalizing French/English separators.
+
+    Signs, exponents, percentages and per-mille units remain part of each token.
+    """
+    value = texte.replace("{,}", ",")
+    value = re.sub(r"\\\\,\\s*(?=\\\\?[%‰])", " ", value)
+    value = re.sub(r"(?<=\\d)(?:\\\\,|\\\\ |\\u202f|\\u00a0| )(?=\\d{3}\\b)", "", value)
+    if langue == "fr":
+        value = re.sub(r"(?<=\\d),(?=\\d)", ".", value)
+    else:
+        value = re.sub(r"(?<=\\d),(?=\\d{3}\\b)", "", value)
+    pattern = r"(?:(?<![\\w.])[+\\-−])?(?<![\\d.])\\d+(?:\\.\\d+)?(?:[eE][+\\-−]?\\d+)?(?:\\s*\\\\?[%‰])?"
+    return sorted(
+        token.replace("−", "-").replace(" ", "").replace(r"\\%", "%")
+        for token in re.findall(pattern, value)
+    )
+
+
+def _formule_sans_libelles(formule: str) -> str:
+    """Blank translatable LaTeX text labels while preserving mathematical structure."""
+    return re.sub(r"\\\\text\\{[^{}]*\\}", r"\\\\text{}", formule)
+
+
+def fusionner_overlay(base: Any, overlay: Any, chemin: str = "séance") -> Any:
+    """Merge a sparse English overlay after enforcing its structural contract."""
+    if isinstance(overlay, dict):
+        if not isinstance(base, dict):
+            raise ValueError(f"{chemin} : structure différente du français")
+        merged = dict(base)
+        for key, value in overlay.items():
+            if key not in base:
+                raise ValueError(f"{chemin}.{key} : clé absente du français")
+            if key in NON_TRADUISIBLES and key != "formule":
+                raise ValueError(f"{chemin}.{key} : ce champ reste dans le fichier français")
+            if key == "formule":
+                if not isinstance(base[key], str) or not isinstance(value, str):
+                    raise ValueError(f"{chemin}.{key} : la formule doit rester un texte")
+                if _formule_sans_libelles(value) != _formule_sans_libelles(base[key]):
+                    raise ValueError(f"{chemin}.{key} : une formule ne peut changer que ses \\\\text{{…}}")
+                merged[key] = value
+            else:
+                merged[key] = fusionner_overlay(base[key], value, f"{chemin}.{key}")
+        return merged
+    if isinstance(overlay, list):
+        if not isinstance(base, list) or len(base) != len(overlay):
+            raise ValueError(f"{chemin} : liste de longueur différente du français")
+        return [
+            fusionner_overlay(original, translated, f"{chemin}[{index}]")
+            for index, (original, translated) in enumerate(zip(base, overlay))
+        ]
+    if type(overlay) is not type(base):
+        raise ValueError(f"{chemin} : type différent du français")
+    if isinstance(overlay, str):
+        if base.strip() and not overlay.strip():
+            raise ValueError(f"{chemin} : texte vide")
+        if _nombres_texte(overlay, "en") != _nombres_texte(base, "fr"):
+            raise ValueError(
+                f"{chemin} : chiffres différents du français "
+                f"({_nombres_texte(base, 'fr')} ≠ {_nombres_texte(overlay, 'en')})"
+            )
+    return overlay
+
+
+def _contient_texte_a_traduire(value: Any) -> bool:
+    if isinstance(value, dict):
+        return any(
+            _contient_texte_a_traduire(child)
+            for key, child in value.items()
+            if key not in NON_TRADUISIBLES
+        )
+    if isinstance(value, list):
+        return any(_contient_texte_a_traduire(child) for child in value)
+    if isinstance(value, str):
+        without_markup = re.sub(r"\\$[^$]*\\$|<[^>]+>", "", value)
+        return bool(re.search(r"[a-zà-ÿ]{4,}", without_markup))
+    return False
+
+
+def verifier_overlay_traduction(
+    session: Any, overlay: Any, *, session_id: str = "<inconnue>"
+) -> list[str]:
+    """Validate an English overlay and report translatable French text it omits."""
+    if not isinstance(overlay, dict):
+        return [f"{session_id} : l'overlay anglais doit être un objet YAML (mapping)."]
+    try:
+        fusionner_overlay(session, overlay, session_id)
+    except (TypeError, ValueError) as exc:
+        return [str(exc)]
+
+    missing: list[str] = []
+
+    def inspect(original: Any, translated: Any, path: str) -> None:
+        if isinstance(original, dict):
+            if not isinstance(translated, dict):
+                if _contient_texte_a_traduire(original):
+                    missing.append(path)
+                return
+            for key, value in original.items():
+                if key in NON_TRADUISIBLES:
+                    continue
+                if key not in translated:
+                    if _contient_texte_a_traduire(value):
+                        missing.append(f"{path}.{key}")
+                else:
+                    inspect(value, translated[key], f"{path}.{key}")
+        elif isinstance(original, list):
+            if not isinstance(translated, list) or len(original) != len(translated):
+                return  # The structural error is already reported by fusionner_overlay.
+            for index, (left, right) in enumerate(zip(original, translated)):
+                inspect(left, right, f"{path}[{index}]")
+
+    inspect(session, overlay, session_id)
+    return [f"{path} : texte non traduit" for path in missing]
+
 def verifier_seance(session: Any, *, session_id: str = "<inconnue>") -> list[str]:
     """Return all structural errors found in one session mapping."""
     errors: list[str] = []
@@ -366,6 +491,24 @@ def verifier_parcours(plan: Any) -> list[str]:
                         errors.append(f"{session_id}: l'« id » du fichier ne correspond pas à sa référence dans le plan.")
                     if session.get("module") != module_id:
                         errors.append(f"{session_id}: le module de la séance ne correspond pas au module du plan.")
+                    # The English layer is optional for French-only deployments. Once the
+                    # contents/en directory exists, every referenced session must have an overlay.
+                    english_path = CONTENT_DIR / "en" / f"{session_id}.yaml"
+                    if (CONTENT_DIR / "en").is_dir():
+                        if not english_path.is_file():
+                            errors.append(
+                                f"{session_id}: traduction anglaise manquante "
+                                f"(contenus/en/{session_id}.yaml)."
+                            )
+                        else:
+                            try:
+                                overlay = yaml.safe_load(english_path.read_text(encoding="utf-8"))
+                            except (OSError, yaml.YAMLError) as exc:
+                                errors.append(f"{session_id}: impossible de lire l'overlay anglais ({exc}).")
+                            else:
+                                errors.extend(
+                                    verifier_overlay_traduction(session, overlay, session_id=session_id)
+                                )
 
     return errors
 
