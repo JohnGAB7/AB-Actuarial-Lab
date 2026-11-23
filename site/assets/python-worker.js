@@ -23,8 +23,12 @@ async function ready() {
 // This is not a substitute for an isolated origin or a server-side sandbox.
 function restrictRuntimeCapabilities() {
   const blocked = [
-    "fetch", "XMLHttpRequest", "WebSocket", "EventSource", "BroadcastChannel",
-    "indexedDB", "caches", "importScripts", "Worker", "SharedWorker", "WebTransport", "postMessage",
+    // Network transports and script loading: exercises do not need outbound connections.
+    "fetch", "XMLHttpRequest", "WebSocket", "WebSocketStream", "EventSource",
+    "WebTransport", "RTCPeerConnection", "webkitRTCPeerConnection",
+    // Cross-context communication, storage and creation of additional execution contexts.
+    "BroadcastChannel", "indexedDB", "caches", "importScripts", "Worker", "SharedWorker",
+    "postMessage",
   ];
   for (const name of blocked) {
     try {
