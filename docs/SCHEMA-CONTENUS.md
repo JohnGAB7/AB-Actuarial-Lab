@@ -62,7 +62,7 @@ Une séance peut porter une fiche de référence indépendante de la séquence p
 | applications_labs | applications[] avec contexte, objectif, outils, entrées, hypothèses, procédure, sorties, validation et limites |
 | synthese_references | memo[], glossaire[] (terme_fr, terme_en, definition), maitrise[], references[] annotées et liens[] internes facultatifs |
 
-Les niveaux d'exercice sont fondamental, intermediaire ou avance. Les outils reconnus sont excel, vba, python, r et sans-code. Une référence interne cible une séance existante au format domaine/sNN, éventuellement suivie d'une ancre.
+Les niveaux d'exercice sont fondamental, intermediaire ou avance. Les outils reconnus sont excel, vba, python, r et sans-code. Une référence interne doit respecter le format domaine/sNN, éventuellement suivi d'une ancre. À ce stade, le validateur contrôle la forme et la sûreté du chemin ; il ne certifie pas encore l'existence de la cible.
 
 Le modèle est conçu pour une migration séance par séance. Il ne modifie ni les étapes existantes, ni leur progression, ni le rendu actuel. Les onglets de l'interface seront introduits dans un lot ultérieur après stabilisation du contrat de contenu.
 
