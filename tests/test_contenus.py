@@ -201,3 +201,24 @@ def test_site_bilingue(tmp_path, monkeypatch):
             assert f'hreflang="en" href="{base}en/{sid}/index.html"' in page
     accueil = (tmp_path / "site" / "en" / "index.html").read_text(encoding="utf-8")
     assert 'hreflang="fr" href="../index.html"' in accueil and "Foundations" in accueil
+
+
+def test_traduction_ne_peut_pas_modifier_les_metadonnees_de_session():
+    import pytest
+    from tools.construire import fusion
+
+    base = {
+        "id": "a1/s01",
+        "module": "a1",
+        "en": "Compound interest and annuities certain",
+        "actu_basics": {
+            "episode": "A1 · Financial mathematics",
+            "statut": "à proposer",
+        },
+        "titre": "Intérêt composé",
+    }
+
+    with pytest.raises(ValueError, match="\.en"):
+        fusion(base, {"en": "Different metadata title"}, "a1/s01")
+    with pytest.raises(ValueError, match="\.actu_basics"):
+        fusion(base, {"actu_basics": {"statut": "published"}}, "a1/s01")
