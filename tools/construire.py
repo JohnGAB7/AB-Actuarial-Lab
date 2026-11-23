@@ -173,7 +173,7 @@ def marque(racine: str, langue: str) -> str:
     libelle = "ACTUARIAL LEARNING LAB" if langue == "en" else "LABORATOIRE ACTUARIEL"
     source = "https://raw.githubusercontent.com/JohnGAB7/Actu-Basics/080890b8acd452c790f3e10664a63d0b3e43aa21/assets/brand/actu-basics/"
     return (
-        f'<a class="brand brand-lockup" href="{racine}index.html" aria-label="ACTU-BASICS — {libelle}">'
+        f'<a class="brand brand-lockup" href="{racine}index.html" aria-label="{libelle} — {("by ACTU-BASICS" if langue == "en" else "par ACTU-BASICS")}">'
         f'<picture class="brand-mark">'
         f'<img class="brand-logo brand-logo-light" src="{source}logo-light{suffixe}.png" alt="" width="44" height="44">'
         f'<img class="brand-logo brand-logo-dark" src="{source}logo-dark{suffixe}.png" alt="" width="44" height="44" loading="lazy">'
@@ -308,7 +308,7 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
         f'<section class="hero"><div class="hero-in gutter">'
         f'<div class="hero-copy"><span class="eyebrow">{t["eyebrow"]}</span><h1>{t["h1"]}</h1>'
         f'<p>{e(sous_titre)} {t["hero"]}</p>'
-        f'<div class="hero-cta"><a class="cta" href="{premiere}/index.html" data-reprendre>{hero_cta} · {e(titre_premiere)} →</a>'
+        f'<div class="hero-cta"><a class="cta" href="{premiere}/index.html" data-reprendre>{hero_cta} →</a>'
         f'<a class="cta-2" href="compte/index.html">{ICONE_COMPTE}{t["compte"]}</a></div></div>'
         f'<aside class="hero-visual" aria-label="{hero_art_label}"><span class="hero-visual-label">{hero_art_label}</span>'
         f'<div class="hero-steps">{art}</div><span class="hero-visual-foot">{("ACTUARIAL THINKING · LEARN / MODEL / PRACTICE" if en else "PENSÉE ACTUARIELLE · APPRENDRE / MODÉLISER / PRATIQUER")}</span></aside>'
