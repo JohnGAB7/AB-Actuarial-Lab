@@ -529,3 +529,17 @@ def test_a1_s01_video_files_are_on_the_site():
     for langue in ("fr", "en"):
         assert (validation.ASSETS_DIR / media[langue]["src"]).is_file()
         assert (validation.ASSETS_DIR / media[langue]["sous_titres"]).is_file()
+
+
+def test_published_videos_need_a_youtube_id_a_language_and_a_title():
+    session = valid_session()
+    session["actu_basics"] = {"videos": [{"id": "uJ_eQqqQB6s", "langue": "en", "titre": "Lesson", "duree": "6:42"}]}
+    assert verifier_seance(session, session_id="fixture") == []
+    for bad in (
+        {"id": "javascript:x", "langue": "en", "titre": "Lesson"},
+        {"id": "uJ_eQqqQB6s", "langue": "de", "titre": "Lesson"},
+        {"id": "uJ_eQqqQB6s", "langue": "en", "titre": ""},
+        {"id": "uJ_eQqqQB6s", "langue": "en", "titre": "Lesson", "url": "https://example.com"},
+    ):
+        session["actu_basics"] = {"videos": [bad]}
+        assert verifier_seance(session, session_id="fixture"), bad

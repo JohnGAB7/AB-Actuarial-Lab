@@ -1,0 +1,135 @@
+# English texts for session A1.05. Numbers, answers and tests live in contenus/a1/s05.yaml.
+titre: "Bonds and the yield curve"
+
+etapes:
+  - titre: "Placement check"
+    intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
+    questions:
+      - q: 'A bond with face value $F$ pays a coupon $c$ a year for $n$ years, then $F$. At yield $y$, its price is…'
+        pourquoi:
+          rappel: >-
+            The price is the present value of all the promised cash flows: an annuity of coupons plus the final redemption.
+          exemple: >-
+            Face value €1,000, 5% coupon, 5 years, 4% yield: $P = 50 \times 4.4518 + 1{,}000 \times 0.8219 = 1{,}044.52$ euros.
+          piege: >-
+            $nc + F$ ignores discounting. $s_{\overline{n}|}$ would give a value at time $n$, not a price today.
+      - q: 'If the yield rises, the bond price…'
+        options: ['falls', 'rises', 'does not change']
+        pourquoi:
+          rappel: >-
+            The cash flows are fixed by the contract. Discounting them at a higher rate makes them worth less.
+          exemple: >-
+            The same bond is worth €1,044.52 at 4%, €1,000 at 5% and €957.88 at 6%.
+          piege: >-
+            The bond does not "earn" more when rates rise: whoever already holds it loses value.
+      - q: 'A bond trades above par (at a premium) when…'
+        options: ['the coupon rate exceeds the yield', 'the yield exceeds the coupon rate', 'it is close to maturity']
+        pourquoi:
+          rappel: >-
+            If the coupon pays more than the market, the buyer is willing to pay more than the face value to get it.
+          exemple: >-
+            A €50 coupon against $1{,}000 \times 4\% = 40$ euros from the market: a premium of $10 \times 4.4518 = 44.52$ euros.
+          piege: >-
+            Near maturity, the premium or discount shrinks towards zero, but that is not what creates it.
+      - q: 'With spot rates $s_1 = 3\%$ and $s_2 = 3.5\%$, the one-year forward rate in one year $f_{1,\,2}$ is about…'
+        options: ['4.0%', '3.25%', '3.5%']
+        pourquoi:
+          rappel: >-
+            Investing for 2 years at the spot rate must be worth the same as investing for 1 year at the spot rate, then 1 year at the forward rate. Otherwise there would be a risk-free gain.
+          exemple: >-
+            $f_{1,\,2} = 1.035^2 / 1.03 - 1 = 1.071225 / 1.03 - 1 = 4.00\%$.
+          piege: >-
+            The average (3.25%) means nothing here. When the curve slopes up, the forward rate lies above both spot rates.
+
+  - titre: "The intuition on video"
+    texte: >-
+      This topic does not have its Actu-Basics video yet. It will show, with a see-saw, why bond prices and
+      interest rates always move in opposite directions.
+
+  - titre: "The recap"
+    blocs:
+      - p: >-
+          A <b>bond</b> <i>(obligation)</i> promises regular <b>coupons</b> <i>(coupons)</i> and the repayment of the
+          <b>face value</b> <i>(nominal)</i> at <b>maturity</b> <i>(échéance)</i>. Its price is the present value of these
+          cash flows at the <b>yield to maturity</b> <i>(taux de rendement à l'échéance)</i> $y$.
+      - {}
+      - p: >-
+          The second formula says it all: a <b>premium</b> <i>(prime)</i> if the coupon exceeds the market yield, a
+          <b>discount</b> <i>(décote)</i> otherwise, and a price at par if both are equal.
+      - p: >-
+          The market does not use a single rate. The <b>spot rate</b> <i>(taux spot)</i> $s_t$ discounts a single cash
+          flow paid in $t$ years; the set of $s_t$ forms the <b>yield curve</b> <i>(courbe des taux)</i>. The
+          <b>forward rate</b> <i>(taux à terme)</i> is the implied rate between two future dates.
+      - {}
+      - p: >-
+          The yield $y$ of a bond is a kind of average of the spot rates, weighted by its cash flows. Two bonds with the
+          same maturity but different coupons can have different yields.
+      - note: >-
+          A life insurer or a pension plan discounts its obligations with a yield curve, not a single rate. Matching the
+          cash flows of its bonds to those of its obligations is asset-liability management (ALM), which you will see in
+          the ALM domain.
+      - sources:
+          - {titre: "Kellison, The Theory of Interest, chap. 7 and 10", detail: "Bond prices, premium and discount, term structure of interest rates"}
+          - {titre: "SOA, Financial Mathematics (FM) Exam", detail: "Official exam syllabus"}
+
+  - titre: "Check"
+    intro: "Four questions. Answer without rereading the recap."
+    questions:
+      - q: 'A bond with face value €1,000 pays a 5% coupon for 5 years. At a 5% yield, it is worth…'
+        options: ['€1,000', '€1,044.52', '€1,250']
+        pourquoi:
+          rappel: >-
+            When the coupon equals the yield, the premium $(c - Fy)\,a_{\overline{n}|}$ is zero.
+          exemple: >-
+            $50 = 1{,}000 \times 5\%$: the bond trades at par, €1,000.
+          piege: >-
+            €1,044.52 is its price at 4%. €1,250 adds up the cash flows without discounting.
+      - q: 'The same bond, at a 6% yield, is worth about…'
+        options: ['€957.88', '€1,042.12', '€1,000']
+        pourquoi:
+          rappel: >-
+            The yield exceeds the coupon: the bond trades at a discount.
+          exemple: >-
+            $50 \times 4.2124 + 1{,}000 \times 0.7473 = 957.88$ euros, a discount of €42.12.
+          piege: >-
+            €1,042.12 puts the discount on the wrong side. The price falls when the rate rises.
+      - q: 'With $s_1 = 3\%$, $s_2 = 3.5\%$, $s_3 = 4\%$, what is the forward rate $f_{2,\,3}$?'
+        options: ['5.01%', '4.00%', '3.75%']
+        pourquoi:
+          rappel: >-
+            Compare a 3-year investment with a 2-year investment extended by one year.
+          exemple: >-
+            $1.124864 / 1.071225 = 1.050073$, so $f_{2,\,3} = 5.01\%$.
+          piege: >-
+            4.00% is $f_{1,\,2}$. On an upward-sloping curve, forward rates rise faster than spot rates.
+      - q: 'A 3-year bond, 5% coupon, face value €1,000, is worth €1,028.67 with this curve. Its yield is…'
+        options: ['a little under 4%', 'exactly 4%', '5%']
+        pourquoi:
+          rappel: >-
+            The yield is the single rate that gives back the same price. It blends the three spot rates, weighted by the cash flows.
+          exemple: >-
+            We find $y = 3.97\%$: almost all the weight is on the last cash flow, discounted at 4%, but the coupons pull a little towards 3% and 3.5%.
+          piege: >-
+            The yield is not the spot rate at maturity. It also depends on the coupons.
+
+  - titre: "By hand"
+    intro: "Face value €1,000, annual coupon of 5%. $P_5$: 5-year bond at yield $y$. $P_3$: 3-year bond with the spot curve. Prices to the cent, rates to 4 decimal places."
+    donnees:
+      entetes: ['$s_1$', '$s_2$', '$s_3$', '$y$']
+      lignes: [['3%', '3.5%', '4%', '4%']]
+    solution: |
+      5-year price: $50 \times 4.451822 + 1{,}000 \times 0.821927 = 1{,}044.52$ euros. 3-year price: $50/1.03 + 50/1.035^2 + 1{,}050/1.04^3 = 48.54 + 46.68 + 933.45 = 1{,}028.67$ euros.
+      $f_{1,\,2} = 1.071225/1.03 - 1 = 0.0400$ and $f_{2,\,3} = 1.124864/1.071225 - 1 = 0.0501$.
+
+  - titre: "Your turn to code"
+    intro: "Write the body of the three functions, without AI. All the tests must pass."
+    tests:
+      - {nom: 'Price of €1,044.52 at 4%'}
+      - {nom: 'At par when coupon = yield'}
+      - {nom: 'The price falls when the rate rises'}
+      - {nom: 'Price of €1,028.67 with the spot curve'}
+      - {nom: 'Forward rates 3%, 4.0024%, 5.0073%'}
+      - {nom: 'Flat curve: constant forward rates'}
+
+  - titre: "Vocabulary"
+    intro: "Tap a card: the French term and a job-interview sentence."

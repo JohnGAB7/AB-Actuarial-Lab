@@ -1,0 +1,218 @@
+# Séance 1 du module A2 (Probabilités pour l'assurance) : événements, probabilités conditionnelles, Bayes, indépendance.
+# Chiffres : portefeuille automobile fictif. Les valeurs sont recalculées par tests/test_contenus.py et tests/a2/test_s01_conditionnelles.py.
+id: a2/s01
+module: a2
+titre: "Probabilités conditionnelles et formule de Bayes"
+en: "Conditional probability and Bayes' theorem"
+duree: 30
+
+actu_basics:
+  episode: "A2 · Probability for insurance"
+  statut: "A0.01 publiée en anglais"
+  accroche_fr: "Un sinistre vient d'arriver : quelle chance que ce soit un jeune conducteur ?"
+  accroche_en: "A claim has just come in: what are the odds it is a young driver?"
+  videos:
+    - {id: GEJvRrnJLk8, langue: en, titre: "Actuaries: how maths helps make decisions under risk", duree: "6:55"}
+
+etapes:
+  - type: quiz
+    titre: "Test de positionnement"
+    minutes: 3
+    intro: "Quatre questions avant le cours. Si tu as tout juste, survole le rappel et va directement au calcul."
+    questions:
+      - q: 'Que vaut $P(A \mid B)$, pour $P(B) > 0$ ?'
+        options: ['$\dfrac{P(A \cap B)}{P(B)}$', '$\dfrac{P(A \cap B)}{P(A)}$', '$P(A)\,P(B)$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Conditionner par $B$, c'est restreindre l'univers aux cas où $B$ est arrivé, puis renormaliser par $P(B)$.
+          formule: |-
+            P(A \mid B) = \frac{P(A \cap B)}{P(B)}
+          exemple: >-
+            Si 3 % des assurés sont jeunes et ont un sinistre, et 7 % ont un sinistre, alors $P(\text{jeune} \mid \text{sinistre}) = 3/7$.
+          piege: >-
+            Diviser par $P(A)$ donne $P(B \mid A)$, l'autre sens. $P(A)\,P(B)$ ne vaut $P(A \cap B)$ que si $A$ et $B$ sont indépendants.
+      - q: 'Deux événements $A$ et $B$ sont indépendants si…'
+        options: ['$P(A \cap B) = P(A)\,P(B)$', '$A \cap B = \emptyset$', '$P(A) + P(B) = 1$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Indépendants : savoir que $B$ est arrivé ne change pas la probabilité de $A$, soit $P(A \mid B) = P(A)$.
+          formule: |-
+            P(A \cap B) = P(A)\,P(B) \iff P(A \mid B) = P(A)
+          exemple: >-
+            Deux contrats indépendants avec 5 % de sinistre chacun : les deux ont un sinistre avec probabilité $0{,}05^2 = 0{,}0025$.
+          piege: >-
+            Incompatibles (disjoints) n'est pas indépendants : si $A$ et $B$ ne peuvent pas arriver ensemble, savoir $B$ exclut $A$.
+      - q: 'La formule des probabilités totales, pour une partition $B_1, \dots, B_k$, s''écrit…'
+        options: ['$P(A) = \sum_j P(A \mid B_j)\,P(B_j)$', '$P(A) = \sum_j P(B_j \mid A)$', '$P(A) = \prod_j P(A \mid B_j)$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On découpe l'univers en classes qui ne se chevauchent pas, puis on additionne la probabilité de $A$ dans chaque classe, pondérée par la taille de la classe.
+          formule: |-
+            P(A) = \sum_{j} P(A \mid B_j)\,P(B_j)
+          exemple: >-
+            20 % de jeunes à 15 % de sinistres, 80 % d'autres à 5 % : $0{,}2 \times 0{,}15 + 0{,}8 \times 0{,}05 = 0{,}07$.
+          piege: >-
+            Sans les poids $P(B_j)$, on additionnerait des taux de classes de tailles différentes.
+      - q: 'La formule de Bayes sert à…'
+        options: ['inverser le conditionnement : passer de $P(A \mid B)$ à $P(B \mid A)$', 'additionner deux probabilités', 'tester l''indépendance']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On connaît souvent la probabilité d'un effet sachant la cause (sinistre sachant la classe). Bayes donne la cause sachant l'effet.
+          formule: |-
+            P(B_j \mid A) = \frac{P(A \mid B_j)\,P(B_j)}{\sum_l P(A \mid B_l)\,P(B_l)}
+          exemple: >-
+            $P(\text{jeune} \mid \text{sinistre}) = 0{,}03 / 0{,}07 = 0{,}4286$ : les jeunes font 20 % du portefeuille mais 43 % des sinistres.
+          piege: >-
+            Confondre $P(\text{sinistre} \mid \text{jeune}) = 15\,\%$ et $P(\text{jeune} \mid \text{sinistre}) = 43\,\%$ est l'erreur du procureur.
+
+  - type: video
+    titre: "L'intuition en vidéo"
+    minutes: 3
+    texte: >-
+      Pour ouvrir le module, la leçon Actu-Basics A0.01 montre comment l'actuaire décide face au risque : des
+      probabilités, des montants, et un premier prix. Elle est en ligne en anglais.
+
+  - type: rappel
+    titre: "Le rappel"
+    minutes: 8
+    blocs:
+      - p: >-
+          Une <b>probabilité conditionnelle</b> <i>(conditional probability)</i> $P(A \mid B)$ est la probabilité de $A$
+          quand on sait que $B$ est arrivé. Deux événements sont <b>indépendants</b> <i>(independent)</i> si cette
+          information ne change rien.
+      - formule: |
+          \begin{gathered}
+          P(A \mid B) = \frac{P(A \cap B)}{P(B)} \qquad P(A \cap B) = P(A \mid B)\,P(B) \\[6pt]
+          A \perp B \iff P(A \cap B) = P(A)\,P(B)
+          \end{gathered}
+      - p: >-
+          Un assureur découpe son portefeuille en <b>classes de risque</b> <i>(risk classes)</i> qui forment une
+          partition. La <b>formule des probabilités totales</b> <i>(law of total probability)</i> recompose le taux global ;
+          la <b>formule de Bayes</b> <i>(Bayes' theorem)</i> remonte d'un sinistre observé vers la classe probable.
+      - formule: |
+          \begin{gathered}
+          P(A) = \sum_j P(A \mid B_j)\,P(B_j) \\[6pt]
+          P(B_j \mid A) = \frac{P(A \mid B_j)\,P(B_j)}{P(A)}
+          \end{gathered}
+      - p: >-
+          Avec $n$ contrats indépendants de même probabilité $p$, la probabilité qu'aucun n'ait de sinistre vaut
+          $(1-p)^n$. Un événement rare pour chacun devient presque certain pour un grand portefeuille.
+      - formule: |
+          P(\text{au moins un}) = 1 - (1 - p)^n
+      - note: >-
+          La tarification par classes (âge, zone, usage) repose sur ces formules. La crédibilité bayésienne, qui mêle
+          l'expérience d'un assuré et celle de sa classe, en est le prolongement direct.
+      - sources:
+          - {titre: "Hogg, McKean et Craig, Introduction to Mathematical Statistics, chap. 1", detail: "Probabilité conditionnelle, indépendance, Bayes"}
+          - {titre: "SOA, Probability (P) Exam", url: "https://www.soa.org/education/exam-req/edu-exam-p-detail/", detail: "Syllabus officiel de l'examen"}
+
+  - type: quiz
+    titre: "Vérifie"
+    minutes: 4
+    intro: "Quatre questions. Réponds sans relire le rappel."
+    questions:
+      - q: 'Portefeuille fictif : 20 % de jeunes conducteurs (15 % de sinistres), 80 % d''autres (5 %). Quelle part des assurés a un sinistre ?'
+        options: ['7 %', '10 %', '20 %']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Probabilités totales : chaque classe pèse selon sa taille.
+          formule: |-
+            P(S) = 0{,}2 \times 0{,}15 + 0{,}8 \times 0{,}05
+          exemple: >-
+            $0{,}03 + 0{,}04 = 0{,}07$, soit 7 %.
+          piege: >-
+            10 % est la moyenne simple des deux taux, comme si les classes avaient la même taille.
+      - q: 'Même portefeuille : un sinistre arrive. Quelle est la probabilité que l''assuré soit un jeune ?'
+        options: ['42,9 %', '15 %', '20 %']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Bayes : la part des sinistres qui viennent des jeunes.
+          formule: |-
+            P(J \mid S) = \frac{0{,}2 \times 0{,}15}{0{,}07}
+          exemple: >-
+            $0{,}03 / 0{,}07 = 0{,}4286$ : 43 % des sinistres viennent de 20 % des assurés.
+          piege: >-
+            15 % est $P(S \mid J)$, l'autre sens. 20 % est la part des jeunes avant d'avoir vu le sinistre.
+      - q: '10 contrats indépendants, chacun avec 5 % de sinistre. Probabilité d''au moins un sinistre ?'
+        options: ['40,1 %', '50 %', '5 %']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On passe par le complémentaire : aucun sinistre sur les 10 contrats.
+          formule: |-
+            1 - 0{,}95^{10}
+          exemple: >-
+            $0{,}95^{10} = 0{,}598737$, donc $1 - 0{,}598737 = 0{,}401263$.
+          piege: >-
+            $10 \times 5\,\% = 50\,\%$ additionne des événements qui peuvent arriver ensemble. Avec 30 contrats, cette méthode dépasserait 100 %.
+      - q: 'Deux événements incompatibles, de probabilités non nulles, sont-ils indépendants ?'
+        options: ['Jamais', 'Toujours', 'Seulement si leurs probabilités sont égales']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Incompatibles : $P(A \cap B) = 0$. Indépendants : $P(A \cap B) = P(A)\,P(B) > 0$. Les deux ne peuvent pas être vrais à la fois.
+          formule: |-
+            P(A \cap B) = 0 \ne P(A)\,P(B)
+          exemple: >-
+            « L'assuré a 0 sinistre » et « l'assuré a 2 sinistres » sont incompatibles. Savoir l'un exclut l'autre : c'est une forte dépendance.
+          piege: >-
+            L'intuition « sans lien » mélange les deux notions. L'indépendance est une propriété des probabilités, pas des événements eux-mêmes.
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: "Portefeuille fictif de la page précédente, et 10 contrats indépendants à 5 %. Saisis tes résultats à 4 décimales."
+    donnees:
+      entetes: ['$P(J)$', '$P(S \mid J)$', '$P(S \mid \bar{J})$', '$p$', '$n$']
+      lignes: [['0,2', '0,15', '0,05', '0,05', '10']]
+    champs:
+      - {cle: ps, libelle: '$P(S)$', valeur: 0.07, tolerance: 0.00015}
+      - {cle: pjs, libelle: '$P(J \mid S)$', valeur: 0.4285714, tolerance: 0.00015}
+      - {cle: aucun, libelle: '$(1-p)^{n}$', valeur: 0.5987369, tolerance: 0.00015}
+      - {cle: un, libelle: '$1 - (1-p)^{n}$', valeur: 0.4012631, tolerance: 0.00015}
+    solution: |
+      $P(S) = 0{,}2 \times 0{,}15 + 0{,}8 \times 0{,}05 = 0{,}07$ et $P(J \mid S) = 0{,}03 / 0{,}07 = 0{,}4286$.
+      $0{,}95^{10} = 0{,}5987$, donc la probabilité d'au moins un sinistre vaut $0{,}4013$.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 8
+    intro: "Écris le corps des trois fonctions, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a2/s01_conditionnelles.py
+    depart: |
+      def total_probability(priors, likelihoods):
+          """P(A) = sum of P(A | B_j) P(B_j); priors and likelihoods are lists of the same length."""
+          raise NotImplementedError
+
+      def posterior(priors, likelihoods):
+          """List of P(B_j | A) by Bayes' theorem."""
+          raise NotImplementedError
+
+      def prob_at_least_one(p, n):
+          """Probability of at least one event among n independent trials of probability p."""
+          raise NotImplementedError
+    tests:
+      - {nom: 'Probabilités totales : 0,07', expr: "abs(total_probability([0.2, 0.8], [0.15, 0.05]) - 0.07) < 1e-12"}
+      - {nom: 'Bayes : 0,4286 pour les jeunes', expr: "abs(posterior([0.2, 0.8], [0.15, 0.05])[0] - 0.4285714) < 1e-7"}
+      - {nom: 'Trois classes : 2/9, 1/3, 4/9', expr: "all(abs(a - b) < 1e-12 for a, b in zip(posterior([0.5, 0.3, 0.2], [0.02, 0.05, 0.10]), [2 / 9, 1 / 3, 4 / 9]))"}
+      - {nom: 'Les probabilités a posteriori somment à 1', expr: "abs(sum(posterior([0.1, 0.6, 0.3], [0.3, 0.01, 0.2])) - 1) < 1e-12"}
+      - {nom: 'Au moins un sinistre sur 10 : 0,40126', expr: "abs(prob_at_least_one(0.05, 10) - 0.40126) < 0.00001"}
+      - {nom: 'Avec $n = 0$, la probabilité est nulle', expr: "prob_at_least_one(0.3, 0) == 0"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Probabilité conditionnelle", "conditional probability", "The conditional probability of a claim given a young driver is 15%."]
+      - ["Indépendance", "independence", "We assume independence between policies, which fails for storms."]
+      - ["Événements incompatibles", "mutually exclusive events", "Mutually exclusive events are never independent."]
+      - ["Probabilités totales", "law of total probability", "The law of total probability gives the overall claim rate."]
+      - ["Formule de Bayes", "Bayes' theorem", "Bayes' theorem tells us which risk class a claim probably came from."]
+      - ["Classe de risque", "risk class, rating class", "Each risk class has its own expected claim frequency."]

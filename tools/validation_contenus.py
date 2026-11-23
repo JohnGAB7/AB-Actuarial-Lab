@@ -64,6 +64,33 @@ def _safe_exercise_path(value: Any) -> Path | None:
 
 
 
+YOUTUBE_ID = re.compile(r"^[A-Za-z0-9_-]{11}$")
+
+
+def _verifier_videos(videos: Any, label: str) -> list[str]:
+    """Published Actu-Basics videos: an 11-character YouTube id, a language and a title."""
+    if videos is None:
+        return []
+    if not isinstance(videos, list) or not videos:
+        return [f"{label}: « videos » doit être une liste non vide."]
+    errors: list[str] = []
+    for index, video in enumerate(videos, 1):
+        item = f"{label}[{index}]"
+        if not isinstance(video, dict):
+            errors.append(f"{item}: la vidéo doit être un objet YAML.")
+            continue
+        errors.extend(_unknown_keys(video, {"id", "langue", "titre", "duree"}, item))
+        if not isinstance(video.get("id"), str) or not YOUTUBE_ID.fullmatch(video["id"]):
+            errors.append(f"{item}: « id » doit être un identifiant YouTube de 11 caractères.")
+        if video.get("langue") not in {"fr", "en"}:
+            errors.append(f"{item}: « langue » doit valoir fr ou en.")
+        if not _text(video.get("titre")):
+            errors.append(f"{item}: « titre » doit être un texte non vide.")
+        if "duree" in video and not _text(video.get("duree")):
+            errors.append(f"{item}: « duree » doit être un texte comme 6:42.")
+    return errors
+
+
 # Fields whose meaning is not linguistic and must remain in the French source.
 # "formule" is the sole exception: only its \text{...} labels may be translated.
 NON_TRADUISIBLES = {
@@ -239,8 +266,9 @@ def verifier_seance(session: Any, *, session_id: str = "<inconnue>") -> list[str
             errors.append(f"{session_id}: « actu_basics » doit être un objet YAML.")
         else:
             errors.extend(_unknown_keys(
-                actu_basics, {"episode", "statut", "accroche_fr", "accroche_en"}, f"{session_id}.actu_basics"
+                actu_basics, {"episode", "statut", "accroche_fr", "accroche_en", "videos"}, f"{session_id}.actu_basics"
             ))
+            errors.extend(_verifier_videos(actu_basics.get("videos"), f"{session_id}.actu_basics.videos"))
 
     for key in ("id", "module", "titre", "en", "duree", "etapes"):
         if key not in session:

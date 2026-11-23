@@ -1,0 +1,131 @@
+# English texts for session A2.05. Numbers, answers and tests live in contenus/a2/s05.yaml.
+titre: "Frequency, severity and aggregate loss"
+
+etapes:
+  - titre: "Placement check"
+    intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
+    questions:
+      - q: 'Aggregate loss $S = X_1 + \dots + X_N$, with $N$ independent of the $X_i$, which share the same distribution. What is $E[S]$?'
+        pourquoi:
+          rappel: >-
+            Condition on the number of claims: given $N = n$, the expected loss is $n\,E[X]$. Then average over $N$.
+          exemple: >-
+            50 expected claims of €2,000 on average: $E[S] = 100{,}000$ euros.
+          piege: >-
+            $N\,E[X]$ is still random: it is $E[S \mid N]$, not $E[S]$.
+      - q: 'And the variance of $S$?'
+        pourquoi:
+          rappel: >-
+            Two sources of uncertainty: the amount of each claim, and the number of claims. The law of total variance adds them up.
+          exemple: >-
+            The first term comes from severity, the second from frequency.
+          piege: >-
+            Multiplying the two variances makes no sense: the unit would not even be that of a variance of amounts.
+      - q: 'For a compound Poisson distribution ($N \sim$ Poisson($\lambda$)), the variance simplifies to…'
+        pourquoi:
+          rappel: >-
+            With $E[N] = \operatorname{Var}(N) = \lambda$, the two terms combine: $\operatorname{Var}(X) + (E[X])^2 = E[X^2]$.
+          exemple: >-
+            Exponential claims with mean €2,000: $E[X^2] = 2\theta^2 = 8{,}000{,}000$, so $\operatorname{Var}(S) = 50 \times 8 \times 10^6 = 4 \times 10^8$.
+          piege: >-
+            $\lambda\,\operatorname{Var}(X)$ forgets the uncertainty about the number of claims.
+      - q: 'Why model frequency and severity separately?'
+        options: ['They respond to different factors', 'The law requires it', 'To simplify the accounting']
+        pourquoi:
+          rappel: >-
+            A young driver has more accidents (frequency); an expensive car costs more per accident (severity). Inflation affects severity, not frequency.
+          formule: |-
+            \text{pure premium} = E[N] \times E[X]
+          exemple: >-
+            In pricing (A6), we often fit two models: Poisson for frequency, gamma or lognormal for severity.
+          piege: >-
+            Modelling the total loss directly mixes two effects and makes the results hard to explain.
+
+  - titre: "The intuition on video"
+    texte: >-
+      This topic does not have its Actu-Basics lesson yet. It will show how the number of claims and their amounts
+      combine into a single loss, and which of the two uncertainties weighs more.
+
+  - titre: "The recap"
+    blocs:
+      - p: >-
+          The <b>collective risk model</b> <i>(modèle collectif)</i> writes the <b>aggregate loss</b> <i>(charge totale)</i>
+          of a portfolio as a sum of a random number of claims: the <b>frequency</b> <i>(fréquence)</i> $N$ and the
+          <b>severity</b> <i>(sévérité)</i> $X_i$, independent and identically distributed.
+      - {}
+      - p: >-
+          When $N$ follows a Poisson distribution, $S$ follows a <b>compound Poisson</b> <i>(Poisson composée)</i>
+          distribution and $\operatorname{Var}(S) = \lambda\,E[X^2]$. If $N$ is overdispersed (variance above the mean),
+          the variance of $S$ rises, and so does the tail.
+      - p: >-
+          For a discrete severity distribution, the exact distribution of $S$ comes from <b>convolution</b>
+          <i>(convolution)</i>: for each $n$, add the distribution of the sum of $n$ claims weighted by $P(N = n)$. For a
+          large portfolio, the normal approximation is often enough for an order of magnitude.
+      - {}
+      - note: >-
+          The collective risk model is the starting point of non-life pricing (A5, A6) and of capital calculations: an
+          excess-of-loss reinsurance treaty is priced on the distribution of $S$, not on its mean alone.
+      - sources:
+          - {titre: "Klugman, Panjer and Willmot, Loss Models, chap. 9", detail: "Collective risk model, compound Poisson, convolution, Panjer recursion"}
+          - {titre: "CAS, MAS-I (Modern Actuarial Statistics I)", detail: "Frequency, severity and aggregate loss models"}
+
+  - titre: "Check"
+    intro: "Four questions. Answer without rereading the recap."
+    questions:
+      - q: 'Poisson frequency with mean 50, exponential claims with mean €2,000. Standard deviation of $S$?'
+        options: ['€20,000', '€14,142', '€100,000']
+        pourquoi:
+          rappel: >-
+            Compound Poisson: $\operatorname{Var}(S) = \lambda\,E[X^2]$, with $E[X^2] = 2\theta^2$ for the exponential.
+          exemple: >-
+            $\sqrt{4 \times 10^8} = 20{,}000$ euros, that is 20% of the expected loss.
+          piege: >-
+            €14,142 is $\sqrt{\lambda\,\operatorname{Var}(X)}$: the effect of the number of claims is missing.
+      - q: 'Same portfolio. By the normal approximation, what is the probability that the loss exceeds €130,000?'
+        options: ['6.7%', '1.5%', '30%']
+        pourquoi:
+          rappel: >-
+            Standardize: $z = (130{,}000 - 100{,}000) / 20{,}000$.
+          exemple: >-
+            $1 - \Phi(1.5) = 0.0668$.
+          piege: >-
+            1.5 is the value of $z$, not a probability. 30% divides the gap by the mean instead of the standard deviation.
+      - q: 'If frequency has the same mean but a variance of 100 (instead of 50), the standard deviation of $S$ becomes…'
+        options: ['€24,495', '€20,000', '€28,284']
+        pourquoi:
+          rappel: >-
+            General formula: $E[N]\operatorname{Var}(X) + \operatorname{Var}(N)(E[X])^2$, with $\operatorname{Var}(X) = \theta^2$.
+          exemple: >-
+            $\sigma_S = 24{,}494.90$ euros: overdispersed frequency makes the risk 22% heavier.
+          piege: >-
+            €28,284 doubles the whole variance, whereas only the frequency term changes.
+      - q: '$N$ is 0, 1 or 2 (probabilities 0.7, 0.2, 0.1); each claim is €100 or €500, equally likely. $P(S = 600)$?'
+        options: ['0.05', '0.025', '0.1']
+        pourquoi:
+          rappel: >-
+            €600 is only possible with two claims, one of €100 and one of €500, in either order.
+          exemple: >-
+            $0.1 \times 0.5 = 0.05$.
+          piege: >-
+            0.025 forgets that the order (100 then 500, or 500 then 100) counts twice.
+
+  - titre: "By hand"
+    intro: "Poisson frequency with mean $\\lambda = 50$, exponential claims with mean $\\theta = 2{,}000$ euros. Enter your results to the nearest euro, the probability to 4 decimal places."
+    donnees:
+      lignes: [['50', '2,000', '130,000']]
+    solution: |
+      $E[S] = 50 \times 2{,}000 = 100{,}000$ euros. $E[X^2] = 2 \times 2{,}000^2 = 8 \times 10^6$, so $\operatorname{Var}(S) = 4 \times 10^8$ and $\sigma_S = 20{,}000$ euros.
+      $z = 30{,}000 / 20{,}000 = 1.5$, so $P(S > 130{,}000) \approx 1 - \Phi(1.5) = 0.0668$.
+
+  - titre: "Your turn to code"
+    intro: "Write the body of the three functions, without AI. All the tests must pass."
+    tests:
+      - {nom: '$E[S] = 100{,}000$ and $\operatorname{Var}(S) = 4 \times 10^8$'}
+      - {nom: 'Compound Poisson: $\lambda E[X^2]$'}
+      - {nom: 'Overdispersed frequency: $6 \times 10^8$'}
+      - {nom: '$P(S = 600) = 0.05$'}
+      - {nom: 'The distribution of $S$ adds up to 1'}
+      - {nom: 'The convolution gives back $E[S] = 120$'}
+
+  - titre: "Vocabulary"
+    intro: "Tap a card: the French term and a job-interview sentence."

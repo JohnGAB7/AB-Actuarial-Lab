@@ -1,0 +1,133 @@
+# English texts for session A2.04. Numbers, answers and tests live in contenus/a2/s04.yaml.
+titre: "Pooling and the law of large numbers"
+
+etapes:
+  - titre: "Placement check"
+    intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
+    questions:
+      - q: 'For $n$ independent variables with the same variance $\sigma^2$, what is the variance of their mean $\bar{X}$?'
+        pourquoi:
+          rappel: >-
+            The variances of independent variables add up: the sum has variance $n\sigma^2$. Dividing by $n$ divides the variance by $n^2$.
+          exemple: >-
+            The standard deviation of the mean is $\sigma/\sqrt{n}$: 100 times more policies, 10 times less spread.
+          piege: >-
+            $n\sigma^2$ is the variance of the sum. The total risk grows, but more slowly than the portfolio.
+      - q: 'What does the law of large numbers say?'
+        options: ['The observed mean gets closer to the expected value as $n$ grows', 'Each policy ends up costing the mean', 'Claims cancel out exactly']
+        pourquoi:
+          rappel: >-
+            The law of large numbers is about the mean of many independent variables with the same distribution, not about each policy.
+          exemple: >-
+            A policy costs €0 or €10,000, never €100. But the average cost of 10,000 policies stays close to €100.
+          piege: >-
+            It promises no exact offsetting and no profit: it makes the mean predictable.
+      - q: 'The central limit theorem lets us approximate the distribution of the sum of $n$ claims by…'
+        options: ['a normal distribution', 'a Poisson distribution', 'a uniform distribution']
+        pourquoi:
+          rappel: >-
+            For large $n$, the sum of independent variables with the same distribution and finite variance is approximately normal.
+          exemple: >-
+            This is what lets us compute a probability of loss for the portfolio with nothing but the normal table.
+          piege: >-
+            For very skewed claims or a small portfolio, the normal approximation underestimates the tail.
+      - q: 'Pooling works well when the risks are…'
+        options: ['numerous, independent and comparable', 'few but very large', 'strongly correlated']
+        pourquoi:
+          rappel: >-
+            The reduction in $1/\sqrt{n}$ assumes independence. A windstorm or a pandemic hits many policies at once: that part of the risk does not dilute.
+          exemple: >-
+            With a correlation $\rho > 0$, the variance of the mean never falls below $\rho\sigma^2$.
+          piege: >-
+            Pooling makes losses predictable; it does not make the insurer profitable. Pricing, expenses and reinsurance matter too.
+
+  - titre: "The intuition on video"
+    texte: >-
+      Actu-Basics lesson A2.01 shows, with a portfolio of phones, why the average cost becomes predictable as the
+      number of policies grows, and under which assumptions. It is online in English.
+
+  - titre: "The recap"
+    blocs:
+      - p: >-
+          For $n$ independent policies with costs $X_1, \dots, X_n$, the same mean $\mu$ and the same variance
+          $\sigma^2$, the <b>aggregate loss</b> <i>(charge totale)</i> $S_n$ and the <b>average cost</b> $\bar{X}_n$ have:
+      - {}
+      - p: >-
+          This is <b>pooling of risks</b> <i>(mutualisation)</i>: the risk per policy falls like $1/\sqrt{n}$. The
+          <b>law of large numbers</b> <i>(loi des grands nombres)</i> says that $\bar{X}_n$ tends to $\mu$; the
+          <b>central limit theorem</b> <i>(théorème central limite)</i> says how fast, and with which distribution.
+      - {}
+      - p: >-
+          Fictional example: each policy has a 1% chance of a €10,000 claim. Then $\mu = 100$ euros and
+          $\sigma = 994.99$ euros. With 100 policies, the standard deviation of the average cost is €99.50; with 10,000
+          policies, €9.95.
+      - p: >-
+          For the premium to suffice with probability 95%, a <b>safety loading</b> <i>(chargement de sécurité)</i> of
+          $1.645\,\sigma/\sqrt{n}$ per policy must be added: €16.37 for 10,000 policies.
+      - note: >-
+          These assumptions (independence, size, homogeneity) never hold perfectly. Natural catastrophes create
+          correlation; that is why reinsurance and solvency capital exist (A8).
+      - sources:
+          - {titre: "Klugman, Panjer and Willmot, Loss Models, chap. 9", detail: "Aggregate loss models and the normal approximation"}
+          - {titre: "SOA, Probability (P) Exam", detail: "Official exam syllabus"}
+
+  - titre: "Check"
+    intro: "Four questions on the fictional portfolio: a 1% chance of a €10,000 claim per policy."
+    questions:
+      - q: 'What is the standard deviation of the cost of a single policy?'
+        options: ['€994.99', '€100', '€9,900']
+        pourquoi:
+          rappel: >-
+            The cost is $10{,}000 \times B$, with $B$ a Bernoulli variable with parameter 0.01.
+          exemple: >-
+            $\sigma^2 = 990{,}000$ and $\sigma = 994.99$ euros: almost ten times the mean of €100.
+          piege: >-
+            €100 is the expected value. €9,900 forgets the square root of the Bernoulli variance.
+      - q: 'With 10,000 policies, what is the probability that the average cost exceeds €110?'
+        options: ['15.7%', '46.0%', '5%']
+        pourquoi:
+          rappel: >-
+            Normal approximation of the average cost, with standard deviation $\sigma/\sqrt{n}$.
+          exemple: >-
+            $z = 10 / 9.95 = 1.005$ and $1 - \Phi(1.005) = 0.157$.
+          piege: >-
+            46.0% is the result for only 100 policies: pooling is still weak there.
+      - q: 'How many policies are needed for the standard deviation of the average cost to fall to 5% of the mean?'
+        options: ['39,600', '10,000', '200']
+        pourquoi:
+          rappel: >-
+            We want $\sigma / (\mu\sqrt{n}) = 0.05$, so $n = (\sigma / (0.05\,\mu))^2$.
+          exemple: >-
+            $(198.997)^2 = 39{,}600$ policies.
+          piege: >-
+            With 10,000 policies, the ratio is 9.95%, not 5%. Dividing the risk by 2 takes 4 times as many policies.
+      - q: 'If all the policies are exposed to the same windstorm, pooling…'
+        options: ['reduces the risk much less', 'reduces it even more', 'is not affected']
+        pourquoi:
+          rappel: >-
+            The common part of the risk does not dilute: the variance of the average cost tends to $\rho\sigma^2$, not to 0.
+          exemple: >-
+            That is why an insurer limits its exposure by area and buys catastrophe reinsurance.
+          piege: >-
+            Adding policies from the same area adds no diversification against the windstorm.
+
+  - titre: "By hand"
+    intro: "Fictional portfolio: a 1% chance of a €10,000 claim per policy, independent policies. Enter your results to the cent, and the probability to 4 decimal places."
+    donnees:
+      lignes: [['0.01', '10,000', '10,000']]
+    solution: |
+      $\mu = 100$, $\sigma^2 = 10{,}000^2 \times 0.01 \times 0.99 = 990{,}000$, $\sigma = 994.99$ and $\sigma/\sqrt{n} = 9.95$.
+      $z = 10 / 9.95 = 1.005$, so $P = 1 - \Phi(1.005) = 0.1574$. Premium at 95%: $100 + 1.645 \times 9.95 = 116.37$ euros.
+
+  - titre: "Your turn to code"
+    intro: "Write the body of the three functions, without AI. All the tests must pass."
+    tests:
+      - {nom: '$\sigma/\sqrt{n}$ is 9.94987 for 10,000 policies'}
+      - {nom: 'Probability of exceeding €110: 0.15744'}
+      - {nom: 'At the mean, the probability is 1/2'}
+      - {nom: 'More policies, less risk of exceeding'}
+      - {nom: 'The simulation is reproducible'}
+      - {nom: 'With 200,000 policies, the simulated mean is close to €100'}
+
+  - titre: "Vocabulary"
+    intro: "Tap a card: the French term and a job-interview sentence."

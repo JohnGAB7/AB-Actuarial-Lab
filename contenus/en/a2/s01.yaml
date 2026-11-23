@@ -1,0 +1,130 @@
+# English texts for session A2.01. Numbers, answers and tests live in contenus/a2/s01.yaml.
+titre: "Conditional probability and Bayes' theorem"
+
+etapes:
+  - titre: "Placement check"
+    intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
+    questions:
+      - q: 'What is $P(A \mid B)$, for $P(B) > 0$?'
+        pourquoi:
+          rappel: >-
+            Conditioning on $B$ means restricting the universe to the cases where $B$ happened, then renormalizing by $P(B)$.
+          exemple: >-
+            If 3% of policyholders are young and have a claim, and 7% have a claim, then $P(\text{young} \mid \text{claim}) = 3/7$.
+          piege: >-
+            Dividing by $P(A)$ gives $P(B \mid A)$, the other direction. $P(A)\,P(B)$ equals $P(A \cap B)$ only if $A$ and $B$ are independent.
+      - q: 'Two events $A$ and $B$ are independent if…'
+        pourquoi:
+          rappel: >-
+            Independent: knowing that $B$ happened does not change the probability of $A$, that is $P(A \mid B) = P(A)$.
+          exemple: >-
+            Two independent policies with a 5% claim probability each: both have a claim with probability $0.05^2 = 0.0025$.
+          piege: >-
+            Mutually exclusive (disjoint) is not independent: if $A$ and $B$ cannot happen together, knowing $B$ rules out $A$.
+      - q: 'The law of total probability, for a partition $B_1, \dots, B_k$, reads…'
+        pourquoi:
+          rappel: >-
+            Split the universe into classes that do not overlap, then add up the probability of $A$ in each class, weighted by the size of the class.
+          exemple: >-
+            20% young drivers with 15% claims, 80% others with 5%: $0.2 \times 0.15 + 0.8 \times 0.05 = 0.07$.
+          piege: >-
+            Without the weights $P(B_j)$, you would add up rates from classes of different sizes.
+      - q: 'Bayes'' theorem is used to…'
+        options: ['reverse the conditioning: go from $P(A \mid B)$ to $P(B \mid A)$', 'add two probabilities', 'test independence']
+        pourquoi:
+          rappel: >-
+            We often know the probability of an effect given the cause (a claim given the class). Bayes gives the cause given the effect.
+          exemple: >-
+            $P(\text{young} \mid \text{claim}) = 0.03 / 0.07 = 0.4286$: young drivers are 20% of the portfolio but 43% of the claims.
+          piege: >-
+            Confusing $P(\text{claim} \mid \text{young}) = 15\%$ with $P(\text{young} \mid \text{claim}) = 43\%$ is the prosecutor's fallacy.
+
+  - titre: "The intuition on video"
+    texte: >-
+      To open the module, Actu-Basics lesson A0.01 shows how an actuary decides under risk: probabilities,
+      amounts, and a first price. It is online in English.
+
+  - titre: "The recap"
+    blocs:
+      - p: >-
+          A <b>conditional probability</b> <i>(probabilité conditionnelle)</i> $P(A \mid B)$ is the probability of $A$
+          when we know that $B$ happened. Two events are <b>independent</b> <i>(indépendants)</i> if this information
+          changes nothing.
+      - {}
+      - p: >-
+          An insurer splits its portfolio into <b>risk classes</b> <i>(classes de risque)</i> that form a partition. The
+          <b>law of total probability</b> <i>(formule des probabilités totales)</i> rebuilds the overall rate; <b>Bayes'
+          theorem</b> <i>(formule de Bayes)</i> goes back from an observed claim to its likely class.
+      - {}
+      - p: >-
+          With $n$ independent policies of the same probability $p$, the probability that none has a claim is
+          $(1-p)^n$. An event that is rare for each one becomes almost certain for a large portfolio.
+      - formule: |
+          P(\text{at least one}) = 1 - (1 - p)^n
+      - note: >-
+          Rating by class (age, area, use) relies on these formulas. Bayesian credibility, which blends a
+          policyholder's own experience with that of their class, is their direct extension.
+      - sources:
+          - {titre: "Hogg, McKean and Craig, Introduction to Mathematical Statistics, chap. 1", detail: "Conditional probability, independence, Bayes"}
+          - {titre: "SOA, Probability (P) Exam", detail: "Official exam syllabus"}
+
+  - titre: "Check"
+    intro: "Four questions. Answer without rereading the recap."
+    questions:
+      - q: 'Fictional portfolio: 20% young drivers (15% claims), 80% others (5%). What share of policyholders has a claim?'
+        options: ['7%', '10%', '20%']
+        pourquoi:
+          rappel: >-
+            Total probability: each class weighs according to its size.
+          exemple: >-
+            $0.03 + 0.04 = 0.07$, that is 7%.
+          piege: >-
+            10% is the simple average of the two rates, as if both classes had the same size.
+      - q: 'Same portfolio: a claim comes in. What is the probability that the policyholder is young?'
+        options: ['42.9%', '15%', '20%']
+        pourquoi:
+          rappel: >-
+            Bayes: the share of claims that come from young drivers.
+          exemple: >-
+            $0.03 / 0.07 = 0.4286$: 43% of the claims come from 20% of the policyholders.
+          piege: >-
+            15% is $P(S \mid J)$, the other direction. 20% is the share of young drivers before seeing the claim.
+      - q: '10 independent policies, each with a 5% claim probability. Probability of at least one claim?'
+        options: ['40.1%', '50%', '5%']
+        pourquoi:
+          rappel: >-
+            Go through the complement: no claim at all on the 10 policies.
+          exemple: >-
+            $0.95^{10} = 0.598737$, so $1 - 0.598737 = 0.401263$.
+          piege: >-
+            $10 \times 5\% = 50\%$ adds up events that can happen together. With 30 policies, this method would exceed 100%.
+      - q: 'Are two mutually exclusive events, with non-zero probabilities, independent?'
+        options: ['Never', 'Always', 'Only if their probabilities are equal']
+        pourquoi:
+          rappel: >-
+            Mutually exclusive: $P(A \cap B) = 0$. Independent: $P(A \cap B) = P(A)\,P(B) > 0$. Both cannot hold at once.
+          exemple: >-
+            "The policyholder has 0 claims" and "the policyholder has 2 claims" are mutually exclusive. Knowing one rules out the other: a strong dependence.
+          piege: >-
+            The intuition "unrelated" mixes up the two notions. Independence is a property of the probabilities, not of the events themselves.
+
+  - titre: "By hand"
+    intro: "The fictional portfolio from the previous page, and 10 independent policies at 5%. Enter your results to 4 decimal places."
+    donnees:
+      lignes: [['0.2', '0.15', '0.05', '0.05', '10']]
+    solution: |
+      $P(S) = 0.2 \times 0.15 + 0.8 \times 0.05 = 0.07$ and $P(J \mid S) = 0.03 / 0.07 = 0.4286$.
+      $0.95^{10} = 0.5987$, so the probability of at least one claim is $0.4013$.
+
+  - titre: "Your turn to code"
+    intro: "Write the body of the three functions, without AI. All the tests must pass."
+    tests:
+      - {nom: 'Total probability: 0.07'}
+      - {nom: 'Bayes: 0.4286 for young drivers'}
+      - {nom: 'Three classes: 2/9, 1/3, 4/9'}
+      - {nom: 'The posterior probabilities add up to 1'}
+      - {nom: 'At least one claim out of 10: 0.40126'}
+      - {nom: 'With $n = 0$, the probability is zero'}
+
+  - titre: "Vocabulary"
+    intro: "Tap a card: the French term and a job-interview sentence."

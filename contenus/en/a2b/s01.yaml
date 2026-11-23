@@ -1,0 +1,140 @@
+# English texts for session A2b.01. Numbers, answers and tests live in contenus/a2b/s01.yaml.
+titre: "Estimating a claim distribution: the method of moments"
+
+etapes:
+  - titre: "Placement check"
+    intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
+    questions:
+      - q: 'An estimator $\hat{\theta}$ is unbiased if…'
+        options: ['$E[\hat{\theta}] = \theta$', '$\hat{\theta} = \theta$ for every sample', '$\operatorname{Var}(\hat{\theta}) = 0$']
+        pourquoi:
+          rappel: >-
+            An estimator is a formula applied to a random sample, so it is itself a random variable. Unbiased means right on average, over all possible samples.
+          formule: |-
+            \text{bias}(\hat{\theta}) = E[\hat{\theta}] - \theta
+          exemple: >-
+            The sample mean $\bar{X}$ is an unbiased estimator of $E[X]$.
+          piege: >-
+            Unbiased does not mean exact: on a given sample, the estimate can be far from the true value.
+      - q: 'Why divide by $n - 1$ in the sample variance $s^2$?'
+        options: ['To make it unbiased', 'To make it smaller', 'By convention, with no effect']
+        pourquoi:
+          rappel: >-
+            Deviations are measured from $\bar{X}$, which is computed on the same data and sticks to the sample. Dividing by $n$ underestimates the variance on average.
+          exemple: >-
+            On 8 claims, dividing by 7 instead of 8 raises the estimated variance by $8/7 - 1 = 14.3\%$.
+          piege: >-
+            For a large sample the difference becomes negligible; for 8 claims it matters.
+      - q: 'The standard error of $\bar{X}$ is…'
+        options: ['$s / \sqrt{n}$', '$s$', '$s / n$']
+        pourquoi:
+          rappel: >-
+            The standard error is the standard deviation of the estimator: it measures how much $\bar{X}$ would vary from one sample to another.
+          exemple: >-
+            8 claims with $s = 1{,}321$ euros: a standard error of 467 euros, a quarter of the mean.
+          piege: >-
+            $s$ describes the spread of the claims themselves, not the precision of their mean.
+      - q: 'The method of moments consists in…'
+        options: ['equating theoretical and sample moments, then solving', 'maximizing the probability of the data', 'taking the median']
+        pourquoi:
+          rappel: >-
+            Write as many equations as there are parameters: theoretical mean = observed mean, theoretical variance = observed variance, and so on.
+          exemple: >-
+            For an exponential there is one parameter: $\hat{\theta} = \bar{x}$.
+          piege: >-
+            Maximizing the probability of the data is maximum likelihood: the next session.
+
+  - titre: "The intuition on video"
+    texte: >-
+      This topic does not have its long Actu-Basics lesson yet. The recap and the exercises that follow cover the whole
+      content of the session.
+
+  - titre: "The recap"
+    blocs:
+      - p: >-
+          An actuary never observes the claim distribution, only a <b>sample</b> <i>(échantillon)</i>. An
+          <b>estimator</b> <i>(estimateur)</i> turns this sample into a value of a parameter. It is judged by its
+          <b>bias</b> <i>(biais)</i>, its <b>variance</b> and their combination, the <b>mean squared error</b>
+          <i>(erreur quadratique moyenne)</i>.
+      - formule: |
+          \begin{gathered}
+          \text{MSE}(\hat{\theta}) = E\big[(\hat{\theta} - \theta)^2\big] = \operatorname{Var}(\hat{\theta}) + \text{bias}(\hat{\theta})^2 \\[6pt]
+          \bar{X} = \frac{1}{n}\sum X_i \qquad s^2 = \frac{1}{n-1}\sum (X_i - \bar{X})^2 \qquad \operatorname{se}(\bar{X}) = \frac{s}{\sqrt{n}}
+          \end{gathered}
+      - p: >-
+          The <b>method of moments</b> <i>(méthode des moments)</i> equates the moments of the distribution with those of
+          the sample. For the <b>gamma distribution</b> <i>(loi gamma)</i>, with mean $\alpha\theta$ and variance
+          $\alpha\theta^2$, this gives two equations in two unknowns.
+      - {}
+      - p: >-
+          By convention, the method of moments uses the sample variance divided by $n$, written $\hat{\sigma}^2$. It is
+          simple and gives good starting values, but it is often less precise than maximum likelihood, especially for
+          heavy-tailed distributions.
+      - note: >-
+          With few claims, the standard error is large. This is the idea behind credibility: do not rely entirely on
+          the experience of a small portfolio.
+      - sources:
+          - {titre: "Hogg, McKean and Craig, Introduction to Mathematical Statistics, chap. 4", detail: "Estimators, bias, method of moments"}
+          - {titre: "Klugman, Panjer and Willmot, Loss Models, chap. 12 and 13", detail: "Estimating frequency and severity distributions"}
+
+  - titre: "Check"
+    intro: "A fictional sample of 8 claims (€): 1,200, 800, 3,500, 600, 2,100, 950, 1,700, 4,200."
+    questions:
+      - q: 'What is the sample mean?'
+        options: ['€1,881.25', '€1,450', '€15,050']
+        pourquoi:
+          rappel: >-
+            The sum of the observations divided by their number.
+          exemple: >-
+            $1{,}881.25$ euros. The median, between €1,200 and €1,700, is €1,450: the right tail pulls the mean up.
+          piege: >-
+            €1,450 is the median. €15,050 is the sum.
+      - q: 'For an exponential, the method of moments estimate of $\theta$ is…'
+        options: ['€1,881.25', '€1,321.24', '€1,450']
+        pourquoi:
+          rappel: >-
+            The exponential has a single parameter, its mean: $\hat{\theta} = \bar{x}$.
+          exemple: >-
+            $\hat{\theta} = 1{,}881.25$ euros. But the exponential forces standard deviation = mean; here $s = 1{,}321$ euros, smaller: a gamma fits better.
+          piege: >-
+            €1,321.24 is the sample standard deviation $s$, not the mean.
+      - q: 'With the gamma distribution, $\hat{\sigma}^2 = 1{,}527{,}460.94$. What is $\hat{\alpha}$?'
+        options: ['2.317', '0.432', '1.232']
+        pourquoi:
+          rappel: >-
+            $\hat{\alpha} = \bar{x}^2 / \hat{\sigma}^2$.
+          exemple: >-
+            $3{,}539{,}101.56 / 1{,}527{,}460.94 = 2.317$, and $\hat{\theta} = 1{,}527{,}460.94 / 1{,}881.25 = 811.94$ euros.
+          piege: >-
+            0.432 is the inverse. An $\alpha$ above 1 gives a skewed bell-shaped density, less peaked at 0 than the exponential.
+      - q: 'The standard error of the mean is €467. What divides it by 2?'
+        options: ['Observing 4 times as many claims', 'Observing 2 times as many claims', 'Dividing by $n$ instead of $n - 1$']
+        pourquoi:
+          rappel: >-
+            The standard error decreases like $1/\sqrt{n}$.
+          exemple: >-
+            With 32 claims of the same spread, the standard error would fall to about 234 euros.
+          piege: >-
+            Changing the calculation convention does not make the data more informative.
+
+  - titre: "By hand"
+    intro: 'Same sample of 8 claims. Enter your results to the cent, $\hat{\alpha}$ to 4 decimal places.'
+    donnees:
+      entetes: ['$x_1$', '$x_2$', '$x_3$', '$x_4$', '$x_5$', '$x_6$', '$x_7$', '$x_8$']
+      lignes: [['1,200', '800', '3,500', '600', '2,100', '950', '1,700', '4,200']]
+    solution: |
+      $\sum (x_i - \bar{x})^2 = 12{,}219{,}687.5$, so $s^2 = 12{,}219{,}687.5 / 7 = 1{,}745{,}669.64$ and $s = 1{,}321.24$ euros; $s/\sqrt{8} = 467.13$ euros.
+      $\hat{\sigma}^2 = 12{,}219{,}687.5 / 8 = 1{,}527{,}460.94$, $\hat{\alpha} = 1{,}881.25^2 / \hat{\sigma}^2 = 2.3170$ and $\hat{\theta} = \hat{\sigma}^2 / 1{,}881.25 = 811.94$ euros.
+
+  - titre: "Your turn to code"
+    intro: "Write the body of the three functions, without AI. All the tests must pass."
+    tests:
+      - {nom: 'Mean €1,881.25 and $s^2 = 1{,}745{,}669.64$'}
+      - {nom: 'Standard error of €467.13'}
+      - {nom: 'Gamma: $\hat{\alpha} = 2.31698$'}
+      - {nom: 'Gamma: $\hat{\alpha}\hat{\theta} = \bar{x}$'}
+      - {nom: 'Zero variance for equal values'}
+      - {nom: 'Mean and variance of 0, 1, 0, 0, 2, 0, 1, 0, 0, 1: 0.5 and 0.5'}
+
+  - titre: "Vocabulary"
+    intro: "Tap a card: the French term and a job-interview sentence."

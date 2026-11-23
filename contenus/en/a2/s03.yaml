@@ -1,0 +1,136 @@
+# English texts for session A2.03. Numbers, answers and tests live in contenus/a2/s03.yaml.
+titre: "Claim size: continuous distributions"
+
+etapes:
+  - titre: "Placement check"
+    intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
+    questions:
+      - q: 'For a continuous variable $X$ with distribution function $F$, what is $P(a < X \le b)$?'
+        pourquoi:
+          rappel: >-
+            The cumulative distribution function $F(x) = P(X \le x)$ accumulates probability up to $x$. The density $f = F'$ gives a probability per unit, not a probability.
+          exemple: >-
+            For a continuous variable, $P(X = x) = 0$: only intervals have a probability.
+          piege: >-
+            A density can exceed 1. Computing $f(b) - f(a)$ mixes up density and probability.
+      - q: 'A claim amount follows an exponential distribution with mean $\theta$. What is $P(X > x)$?'
+        pourquoi:
+          rappel: >-
+            The survival function $S(x) = 1 - F(x)$ is often more natural in insurance: it is the probability of exceeding a threshold.
+          exemple: >-
+            Mean €2,000: $P(X > 5{,}000) = e^{-2.5} = 0.0821$.
+          piege: >-
+            $1 - e^{-x/\theta}$ is $P(X \le x)$, the opposite.
+      - q: 'If $\ln X \sim \mathcal{N}(\mu, \sigma^2)$, what is $E[X]$?'
+        pourquoi:
+          rappel: >-
+            The lognormal distribution has a right tail. Its mean exceeds its median $e^{\mu}$, because of the large claims.
+          exemple: >-
+            $\mu = 7$, $\sigma = 1$: median $e^7 = 1{,}096.63$ euros, mean $e^{7.5} = 1{,}808.04$ euros.
+          piege: >-
+            $e^{\mu}$ is the median, not the mean. This is Jensen's inequality: $E[e^Y] > e^{E[Y]}$.
+      - q: 'The 99% quantile of a claim distribution is…'
+        options: ['the amount exceeded with 1% probability', 'the mean of the largest 1% of claims', '99% of the mean']
+        pourquoi:
+          rappel: >-
+            The quantile $q_p$ is the inverse of the distribution function: $F(q_p) = p$. In risk management, it is called the Value at Risk.
+          exemple: >-
+            Exponential with mean €2,000: $q_{0.99} = 2{,}000 \ln 100 = 9{,}210.34$ euros.
+          piege: >-
+            The mean beyond the quantile is the Tail Value at Risk, another measure you will see in A8.
+
+  - titre: "The intuition on video"
+    texte: >-
+      This topic does not have its Actu-Basics lesson yet. It will compare two distributions with the same mean, one
+      with a thin tail and one with a heavy tail, and what each costs the insurer.
+
+  - titre: "The recap"
+    blocs:
+      - p: >-
+          The size of a claim is a <b>continuous random variable</b> <i>(variable continue)</i>, described by its
+          <b>density</b> <i>(densité)</i> $f$, its <b>distribution function</b> <i>(fonction de répartition)</i> $F$
+          and its <b>survival function</b> <i>(fonction de survie)</i> $S = 1 - F$.
+      - {}
+      - p: >-
+          Three distributions come up again and again. The <b>exponential</b>, simple and memoryless. The
+          <b>lognormal</b>, when the log of the amount is normal. The <b>Pareto</b>, with a heavy tail, for large
+          claims (fire, liability).
+      - formule: |
+          \begin{gathered}
+          \text{Exponential: } S(x) = e^{-x/\theta} \qquad \text{Pareto: } S(x) = \left(\frac{\theta}{\theta + x}\right)^{\alpha} \\[6pt]
+          \text{Lognormal: } P(X > x) = 1 - \Phi\!\left(\frac{\ln x - \mu}{\sigma}\right)
+          \end{gathered}
+      - p: >-
+          For the same mean, the tail changes everything. An exponential and a Pareto ($\alpha = 3$, $\theta = 4{,}000$)
+          both have a mean of €2,000. The first exceeds €20,000 with probability $e^{-10} = 0.0045\%$, the second
+          with probability $0.46\%$, a hundred times more.
+      - p: >-
+          The <b>quantile</b> <i>(quantile)</i> $q_p = F^{-1}(p)$ answers the question: which amount is exceeded only
+          with probability $1-p$? For the normal distribution, $q_{0.95} = \mu + 1.645\,\sigma$.
+      - note: >-
+          In reinsurance, the choice between a thin and a heavy tail sets the price of an excess-of-loss treaty. An
+          error in the tail costs more than an error in the mean.
+      - sources:
+          - {titre: "Klugman, Panjer and Willmot, Loss Models, chap. 2 to 5", detail: "Distribution and survival functions, severity distributions, tails"}
+          - {titre: "SOA, Probability (P) Exam", detail: "Official exam syllabus"}
+
+  - titre: "Check"
+    intro: "Four questions. Answer without rereading the recap."
+    questions:
+      - q: 'Exponential claim with mean €2,000. Median amount?'
+        options: ['€1,386.29', '€2,000', '€1,000']
+        pourquoi:
+          rappel: >-
+            The median satisfies $S(m) = 0.5$.
+          exemple: >-
+            $2{,}000 \times 0.693147 = 1{,}386.29$ euros: half of the claims cost less.
+          piege: >-
+            The mean exceeds the median: a few large claims pull the mean up.
+      - q: 'Lognormal claim with $\mu = 7$ and $\sigma = 1$. Probability of exceeding €5,000?'
+        options: ['6.46%', '8.21%', '50%']
+        pourquoi:
+          rappel: >-
+            Take the log, then move to the standard normal distribution.
+          exemple: >-
+            $\ln 5{,}000 = 8.5172$, so $z = 1.5172$ and $1 - \Phi(1.5172) = 0.0646$.
+          piege: >-
+            8.21% is the result for the exponential with mean €2,000, another distribution.
+      - q: 'Pareto with $\alpha = 3$ and $\theta = 4{,}000$. Probability of exceeding €5,000?'
+        options: ['8.78%', '0.46%', '44.4%']
+        pourquoi:
+          rappel: >-
+            Apply the Pareto survival function directly.
+          exemple: >-
+            $(4/9)^3 = 64/729 = 0.0878$.
+          piege: >-
+            0.46% is $S(20{,}000)$. 44.4% forgets the exponent 3.
+      - q: 'An amount follows a normal distribution with mean €1,000 and standard deviation €200. 95% quantile?'
+        options: ['€1,329', '€1,392', '€1,200']
+        pourquoi:
+          rappel: >-
+            Normal quantile: the mean plus $z_p$ standard deviations, with $z_{0.95} = 1.645$.
+          exemple: >-
+            $1{,}000 + 1.645 \times 200 = 1{,}329$ euros.
+          piege: >-
+            €1,392 uses $z = 1.96$, the 97.5% quantile (two-sided 95%).
+
+  - titre: "By hand"
+    intro: '$X_1$ exponential with mean €2,000; $X_2$ lognormal with $\mu = 7$ and $\sigma = 1$. Enter your results to 4 decimal places, amounts to the cent.'
+    donnees:
+      lignes: [['2,000', '7', '1', '5,000']]
+    solution: |
+      $e^{-5{,}000/2{,}000} = e^{-2.5} = 0.0821$; $q_{0.99} = -2{,}000 \ln 0.01 = 9{,}210.34$ euros.
+      $E[X_2] = e^{7.5} = 1{,}808.04$ euros; $z = \ln 5{,}000 - 7 = 1.5172$ and $1 - \Phi(1.5172) = 0.0646$.
+
+  - titre: "Your turn to code"
+    intro: 'Write the body of the four functions, without AI. All the tests must pass. Hint: $\Phi(z) = \tfrac12\left[1 + \operatorname{erf}(z/\sqrt{2})\right]$.'
+    tests:
+      - {nom: '$\Phi(1.644854) = 0.95$'}
+      - {nom: 'Symmetry: $\Phi(-z) = 1 - \Phi(z)$'}
+      - {nom: '99% quantile: €9,210.34'}
+      - {nom: 'Exponential median: $\theta \ln 2$'}
+      - {nom: 'Lognormal: $P(X > 5{,}000) = 0.06461$'}
+      - {nom: 'Pareto: $P(X > 5{,}000) = 64/729$'}
+
+  - titre: "Vocabulary"
+    intro: "Tap a card: the French term and a job-interview sentence."

@@ -1,0 +1,210 @@
+# Séance 3 du module A2b (Statistique pour l'assurance) : intervalles de confiance, Student, proportion, taille d'échantillon.
+# Chiffres : portefeuille et sinistres fictifs. Les valeurs sont recalculées par tests/test_contenus.py et tests/a2b/test_s03_intervalles.py.
+id: a2b/s03
+module: a2b
+titre: "Intervalles de confiance : quelle précision pour une fréquence ?"
+en: "Confidence intervals: how precise is a claim frequency?"
+duree: 30
+
+actu_basics:
+  episode: "A2b · Statistics for insurance"
+  statut: "à proposer"
+  accroche_fr: "6 % de sinistres : à un point près, ou à trois points près ?"
+  accroche_en: "A 6% claim rate: give or take one point, or three?"
+
+etapes:
+  - type: quiz
+    titre: "Test de positionnement"
+    minutes: 3
+    intro: "Quatre questions avant le cours. Si tu as tout juste, survole le rappel et va directement au calcul."
+    questions:
+      - q: 'Un intervalle de confiance (confidence interval) à 95 % signifie que…'
+        options: ['95 % des intervalles construits de cette façon contiennent la vraie valeur', 'la vraie valeur a 95 % de chances d''être dans cet intervalle précis', '95 % des sinistres tombent dans l''intervalle']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Le paramètre est fixe ; c'est l'intervalle qui est aléatoire, parce qu'il dépend de l'échantillon. Le niveau de confiance décrit la méthode, pas un intervalle particulier.
+          formule: |-
+            P\big(\hat{\theta} - z\,\operatorname{se} \le \theta \le \hat{\theta} + z\,\operatorname{se}\big) \approx 95\,\%
+          exemple: >-
+            Sur 100 portefeuilles simulés, environ 95 intervalles contiendraient la vraie fréquence, et 5 la manqueraient.
+          piege: >-
+            Un intervalle sur la moyenne ne dit rien de la dispersion des sinistres individuels : c'est le rôle d'un quantile.
+      - q: 'Pour un intervalle à 95 % avec la loi normale, on prend $z =$…'
+        options: ['1,96', '1,645', '2,576']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On laisse 2,5 % de chaque côté : $z$ est le quantile à 97,5 % de la loi normale centrée réduite.
+          formule: |-
+            \Phi(1{,}96) = 0{,}975
+          exemple: >-
+            1,645 donne un intervalle à 90 %, et 2,576 un intervalle à 99 %.
+          piege: >-
+            1,645 est le quantile à 95 %, qui sert pour un seuil unilatéral, pas pour un intervalle à deux bornes.
+      - q: 'Avec 8 sinistres et un écart-type estimé, on remplace 1,96 par un quantile de Student (t distribution). Pourquoi ?'
+        options: ['Pour tenir compte de l''incertitude sur $s$', 'Parce que les sinistres suivent une loi de Student', 'Pour obtenir un intervalle plus étroit']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Avec $s$ à la place de $\sigma$, le rapport $(\bar{X} - \mu)/(s/\sqrt{n})$ suit une loi de Student à $n - 1$ degrés de liberté (degrees of freedom) si les données sont normales.
+          formule: |-
+            \bar{x} \pm t_{n-1;\,0{,}975}\,\frac{s}{\sqrt{n}}
+          exemple: >-
+            Pour 7 degrés de liberté, $t = 2{,}365$ au lieu de 1,96 : l'intervalle s'élargit de 21 %.
+          piege: >-
+            Student donne un intervalle plus large, pas plus étroit. Et il suppose des données à peu près normales, ce que des sinistres sont rarement.
+      - q: 'Si l''on passe d''un niveau de 95 % à 99 %, l''intervalle devient…'
+        options: ['plus large', 'plus étroit', 'identique']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Plus de confiance demande de couvrir plus de valeurs possibles : $z$ passe de 1,96 à 2,576.
+          formule: |-
+            \frac{2{,}576}{1{,}96} = 1{,}31
+          exemple: >-
+            Même échantillon, intervalle 31 % plus large.
+          piege: >-
+            Seul un échantillon plus grand rend l'intervalle à la fois étroit et sûr.
+
+  - type: video
+    titre: "L'intuition en vidéo"
+    minutes: 3
+    texte: >-
+      Ce thème n'a pas encore sa leçon Actu-Basics longue. Le rappel et les exercices qui suivent couvrent toute la
+      matière de la séance.
+
+  - type: rappel
+    titre: "Le rappel"
+    minutes: 8
+    blocs:
+      - p: >-
+          Une estimation seule ne suffit pas : il faut dire à quel point on s'y fie. Un <b>intervalle de confiance</b>
+          <i>(confidence interval)</i> encadre le paramètre avec un <b>niveau de confiance</b> <i>(confidence level)</i>
+          donné. Sa demi-largeur s'appelle la <b>marge d'erreur</b> <i>(margin of error)</i>.
+      - formule: |
+          \begin{gathered}
+          \text{moyenne : } \bar{x} \pm t_{n-1;\,0{,}975}\,\frac{s}{\sqrt{n}} \qquad \text{proportion : } \hat{p} \pm 1{,}96\,\sqrt{\frac{\hat{p}(1 - \hat{p})}{n}} \\[6pt]
+          \text{Poisson : } \hat{\lambda} \pm 1{,}96\,\sqrt{\frac{\hat{\lambda}}{n}} \qquad \text{taille d'échantillon : } n \ge \frac{z^2\,p(1 - p)}{e^2}
+          \end{gathered}
+      - p: >-
+          Ces formules reposent sur l'approximation normale : elles marchent bien pour une fréquence sur un grand
+          portefeuille, beaucoup moins pour quelques gros sinistres à la queue épaisse. Le <b>bootstrap</b>
+          <i>(bootstrap)</i> rééchantillonne alors les données pour obtenir l'intervalle sans hypothèse de loi.
+      - p: >-
+          La <b>taille d'échantillon</b> <i>(sample size)</i> se calcule à l'envers : on fixe la marge voulue $e$ et on
+          en déduit $n$. Comme la marge décroît en $1/\sqrt{n}$, diviser la marge par 2 demande 4 fois plus de contrats.
+      - note: >-
+          En tarification, un petit portefeuille a une fréquence observée très imprécise. La théorie de la
+          <b>crédibilité</b> <i>(credibility)</i> mélange alors son expérience avec celle du marché, en proportion de sa
+          précision.
+      - sources:
+          - {titre: "Hogg, McKean et Craig, Introduction to Mathematical Statistics, chap. 4", detail: "Intervalles de confiance, loi de Student"}
+          - {titre: "Klugman, Panjer et Willmot, Loss Models, chap. 13", detail: "Variance des estimateurs, intervalles pour les paramètres"}
+
+  - type: quiz
+    titre: "Vérifie"
+    minutes: 4
+    intro: "Portefeuille fictif : 120 sinistres sur 2 000 contrats. Montants : les 8 sinistres de la séance 1."
+    questions:
+      - q: 'Intervalle de confiance à 95 % de la fréquence $p$ ?'
+        options: ['[4,96 % ; 7,04 %]', '[5,47 % ; 6,53 %]', '[5,90 % ; 6,10 %]']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            $\hat{p} = 120 / 2\,000 = 6\,\%$ et $\operatorname{se} = \sqrt{\hat{p}(1 - \hat{p})/n}$.
+          formule: |-
+            \sqrt{\frac{0{,}06 \times 0{,}94}{2\,000}} = 0{,}00531, \qquad 1{,}96 \times 0{,}00531 = 0{,}0104
+          exemple: >-
+            $6\,\% \pm 1{,}04$ point : la vraie fréquence est plausiblement entre 4,96 % et 7,04 %.
+          piege: >-
+            [5,47 % ; 6,53 %] s'arrête à une erreur type : c'est un intervalle à 68 % seulement.
+      - q: 'Combien de contrats faut-il pour une marge de ±1 point à 95 %, si $p \approx 6\,\%$ ?'
+        options: ['2 167', '564', '1 106']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On résout $1{,}96\,\sqrt{p(1 - p)/n} \le e$ en $n$, et on arrondit au-dessus.
+          formule: |-
+            n \ge \frac{1{,}96^2 \times 0{,}06 \times 0{,}94}{0{,}01^2} = 2\,166{,}7
+          exemple: >-
+            2 167 contrats : nos 2 000 contrats donnent une marge un peu au-dessus de 1 point, 1,04 point.
+          piege: >-
+            564 oublie $z$, et 1 106 oublie de mettre $z$ au carré.
+      - q: 'Intervalle à 95 % de la moyenne des 8 sinistres ($\bar{x} = 1\,881{,}25$ €, $s / \sqrt{8} = 467{,}13$ €, $t_7 = 2{,}365$) ?'
+        options: ['[777 € ; 2 986 €]', '[966 € ; 2 797 €]', '[1 414 € ; 2 348 €]']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Petit échantillon, écart-type estimé : quantile de Student à 7 degrés de liberté.
+          formule: |-
+            1\,881{,}25 \pm 2{,}365 \times 467{,}13 = 1\,881{,}25 \pm 1\,104{,}6
+          exemple: >-
+            La moyenne vraie se situe plausiblement entre 777 € et 2 986 € : avec 8 sinistres, on sait peu de choses.
+          piege: >-
+            [966 € ; 2 797 €] prend 1,96 au lieu de 2,365, et [1 414 € ; 2 348 €] une seule erreur type.
+      - q: '25 sinistres observés en 10 ans, modèle de Poisson. Intervalle à 95 % de $\lambda$ ?'
+        options: ['[1,52 ; 3,48]', '[2,0 ; 3,0]', '[−0,60 ; 5,60]']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            $\hat{\lambda} = 2{,}5$ et $\operatorname{se}(\hat{\lambda}) = \sqrt{\hat{\lambda}/n} = 0{,}5$ (séance 2).
+          formule: |-
+            2{,}5 \pm 1{,}96 \times 0{,}5
+          exemple: >-
+            Entre 1,52 et 3,48 sinistres par an.
+          piege: >-
+            [−0,60 ; 5,60] utilise l'écart-type d'une seule année, $\sqrt{2{,}5}$, au lieu de l'erreur type de la moyenne sur 10 ans. Une borne négative est d'ailleurs un signal d'alerte.
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: 'Fréquence observée sur le portefeuille, niveau de confiance de 95 % ($z = 1{,}96$). Saisis tes résultats à 4 décimales, et $n$ arrondi au-dessus pour une marge de ±1 point.'
+    donnees:
+      entetes: ['Contrats', 'Sinistres']
+      lignes: [['2 000', '120']]
+    champs:
+      - {cle: se, libelle: '$\operatorname{se}(\hat{p})$', valeur: 0.005310, tolerance: 0.00015}
+      - {cle: bas, libelle: '$\hat{p} - 1{,}96\,\operatorname{se}$', valeur: 0.049592, tolerance: 0.00015}
+      - {cle: haut, libelle: '$\hat{p} + 1{,}96\,\operatorname{se}$', valeur: 0.070408, tolerance: 0.00015}
+      - {cle: n, libelle: '$n$', valeur: 2167, tolerance: 0.5}
+    solution: |
+      $\hat{p} = 0{,}06$, $\operatorname{se} = \sqrt{0{,}06 \times 0{,}94 / 2\,000} = 0{,}0053$, donc l'intervalle est $[0{,}0496 ; 0{,}0704]$.
+      Pour une marge de 0,01 : $n \ge 1{,}96^2 \times 0{,}0564 / 0{,}0001 = 2\,166{,}7$, soit 2 167 contrats.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 8
+    intro: "Écris le corps des trois fonctions, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a2b/s03_intervalles.py
+    depart: |
+      def mean_ci(xs, q):
+          """(low, high) interval for the mean: mean -/+ q * s / sqrt(n), with s the unbiased standard deviation."""
+          raise NotImplementedError
+
+      def proportion_ci(k, n, z=1.96):
+          """(low, high) normal-approximation interval for a proportion with k events out of n."""
+          raise NotImplementedError
+
+      def sample_size(p, margin, z=1.96):
+          """Smallest whole number of policies for which z * sqrt(p * (1 - p) / n) <= margin."""
+          raise NotImplementedError
+    tests:
+      - {nom: 'Fréquence : [4,96 % ; 7,04 %]', expr: "all(abs(a - b) < 1e-6 for a, b in zip(proportion_ci(120, 2000), (0.0495917, 0.0704083)))"}
+      - {nom: 'À 99 %, l''intervalle est plus large', expr: "proportion_ci(120, 2000, 2.576)[0] < proportion_ci(120, 2000)[0] and proportion_ci(120, 2000, 2.576)[1] > proportion_ci(120, 2000)[1]"}
+      - {nom: '2 167 contrats pour ±1 point', expr: "sample_size(0.06, 0.01) == 2167"}
+      - {nom: 'Diviser la marge par 2 demande environ 4 fois plus de contrats', expr: "abs(sample_size(0.06, 0.005) / sample_size(0.06, 0.01) - 4) < 0.01"}
+      - {nom: 'Moyenne des sinistres : [776,67 € ; 2 985,83 €]', expr: "all(abs(a - b) < 0.01 for a, b in zip(mean_ci([1200, 800, 3500, 600, 2100, 950, 1700, 4200], 2.364624), (776.67, 2985.83)))"}
+      - {nom: 'L''intervalle est centré sur la moyenne', expr: "abs(sum(mean_ci([3, 7, 1, 9, 4], 1.96)) / 2 - 4.8) < 1e-12"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Intervalle de confiance", "confidence interval", "The 95% confidence interval for the claim frequency was 5% to 7%."]
+      - ["Niveau de confiance", "confidence level", "Raising the confidence level to 99% widens the interval."]
+      - ["Marge d'erreur", "margin of error", "We needed a margin of error of one point on the frequency."]
+      - ["Loi de Student", "t distribution", "With only 8 claims, we used the t distribution instead of the normal."]
+      - ["Taille d'échantillon", "sample size", "The sample size had to quadruple to halve the margin of error."]
+      - ["Crédibilité", "credibility", "A small portfolio gets a low credibility weight."]

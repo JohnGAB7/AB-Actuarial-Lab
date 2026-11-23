@@ -42,13 +42,29 @@ def charger_parcours() -> dict:
     return yaml.safe_load((CONTENUS / "parcours.yaml").read_text(encoding="utf-8"))
 
 
+def nombres_tex_en(tex: str) -> str:
+    """Write the numbers of a French LaTeX formula the English way: 1\\,881{,}25 becomes 1{,}881.25."""
+    tex = re.sub(r"(?<=\d)\{,\}(?=\d)", ".", tex)
+    return re.sub(r"(?<=\d)\\,(?=\d{3}(?!\d))", "{,}", tex)
+
+
+def _formules_en(objet):
+    """Formulas and calculation labels stay in the French file: convert their numbers for the English page."""
+    if isinstance(objet, dict):
+        return {k: nombres_tex_en(v) if k in ("formule", "libelle") and isinstance(v, str) else _formules_en(v)
+                for k, v in objet.items()}
+    if isinstance(objet, list):
+        return [_formules_en(v) for v in objet]
+    return objet
+
+
 def charger_seance(sid: str, langue: str = "fr") -> dict:
     s = yaml.safe_load((CONTENUS / f"{sid}.yaml").read_text(encoding="utf-8"))
     if langue == "fr":
         return s
-    return fusionner_overlay(
+    return _formules_en(fusionner_overlay(
         s, yaml.safe_load((CONTENUS / langue / f"{sid}.yaml").read_text(encoding="utf-8")), sid
-    )
+    ))
 
 
 def verifier_traduction(sid: str) -> list[str]:

@@ -1,0 +1,219 @@
+# Séance 5 du module A1 (Mathématiques financières) : prix d'une obligation, taux spot et taux à terme.
+# Chiffres : obligation et courbe des taux fictives. Les valeurs sont recalculées par tests/test_contenus.py et tests/a1/test_s05_obligations.py.
+id: a1/s05
+module: a1
+titre: "Obligations et courbe des taux"
+en: "Bonds and the yield curve"
+duree: 30
+taux: 0.04
+
+actu_basics:
+  episode: "A1 · Financial mathematics"
+  statut: "à proposer"
+  accroche_fr: "Pourquoi le prix d'une obligation baisse quand les taux montent ?"
+  accroche_en: "Why does a bond's price fall when rates rise?"
+
+etapes:
+  - type: quiz
+    titre: "Test de positionnement"
+    minutes: 3
+    intro: "Quatre questions avant le cours. Si tu as tout juste, survole le rappel et va directement au calcul."
+    questions:
+      - q: 'Une obligation de nominal $F$ verse un coupon $c$ par an pendant $n$ ans, puis $F$. Au taux de rendement $y$, son prix vaut…'
+        options: ['$c\,a_{\overline{n}|y} + F\,v_y^n$', '$n\,c + F$', '$c\,s_{\overline{n}|y} + F$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Le prix est la valeur actuelle de tous les flux promis : une annuité de coupons plus le remboursement final.
+          formule: |-
+            P = c\,a_{\overline{n}|y} + F\,v_y^{\,n}, \qquad v_y = \frac{1}{1+y}
+          exemple: >-
+            Nominal 1 000 €, coupon 5 %, 5 ans, rendement 4 % : $P = 50 \times 4{,}4518 + 1\,000 \times 0{,}8219 = 1\,044{,}52$ €.
+          piege: >-
+            $nc + F$ oublie l'actualisation. $s_{\overline{n}|}$ donnerait une valeur au temps $n$, pas un prix aujourd'hui.
+      - q: 'Si le taux de rendement monte, le prix de l''obligation…'
+        options: ['baisse', 'monte', 'ne change pas']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Les flux sont fixés par le contrat. Les actualiser à un taux plus élevé les fait valoir moins.
+          formule: |-
+            \frac{\partial P}{\partial y} = -\sum_t t\,C_t\,(1+y)^{-t-1} < 0
+          exemple: >-
+            La même obligation vaut 1 044,52 € à 4 %, 1 000 € à 5 % et 957,88 € à 6 %.
+          piege: >-
+            L'obligation ne « rapporte » pas plus quand les taux montent : celui qui la détient déjà perd de la valeur.
+      - q: 'Une obligation cote au-dessus du pair (prime) quand…'
+        options: ['le taux du coupon dépasse le rendement', 'le rendement dépasse le taux du coupon', 'elle est proche de l''échéance']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Si le coupon paie plus que le marché, l'acheteur accepte de payer plus que le nominal pour l'obtenir.
+          formule: |-
+            P - F = (c - F\,y)\,a_{\overline{n}|y}
+          exemple: >-
+            Coupon de 50 € contre $1\,000 \times 4\,\% = 40$ € de marché : prime de $10 \times 4{,}4518 = 44{,}52$ €.
+          piege: >-
+            Près de l'échéance, la prime ou la décote fond vers zéro, mais ce n'est pas ce qui la crée.
+      - q: 'Avec des taux spot $s_1 = 3\,\%$ et $s_2 = 3{,}5\,\%$, le taux à terme d''un an dans un an $f_{1,\,2}$ vaut environ…'
+        options: ['4,0 %', '3,25 %', '3,5 %']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Placer 2 ans au taux spot doit équivaloir à placer 1 an au taux spot, puis 1 an au taux à terme. Sinon, il y aurait un gain sans risque.
+          formule: |-
+            (1+s_2)^2 = (1+s_1)(1+f_{1,\,2})
+          exemple: >-
+            $f_{1,\,2} = 1{,}035^2 / 1{,}03 - 1 = 1{,}071225 / 1{,}03 - 1 = 4{,}00\,\%$.
+          piege: >-
+            La moyenne (3,25 %) n'a pas de sens ici. Quand la courbe monte, le taux à terme est au-dessus des deux taux spot.
+
+  - type: video
+    titre: "L'intuition en vidéo"
+    minutes: 3
+    texte: >-
+      Ce thème n'a pas encore sa vidéo Actu-Basics. Elle montrera, sur une balançoire, pourquoi le prix d'une
+      obligation et les taux d'intérêt bougent toujours en sens contraire.
+
+  - type: rappel
+    titre: "Le rappel"
+    minutes: 8
+    blocs:
+      - p: >-
+          Une <b>obligation</b> <i>(bond)</i> promet des <b>coupons</b> <i>(coupons)</i> réguliers et le remboursement du
+          <b>nominal</b> <i>(face value, par value)</i> à l'<b>échéance</b> <i>(maturity)</i>. Son prix est la valeur
+          actuelle de ces flux au <b>taux de rendement à l'échéance</b> <i>(yield to maturity)</i> $y$.
+      - formule: |
+          \begin{gathered}
+          P = c\,a_{\overline{n}|y} + F\,v_y^{\,n} \\[6pt]
+          P - F = (c - F\,y)\,a_{\overline{n}|y}
+          \end{gathered}
+      - p: >-
+          La seconde formule dit tout : <b>prime</b> <i>(premium)</i> si le coupon dépasse le rendement du marché,
+          <b>décote</b> <i>(discount)</i> sinon, prix au pair si les deux sont égaux.
+      - p: >-
+          Le marché n'utilise pas un seul taux. Le <b>taux spot</b> <i>(spot rate)</i> $s_t$ actualise un flux unique payé
+          dans $t$ ans ; l'ensemble des $s_t$ forme la <b>courbe des taux</b> <i>(yield curve, term structure)</i>. Le
+          <b>taux à terme</b> <i>(forward rate)</i> est le taux implicite entre deux dates futures.
+      - formule: |
+          \begin{gathered}
+          P = \sum_{t=1}^{n} \frac{C_t}{(1+s_t)^t} \\[6pt]
+          (1+s_t)^t = (1+s_{t-1})^{t-1}\,(1+f_{t-1,\,t})
+          \end{gathered}
+      - p: >-
+          Le taux de rendement $y$ d'une obligation est une sorte de moyenne des taux spot, pondérée par ses flux. Deux
+          obligations de même échéance mais de coupons différents peuvent avoir des rendements différents.
+      - note: >-
+          Un assureur vie ou un régime de retraite actualise ses engagements avec une courbe des taux, pas un taux unique.
+          Faire correspondre les flux de ses obligations à ceux de ses engagements, c'est la gestion actif-passif (ALM),
+          que tu verras dans le domaine ALM.
+      - sources:
+          - {titre: "Kellison, The Theory of Interest, chap. 7 et 10", detail: "Prix des obligations, prime et décote, structure par terme des taux"}
+          - {titre: "SOA, Financial Mathematics (FM) Exam", url: "https://www.soa.org/education/exam-req/edu-exam-fm-detail/", detail: "Syllabus officiel de l'examen"}
+
+  - type: quiz
+    titre: "Vérifie"
+    minutes: 4
+    intro: "Quatre questions. Réponds sans relire le rappel."
+    questions:
+      - q: 'Une obligation de nominal 1 000 € verse un coupon de 5 % pendant 5 ans. À un rendement de 5 %, elle vaut…'
+        options: ['1 000 €', '1 044,52 €', '1 250 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Quand le coupon égale le rendement, la prime $(c - Fy)\,a_{\overline{n}|}$ est nulle.
+          formule: |-
+            c = F\,y \;\Rightarrow\; P = F
+          exemple: >-
+            $50 = 1\,000 \times 5\,\%$ : l'obligation cote au pair, 1 000 €.
+          piege: >-
+            1 044,52 € est son prix à 4 %. 1 250 € additionne les flux sans actualiser.
+      - q: 'La même obligation, à un rendement de 6 %, vaut environ…'
+        options: ['957,88 €', '1 042,12 €', '1 000 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Le rendement dépasse le coupon : l'obligation cote avec une décote.
+          formule: |-
+            P = 50\,a_{\overline{5}|6\%} + 1\,000\,v_{6\%}^{\,5}
+          exemple: >-
+            $50 \times 4{,}2124 + 1\,000 \times 0{,}7473 = 957{,}88$ €, soit une décote de 42,12 €.
+          piege: >-
+            1 042,12 € met la décote du mauvais côté. Le prix baisse quand le taux monte.
+      - q: 'Avec $s_1 = 3\,\%$, $s_2 = 3{,}5\,\%$, $s_3 = 4\,\%$, que vaut le taux à terme $f_{2,\,3}$ ?'
+        options: ['5,01 %', '4,00 %', '3,75 %']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On compare un placement de 3 ans à un placement de 2 ans prolongé d'un an.
+          formule: |-
+            1 + f_{2,\,3} = \frac{(1+s_3)^3}{(1+s_2)^2}
+          exemple: >-
+            $1{,}124864 / 1{,}071225 = 1{,}050073$, donc $f_{2,\,3} = 5{,}01\,\%$.
+          piege: >-
+            4,00 % est $f_{1,\,2}$. Sur une courbe croissante, les taux à terme montent plus vite que les taux spot.
+      - q: 'Une obligation à 3 ans, coupon 5 %, nominal 1 000 €, vaut 1 028,67 € avec cette courbe. Son rendement est…'
+        options: ['un peu moins de 4 %', 'exactement 4 %', '5 %']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Le rendement est le taux unique qui redonne le même prix. Il mélange les trois taux spot, pondérés par les flux.
+          formule: |-
+            1\,028{,}67 = \frac{50}{1+y} + \frac{50}{(1+y)^2} + \frac{1\,050}{(1+y)^3}
+          exemple: >-
+            On trouve $y = 3{,}97\,\%$ : presque tout le poids est sur le dernier flux, actualisé à 4 %, mais les coupons tirent un peu vers 3 % et 3,5 %.
+          piege: >-
+            Le rendement n'est pas le taux spot de l'échéance. Il dépend aussi des coupons.
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: "Nominal 1 000 €, coupon annuel de 5 %. $P_5$ : obligation à 5 ans au rendement $y$. $P_3$ : obligation à 3 ans avec la courbe spot. Prix au centime, taux à 4 décimales."
+    donnees:
+      entetes: ['$s_1$', '$s_2$', '$s_3$', '$y$']
+      lignes: [['3 %', '3,5 %', '4 %', '4 %']]
+    champs:
+      - {cle: prix5, libelle: '$P_5$', valeur: 1044.5182, tolerance: 0.015}
+      - {cle: prix3, libelle: '$P_3$', valeur: 1028.6654, tolerance: 0.015}
+      - {cle: f12, libelle: '$f_{1,\,2}$', valeur: 0.0400243, tolerance: 0.00015}
+      - {cle: f23, libelle: '$f_{2,\,3}$', valeur: 0.0500726, tolerance: 0.00015}
+    solution: |
+      Prix à 5 ans : $50 \times 4{,}451822 + 1\,000 \times 0{,}821927 = 1\,044{,}52$ €. Prix à 3 ans : $50/1{,}03 + 50/1{,}035^2 + 1\,050/1{,}04^3 = 48{,}54 + 46{,}68 + 933{,}45 = 1\,028{,}67$ €.
+      $f_{1,\,2} = 1{,}071225/1{,}03 - 1 = 0{,}0400$ et $f_{2,\,3} = 1{,}124864/1{,}071225 - 1 = 0{,}0501$.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 8
+    intro: "Écris le corps des trois fonctions, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a1/s05_obligations.py
+    depart: |
+      def bond_price(face, coupon_rate, n, y):
+          """Price of a bond paying coupon_rate * face at the end of years 1 .. n, then face, at yield y."""
+          raise NotImplementedError
+
+      def price_from_spot(cash_flows, spot):
+          """Price of {time: amount} using spot rates: spot[t - 1] is the rate for time t."""
+          raise NotImplementedError
+
+      def forward_rates(spot):
+          """One-year forward rates [f(0,1), f(1,2), ...] implied by the spot rates."""
+          raise NotImplementedError
+    tests:
+      - {nom: 'Prix de 1 044,52 € à 4 %', expr: "abs(bond_price(1000, 0.05, 5, 0.04) - 1044.52) < 0.005"}
+      - {nom: 'Au pair quand coupon = rendement', expr: "abs(bond_price(1000, 0.05, 5, 0.05) - 1000) < 1e-9"}
+      - {nom: 'Le prix baisse quand le taux monte', expr: "bond_price(1000, 0.05, 5, 0.06) < bond_price(1000, 0.05, 5, 0.05)"}
+      - {nom: 'Prix de 1 028,67 € avec la courbe spot', expr: "abs(price_from_spot({1: 50, 2: 50, 3: 1050}, [0.03, 0.035, 0.04]) - 1028.67) < 0.005"}
+      - {nom: 'Taux à terme 3 %, 4,0024 %, 5,0073 %', expr: "all(abs(a - b) < 1e-6 for a, b in zip(forward_rates([0.03, 0.035, 0.04]), [0.03, 0.0400243, 0.0500726]))"}
+      - {nom: 'Courbe plate : taux à terme constants', expr: "all(abs(f - 0.04) < 1e-12 for f in forward_rates([0.04] * 5))"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Obligation, coupon, nominal", "bond, coupon, face value", "The bond pays an annual coupon of 5% on a face value of 1,000."]
+      - ["Taux de rendement à l'échéance", "yield to maturity", "Its yield to maturity is just below 4%."]
+      - ["Prime, décote", "premium, discount", "The bond trades at a premium because its coupon exceeds the market yield."]
+      - ["Taux spot", "spot rate, zero-coupon rate", "We discount each cash flow at its own spot rate."]
+      - ["Taux à terme", "forward rate", "The one-year forward rate in two years is about 5%."]
+      - ["Courbe des taux", "yield curve, term structure of interest rates", "The liabilities are discounted with the risk-free yield curve."]

@@ -1,0 +1,140 @@
+# English texts for session A2.06. Numbers, answers and tests live in contenus/a2/s06.yaml.
+titre: "Pure premium, deductible and gross premium"
+
+etapes:
+  - titre: "Placement check"
+    intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
+    questions:
+      - q: '1,000 insured phones, 2% theft a year, €500 per stolen phone. Pure premium per policy?'
+        options: ['€10', '€500', '€20']
+        pourquoi:
+          rappel: >-
+            The pure premium is the expected cost of a policy's claims: expected frequency times average cost.
+          exemple: >-
+            €10 per policy, that is €10,000 for the portfolio: the expected cost of 20 thefts.
+          piege: >-
+            €20 counts 20 thefts per policy instead of 20 per 1,000 policies.
+      - q: 'Same portfolio, with a €100 deductible per theft. New pure premium?'
+        options: ['€8', '€9.80', '€10']
+        pourquoi:
+          rappel: >-
+            A deductible $d$ leaves the first $d$ euros of each claim to the policyholder. The insurer pays $(X - d)_+$.
+          exemple: >-
+            $0.02 \times 400 = 8$ euros: the pure premium falls by 20%.
+          piege: >-
+            €9.80 removes €100 from the portfolio's premium instead of from each claim.
+      - q: 'The gross premium is…'
+        options: ['the pure premium plus loadings for risk, expenses and profit', 'the pure premium divided by the number of policies', 'the pure premium before the deductible']
+        pourquoi:
+          rappel: >-
+            The pure premium covers only the expected claims. A risk loading, administration expenses and commissions must be added.
+          exemple: >-
+            With $\eta = 20\%$ risk loading and $c = 25\%$ of expenses on premium: $P = 10 \times 1.2 / 0.75 = 16$ euros.
+          piege: >-
+            Adding 25% to the pure premium instead of dividing by $1 - c$ underestimates the premium: expenses are charged on the premium, not on the pure premium.
+      - q: 'An insurer''s combined ratio is 87.5%. This means…'
+        options: ['claims and expenses absorb 87.5% of premiums', 'it loses 12.5% of its premiums', '87.5% of policyholders have a claim']
+        pourquoi:
+          rappel: >-
+            Loss ratio plus expense ratio. Below 100%, the insurance business makes a positive underwriting result.
+          formule: |-
+            \text{combined ratio} = \frac{\text{claims} + \text{expenses}}{\text{premiums}}
+          exemple: >-
+            Premiums €16,000, expected claims €10,000, expenses €4,000: $14{,}000 / 16{,}000 = 87.5\%$.
+          piege: >-
+            A ratio below 100% guarantees nothing in a given year: actual claims fluctuate around their expected value.
+
+  - titre: "The intuition on video"
+    texte: >-
+      This topic does not have its long Actu-Basics lesson yet. It will take the phone portfolio again to go from
+      the pure premium to the premium the customer pays.
+
+  - titre: "The recap"
+    blocs:
+      - p: >-
+          The <b>pure premium</b> <i>(prime pure)</i> is the expected cost of a policy. A <b>deductible</b>
+          <i>(franchise)</i> $d$ reduces each payment; a <b>policy limit</b> <i>(plafond)</i> $u$ caps it.
+      - formule: |
+          \begin{gathered}
+          \pi = E[N]\,E[X] \qquad \pi_d = E[N]\,E\big[(X - d)_+\big] \\[6pt]
+          \text{exponential: } E\big[(X - d)_+\big] = \theta\,e^{-d/\theta}
+          \end{gathered}
+      - p: >-
+          The <b>loss elimination ratio</b> <i>(taux d'élimination des sinistres)</i> measures the share of the loss that
+          the deductible removes: $\text{LER} = E[\min(X, d)] / E[X]$. For an exponential, $\text{LER} = 1 - e^{-d/\theta}$.
+      - p: >-
+          The <b>gross premium</b> <i>(prime commerciale)</i> adds a <b>risk loading</b> <i>(chargement de sécurité)</i>
+          $\eta$ and covers <b>expenses</b> <i>(frais)</i> expressed as a percentage $c$ of the premium.
+      - formule: |
+          P = \frac{\pi\,(1 + \eta)}{1 - c} \qquad \text{underwriting result} = P - \text{claims} - \text{expenses}
+      - p: >-
+          The <b>loss ratio</b> <i>(ratio sinistres sur primes)</i> plus the <b>expense ratio</b> <i>(ratio de frais)</i>
+          gives the <b>combined ratio</b> <i>(ratio combiné)</i>. Investment income on the invested premiums then adds to
+          the result.
+      - note: >-
+          Profitability does not come from pooling alone: it depends on pricing, expenses, commissions, reinsurance and
+          investment income. A premium that is right on average can lose money in a bad year.
+      - sources:
+          - {titre: "Klugman, Panjer and Willmot, Loss Models, chap. 8", detail: "Deductibles, policy limits, loss elimination ratio"}
+          - {titre: "Werner and Modlin, Basic Ratemaking (CAS), chap. 1 and 7", detail: "Pure premium, loadings, gross premium, ratios"}
+
+  - titre: "Check"
+    intro: "Four questions. Answer without rereading the recap."
+    questions:
+      - q: '5% frequency, exponential claims with mean €2,000, €500 deductible. Pure premium?'
+        options: ['€77.88', '€75', '€100']
+        pourquoi:
+          rappel: >-
+            For the exponential, the part above $d$ has the same distribution as $X$ (memorylessness), but only occurs if $X > d$.
+          exemple: >-
+            $100 \times e^{-0.25} = 100 \times 0.7788 = 77.88$ euros.
+          piege: >-
+            €75 removes €500 from the mean, as if every claim exceeded the deductible. Small claims no longer cost anything; they do not cost "minus €500".
+      - q: 'Same case: what is the loss elimination ratio of this deductible?'
+        options: ['22.1%', '25%', '77.9%']
+        pourquoi:
+          rappel: >-
+            The share of the loss removed by the deductible.
+          exemple: >-
+            $1 - 0.7788 = 0.2212$: the deductible removes 22.1% of the loss.
+          piege: >-
+            77.9% is the share that stays with the insurer.
+      - q: 'Pure premium €77.88, 20% risk loading, expenses of 25% of the premium. Gross premium?'
+        options: ['€124.61', '€116.82', '€97.35']
+        pourquoi:
+          rappel: >-
+            Load the pure premium, then divide by $1 - c$ so that expenses are paid by the premium itself.
+          exemple: >-
+            $93.456 / 0.75 = 124.61$ euros. Expenses: €31.15; expected claims: €77.88; expected margin: €15.58.
+          piege: >-
+            €116.82 adds 25% to the loaded premium: the actual expenses ($0.25 \times 116.82 = 29.21$ euros) would not be covered.
+      - q: 'For this premium, the expected loss ratio is…'
+        options: ['62.5%', '75%', '80%']
+        pourquoi:
+          rappel: >-
+            Expected claims divided by the gross premium.
+          exemple: >-
+            $0.625$, and the expected combined ratio is $62.5\% + 25\% = 87.5\%$.
+          piege: >-
+            This ratio depends neither on the deductible nor on the amount: only on $\eta$ and $c$.
+
+  - titre: "By hand"
+    intro: "5% frequency, exponential claims with mean €2,000, €500 deductible, 20% loading, expenses of 25% of the premium. Amounts to the cent, ratios to 4 decimal places."
+    donnees:
+      lignes: [['0.05', '2,000', '500', '20%', '25%']]
+    solution: |
+      $\pi_d = 0.05 \times 2{,}000 \times e^{-0.25} = 77.88$ euros; $\text{LER} = 1 - e^{-0.25} = 0.2212$.
+      $P = 77.88 \times 1.2 / 0.75 = 124.61$ euros; loss ratio $= 0.75 / 1.2 = 0.625$.
+
+  - titre: "Your turn to code"
+    intro: "Write the body of the three functions, without AI. All the tests must pass."
+    tests:
+      - {nom: 'Phones without a deductible: €10'}
+      - {nom: 'With a €100 deductible: €8'}
+      - {nom: 'A claim below the deductible costs nothing'}
+      - {nom: 'Exponential: $E[(X - 500)_+] = 1{,}557.60$'}
+      - {nom: 'Gross premium: €16 for the phones'}
+      - {nom: 'Expenses really are 25% of the premium'}
+
+  - titre: "Vocabulary"
+    intro: "Tap a card: the French term and a job-interview sentence."
