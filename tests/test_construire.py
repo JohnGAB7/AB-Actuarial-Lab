@@ -66,3 +66,17 @@ def test_homepage_is_bilingual_and_keeps_resume_progression_hook():
     assert "EXPLORE THE CURRICULUM" in english
     assert f'>{sum(1 for _ in builder.seances(parcours)):02d}<' in french
     assert "FR · EN" in french and "FR · EN" in english
+
+
+def test_actu_basics_parent_brand_is_consistent_in_both_languages():
+    french = builder.marque("", "fr")
+    english = builder.marque("", "en")
+
+    assert "ACTU-BASICS" in french and "PARCOURS ACTUARIEL" in french
+    assert "ACTU-BASICS" in english and "ACTUARIAL LEARNING PATH" in english
+    assert "assets/brand/actu-basics/logo-light.png" in french
+    assert "assets/brand/actu-basics/logo-dark.png" in french
+    assert "assets/brand/actu-basics/logo-light-en.png" in english
+    assert "assets/brand/actu-basics/logo-dark-en.png" in english
+    assert builder.titre_site("fr") == "ACTU-BASICS — Parcours Actuariel"
+    assert builder.titre_site("en") == "ACTU-BASICS — Actuarial Learning Path"
