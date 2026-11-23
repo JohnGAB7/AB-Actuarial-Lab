@@ -246,7 +246,7 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
         cartes.append(
             f'<a class="dom{"" if n else " futur"}" href="{d["id"]}/index.html" data-domaine="{d["id"]}">'
             f'<span class="dom-n mono">{k:02d}</span>'
-            f'<span class="dom-t">{e(dom_court(d, langue))}</span><span class="dom-en">{e(dom_sous(d, langue))}</span>'
+            f'<span class="dom-t">{e(dom_court(d, langue))}</span><span class="dom-en">{e(dom_court(d, "en" if langue == "fr" else "fr"))}</span>'
             f'<span class="dom-a">{e(dom_accroche(d, langue))}</span>'
             f'<span class="dom-f"><span class="dom-s">{etat}</span><span class="barre" aria-hidden="true"><i></i></span></span></a>')
     premiere = next(seances(parcours))[2]
@@ -353,8 +353,8 @@ def page_domaine(parcours: dict, d: dict, k: int, langue: str) -> str:
                     f'<span>{e(dom_titre(suivant, langue))} →</span></a>') if suivant else ""
     return (
         f'<main class="page gutter">'
-        f'<nav class="fil" aria-label="{e(t["fil"])}"><a href="../index.html">{t["accueil"]}</a><span>/</span><span>{e(dom_court(d, langue))}</span></nav>'
-        f'<div class="page-head"><span class="eyebrow mono">{t["domaine"]} {k:02d}</span><h1>{e(dom_court(d, langue))}</h1>'
+        f'<nav class="fil" aria-label="{e(t["fil"])}"><a href="../index.html">{t["accueil"]}</a><span>/</span><span>{e(dom_titre(d, langue))}</span></nav>'
+        f'<div class="page-head"><span class="eyebrow mono">{t["domaine"]} {k:02d}</span><h1>{e(dom_titre(d, langue))}</h1>'
         f'<p class="en">{e(dom_sous(d, langue))}</p><p class="lead">{e(dom_accroche(d, langue))}</p></div>'
         f'<ol class="mods-l">{"".join(lignes)}</ol>{lien_suivant}</main>')
 
