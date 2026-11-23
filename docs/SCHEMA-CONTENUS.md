@@ -4,8 +4,9 @@ Ce document décrit le schéma actuellement utilisé par le parcours. Le validat
 
 ## Plan — `contenus/parcours.yaml`
 
-- Racine : `titre`, `sous_titre`, `sous_titre_en` (facultatif), `domaines`.
-- Domaine : `id`, `titre`, `en`, `accroche`, `accroche_en` (facultatif), `modules`.
+- Racine : `titre`, `sous_titre`, `sous_titre_en`, `domaines` (les trois textes sont requis pour le site bilingue).
+- Domaine : `id`, `titre`, `en`, `accroche`, `accroche_en`, `modules` (tous les textes sont requis pour le site bilingue).
+- Identifiants de domaines et de modules : segments de chemin de 1 à 40 caractères, minuscules ASCII, chiffres et tirets ; ils ne peuvent contenir ni slash, ni point, ni attribut HTML.
 - Module : `id`, `titre`, `en`, `seances` (facultatif ; liste de références `domaine/seance`).
 
 ## Séance — `contenus/<id>.yaml`
