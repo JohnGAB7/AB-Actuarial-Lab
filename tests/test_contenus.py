@@ -148,7 +148,7 @@ def test_traduction_preserve_signe_unite_et_exposant():
     import pytest
     from tools.construire import fusion
 
-    base = {"solution": String.raw"Le taux est -2{,}5\,\% et epsilon vaut 1e-5."}
+    base = {"solution": r"Le taux est -2{,}5\,\% et epsilon vaut 1e-5."}
     valide = {"solution": "The rate is -2.5% and epsilon is 1e-5."}
     assert fusion(base, valide, "test")["solution"] == valide["solution"]
 
