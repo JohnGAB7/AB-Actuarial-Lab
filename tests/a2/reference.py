@@ -51,3 +51,18 @@ def lognormal_survival(x, mu, sigma):
 
 def pareto_survival(x, alpha, theta):
     return (theta / (theta + x)) ** alpha
+
+
+# Session a2/s04
+def sd_of_mean(sigma, n):
+    return sigma / math.sqrt(n)
+
+
+def prob_mean_exceeds(threshold, mu, sigma, n):
+    return 1 - normal_cdf((threshold - mu) / sd_of_mean(sigma, n))
+
+
+def simulate_mean_cost(n, p, claim, seed=1):
+    import random
+    rng = random.Random(seed)
+    return sum(claim for _ in range(n) if rng.random() < p) / n
