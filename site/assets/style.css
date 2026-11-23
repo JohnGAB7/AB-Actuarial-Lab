@@ -248,7 +248,7 @@ code{font:500 .88em var(--f-mono);background:var(--data-soft);color:var(--ink);p
 /* Vocabulaire */
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
 .card{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:var(--r);padding:20px;text-align:left;display:grid;gap:10px;align-content:start;min-height:150px;transition:border-color .15s,transform .15s}
-.card:hover{border-color:var(--data);transform:translateY(-2px)}
+.card:hover{border-color:var(--data)}
 .card .fr{font:500 1.15rem/1.3 var(--f-display);color:var(--ink)}
 .card .back{display:none;gap:6px;font-size:.93rem}
 .card .back b{color:var(--data);font-weight:600}
