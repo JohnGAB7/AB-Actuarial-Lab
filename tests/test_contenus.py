@@ -144,6 +144,35 @@ def test_traduction_ne_change_ni_formule_ni_nombre_ni_type():
             fusion(base, trad, "t")
 
 
+def test_traduction_preserve_signe_unite_et_exposant():
+    import pytest
+    from tools.construire import fusion
+
+    base = {"solution": r"Le taux est -2{,}5\,\% et epsilon vaut 1e-5."}
+    valide = {"solution": "The rate is -2.5% and epsilon is 1e-5."}
+    assert fusion(base, valide, "test")["solution"] == valide["solution"]
+
+    # Same digits are not enough: sign, percentage unit and exponent sign carry meaning.
+    for invalide in (
+        {"solution": "The rate is 2.5% and epsilon is 1e-5."},
+        {"solution": "The rate is -2.5 and epsilon is 1e-5."},
+        {"solution": "The rate is -2.5% and epsilon is 1e5."},
+    ):
+        with pytest.raises(ValueError):
+            fusion(base, invalide, "test")
+
+    # Numbers embedded in identifiers must remain protected too (A3 must not become A4).
+    base_codes = {"solution": "Use A3, x2 and ch1; then calculate n-1."}
+    valide_codes = {"solution": "Use A3, x2 and ch1; then calculate n-1."}
+    assert fusion(base_codes, valide_codes, "test") == base_codes
+    with pytest.raises(ValueError):
+        fusion(base_codes, {"solution": "Use A4, x2 and ch1; then calculate n-1."}, "test")
+    with pytest.raises(ValueError):
+        fusion(base_codes, {"solution": "Use A3, x3 and ch1; then calculate n-1."}, "test")
+    with pytest.raises(ValueError):
+        fusion(base_codes, {"solution": "Use A3, x2 and ch2; then calculate n-1."}, "test")
+
+
 def test_tableaux_anglais_identiques_au_francais():
     """The English tables only change the number format (2,5 % → 2.5%, 716 046 → 716,046)."""
     def norme(v, langue):
