@@ -16,7 +16,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT_DIR = ROOT / "contenus"
-SESSION_ID = re.compile(r"^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*$")
+SESSION_ID = re.compile(r"^[a-z0-9][a-z0-9-]{1,19}/s[0-9]{2}$")
 PLAN_ID = re.compile(r"^[a-z0-9][a-z0-9-]{0,39}$")
 
 
