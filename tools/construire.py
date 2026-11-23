@@ -232,7 +232,6 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
             ("03", "Put it to work", "Calculate, test your reasoning and write code against a practical problem."),
         ]
         method_note = "Not just more content. A clearer path from knowing a formula to understanding when and why to use it."
-        first_module = "FINANCIAL MATHEMATICS"
         hero_art_label = "FROM DATA TO DECISION"
         hero_art = [("01", "OBSERVE", "A real question"), ("02", "MODEL", "A mathematical structure"), ("03", "DECIDE", "An explained result")]
         hero_cta = "Start learning"
@@ -254,7 +253,6 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
             ("03", "Mettre en pratique", "Calculer, vérifier ton raisonnement et écrire du code sur un problème concret."),
         ]
         method_note = "Pas seulement davantage de contenu : un chemin plus clair entre connaître une formule et comprendre quand et pourquoi l'utiliser."
-        first_module = "MATHÉMATIQUES FINANCIÈRES"
         hero_art_label = "DE LA DONNÉE À LA DÉCISION"
         hero_art = [("01", "OBSERVER", "Une question réelle"), ("02", "MODÉLISER", "Une structure mathématique"), ("03", "DÉCIDER", "Un résultat expliqué")]
         hero_cta = "Commencer le parcours"
@@ -285,7 +283,7 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
         f'<section class="start-feature"><div class="start-feature-copy"><span class="eyebrow">{start_kicker}</span>'
         f'<h2>{start_title}</h2><p>{start_text}</p>'
         f'<a class="start-link" href="{premiere}/index.html">{start_action} <span aria-hidden="true">↗</span></a></div>'
-        f'<div class="start-feature-meta"><span class="start-index mono">01 / 0{nb_modules}</span>'
+        f'<div class="start-feature-meta"><span class="start-index mono">01 / {nb_modules:02d}</span>'
         f'<span class="start-domain">{e(dom_titre(premier_dom, langue))}</span>'
         f'<strong>{e(mod_titre(premier_module, langue))}</strong>'
         f'<span class="start-duration">{( "One session at a time" if en else "Une séance à la fois")}</span></div></section>'
