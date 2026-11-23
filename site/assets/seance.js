@@ -1,6 +1,7 @@
 // Affiche une séance une étape à la fois. Le contenu vient du JSON intégré à la page (généré depuis contenus/*.yaml).
 // Formules : KaTeX. Éditeur : CodeMirror 5. Python : Pyodide, chargé au premier lancement des tests.
 const S = JSON.parse(document.getElementById("seance").textContent);
+const SCRIPT_URL = document.currentScript ? document.currentScript.src : location.href;
 const $ = (s, r = document) => r.querySelector(s);
 const el = (tag, attrs = {}, ...kids) => {
   const e = document.createElement(tag);
@@ -227,39 +228,33 @@ const R = {
     });
     ta.addEventListener("input", () => saveCode(ta.value));
     reset.addEventListener("click", () => { if (cm) cm.setValue(e.depart); else ta.value = e.depart; saveCode(e.depart); });
+    const stop = el("button", { class: "btn ghost", type: "button", hidden: "" }, "Arrêter");
+    stop.addEventListener("click", () => { stopPython(); });
     run.addEventListener("click", async () => {
-      run.disabled = true; summary.textContent = "Chargement de Python… (quelques secondes la première fois)";
+      run.disabled = true; stop.hidden = false;
+      summary.className = "res-sum";
+      summary.textContent = "Chargement de Python… (quelques secondes la première fois)";
       [...res.children].forEach((li) => { li.className = "run"; li.querySelector(".tm").textContent = ""; });
       try {
-        const py = await pyodide();
-        summary.textContent = "Exécution…";
-        const ns = py.globals.get("dict")();
-        let setupErr = null;
-        try { py.runPython(value(), { globals: ns }); } catch (err) { setupErr = lastLine(err); }
+        const results = await runPython(value(), e.tests.map((t) => t.expr), () => { summary.textContent = "Exécution…"; });
         let n = 0;
-        e.tests.forEach((t, k) => {
+        results.forEach((r, k) => {
           const li = res.children[k], msg = li.querySelector(".tm");
-          if (setupErr) { li.className = "fail"; msg.textContent = setupErr; return; }
-          try {
-            const okv = py.runPython(t.expr, { globals: ns });
-            li.className = okv ? "pass" : "fail"; if (okv) n++; else msg.textContent = "valeur inattendue";
-          } catch (err) {
-            const m = lastLine(err);
-            li.className = /NotImplementedError/.test(m) ? "todo" : "fail";
-            msg.textContent = /NotImplementedError/.test(m) ? "fonction pas encore écrite" : m;
-          }
+          li.className = r.status;
+          if (r.status === "pass") n++;
+          msg.textContent = r.status === "todo" ? "fonction pas encore écrite" : r.msg === "unexpected" ? "valeur inattendue" : r.msg;
         });
-        ns.destroy?.();
         summary.textContent = n === e.tests.length ? `Les ${n} tests passent. Bravo.` : `${n} test${n > 1 ? "s" : ""} sur ${e.tests.length} passe${n > 1 ? "nt" : ""}.`;
         summary.className = "res-sum " + (n === e.tests.length ? "good" : "");
         if (n === e.tests.length) markDone(i);
       } catch (err) {
+        [...res.children].forEach((li) => { li.className = "idle"; });
         summary.textContent = String(err.message || err);
       }
-      run.disabled = false;
+      run.disabled = false; stop.hidden = true;
     });
     const where = el("p", { class: "hint" }, "Même exercice dans le dépôt : ", el("code", {}, e.fichier), ". Les tests y tournent aussi sur GitHub Actions.");
-    return [shell, el("div", { class: "row" }, run, reset), el("div", { class: "results-box" }, summary, res), where];
+    return [shell, el("div", { class: "row" }, run, stop, reset), el("div", { class: "results-box" }, summary, res), where];
   },
   vocabulaire(e, i) {
     const seen = new Set();
@@ -277,17 +272,36 @@ const R = {
 };
 const lastLine = (err) => String(err.message || err).trim().split("\n").pop();
 
-let pyPromise = null;
-function pyodide() {
-  if (pyPromise) return pyPromise;
-  pyPromise = new Promise((resolve, reject) => {
-    const s = document.createElement("script");
-    s.src = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js";
-    s.onload = () => window.loadPyodide().then(resolve, reject);
-    s.onerror = () => reject(new Error("Python n'a pas pu se charger. Vérifie ta connexion, ou lance les tests du dépôt avec pytest."));
-    document.head.append(s);
-  }).catch((e) => { pyPromise = null; throw e; });
-  return pyPromise;
+/* ---------- Python dans un Web Worker ---------- */
+// Le code de l'apprenant tourne hors de la page : pas d'accès au DOM ni à la session du compte.
+// Limite de temps après le chargement ; « Arrêter » ou le dépassement termine le worker.
+const PY_LIMITE_MS = 10000;
+let worker = null, pending = null, seq = 0;
+function stopPython(raison) {
+  if (worker) { worker.terminate(); worker = null; }
+  if (pending) { const p = pending; pending = null; clearTimeout(p.timer); p.reject(new Error(raison || "Exécution arrêtée. Python se rechargera au prochain lancement.")); }
+}
+function runPython(code, tests, onRunning) {
+  stopPython();
+  if (!worker) {
+    worker = new Worker(new URL("python-worker.js", SCRIPT_URL));
+    worker.onmessage = (ev) => {
+      const m = ev.data; if (!pending || m.id !== pending.id) return;
+      if (m.phase === "running") {
+        onRunning && onRunning();
+        pending.timer = setTimeout(() => stopPython(`Arrêt après ${PY_LIMITE_MS / 1000} secondes : boucle infinie ou calcul trop long ?`), PY_LIMITE_MS);
+        return;
+      }
+      const p = pending; pending = null; clearTimeout(p.timer);
+      if (m.phase === "done") p.resolve(m.results);
+      else p.reject(new Error(m.msg));
+    };
+    worker.onerror = () => stopPython("Python n'a pas pu se charger. Vérifie ta connexion, ou lance les tests du dépôt avec pytest.");
+  }
+  return new Promise((resolve, reject) => {
+    pending = { id: ++seq, resolve, reject, timer: null };
+    worker.postMessage({ id: seq, code, tests });
+  });
 }
 
 function render() {
