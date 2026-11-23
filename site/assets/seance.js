@@ -289,7 +289,7 @@ const R = {
     const qs = e.questions.map((it, qi) => {
       const why = el("div", { class: "why", html: "" }); why.hidden = true;
       const opts = el("div", { class: "opts", role: "group" }, ...it.options.map((t, j) => {
-        const b = el("button", { class: "opt", type: "button" }, el("span", { class: "k" }, String.fromCharCode(65 + j)), " - ", el("span", {}, rich(t)));
+        const b = el("button", { class: "opt", type: "button" }, el("span", { class: "k" }, String.fromCharCode(65 + j)), " ", el("span", {}, rich(t)));
         b.addEventListener("click", () => {
           opts.querySelectorAll(".opt").forEach((x) => x.classList.remove("right", "wrong"));
           const good = j === it.reponse;
