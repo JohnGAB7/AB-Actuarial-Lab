@@ -10,7 +10,6 @@
       return Object.keys(v).filter(function (k) { return v[k] === true; }).length;
     } catch (e) { return 0; }
   };
-  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
 
   function afficher() {
     var etat = plan.map(function (p) { return { p: p, f: Math.min(faites(p.s), p.n) }; });
@@ -38,9 +37,9 @@
       var base = BASE;
       if (suite) {
         cta.href = base + suite.p.s + "/index.html";
-        cta.innerHTML = (commence ? "Reprendre : " : "Commencer : ") + esc(suite.p.t) + " →";
+        cta.textContent = (commence ? "Reprendre : " : "Commencer : ") + suite.p.t + " →";
       } else {
-        cta.innerHTML = "Tout est terminé. Revoir le parcours →";
+        cta.textContent = "Tout est terminé. Revoir le parcours →";
       }
     }
   }
