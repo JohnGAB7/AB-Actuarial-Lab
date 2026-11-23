@@ -245,7 +245,7 @@ def valid_overlay_session():
                 "minutes": 5,
                 "blocs": [
                     {
-                        "p": "La valeur actuelle de 1 euro.",
+                        "p": "La valeur actuelle d’un capital.",
                         "formule": r"\text{Valeur actuelle} = C(1+i)^{-n}",
                     }
                 ],
@@ -262,7 +262,7 @@ def valid_overlay():
                 "titre": "Recap",
                 "blocs": [
                     {
-                        "p": "The present value of one euro.",
+                        "p": "The present value of a capital.",
                         "formule": r"\text{Present value} = C(1+i)^{-n}",
                     }
                 ],
