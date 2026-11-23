@@ -257,7 +257,7 @@ code{font:500 .88em var(--f-mono);background:var(--data-soft);color:var(--ink);p
 /* Navigation globale */
 .nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .nav-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:28px;min-height:64px}
-.nav-links{display:flex;gap:4px;flex:1;min-width:0}
+.nav-links{display:flex;gap:4px;flex:1;min-width:0;overflow:hidden}
 .nav-links a,.nav-sheet a{color:var(--text);text-decoration:none;font-size:.93rem;font-weight:500;padding:8px 12px;border-radius:999px;white-space:nowrap}
 .nav-links a:hover{background:var(--surface);color:var(--ink)}
 .nav-links a[aria-current="page"]{color:var(--ink);background:var(--surface);box-shadow:inset 0 0 0 1px var(--line)}
@@ -272,7 +272,7 @@ code{font:500 .88em var(--f-mono);background:var(--data-soft);color:var(--ink);p
 .nav-sheet a[aria-current="page"],.nav-sheet a:hover{background:var(--paper)}
 .nav .acct{margin-left:0}
 @media (max-width:900px){.nav-in{gap:10px}.nav-menu + .langs{margin-left:0}}
-@media (max-width:900px){.nav-links{display:none}.nav-menu{display:block}}
+@media (max-width:1360px){.nav-links{display:none}.nav-menu{display:block}}
 .accueil .hero{margin-top:0;padding-top:72px}
 
 /* Accueil : cartes de domaines */

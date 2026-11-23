@@ -204,7 +204,7 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
         n = sum(len(m.get("seances", [])) for m in d["modules"])
         etat = f'{t["seance"](n)} · {len(d["modules"])} {t["modules"]}' if n else f'{len(d["modules"])} {t["modules"]} · {t["bientot"]}'
         cartes.append(
-            f'<a class="dom{" " if n else " futur"}" href="{d["id"]}/index.html" data-domaine="{d["id"]}">'
+            f'<a class="dom{"" if n else " futur"}" href="{d["id"]}/index.html" data-domaine="{d["id"]}">'
             f'<span class="dom-n mono">{k:02d}</span>'
             f'<span class="dom-t">{e(dom_titre(d, langue))}</span><span class="dom-en">{e(dom_sous(d, langue))}</span>'
             f'<span class="dom-a">{e(dom_accroche(d, langue))}</span>'
@@ -271,7 +271,7 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
         f'<div class="hero-cta"><a class="cta" href="{premiere}/index.html" data-reprendre>{hero_cta} · {e(titre_premiere)} →</a>'
         f'<a class="cta-2" href="compte/index.html">{ICONE_COMPTE}{t["compte"]}</a></div></div>'
         f'<aside class="hero-visual" aria-label="{hero_art_label}"><span class="hero-visual-label">{hero_art_label}</span>'
-        f'<div class="hero-steps">{art}</div><span class="hero-visual-foot">ACTUARIAL THINKING · {("LEARN / MODEL / PRACTICE" if en else "APPRENDRE / MODÉLISER / PRATIQUER")}</span></aside>'
+        f'<div class="hero-steps">{art}</div><span class="hero-visual-foot">{("ACTUARIAL THINKING · LEARN / MODEL / PRACTICE" if en else "PENSÉE ACTUARIELLE · APPRENDRE / MODÉLISER / PRATIQUER")}</span></aside>'
         f'</div></section>'
         f'<main class="home home-redesign gutter">'
         f'<section class="home-intro"><div class="home-intro-copy"><span class="eyebrow">{intro_kicker}</span>'
@@ -292,7 +292,7 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
         f'<div class="doms">{"".join(cartes)}</div></section>'
         f'<section class="home-method"><div class="home-head"><span class="eyebrow">{method_kicker}</span>'
         f'<h2>{method_heading}</h2></div><div class="method-grid">{method_html}</div>'
-        f'<p class="method-note">{method_note}</p></section></main>').replace("Start learning ·", "Start learning ·")
+        f'<p class="method-note">{method_note}</p></section></main>')
 
 
 def page_domaine(parcours: dict, d: dict, k: int, langue: str) -> str:
