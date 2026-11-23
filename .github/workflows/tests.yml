@@ -36,3 +36,21 @@ jobs:
           for f in tests/sql/supabase_stub.sql supabase/migrations/*.sql tests/sql/test_rls.sql; do
             echo "== $f"; psql -v ON_ERROR_STOP=1 -q -f "$f"
           done
+  navigateur:
+    # Browser test of the Python Web Worker: skeleton, solution, infinite loop timeout, Stop button, no DOM or storage access.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: python -m pip install -r requirements.txt
+      - run: python tools/construire.py
+      - run: npm install --no-save playwright@1.63.0 && npx playwright install --with-deps chromium
+      - run: |
+          (cd _site && python -m http.server 8765 >/dev/null 2>&1 &)
+          sleep 2
+          node tests/navigateur/python_worker.js
