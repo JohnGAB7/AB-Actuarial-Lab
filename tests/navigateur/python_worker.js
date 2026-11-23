@@ -1,7 +1,7 @@
 const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
-// Browser test of the Python Web Worker. Run: node tests/navigateur/python_worker.js (site served on :8765).
+// Browser test of the opaque-origin sandboxed Python frame. Run: node tests/navigateur/python_worker.js (site served on :8765).
 // PYODIDE_LOCAL=<dir> serves Pyodide from a local npm package instead of the CDN (offline machines).
 const PKG = process.env.PYODIDE_LOCAL ? process.env.PYODIDE_LOCAL.replace(/\/?$/, '/') : null;
 const BASE = process.env.SITE_URL || 'http://localhost:8765/';
@@ -16,7 +16,7 @@ const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 
   });
   const p = await ctx.newPage();
   const out = {};
-  const errs = []; p.on('pageerror', (e) => errs.push(e.message)); p.on('console', (m) => { if (m.type() === 'error') errs.push('console: ' + m.text()); });
+  const errs = []; p.on('pageerror', (e) => errs.push(e.message)); p.on('console', (m) => { if (m.type() === 'error' && !/Refused to connect/.test(m.text())) errs.push('console: ' + m.text()); });
   const setCode = async (code) => p.evaluate((c) => { document.querySelector('.CodeMirror').CodeMirror.setValue(c); }, code);
   await p.goto(BASE + 'a1/s01/index.html#etape-6'); await p.waitForTimeout(800);
   const clickRun = () => p.locator('.row .btn').first().click();
@@ -38,14 +38,17 @@ const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 
   const responsive = await p.evaluate(() => 1 + 1);
   await p.locator('.row .btn', { hasText: 'Arrêter' }).click(); await p.waitForTimeout(300);
   out.responsive = responsive; out.stop = await summary(); console.log('stop:', responsive, out.stop);
-  // 5. no access to localStorage or the DOM from Python
-  await setCode("import js\nleaks = [n for n in ('localStorage', 'document') if hasattr(js, n)]\nraise RuntimeError('LEAKS=' + ','.join(leaks))\n");
-  await clickRun(); await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 60000 });
-  out.sandbox = await p.locator('.results li .tm').first().textContent(); console.log('sandbox:', out.sandbox);
-  // Network and browser storage APIs are unavailable after Pyodide initialization.
-  await setCode("import js\nblocked = ['fetch', 'XMLHttpRequest', 'WebSocket', 'WebSocketStream', 'EventSource', 'WebTransport', 'RTCPeerConnection', 'webkitRTCPeerConnection', 'BroadcastChannel', 'indexedDB', 'caches', 'importScripts', 'Worker', 'SharedWorker', 'postMessage']\navailable = [name for name in blocked if hasattr(js, name) and getattr(js, name) is not None]\nraise RuntimeError('AVAILABLE=' + ','.join(available))\n");
+  // 5. the sandbox has an opaque origin: it cannot read the parent DOM or either origin's storage.
+  await setCode("import js, time\nblocked = []\nfor label, obj, attr in [('parent-document', js.parent, 'document'), ('parent-storage', js.parent, 'localStorage'), ('sandbox-storage', js, 'localStorage')]:\n    try:\n        getattr(obj, attr)\n    except Exception:\n        blocked.append(label)\ntime.sleep(1)\nif len(blocked) != 3:\n    raise RuntimeError('BOUNDARY_FAILED=' + ','.join(blocked))\nraise RuntimeError('BOUNDARY_OK')\n");
+  await clickRun();
+  await p.waitForFunction(() => document.querySelector('.res-sum').textContent.includes('Exécution'), null, { timeout: 30000 });
+  out.sandboxFlags = await p.locator('iframe[data-parcours-python-sandbox]').getAttribute('sandbox');
+  await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 30000 });
+  out.sandbox = await p.locator('.results li .tm').first().textContent(); console.log('sandbox:', out.sandbox, out.sandboxFlags);
+  // 6. after Pyodide bootstrap, the additive CSP denies all network connections.
+  await setCode("import js\ntry:\n    await js.fetch('https://example.com/')\nexcept Exception:\n    raise RuntimeError('NETWORK_BLOCKED')\nraise RuntimeError('NETWORK_ALLOWED')\n");
   await clickRun(); await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 30000 });
-  out.capabilities = await p.locator('.results li .tm').first().textContent(); console.log('capabilities:', out.capabilities);
+  out.network = await p.locator('.results li .tm').first().textContent(); console.log('network:', out.network);
   // Oversized code is rejected before Pyodide is loaded.
   await setCode('x'.repeat(50001));
   await clickRun(); await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 5000 });
@@ -56,8 +59,8 @@ const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 
   if (!/6 tests passent/.test(out.solution)) fails.push('solution');
   if (!/Arrêt après 10 secondes/.test(out.loop)) fails.push('loop timeout');
   if (out.responsive !== 2 || !/arrêtée/.test(out.stop)) fails.push('stop');
-  if (out.sandbox !== 'RuntimeError: LEAKS=') fails.push('sandbox: ' + out.sandbox);
-  if (out.capabilities !== 'RuntimeError: AVAILABLE=') fails.push('runtime capabilities: ' + out.capabilities);
+  if (out.sandbox !== 'RuntimeError: BOUNDARY_OK' || out.sandboxFlags !== 'allow-scripts') fails.push('opaque-origin boundary: ' + out.sandbox + ' / ' + out.sandboxFlags);
+  if (out.network !== 'RuntimeError: NETWORK_BLOCKED') fails.push('network policy: ' + out.network);
   if (!/Code trop long/.test(out.inputLimit)) fails.push('input limit');
   if (errs.length) fails.push('page errors');
   if (fails.length) { console.error('FAILED:', fails.join('; ')); process.exitCode = 1; } else console.log('OK');
