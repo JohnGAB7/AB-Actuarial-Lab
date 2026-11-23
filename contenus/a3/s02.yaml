@@ -107,7 +107,7 @@ etapes:
         reponse: 0
         pourquoi:
           rappel: >-
-            Pour une vie entière, le paiement de 1 est certain ; seule sa date est aléatoire. Plus l'assuré est âgé, plus le décès est proche et moins il est actualisé.
+            Pour la table de Makeham utilisée ici, la mortalité augmente avec l'âge. Le paiement de 1 est certain ; seule sa date est aléatoire. À 65 ans, il intervient donc en moyenne plus tôt qu'à 40 ans et subit moins d'actualisation.
           formule: |-
             \begin{gathered} A_x = \mathbb{E}\!\left[v^{K_x + 1}\right] \;\ge\; v^{\,e_x + 1} \\[4pt] \text{(inégalité de Jensen)} \end{gathered}
           exemple: >-
