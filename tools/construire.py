@@ -20,16 +20,20 @@ from string import Template
 
 import yaml
 
+from tools.validation_contenus import (
+    fusionner_overlay,
+    verifier_depot,
+    verifier_overlay_traduction,
+    verifier_seance,
+)
+
 RACINE = Path(__file__).resolve().parents[1]
 CONTENUS = RACINE / "contenus"
 SITE = RACINE / "site"
 SORTIE = RACINE / "_site"
-TYPES = {"video", "rappel", "quiz", "calcul", "code", "vocabulaire"}
 LANGUES = ("fr", "en")
-# Keys that hold numbers, answers, tests or structure: they only live in the French file.
-NON_TRADUISIBLES = {"id", "module", "en", "actu_basics", "type", "minutes", "duree", "table", "taux",
-                    "reponse", "valeur", "tolerance", "cle", "expr", "fichier", "depart", "interactif",
-                    "url", "cartes", "statut", "formule"}
+# Compatibility alias for existing tests and downstream imports.
+fusion = fusionner_overlay
 
 
 def charger_parcours() -> dict:
@@ -40,112 +44,22 @@ def charger_seance(sid: str, langue: str = "fr") -> dict:
     s = yaml.safe_load((CONTENUS / f"{sid}.yaml").read_text(encoding="utf-8"))
     if langue == "fr":
         return s
-    return fusion(s, yaml.safe_load((CONTENUS / langue / f"{sid}.yaml").read_text(encoding="utf-8")), sid)
-
-
-def nombres(texte: str, langue: str) -> list[str]:
-    """Numbers in a text, written the same way whatever the language: 0,0247 and 0.0247 give 0.0247; 716 046 and 716,046 give 716046."""
-    t = texte.replace("{,}", ",")
-    # In LaTeX, \, is also a thin space before units (e.g. 2{,}5\,\%).
-    t = re.sub(r"\\,\s*(?=\\?[%‰])", " ", t)
-    t = re.sub(r"(?<=\d)(?:\\,|\\ |\u202f|\u00a0| )(?=\d{3}\b)", "", t)  # thousands separators: 716 046, 716\,046
-    if langue == "fr":
-        t = re.sub(r"(?<=\d),(?=\d)", ".", t)
-    else:
-        t = re.sub(r"(?<=\d),(?=\d{3}\b)", "", t)
-    # Keep sign, exponent and percentage/per-mille unit: comparing unsigned digit runs
-    # would accept -2.5 % -> 2.5 % or 2.5 % -> 2.5, both material changes.
-    motif = r"(?:(?<![\w.])[+\-−])?(?<![\d.])\d+(?:\.\d+)?(?:[eE][+\-−]?\d+)?(?:\s*\\?[%‰])?"
-    return sorted(x.replace("−", "-").replace(" ", "").replace(r"\%", "%") for x in re.findall(motif, t))
-
-
-def sans_texte(formule: str) -> str:
-    """A formula with its \\text{...} labels blanked: only those labels may change in a translation."""
-    return re.sub(r"\\text\{[^{}]*\}", r"\\text{}", formule)
-
-
-def fusion(base, trad, chemin: str):
-    """Lay the translated texts over the French session.
-
-    The translation may not add keys, change list lengths or types, touch the numeric fields, leave a text empty,
-    or change a number written in a text. A formula may only change its \\text{...} labels.
-    """
-    if isinstance(trad, dict):
-        if not isinstance(base, dict):
-            raise ValueError(f"{chemin} : structure différente du français")
-        sortie = dict(base)
-        for k, v in trad.items():
-            if k not in base:
-                raise ValueError(f"{chemin}.{k} : clé absente du français")
-            if k in NON_TRADUISIBLES and k != "formule":
-                raise ValueError(f"{chemin}.{k} : ce champ reste dans le fichier français")
-            if k == "formule" and (not isinstance(v, str) or sans_texte(v) != sans_texte(base[k])):
-                raise ValueError(f"{chemin}.{k} : une formule ne peut changer que ses \\text{{…}}")
-            sortie[k] = v if k == "formule" else fusion(base[k], v, f"{chemin}.{k}")
-        return sortie
-    if isinstance(trad, list):
-        if not isinstance(base, list) or len(base) != len(trad):
-            raise ValueError(f"{chemin} : liste de longueur différente du français")
-        return [fusion(b, t, f"{chemin}[{i}]") for i, (b, t) in enumerate(zip(base, trad))]
-    if type(trad) is not type(base):
-        raise ValueError(f"{chemin} : type différent du français")
-    if isinstance(trad, str):
-        if base.strip() and not trad.strip():
-            raise ValueError(f"{chemin} : texte vide")
-        if nombres(trad, "en") != nombres(base, "fr"):
-            raise ValueError(f"{chemin} : chiffres différents du français ({nombres(base, 'fr')} ≠ {nombres(trad, 'en')})")
-    return trad
-
-
-def verifier_seance(s: dict) -> list[str]:
-    erreurs = []
-    for i, e in enumerate(s.get("etapes", []), 1):
-        if e.get("type") not in TYPES:
-            erreurs.append(f"{s['id']} étape {i} : type inconnu {e.get('type')!r}")
-        if e.get("type") == "quiz":
-            for q in e["questions"]:
-                if not 0 <= q["reponse"] < len(q["options"]):
-                    erreurs.append(f"{s['id']} : réponse hors des options pour « {q['q']} »")
-                p = q.get("pourquoi")
-                if not isinstance(p, dict) or not all(p.get(k) for k in ("rappel", "formule", "exemple")):
-                    erreurs.append(f"{s['id']} : explication sans rappel, formule et exemple pour « {q['q']} »")
-    return erreurs
+    return fusionner_overlay(
+        s, yaml.safe_load((CONTENUS / langue / f"{sid}.yaml").read_text(encoding="utf-8")), sid
+    )
 
 
 def verifier_traduction(sid: str) -> list[str]:
-    """The English file must exist and give every French text with words in it (a text the overlay leaves out counts as missing)."""
+    """Compatibility wrapper around the canonical overlay validator."""
     chemin = CONTENUS / "en" / f"{sid}.yaml"
-    if not chemin.exists():
+    if not chemin.is_file():
         return [f"{sid} : traduction anglaise manquante (contenus/en/{sid}.yaml)"]
     try:
-        charger_seance(sid, "en")
-    except ValueError as err:
-        return [str(err)]
-    fr = charger_seance(sid)
-    trad = yaml.safe_load(chemin.read_text(encoding="utf-8"))
-    oublis = []
-
-    def a_traduire(x) -> bool:
-        if isinstance(x, dict):
-            return any(a_traduire(v) for k, v in x.items() if k not in NON_TRADUISIBLES)
-        if isinstance(x, list):
-            return any(a_traduire(v) for v in x)
-        return isinstance(x, str) and bool(re.search(r"[a-zà-ÿ]{4,}", re.sub(r"\$[^$]*\$|<[^>]+>", "", x)))
-
-    def comparer(a, b, p):
-        if b is None:
-            if a_traduire(a):
-                oublis.append(p)
-        elif isinstance(a, dict):
-            for k in a:
-                if k not in NON_TRADUISIBLES and k not in ("actu_basics", "en"):
-                    comparer(a[k], b.get(k) if isinstance(b, dict) else None, f"{p}.{k}")
-        elif isinstance(a, list):
-            for i, x in enumerate(a):
-                comparer(x, b[i] if isinstance(b, list) else None, f"{p}[{i}]")
-
-    comparer(fr, trad, sid)
-    return [f"{o} : texte non traduit" for o in oublis]
+        base = charger_seance(sid)
+        overlay = yaml.safe_load(chemin.read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError) as err:
+        return [f"{sid} : impossible de lire l'overlay anglais ({err})."]
+    return verifier_overlay_traduction(base, overlay, session_id=sid)
 
 
 def seances(parcours: dict):
@@ -362,12 +276,10 @@ def chemins(chemin: str, langue: str) -> tuple[str, str, str]:
 
 
 def construire() -> None:
-    parcours = charger_parcours()
-    erreurs = []
-    for _, _, sid in seances(parcours):
-        erreurs += verifier_seance(charger_seance(sid)) + verifier_traduction(sid)
+    erreurs = verifier_depot()
     if erreurs:
         sys.exit("\n".join(erreurs))
+    parcours = charger_parcours()
     if SORTIE.exists():
         shutil.rmtree(SORTIE)
     shutil.copytree(SITE / "assets", SORTIE / "assets")
@@ -425,7 +337,10 @@ def construire() -> None:
 
 if __name__ == "__main__":
     if "--verifier" in sys.argv:
-        p = charger_parcours()
-        errs = [x for _, _, sid in seances(p) for x in verifier_seance(charger_seance(sid)) + verifier_traduction(sid)]
-        sys.exit("\n".join(errs) if errs else 0)
+        errs = verifier_depot()
+        if errs:
+            print("\n".join(errs), file=sys.stderr)
+            sys.exit(1)
+        print("Course plan and referenced sessions are structurally valid.")
+        sys.exit(0)
     construire()
