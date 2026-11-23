@@ -212,6 +212,20 @@ def test_calcul_a2_s06():
         [31.15, 93.46, 15.58, 116.82, 29.21, 97.35]
     assert round(pd * 1.2, 3) == 93.456 and round(2000 * math.exp(-0.25), 2) == 1557.60
 
+def test_calcul_a2b_s01():
+    _, champs = _calcul("a2b/s01")
+    xs = [1200, 800, 3500, 600, 2100, 950, 1700, 4200]
+    n, m = len(xs), sum(xs) / len(xs)
+    ss = sum((x - m) ** 2 for x in xs)
+    s = math.sqrt(ss / (n - 1))
+    v = ss / n
+    _proche(champs, {"s": s, "se": s / math.sqrt(n), "alpha": m * m / v, "theta": v / m}, tol=1e-4)
+    assert sum(xs) == 15050 and m == 1881.25 and ss == 12219687.5 and m * m == 3539101.5625
+    assert sorted(xs)[3:5] == [1200, 1700] and (1200 + 1700) / 2 == 1450
+    assert round(ss / 7, 2) == 1745669.64 and round(v, 2) == 1527460.94 and round(8 / 7 - 1, 3) == 0.143
+    assert round(s) == 1321 and round(s / math.sqrt(8)) == 467 and round(s / math.sqrt(32)) == 234
+    assert round(v / (m * m), 3) == 0.432 and round(m * m / v, 3) == 2.317 and round(v / m, 2) == 811.94
+
 def test_aucun_support_de_cours_ni_cv_dans_le_depot():
     """Supports de cours et CV restent dans la bibliothèque du projet, jamais sur un dépôt."""
     interdits = {".pdf", ".pptx", ".ppt", ".docx", ".doc", ".tex", ".xlsx"}

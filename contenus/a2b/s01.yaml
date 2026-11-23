@@ -1,0 +1,213 @@
+# Séance 1 du module A2b (Statistique pour l'assurance) : estimateurs, biais, erreur type, méthode des moments.
+# Chiffres : échantillon fictif de 8 sinistres. Les valeurs sont recalculées par tests/test_contenus.py et tests/a2b/test_s01_estimation.py.
+id: a2b/s01
+module: a2b
+titre: "Estimer une loi de sinistres : la méthode des moments"
+en: "Estimating a claim distribution: the method of moments"
+duree: 30
+
+actu_basics:
+  episode: "A2b · Statistics for insurance"
+  statut: "à proposer"
+  accroche_fr: "Huit sinistres observés : que peut-on dire de tous les autres ?"
+  accroche_en: "Eight claims observed: what can we say about all the others?"
+
+etapes:
+  - type: quiz
+    titre: "Test de positionnement"
+    minutes: 3
+    intro: "Quatre questions avant le cours. Si tu as tout juste, survole le rappel et va directement au calcul."
+    questions:
+      - q: 'Un estimateur $\hat{\theta}$ est sans biais si…'
+        options: ['$E[\hat{\theta}] = \theta$', '$\hat{\theta} = \theta$ pour tout échantillon', '$\operatorname{Var}(\hat{\theta}) = 0$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Un estimateur (estimator) est une formule appliquée à un échantillon aléatoire : c'est donc une variable aléatoire. Sans biais (unbiased) veut dire juste en moyenne, sur tous les échantillons possibles.
+          formule: |-
+            \text{biais}(\hat{\theta}) = E[\hat{\theta}] - \theta
+          exemple: >-
+            La moyenne empirique $\bar{X}$ est un estimateur sans biais de $E[X]$.
+          piege: >-
+            Sans biais ne veut pas dire exact : sur un échantillon donné, l'estimation peut être loin de la vraie valeur.
+      - q: 'Pourquoi divise-t-on par $n - 1$ dans la variance empirique $s^2$ ?'
+        options: ['Pour la rendre sans biais', 'Pour qu''elle soit plus petite', 'Par convention, sans effet']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Les écarts sont mesurés à $\bar{X}$, qui est calculée sur les mêmes données et colle à l'échantillon. Diviser par $n$ sous-estime la variance en moyenne.
+          formule: |-
+            s^2 = \frac{1}{n-1}\sum_{i=1}^{n} (X_i - \bar{X})^2, \qquad E[s^2] = \sigma^2
+          exemple: >-
+            Sur 8 sinistres, diviser par 7 au lieu de 8 augmente la variance estimée de $8/7 - 1 = 14{,}3\,\%$.
+          piege: >-
+            Pour un grand échantillon, la différence devient négligeable ; pour 8 sinistres, elle compte.
+      - q: 'L''erreur type (standard error) de $\bar{X}$ vaut…'
+        options: ['$s / \sqrt{n}$', '$s$', '$s / n$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            L'erreur type est l'écart-type de l'estimateur : elle mesure combien $\bar{X}$ varierait d'un échantillon à l'autre.
+          formule: |-
+            \operatorname{se}(\bar{X}) = \frac{s}{\sqrt{n}}
+          exemple: >-
+            8 sinistres avec $s = 1\,321$ € : erreur type de 467 €, soit un quart de la moyenne.
+          piege: >-
+            $s$ décrit la dispersion des sinistres eux-mêmes, pas la précision de leur moyenne.
+      - q: 'La méthode des moments (method of moments) consiste à…'
+        options: ['égaler moments théoriques et moments empiriques, puis résoudre', 'maximiser la probabilité des données', 'prendre la médiane']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On écrit autant d'équations que de paramètres : moyenne théorique = moyenne observée, variance théorique = variance observée, etc.
+          formule: |-
+            E[X](\hat{\theta}) = \bar{x}, \quad \operatorname{Var}(X)(\hat{\theta}) = \hat{\sigma}^2
+          exemple: >-
+            Pour une exponentielle, un seul paramètre : $\hat{\theta} = \bar{x}$.
+          piege: >-
+            Maximiser la probabilité des données, c'est le maximum de vraisemblance : la séance suivante.
+
+  - type: video
+    titre: "L'intuition en vidéo"
+    minutes: 3
+    texte: >-
+      Ce thème n'a pas encore sa leçon Actu-Basics longue. Le rappel et les exercices qui suivent couvrent toute la
+      matière de la séance.
+
+  - type: rappel
+    titre: "Le rappel"
+    minutes: 8
+    blocs:
+      - p: >-
+          L'actuaire n'observe jamais la loi des sinistres, seulement un <b>échantillon</b> <i>(sample)</i>. Un
+          <b>estimateur</b> <i>(estimator)</i> transforme cet échantillon en valeur d'un paramètre. On le juge par son
+          <b>biais</b> <i>(bias)</i>, sa <b>variance</b> et leur combinaison, l'<b>erreur quadratique moyenne</b>
+          <i>(mean squared error)</i>.
+      - formule: |
+          \begin{gathered}
+          \text{EQM}(\hat{\theta}) = E\big[(\hat{\theta} - \theta)^2\big] = \operatorname{Var}(\hat{\theta}) + \text{biais}(\hat{\theta})^2 \\[6pt]
+          \bar{X} = \frac{1}{n}\sum X_i \qquad s^2 = \frac{1}{n-1}\sum (X_i - \bar{X})^2 \qquad \operatorname{se}(\bar{X}) = \frac{s}{\sqrt{n}}
+          \end{gathered}
+      - p: >-
+          La <b>méthode des moments</b> <i>(method of moments)</i> égale les moments de la loi à ceux de l'échantillon.
+          Pour la <b>loi gamma</b> <i>(gamma distribution)</i>, de moyenne $\alpha\theta$ et de variance
+          $\alpha\theta^2$, on obtient deux équations et deux inconnues.
+      - formule: |
+          \alpha\,\theta = \bar{x}, \quad \alpha\,\theta^2 = \hat{\sigma}^2 \;\Rightarrow\; \hat{\theta} = \frac{\hat{\sigma}^2}{\bar{x}}, \quad \hat{\alpha} = \frac{\bar{x}^2}{\hat{\sigma}^2}
+      - p: >-
+          Par convention, la méthode des moments utilise la variance empirique divisée par $n$, notée
+          $\hat{\sigma}^2$. Elle est simple et donne de bons points de départ, mais elle est souvent moins précise que le
+          maximum de vraisemblance, surtout pour les lois à queue épaisse.
+      - note: >-
+          Avec peu de sinistres, l'erreur type est grande. C'est l'idée de la crédibilité : ne pas se fier entièrement à
+          l'expérience d'un petit portefeuille.
+      - sources:
+          - {titre: "Hogg, McKean et Craig, Introduction to Mathematical Statistics, chap. 4", detail: "Estimateurs, biais, méthode des moments"}
+          - {titre: "Klugman, Panjer et Willmot, Loss Models, chap. 12 et 13", detail: "Estimation des lois de fréquence et de sévérité"}
+
+  - type: quiz
+    titre: "Vérifie"
+    minutes: 4
+    intro: "Échantillon fictif de 8 sinistres (€) : 1 200, 800, 3 500, 600, 2 100, 950, 1 700, 4 200."
+    questions:
+      - q: 'Que vaut la moyenne empirique ?'
+        options: ['1 881,25 €', '1 450 €', '15 050 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Somme des observations divisée par leur nombre.
+          formule: |-
+            \bar{x} = \frac{15\,050}{8}
+          exemple: >-
+            $1\,881{,}25$ €. La médiane, entre 1 200 € et 1 700 €, vaut 1 450 € : la queue à droite tire la moyenne vers le haut.
+          piege: >-
+            1 450 € est la médiane. 15 050 € est la somme.
+      - q: 'Pour une exponentielle, l''estimation de $\theta$ par la méthode des moments vaut…'
+        options: ['1 881,25 €', '1 321,24 €', '1 450 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            L'exponentielle a un seul paramètre, sa moyenne : $\hat{\theta} = \bar{x}$.
+          formule: |-
+            E[X] = \theta = \bar{x}
+          exemple: >-
+            $\hat{\theta} = 1\,881{,}25$ €. Mais l'exponentielle impose écart-type = moyenne ; ici $s = 1\,321$ €, plus petit : une gamma colle mieux.
+          piege: >-
+            1 321,24 € est l'écart-type empirique $s$, pas la moyenne.
+      - q: 'Avec la loi gamma, $\hat{\sigma}^2 = 1\,527\,460{,}94$. Que vaut $\hat{\alpha}$ ?'
+        options: ['2,317', '0,432', '1,232']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            $\hat{\alpha} = \bar{x}^2 / \hat{\sigma}^2$.
+          formule: |-
+            \hat{\alpha} = \frac{1\,881{,}25^2}{1\,527\,460{,}94}
+          exemple: >-
+            $3\,539\,101{,}56 / 1\,527\,460{,}94 = 2{,}317$, et $\hat{\theta} = 1\,527\,460{,}94 / 1\,881{,}25 = 811{,}94$ €.
+          piege: >-
+            0,432 est l'inverse. Un $\alpha$ supérieur à 1 donne une densité en cloche asymétrique, moins piquée en 0 que l'exponentielle.
+      - q: 'L''erreur type de la moyenne vaut 467 €. Que faire pour la diviser par 2 ?'
+        options: ['Observer 4 fois plus de sinistres', 'Observer 2 fois plus de sinistres', 'Diviser par $n$ au lieu de $n - 1$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            L'erreur type décroît comme $1/\sqrt{n}$.
+          formule: |-
+            \frac{s}{\sqrt{4n}} = \frac{1}{2}\,\frac{s}{\sqrt{n}}
+          exemple: >-
+            Avec 32 sinistres de même dispersion, l'erreur type tomberait vers 234 €.
+          piege: >-
+            Changer de convention de calcul ne rend pas les données plus informatives.
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: 'Même échantillon de 8 sinistres. Saisis tes résultats au centime, $\hat{\alpha}$ à 4 décimales.'
+    donnees:
+      entetes: ['$x_1$', '$x_2$', '$x_3$', '$x_4$', '$x_5$', '$x_6$', '$x_7$', '$x_8$']
+      lignes: [['1 200', '800', '3 500', '600', '2 100', '950', '1 700', '4 200']]
+    champs:
+      - {cle: s, libelle: '$s$', valeur: 1321.2379, tolerance: 0.015}
+      - {cle: se, libelle: '$s / \sqrt{n}$', valeur: 467.1281, tolerance: 0.015}
+      - {cle: alpha, libelle: '$\hat{\alpha}$', valeur: 2.316983, tolerance: 0.00015}
+      - {cle: theta, libelle: '$\hat{\theta}$', valeur: 811.9394, tolerance: 0.015}
+    solution: |
+      $\sum (x_i - \bar{x})^2 = 12\,219\,687{,}5$, donc $s^2 = 12\,219\,687{,}5 / 7 = 1\,745\,669{,}64$ et $s = 1\,321{,}24$ € ; $s/\sqrt{8} = 467{,}13$ €.
+      $\hat{\sigma}^2 = 12\,219\,687{,}5 / 8 = 1\,527\,460{,}94$, $\hat{\alpha} = 1\,881{,}25^2 / \hat{\sigma}^2 = 2{,}3170$ et $\hat{\theta} = \hat{\sigma}^2 / 1\,881{,}25 = 811{,}94$ €.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 8
+    intro: "Écris le corps des trois fonctions, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a2b/s01_estimation.py
+    depart: |
+      def sample_mean_var(xs):
+          """(mean, unbiased variance s**2) of a list of observations."""
+          raise NotImplementedError
+
+      def standard_error(xs):
+          """Standard error of the sample mean: s / sqrt(n)."""
+          raise NotImplementedError
+
+      def gamma_moments(xs):
+          """(alpha, theta) of a gamma distribution by the method of moments (variance divided by n)."""
+          raise NotImplementedError
+    tests:
+      - {nom: 'Moyenne 1 881,25 € et $s^2 = 1\,745\,669{,}64$', expr: "abs(sample_mean_var([1200, 800, 3500, 600, 2100, 950, 1700, 4200])[0] - 1881.25) < 1e-9 and abs(sample_mean_var([1200, 800, 3500, 600, 2100, 950, 1700, 4200])[1] - 1745669.64) < 0.005"}
+      - {nom: 'Erreur type de 467,13 €', expr: "abs(standard_error([1200, 800, 3500, 600, 2100, 950, 1700, 4200]) - 467.13) < 0.005"}
+      - {nom: 'Gamma : $\hat{\alpha} = 2{,}31698$', expr: "abs(gamma_moments([1200, 800, 3500, 600, 2100, 950, 1700, 4200])[0] - 2.31698) < 0.00001"}
+      - {nom: 'Gamma : $\hat{\alpha}\hat{\theta} = \bar{x}$', expr: "abs(gamma_moments([3, 7, 1, 9, 4])[0] * gamma_moments([3, 7, 1, 9, 4])[1] - 4.8) < 1e-9"}
+      - {nom: 'Variance nulle pour des valeurs égales', expr: "sample_mean_var([5, 5, 5])[1] == 0"}
+      - {nom: 'Moyenne et variance de 0, 1, 0, 0, 2, 0, 1, 0, 0, 1 : 0,5 et 0,5', expr: "all(abs(a - 0.5) < 1e-12 for a in sample_mean_var([0, 1, 0, 0, 2, 0, 1, 0, 0, 1]))"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Échantillon", "sample", "We only had a sample of 8 large claims."]
+      - ["Estimateur sans biais", "unbiased estimator", "The sample mean is an unbiased estimator of the expected claim."]
+      - ["Erreur type", "standard error", "With so few claims, the standard error is a quarter of the mean."]
+      - ["Erreur quadratique moyenne", "mean squared error", "A small bias can be worth it if it lowers the mean squared error."]
+      - ["Méthode des moments", "method of moments", "The method of moments gave starting values for the gamma fit."]
+      - ["Loi gamma", "gamma distribution", "Claim severity was fitted with a gamma distribution."]
