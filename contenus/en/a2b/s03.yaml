@@ -1,0 +1,136 @@
+# English texts for session A2b.03. Numbers, answers and tests live in contenus/a2b/s03.yaml.
+titre: "Confidence intervals: how precise is a claim frequency?"
+
+etapes:
+  - titre: "Placement check"
+    intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
+    questions:
+      - q: 'A 95% confidence interval means that…'
+        options: ['95% of the intervals built this way contain the true value', 'the true value has a 95% chance of being in this particular interval', '95% of the claims fall in the interval']
+        pourquoi:
+          rappel: >-
+            The parameter is fixed; it is the interval that is random, because it depends on the sample. The confidence level describes the method, not a particular interval.
+          exemple: >-
+            Out of 100 simulated portfolios, about 95 intervals would contain the true frequency, and 5 would miss it.
+          piege: >-
+            An interval on the mean says nothing about the spread of individual claims: that is the job of a quantile.
+      - q: 'For a 95% interval with the normal distribution, we take $z =$…'
+        options: ['1.96', '1.645', '2.576']
+        pourquoi:
+          rappel: >-
+            We leave 2.5% on each side: $z$ is the 97.5% quantile of the standard normal distribution.
+          exemple: >-
+            1.645 gives a 90% interval, and 2.576 a 99% interval.
+          piege: >-
+            1.645 is the 95% quantile, used for a one-sided threshold, not for an interval with two bounds.
+      - q: 'With 8 claims and an estimated standard deviation, we replace 1.96 with a t distribution quantile. Why?'
+        options: ['To account for the uncertainty in $s$', 'Because claims follow a t distribution', 'To get a narrower interval']
+        pourquoi:
+          rappel: >-
+            With $s$ instead of $\sigma$, the ratio $(\bar{X} - \mu)/(s/\sqrt{n})$ follows a t distribution with $n - 1$ degrees of freedom if the data are normal.
+          exemple: >-
+            For 7 degrees of freedom, $t = 2.365$ instead of 1.96: the interval widens by 21%.
+          piege: >-
+            The t distribution gives a wider interval, not a narrower one. And it assumes roughly normal data, which claims rarely are.
+      - q: 'Going from a 95% to a 99% level, the interval becomes…'
+        options: ['wider', 'narrower', 'the same']
+        pourquoi:
+          rappel: >-
+            More confidence requires covering more possible values: $z$ goes from 1.96 to 2.576.
+          exemple: >-
+            Same sample, an interval 31% wider.
+          piege: >-
+            Only a larger sample makes the interval both narrow and reliable.
+
+  - titre: "The intuition on video"
+    texte: >-
+      This topic does not have its long Actu-Basics lesson yet. The recap and the exercises that follow cover the whole
+      content of the session.
+
+  - titre: "The recap"
+    blocs:
+      - p: >-
+          An estimate alone is not enough: we must say how far we trust it. A <b>confidence interval</b>
+          <i>(intervalle de confiance)</i> brackets the parameter at a given <b>confidence level</b>
+          <i>(niveau de confiance)</i>. Its half-width is the <b>margin of error</b> <i>(marge d'erreur)</i>.
+      - formule: |
+          \begin{gathered}
+          \text{mean: } \bar{x} \pm t_{n-1;\,0{,}975}\,\frac{s}{\sqrt{n}} \qquad \text{proportion: } \hat{p} \pm 1{,}96\,\sqrt{\frac{\hat{p}(1 - \hat{p})}{n}} \\[6pt]
+          \text{Poisson: } \hat{\lambda} \pm 1{,}96\,\sqrt{\frac{\hat{\lambda}}{n}} \qquad \text{sample size: } n \ge \frac{z^2\,p(1 - p)}{e^2}
+          \end{gathered}
+      - p: >-
+          These formulas rely on the normal approximation: they work well for a frequency on a large portfolio, much
+          less for a few large heavy-tailed claims. The <b>bootstrap</b> <i>(bootstrap)</i> then resamples the data to
+          get the interval without assuming a distribution.
+      - p: >-
+          The <b>sample size</b> <i>(taille d'échantillon)</i> is worked out backwards: fix the desired margin $e$ and
+          deduce $n$. Since the margin decreases like $1/\sqrt{n}$, dividing the margin by 2 takes 4 times as many
+          policies.
+      - note: >-
+          In pricing, a small portfolio has a very imprecise observed frequency. <b>Credibility</b>
+          <i>(crédibilité)</i> theory then blends its experience with the market's, in proportion to its precision.
+      - sources:
+          - {titre: "Hogg, McKean and Craig, Introduction to Mathematical Statistics, chap. 4", detail: "Confidence intervals, t distribution"}
+          - {titre: "Klugman, Panjer and Willmot, Loss Models, chap. 13", detail: "Variance of estimators, intervals for parameters"}
+
+  - titre: "Check"
+    intro: "A fictional portfolio: 120 claims out of 2,000 policies. Amounts: the 8 claims of session 1."
+    questions:
+      - q: '95% confidence interval for the frequency $p$?'
+        options: ['[4.96%, 7.04%]', '[5.47%, 6.53%]', '[5.90%, 6.10%]']
+        pourquoi:
+          rappel: >-
+            $\hat{p} = 120 / 2{,}000 = 6\%$ and $\operatorname{se} = \sqrt{\hat{p}(1 - \hat{p})/n}$.
+          exemple: >-
+            $6\% \pm 1.04$ points: the true frequency is plausibly between 4.96% and 7.04%.
+          piege: >-
+            [5.47%, 6.53%] stops at one standard error: it is only a 68% interval.
+      - q: 'How many policies for a margin of ±1 point at 95%, if $p \approx 6\%$?'
+        options: ['2,167', '564', '1,106']
+        pourquoi:
+          rappel: >-
+            Solve $1.96\,\sqrt{p(1 - p)/n} \le e$ for $n$, and round up.
+          exemple: >-
+            2,167 policies: our 2,000 policies give a margin a little above 1 point, 1.04 points.
+          piege: >-
+            564 forgets $z$, and 1,106 forgets to square $z$.
+      - q: '95% interval for the mean of the 8 claims ($\bar{x} = 1{,}881.25$ euros, $s / \sqrt{8} = 467.13$ euros, $t_7 = 2.365$)?'
+        options: ['[€777, €2,986]', '[€966, €2,797]', '[€1,414, €2,348]']
+        pourquoi:
+          rappel: >-
+            Small sample, estimated standard deviation: t quantile with 7 degrees of freedom.
+          exemple: >-
+            The true mean plausibly lies between €777 and €2,986: with 8 claims, we know little.
+          piege: >-
+            [€966, €2,797] takes 1.96 instead of 2.365, and [€1,414, €2,348] a single standard error.
+      - q: '25 claims observed in 10 years, Poisson model. 95% interval for $\lambda$?'
+        options: ['[1.52, 3.48]', '[2.0, 3.0]', '[−0.60, 5.60]']
+        pourquoi:
+          rappel: >-
+            $\hat{\lambda} = 2.5$ and $\operatorname{se}(\hat{\lambda}) = \sqrt{\hat{\lambda}/n} = 0.5$ (session 2).
+          exemple: >-
+            Between 1.52 and 3.48 claims a year.
+          piege: >-
+            [−0.60, 5.60] uses the standard deviation of a single year, $\sqrt{2.5}$, instead of the standard error of the 10-year mean. A negative bound is a warning sign anyway.
+
+  - titre: "By hand"
+    intro: 'Observed frequency on the portfolio, 95% confidence level ($z = 1.96$). Enter your results to 4 decimal places, and $n$ rounded up for a margin of ±1 point.'
+    donnees:
+      entetes: ['Policies', 'Claims']
+      lignes: [['2,000', '120']]
+    solution: |
+      $\hat{p} = 0.06$, $\operatorname{se} = \sqrt{0.06 \times 0.94 / 2{,}000} = 0.0053$, so the interval is $[0.0496, 0.0704]$.
+      For a margin of 0.01: $n \ge 1.96^2 \times 0.0564 / 0.0001 = 2{,}166.7$, that is 2,167 policies.
+
+  - titre: "Your turn to code"
+    intro: "Write the body of the three functions, without AI. All the tests must pass."
+    tests:
+      - {nom: 'Frequency: [4.96%, 7.04%]'}
+      - {nom: 'At 99%, the interval is wider'}
+      - {nom: '2,167 policies for ±1 point'}
+      - {nom: 'Dividing the margin by 2 takes about 4 times as many policies'}
+      - {nom: 'Mean claim: [€776.67, €2,985.83]'}
+      - {nom: 'The interval is centred on the mean'}
+
+  - titre: "Vocabulary"
+    intro: "Tap a card: the French term and a job-interview sentence."

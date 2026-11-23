@@ -1,0 +1,211 @@
+# Séance 2 du module A2b (Statistique pour l'assurance) : vraisemblance, maximum de vraisemblance, invariance, choix de queue.
+# Chiffres : nombres de sinistres et montants fictifs. Les valeurs sont recalculées par tests/test_contenus.py et tests/a2b/test_s02_vraisemblance.py.
+id: a2b/s02
+module: a2b
+titre: "Le maximum de vraisemblance"
+en: "Maximum likelihood"
+duree: 30
+
+actu_basics:
+  episode: "A2b · Statistics for insurance"
+  statut: "à proposer"
+  accroche_fr: "Quelle valeur du paramètre rend nos sinistres les plus probables ?"
+  accroche_en: "Which parameter value makes our claims the most likely?"
+
+etapes:
+  - type: quiz
+    titre: "Test de positionnement"
+    minutes: 3
+    intro: "Quatre questions avant le cours. Si tu as tout juste, survole le rappel et va directement au calcul."
+    questions:
+      - q: 'Pour des observations indépendantes $x_1, \dots, x_n$, la vraisemblance (likelihood) $L(\theta)$ est…'
+        options: ['le produit des densités $f(x_i; \theta)$', 'la somme des densités $f(x_i; \theta)$', 'la probabilité que $\theta$ soit le vrai paramètre']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            La vraisemblance lit la densité des données observées comme une fonction du paramètre. L'indépendance transforme la densité jointe en produit.
+          formule: |-
+            L(\theta) = \prod_{i=1}^{n} f(x_i; \theta)
+          exemple: >-
+            Pour des nombres de sinistres de Poisson, $L(\lambda) = \prod e^{-\lambda} \lambda^{x_i} / x_i!$.
+          piege: >-
+            $L(\theta)$ n'est pas une probabilité sur $\theta$ : elle ne somme pas à 1 quand $\theta$ varie.
+      - q: 'Pourquoi maximiser la log-vraisemblance $\ell(\theta) = \ln L(\theta)$ plutôt que $L(\theta)$ ?'
+        options: ['Le logarithme change le produit en somme sans déplacer le maximum', 'Elle donne un autre estimateur, plus précis', 'Pour obtenir une valeur positive']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Le logarithme est croissant : $L$ et $\ln L$ atteignent leur maximum au même $\theta$. Une somme se dérive bien plus facilement qu'un produit.
+          formule: |-
+            \ell(\theta) = \sum_{i=1}^{n} \ln f(x_i; \theta), \qquad \ell'(\hat{\theta}) = 0
+          exemple: >-
+            Le produit de 1 000 densités très petites tombe à 0 en machine ; la somme de leurs logarithmes reste calculable.
+          piege: >-
+            La log-vraisemblance est en général négative : ce n'est pas un problème, seul l'endroit du maximum compte.
+      - q: 'Pour des nombres de sinistres de Poisson, l''estimateur du maximum de vraisemblance (MLE) de $\lambda$ est…'
+        options: ['la moyenne empirique $\bar{x}$', 'la variance empirique $s^2$', 'le nombre maximal observé']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On dérive $\ell(\lambda) = -n\lambda + \sum x_i \ln \lambda - \sum \ln x_i!$ et on annule.
+          formule: |-
+            -n + \frac{\sum x_i}{\lambda} = 0 \;\Rightarrow\; \hat{\lambda} = \bar{x}
+          exemple: >-
+            25 sinistres en 10 ans : $\hat{\lambda} = 2{,}5$ par an.
+          piege: >-
+            La variance d'une Poisson vaut aussi $\lambda$, mais l'estimateur du maximum de vraisemblance est la moyenne.
+      - q: 'Si $\hat{\lambda}$ est le MLE de $\lambda$, le MLE de $P(N = 0) = e^{-\lambda}$ est…'
+        options: ['$e^{-\hat{\lambda}}$', 'la part d''années sans sinistre', 'impossible à obtenir sans refaire le calcul']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Propriété d'invariance (invariance) : le MLE d'une fonction du paramètre est cette fonction appliquée au MLE.
+          formule: |-
+            \widehat{g(\theta)} = g(\hat{\theta})
+          exemple: >-
+            $\hat{\lambda} = 2{,}5$ donne $P(N = 0) \approx e^{-2{,}5} = 0{,}0821$.
+          piege: >-
+            La part d'années sans sinistre est une estimation sans modèle ; elle n'utilise pas l'hypothèse de Poisson.
+
+  - type: video
+    titre: "L'intuition en vidéo"
+    minutes: 3
+    texte: >-
+      Ce thème n'a pas encore sa leçon Actu-Basics longue. Le rappel et les exercices qui suivent couvrent toute la
+      matière de la séance.
+
+  - type: rappel
+    titre: "Le rappel"
+    minutes: 8
+    blocs:
+      - p: >-
+          Le <b>maximum de vraisemblance</b> <i>(maximum likelihood)</i> choisit la valeur du paramètre qui rend les
+          données observées les plus probables. On maximise la <b>log-vraisemblance</b> <i>(log-likelihood)</i> en
+          annulant sa dérivée, le <b>score</b> <i>(score)</i>.
+      - formule: |
+          \begin{gathered}
+          \ell(\theta) = \sum_{i=1}^{n} \ln f(x_i; \theta) \qquad \ell'(\hat{\theta}) = 0 \\[6pt]
+          \text{Poisson : } \hat{\lambda} = \bar{x} \qquad \text{exponentielle : } \hat{\theta} = \bar{x} \qquad \text{Pareto, } \theta \text{ connu : } \hat{\alpha} = \frac{n}{\sum \ln(1 + x_i/\theta)}
+          \end{gathered}
+      - p: >-
+          Pour un grand échantillon, le MLE est presque sans biais et suit à peu près une loi normale. Sa variance est
+          l'inverse de l'<b>information de Fisher</b> <i>(Fisher information)</i> $I(\theta) = -E[\ell''(\theta)]$. Pour la
+          Poisson, $I(\lambda) = n/\lambda$, donc $\operatorname{se}(\hat{\lambda}) = \sqrt{\hat{\lambda}/n}$.
+      - p: >-
+          La <b>propriété d'invariance</b> <i>(invariance property)</i> donne directement le MLE de toute grandeur
+          dérivée : probabilité de zéro sinistre, quantile, prime pure. Il suffit de remplacer le paramètre par son
+          estimation.
+      - note: >-
+          Deux lois peuvent coller aux mêmes sinistres et diverger dans la queue. La Pareto, à <b>queue épaisse</b>
+          <i>(heavy tail)</i>, donne bien plus de poids aux gros sinistres que l'exponentielle : c'est ce qui compte pour
+          la réassurance et le capital. La séance 4 compare les ajustements.
+      - sources:
+          - {titre: "Klugman, Panjer et Willmot, Loss Models, chap. 13", detail: "Maximum de vraisemblance pour les lois de sinistres"}
+          - {titre: "Hogg, McKean et Craig, Introduction to Mathematical Statistics, chap. 6", detail: "Vraisemblance, information de Fisher, invariance"}
+
+  - type: quiz
+    titre: "Vérifie"
+    minutes: 4
+    intro: "Nombres de sinistres sur 10 ans : 3, 1, 4, 2, 0, 5, 2, 3, 1, 4. Montants (€) : les 8 sinistres de la séance 1."
+    questions:
+      - q: 'Que vaut $\hat{\lambda}$, et son erreur type ?'
+        options: ['2,5 et 0,5', '2,5 et 1,58', '25 et 5']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            $\hat{\lambda} = \bar{x}$ et $\operatorname{se}(\hat{\lambda}) = \sqrt{\hat{\lambda}/n}$.
+          formule: |-
+            \hat{\lambda} = \frac{25}{10}, \qquad \sqrt{\frac{2{,}5}{10}}
+          exemple: >-
+            $\hat{\lambda} = 2{,}5$ sinistres par an, avec une erreur type de 0,5.
+          piege: >-
+            1,58 est $\sqrt{2{,}5}$, l'écart-type du nombre de sinistres d'une année, pas la précision de la moyenne sur 10 ans.
+      - q: 'Avec ce modèle, la probabilité estimée d''une année sans sinistre est…'
+        options: ['8,2 %', '10 %', '2,5 %']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Invariance : on remplace $\lambda$ par $\hat{\lambda}$ dans $P(N = 0) = e^{-\lambda}$.
+          formule: |-
+            e^{-2{,}5} = 0{,}0821
+          exemple: >-
+            8,2 % : environ une année sur douze sans sinistre.
+          piege: >-
+            10 % est la fréquence observée (1 année sur 10) : elle ignore le modèle de Poisson.
+      - q: 'Pareto avec $\theta = 2\,000$ € connu : $\sum \ln(1 + x_i/\theta) = 4{,}9335$. Que vaut $\hat{\alpha}$ ?'
+        options: ['1,62', '0,62', '2,32']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            $\hat{\alpha} = n / \sum \ln(1 + x_i/\theta)$, avec $n = 8$.
+          formule: |-
+            \hat{\alpha} = \frac{8}{4{,}9335} = 1{,}6216
+          exemple: >-
+            Avec $\hat{\alpha} = 1{,}62$, la moyenne de la Pareto vaut $\theta / (\alpha - 1) = 3\,218$ €, bien au-dessus de la moyenne observée.
+          piege: >-
+            0,62 est $\hat{\alpha} - 1$. 2,32 est le $\hat{\alpha}$ de la loi gamma de la séance 1 : une autre loi, un autre paramètre.
+      - q: 'La Pareto ajustée donne $P(X > 5\,000) = 13{,}1\,\%$. L''exponentielle ajustée ($\hat{\theta} = 1\,881{,}25$ €) donne…'
+        options: ['7,0 %', '13,1 %', '28,6 %']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Pour l'exponentielle, $P(X > x) = e^{-x/\theta}$.
+          formule: |-
+            e^{-5\,000 / 1\,881{,}25} = 0{,}0701
+          exemple: >-
+            Mêmes 8 sinistres, et la Pareto prévoit presque deux fois plus de sinistres au-delà de 5 000 € : le choix de la loi pèse sur la queue.
+          piege: >-
+            28,6 % est $2\,000 / 7\,000$ : la Pareto avec $\alpha = 1$ au lieu de 1,62, et pas l'exponentielle.
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: 'Montants de la séance 1, Pareto avec $\theta = 2\,000$ € connu, puis exponentielle. Saisis tes résultats à 4 décimales.'
+    donnees:
+      entetes: ['$x_1$', '$x_2$', '$x_3$', '$x_4$', '$x_5$', '$x_6$', '$x_7$', '$x_8$']
+      lignes: [['1 200', '800', '3 500', '600', '2 100', '950', '1 700', '4 200']]
+    champs:
+      - {cle: somme, libelle: '$\sum \ln(1 + x_i/\theta)$', valeur: 4.933527, tolerance: 0.00015}
+      - {cle: alpha, libelle: '$\hat{\alpha}$', valeur: 1.621558, tolerance: 0.00015}
+      - {cle: queue, libelle: '$P(X > 5\,000)$', valeur: 0.131148, tolerance: 0.00015}
+      - {cle: loglik, libelle: '$\ell(\hat{\theta})$', valeur: -68.317534, tolerance: 0.00015}
+    solution: |
+      $\sum \ln(1 + x_i/2\,000) = 4{,}9335$, donc $\hat{\alpha} = 8 / 4{,}9335 = 1{,}6216$ et $P(X > 5\,000) = (2\,000 / 7\,000)^{1{,}6216} = 0{,}1311$.
+      Exponentielle : $\ell(\theta) = -n \ln \theta - \sum x_i / \theta$, maximale en $\hat{\theta} = 1\,881{,}25$, où $\ell = -8 \ln 1\,881{,}25 - 8 = -68{,}3175$.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 8
+    intro: "Écris le corps des trois fonctions, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a2b/s02_vraisemblance.py
+    depart: |
+      def poisson_mle(counts):
+          """Maximum likelihood estimate of the Poisson mean from a list of claim counts."""
+          raise NotImplementedError
+
+      def exponential_loglik(xs, theta):
+          """Log-likelihood of an exponential distribution with mean theta."""
+          raise NotImplementedError
+
+      def pareto_alpha_mle(xs, theta):
+          """Maximum likelihood estimate of alpha for a Pareto distribution with known theta."""
+          raise NotImplementedError
+    tests:
+      - {nom: 'Poisson : $\hat{\lambda} = 2{,}5$', expr: "poisson_mle([3, 1, 4, 2, 0, 5, 2, 3, 1, 4]) == 2.5"}
+      - {nom: 'Aucun sinistre : $\hat{\lambda} = 0$', expr: "poisson_mle([0, 0, 0]) == 0"}
+      - {nom: '$\ell(1\,881{,}25) = -68{,}3175$', expr: "abs(exponential_loglik([1200, 800, 3500, 600, 2100, 950, 1700, 4200], 1881.25) + 68.317534) < 1e-6"}
+      - {nom: 'La log-vraisemblance est maximale en $\bar{x}$', expr: "all(exponential_loglik([1200, 800, 3500, 600, 2100, 950, 1700, 4200], t) < exponential_loglik([1200, 800, 3500, 600, 2100, 950, 1700, 4200], 1881.25) for t in (1500, 1800, 1950, 2500))"}
+      - {nom: 'Pareto : $\hat{\alpha} = 1{,}62156$', expr: "abs(pareto_alpha_mle([1200, 800, 3500, 600, 2100, 950, 1700, 4200], 2000) - 1.621558) < 1e-6"}
+      - {nom: 'Un seul sinistre égal à $\theta$ : $\hat{\alpha} = 1 / \ln 2$', expr: "abs(pareto_alpha_mle([2000], 2000) - 1.4426950408889634) < 1e-12"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Vraisemblance", "likelihood", "The likelihood is the density of the data, read as a function of the parameter."]
+      - ["Log-vraisemblance", "log-likelihood", "We maximized the log-likelihood numerically for the lognormal."]
+      - ["Estimateur du maximum de vraisemblance", "maximum likelihood estimator (MLE)", "The MLE of the Poisson mean is simply the average claim count."]
+      - ["Information de Fisher", "Fisher information", "The Fisher information gave us the standard error of the estimate."]
+      - ["Propriété d'invariance", "invariance property", "By invariance, the estimated probability of no claim is exp of minus lambda hat."]
+      - ["Queue épaisse", "heavy tail", "A Pareto has a much heavier tail than an exponential fitted to the same claims."]

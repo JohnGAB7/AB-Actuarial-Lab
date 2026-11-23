@@ -1,0 +1,135 @@
+# English texts for session A2b.02. Numbers, answers and tests live in contenus/a2b/s02.yaml.
+titre: "Maximum likelihood"
+
+etapes:
+  - titre: "Placement check"
+    intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
+    questions:
+      - q: 'For independent observations $x_1, \dots, x_n$, the likelihood $L(\theta)$ is…'
+        options: ['the product of the densities $f(x_i; \theta)$', 'the sum of the densities $f(x_i; \theta)$', 'the probability that $\theta$ is the true parameter']
+        pourquoi:
+          rappel: >-
+            The likelihood reads the density of the observed data as a function of the parameter. Independence turns the joint density into a product.
+          exemple: >-
+            For Poisson claim counts, $L(\lambda) = \prod e^{-\lambda} \lambda^{x_i} / x_i!$.
+          piege: >-
+            $L(\theta)$ is not a probability over $\theta$: it does not add up to 1 as $\theta$ varies.
+      - q: 'Why maximize the log-likelihood $\ell(\theta) = \ln L(\theta)$ rather than $L(\theta)$?'
+        options: ['The logarithm turns the product into a sum without moving the maximum', 'It gives another, more precise estimator', 'To get a positive value']
+        pourquoi:
+          rappel: >-
+            The logarithm is increasing: $L$ and $\ln L$ reach their maximum at the same $\theta$. A sum is much easier to differentiate than a product.
+          exemple: >-
+            The product of 1,000 very small densities falls to 0 on a computer; the sum of their logarithms stays computable.
+          piege: >-
+            The log-likelihood is usually negative: that is not a problem, only the location of the maximum matters.
+      - q: 'For Poisson claim counts, the maximum likelihood estimator (MLE) of $\lambda$ is…'
+        options: ['the sample mean $\bar{x}$', 'the sample variance $s^2$', 'the largest observed count']
+        pourquoi:
+          rappel: >-
+            Differentiate $\ell(\lambda) = -n\lambda + \sum x_i \ln \lambda - \sum \ln x_i!$ and set it to zero.
+          exemple: >-
+            25 claims in 10 years: $\hat{\lambda} = 2.5$ a year.
+          piege: >-
+            The variance of a Poisson is also $\lambda$, but the maximum likelihood estimator is the mean.
+      - q: 'If $\hat{\lambda}$ is the MLE of $\lambda$, the MLE of $P(N = 0) = e^{-\lambda}$ is…'
+        options: ['$e^{-\hat{\lambda}}$', 'the share of years without a claim', 'impossible to get without redoing the calculation']
+        pourquoi:
+          rappel: >-
+            Invariance property: the MLE of a function of the parameter is that function applied to the MLE.
+          exemple: >-
+            $\hat{\lambda} = 2.5$ gives $P(N = 0) \approx e^{-2.5} = 0.0821$.
+          piege: >-
+            The share of years without a claim is a model-free estimate; it does not use the Poisson assumption.
+
+  - titre: "The intuition on video"
+    texte: >-
+      This topic does not have its long Actu-Basics lesson yet. The recap and the exercises that follow cover the whole
+      content of the session.
+
+  - titre: "The recap"
+    blocs:
+      - p: >-
+          <b>Maximum likelihood</b> <i>(maximum de vraisemblance)</i> picks the parameter value that makes the observed
+          data the most likely. We maximize the <b>log-likelihood</b> <i>(log-vraisemblance)</i> by setting its
+          derivative, the <b>score</b> <i>(score)</i>, to zero.
+      - formule: |
+          \begin{gathered}
+          \ell(\theta) = \sum_{i=1}^{n} \ln f(x_i; \theta) \qquad \ell'(\hat{\theta}) = 0 \\[6pt]
+          \text{Poisson: } \hat{\lambda} = \bar{x} \qquad \text{exponential: } \hat{\theta} = \bar{x} \qquad \text{Pareto, } \theta \text{ known: } \hat{\alpha} = \frac{n}{\sum \ln(1 + x_i/\theta)}
+          \end{gathered}
+      - p: >-
+          For a large sample, the MLE is nearly unbiased and roughly normal. Its variance is the inverse of the
+          <b>Fisher information</b> <i>(information de Fisher)</i> $I(\theta) = -E[\ell''(\theta)]$. For the Poisson,
+          $I(\lambda) = n/\lambda$, so $\operatorname{se}(\hat{\lambda}) = \sqrt{\hat{\lambda}/n}$.
+      - p: >-
+          The <b>invariance property</b> <i>(propriété d'invariance)</i> directly gives the MLE of any derived quantity:
+          probability of no claim, quantile, pure premium. Just replace the parameter with its estimate.
+      - note: >-
+          Two distributions can fit the same claims and diverge in the tail. The Pareto, with a <b>heavy tail</b>
+          <i>(queue épaisse)</i>, gives far more weight to large claims than the exponential: this is what matters for
+          reinsurance and capital. Session 4 compares the fits.
+      - sources:
+          - {titre: "Klugman, Panjer and Willmot, Loss Models, chap. 13", detail: "Maximum likelihood for loss distributions"}
+          - {titre: "Hogg, McKean and Craig, Introduction to Mathematical Statistics, chap. 6", detail: "Likelihood, Fisher information, invariance"}
+
+  - titre: "Check"
+    intro: "Claim counts over 10 years: 3, 1, 4, 2, 0, 5, 2, 3, 1, 4. Amounts (€): the 8 claims of session 1."
+    questions:
+      - q: 'What are $\hat{\lambda}$ and its standard error?'
+        options: ['2.5 and 0.5', '2.5 and 1.58', '25 and 5']
+        pourquoi:
+          rappel: >-
+            $\hat{\lambda} = \bar{x}$ and $\operatorname{se}(\hat{\lambda}) = \sqrt{\hat{\lambda}/n}$.
+          exemple: >-
+            $\hat{\lambda} = 2.5$ claims a year, with a standard error of 0.5.
+          piege: >-
+            1.58 is $\sqrt{2.5}$, the standard deviation of one year's claim count, not the precision of the 10-year mean.
+      - q: 'With this model, the estimated probability of a year without a claim is…'
+        options: ['8.2%', '10%', '2.5%']
+        pourquoi:
+          rappel: >-
+            Invariance: replace $\lambda$ with $\hat{\lambda}$ in $P(N = 0) = e^{-\lambda}$.
+          exemple: >-
+            8.2%: about one year in twelve without a claim.
+          piege: >-
+            10% is the observed frequency (1 year in 10): it ignores the Poisson model.
+      - q: 'Pareto with known $\theta = 2{,}000$ euros: $\sum \ln(1 + x_i/\theta) = 4.9335$. What is $\hat{\alpha}$?'
+        options: ['1.62', '0.62', '2.32']
+        pourquoi:
+          rappel: >-
+            $\hat{\alpha} = n / \sum \ln(1 + x_i/\theta)$, with $n = 8$.
+          exemple: >-
+            With $\hat{\alpha} = 1.62$, the Pareto mean is $\theta / (\alpha - 1) = 3{,}218$ euros, well above the observed mean.
+          piege: >-
+            0.62 is $\hat{\alpha} - 1$. 2.32 is the gamma $\hat{\alpha}$ of session 1: another distribution, another parameter.
+      - q: 'The fitted Pareto gives $P(X > 5{,}000) = 13.1\%$. The fitted exponential ($\hat{\theta} = 1{,}881.25$ euros) gives…'
+        options: ['7.0%', '13.1%', '28.6%']
+        pourquoi:
+          rappel: >-
+            For the exponential, $P(X > x) = e^{-x/\theta}$.
+          exemple: >-
+            Same 8 claims, and the Pareto expects almost twice as many claims above €5,000: the choice of distribution weighs on the tail.
+          piege: >-
+            28.6% is $2{,}000 / 7{,}000$: the Pareto with $\alpha = 1$ instead of 1.62, and not the exponential.
+
+  - titre: "By hand"
+    intro: 'Amounts from session 1, Pareto with known $\theta = 2{,}000$ euros, then exponential. Enter your results to 4 decimal places.'
+    donnees:
+      lignes: [['1,200', '800', '3,500', '600', '2,100', '950', '1,700', '4,200']]
+    solution: |
+      $\sum \ln(1 + x_i/2{,}000) = 4.9335$, so $\hat{\alpha} = 8 / 4.9335 = 1.6216$ and $P(X > 5{,}000) = (2{,}000 / 7{,}000)^{1.6216} = 0.1311$.
+      Exponential: $\ell(\theta) = -n \ln \theta - \sum x_i / \theta$, maximal at $\hat{\theta} = 1{,}881.25$, where $\ell = -8 \ln 1{,}881.25 - 8 = -68.3175$.
+
+  - titre: "Your turn to code"
+    intro: "Write the body of the three functions, without AI. All the tests must pass."
+    tests:
+      - {nom: 'Poisson: $\hat{\lambda} = 2.5$'}
+      - {nom: 'No claims: $\hat{\lambda} = 0$'}
+      - {nom: '$\ell(1{,}881.25) = -68.3175$'}
+      - {nom: 'The log-likelihood is maximal at $\bar{x}$'}
+      - {nom: 'Pareto: $\hat{\alpha} = 1.62156$'}
+      - {nom: 'A single claim equal to $\theta$: $\hat{\alpha} = 1 / \ln 2$'}
+
+  - titre: "Vocabulary"
+    intro: "Tap a card: the French term and a job-interview sentence."

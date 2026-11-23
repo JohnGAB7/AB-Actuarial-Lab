@@ -1,0 +1,212 @@
+# Séance 5 du module A2 (Probabilités pour l'assurance) : fréquence, sévérité et charge agrégée S = X1 + … + XN.
+# Chiffres : portefeuille fictif (Poisson de moyenne 50, sinistres exponentiels de moyenne 2 000 €). Recalculés par tests/test_contenus.py et tests/a2/test_s05_charge.py.
+id: a2/s05
+module: a2
+titre: "Fréquence, sévérité et charge totale"
+en: "Frequency, severity and aggregate loss"
+duree: 30
+
+actu_basics:
+  episode: "A2 · Probability for insurance"
+  statut: "à proposer"
+  accroche_fr: "Combien de sinistres, et combien chacun : comment l'assureur combine les deux."
+  accroche_en: "How many claims, and how much each: how an insurer combines the two."
+
+etapes:
+  - type: quiz
+    titre: "Test de positionnement"
+    minutes: 3
+    intro: "Quatre questions avant le cours. Si tu as tout juste, survole le rappel et va directement au calcul."
+    questions:
+      - q: 'Charge totale $S = X_1 + \dots + X_N$, avec $N$ indépendant des $X_i$, de même loi. Que vaut $E[S]$ ?'
+        options: ['$E[N]\,E[X]$', '$E[N] + E[X]$', '$N\,E[X]$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On conditionne par le nombre de sinistres : sachant $N = n$, la charge moyenne vaut $n\,E[X]$. On fait ensuite la moyenne sur $N$.
+          formule: |-
+            E[S] = E\big[E[S \mid N]\big] = E[N]\,E[X]
+          exemple: >-
+            50 sinistres attendus de 2 000 € en moyenne : $E[S] = 100\,000$ €.
+          piege: >-
+            $N\,E[X]$ est encore aléatoire : c'est $E[S \mid N]$, pas $E[S]$.
+      - q: 'Et la variance de $S$ ?'
+        options: ['$E[N]\operatorname{Var}(X) + \operatorname{Var}(N)\,(E[X])^2$', '$\operatorname{Var}(N)\operatorname{Var}(X)$', '$E[N]^2 \operatorname{Var}(X)$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Deux sources d'incertitude : le montant de chaque sinistre, et le nombre de sinistres. La formule de la variance totale les additionne.
+          formule: |-
+            \operatorname{Var}(S) = E[N]\,\operatorname{Var}(X) + \operatorname{Var}(N)\,(E[X])^2
+          exemple: >-
+            Le premier terme vient de la sévérité (severity), le second de la fréquence (frequency).
+          piege: >-
+            Multiplier les deux variances n'a pas de sens : l'unité ne serait même pas celle d'une variance de montant.
+      - q: 'Pour une loi de Poisson composée ($N \sim$ Poisson($\lambda$)), la variance se simplifie en…'
+        options: ['$\lambda\,E[X^2]$', '$\lambda\,\operatorname{Var}(X)$', '$\lambda^2\,E[X]^2$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Avec $E[N] = \operatorname{Var}(N) = \lambda$, les deux termes se regroupent : $\operatorname{Var}(X) + (E[X])^2 = E[X^2]$.
+          formule: |-
+            \operatorname{Var}(S) = \lambda\,E[X^2]
+          exemple: >-
+            Sinistres exponentiels de moyenne 2 000 € : $E[X^2] = 2\theta^2 = 8\,000\,000$, donc $\operatorname{Var}(S) = 50 \times 8 \times 10^6 = 4 \times 10^8$.
+          piege: >-
+            $\lambda\,\operatorname{Var}(X)$ oublie l'incertitude sur le nombre de sinistres.
+      - q: 'Pourquoi modéliser séparément fréquence et sévérité ?'
+        options: ['Elles réagissent à des facteurs différents', 'C''est imposé par la loi', 'Pour simplifier la comptabilité']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Un jeune conducteur a plus d'accidents (fréquence) ; une voiture chère coûte plus par accident (sévérité). L'inflation touche la sévérité, pas la fréquence.
+          formule: |-
+            \text{prime pure} = E[N] \times E[X]
+          exemple: >-
+            En tarification (A6), on ajuste souvent deux modèles : Poisson pour la fréquence, gamma ou lognormale pour la sévérité.
+          piege: >-
+            Modéliser directement la charge mélange deux effets et rend les résultats difficiles à expliquer.
+
+  - type: video
+    titre: "L'intuition en vidéo"
+    minutes: 3
+    texte: >-
+      Ce thème n'a pas encore sa leçon Actu-Basics. Elle montrera comment le nombre de sinistres et leur montant
+      se combinent en une seule charge, et laquelle des deux incertitudes pèse le plus.
+
+  - type: rappel
+    titre: "Le rappel"
+    minutes: 8
+    blocs:
+      - p: >-
+          Le <b>modèle collectif</b> <i>(collective risk model)</i> écrit la <b>charge totale</b> <i>(aggregate loss)</i>
+          d'un portefeuille comme une somme d'un nombre aléatoire de sinistres : la <b>fréquence</b>
+          <i>(frequency)</i> $N$ et la <b>sévérité</b> <i>(severity)</i> $X_i$, indépendantes et de même loi.
+      - formule: |
+          \begin{gathered}
+          S = \sum_{i=1}^{N} X_i \\[6pt]
+          E[S] = E[N]\,E[X] \qquad \operatorname{Var}(S) = E[N]\,\operatorname{Var}(X) + \operatorname{Var}(N)\,(E[X])^2
+          \end{gathered}
+      - p: >-
+          Quand $N$ suit une loi de Poisson, $S$ suit une <b>loi de Poisson composée</b> <i>(compound Poisson)</i> et
+          $\operatorname{Var}(S) = \lambda\,E[X^2]$. Si $N$ est surdispersé (variance supérieure à la moyenne), la
+          variance de $S$ augmente, et la queue aussi.
+      - p: >-
+          Pour une loi discrète des montants, la loi exacte de $S$ s'obtient par <b>convolution</b>
+          <i>(convolution)</i> : on additionne, pour chaque $n$, la loi de la somme de $n$ sinistres pondérée par
+          $P(N = n)$. Pour un grand portefeuille, l'approximation normale suffit souvent pour un ordre de grandeur.
+      - formule: |
+          P(S = s) = \sum_{n} P(N = n)\,P(X_1 + \dots + X_n = s)
+      - note: >-
+          Le modèle collectif est le point de départ de la tarification non-vie (A5, A6) et du calcul du capital : un
+          traité de réassurance en excédent de sinistre se tarifie sur la loi de $S$, pas sur sa seule moyenne.
+      - sources:
+          - {titre: "Klugman, Panjer et Willmot, Loss Models, chap. 9", detail: "Modèle collectif, Poisson composée, convolution, récursion de Panjer"}
+          - {titre: "CAS, MAS-I (Modern Actuarial Statistics I)", detail: "Modèles de fréquence, de sévérité et de charge agrégée"}
+
+  - type: quiz
+    titre: "Vérifie"
+    minutes: 4
+    intro: "Quatre questions. Réponds sans relire le rappel."
+    questions:
+      - q: 'Fréquence Poisson de moyenne 50, sinistres exponentiels de moyenne 2 000 €. Écart-type de $S$ ?'
+        options: ['20 000 €', '14 142 €', '100 000 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Poisson composée : $\operatorname{Var}(S) = \lambda\,E[X^2]$, avec $E[X^2] = 2\theta^2$ pour l'exponentielle.
+          formule: |-
+            \sigma_S = \sqrt{50 \times 2 \times 2\,000^2}
+          exemple: >-
+            $\sqrt{4 \times 10^8} = 20\,000$ €, soit 20 % de la charge attendue.
+          piege: >-
+            14 142 € est $\sqrt{\lambda\,\operatorname{Var}(X)}$ : il manque l'effet du nombre de sinistres.
+      - q: 'Même portefeuille. Par l''approximation normale, probabilité que la charge dépasse 130 000 € ?'
+        options: ['6,7 %', '1,5 %', '30 %']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On centre et on réduit : $z = (130\,000 - 100\,000) / 20\,000$.
+          formule: |-
+            P(S > 130\,000) \approx 1 - \Phi(1{,}5)
+          exemple: >-
+            $1 - \Phi(1{,}5) = 0{,}0668$.
+          piege: >-
+            1,5 est la valeur de $z$, pas une probabilité. 30 % divise l'écart par la moyenne au lieu de l'écart-type.
+      - q: 'Si la fréquence a la même moyenne mais une variance de 100 (au lieu de 50), l''écart-type de $S$ devient…'
+        options: ['24 495 €', '20 000 €', '28 284 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Formule générale : $E[N]\operatorname{Var}(X) + \operatorname{Var}(N)(E[X])^2$, avec $\operatorname{Var}(X) = \theta^2$.
+          formule: |-
+            \operatorname{Var}(S) = 50 \times 2\,000^2 + 100 \times 2\,000^2 = 6 \times 10^8
+          exemple: >-
+            $\sigma_S = 24\,494{,}90$ € : la surdispersion de la fréquence alourdit le risque de 22 %.
+          piege: >-
+            28 284 € double toute la variance, alors que seul le terme de fréquence change.
+      - q: '$N$ vaut 0, 1 ou 2 (probabilités 0,7, 0,2, 0,1) ; chaque sinistre vaut 100 € ou 500 €, à parts égales. $P(S = 600)$ ?'
+        options: ['0,05', '0,025', '0,1']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            600 € n'est possible qu'avec deux sinistres, l'un de 100 €, l'autre de 500 €, dans un ordre ou dans l'autre.
+          formule: |-
+            P(S = 600) = P(N = 2) \times 2 \times 0{,}5 \times 0{,}5
+          exemple: >-
+            $0{,}1 \times 0{,}5 = 0{,}05$.
+          piege: >-
+            0,025 oublie que l'ordre (100 puis 500, ou 500 puis 100) compte deux fois.
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: "Fréquence Poisson de moyenne $\\lambda = 50$, sinistres exponentiels de moyenne $\\theta = 2\\,000$ €. Saisis tes résultats à l'euro près, la probabilité à 4 décimales."
+    donnees:
+      entetes: ['$\lambda$', '$\theta$', '$s$']
+      lignes: [['50', '2 000', '130 000']]
+    champs:
+      - {cle: es, libelle: '$E[S]$', valeur: 100000, tolerance: 0.5}
+      - {cle: vs, libelle: '$\operatorname{Var}(S) / 10^6$', valeur: 400, tolerance: 0.05}
+      - {cle: sd, libelle: '$\sigma_S$', valeur: 20000, tolerance: 0.5}
+      - {cle: p, libelle: '$P(S > s)$', valeur: 0.0668072, tolerance: 0.0015}
+    solution: |
+      $E[S] = 50 \times 2\,000 = 100\,000$ €. $E[X^2] = 2 \times 2\,000^2 = 8 \times 10^6$, donc $\operatorname{Var}(S) = 4 \times 10^8$ et $\sigma_S = 20\,000$ €.
+      $z = 30\,000 / 20\,000 = 1{,}5$, donc $P(S > 130\,000) \approx 1 - \Phi(1{,}5) = 0{,}0668$.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 8
+    intro: "Écris le corps des trois fonctions, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a2/s05_charge.py
+    depart: |
+      def aggregate_mean_var(mean_n, var_n, mean_x, var_x):
+          """(E[S], Var(S)) for S = X_1 + ... + X_N in the collective risk model."""
+          raise NotImplementedError
+
+      def compound_poisson_var(lam, second_moment_x):
+          """Var(S) when N ~ Poisson(lam): lam * E[X**2]."""
+          raise NotImplementedError
+
+      def aggregate_pmf(freq, sev):
+          """Exact distribution of S by convolution; freq and sev are dicts {value: probability}."""
+          raise NotImplementedError
+    tests:
+      - {nom: '$E[S] = 100\,000$ et $\operatorname{Var}(S) = 4 \times 10^8$', expr: "aggregate_mean_var(50, 50, 2000, 2000 ** 2) == (100000, 400000000)"}
+      - {nom: 'Poisson composée : $\lambda E[X^2]$', expr: "compound_poisson_var(50, 2 * 2000 ** 2) == 400000000"}
+      - {nom: 'Fréquence surdispersée : $6 \times 10^8$', expr: "aggregate_mean_var(50, 100, 2000, 2000 ** 2)[1] == 600000000"}
+      - {nom: '$P(S = 600) = 0{,}05$', expr: "abs(aggregate_pmf({0: 0.7, 1: 0.2, 2: 0.1}, {100: 0.5, 500: 0.5})[600] - 0.05) < 1e-12"}
+      - {nom: 'La loi de $S$ somme à 1', expr: "abs(sum(aggregate_pmf({0: 0.7, 1: 0.2, 2: 0.1}, {100: 0.5, 500: 0.5}).values()) - 1) < 1e-12"}
+      - {nom: 'La convolution retrouve $E[S] = 120$', expr: "abs(sum(s * q for s, q in aggregate_pmf({0: 0.7, 1: 0.2, 2: 0.1}, {100: 0.5, 500: 0.5}).items()) - 120) < 1e-9"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Fréquence, sévérité", "frequency, severity", "We model frequency and severity separately, then combine them."]
+      - ["Charge totale", "aggregate loss", "The aggregate loss has a standard deviation of 20% of its mean."]
+      - ["Modèle collectif", "collective risk model", "The collective risk model sums a random number of claims."]
+      - ["Poisson composée", "compound Poisson distribution", "Under a compound Poisson model, the variance is lambda times the second moment."]
+      - ["Convolution", "convolution", "We computed the exact distribution by convolution."]
+      - ["Prime pure", "pure premium, loss cost", "The pure premium is expected frequency times expected severity."]

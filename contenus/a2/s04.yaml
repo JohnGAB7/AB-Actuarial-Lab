@@ -1,0 +1,219 @@
+# Séance 4 du module A2 (Probabilités pour l'assurance) : sommes de variables, loi des grands nombres, mutualisation.
+# Chiffres : portefeuille fictif (1 % de sinistre, 10 000 € par sinistre). Les valeurs sont recalculées par tests/test_contenus.py et tests/a2/test_s04_mutualisation.py.
+id: a2/s04
+module: a2
+titre: "Mutualisation et loi des grands nombres"
+en: "Pooling and the law of large numbers"
+duree: 30
+
+actu_basics:
+  episode: "A2 · Probability for insurance"
+  statut: "A2.01 publiée en anglais"
+  accroche_fr: "Pourquoi le coût moyen d'un sinistre est-il plus prévisible avec 10 000 contrats ?"
+  accroche_en: "Why is the average claim cost more predictable with 10,000 policies?"
+  videos:
+    - {id: zVX2Oy68W5Y, langue: en, titre: "Why is the average claim cost more predictable with 10,000 policies?", duree: "6:39"}
+
+etapes:
+  - type: quiz
+    titre: "Test de positionnement"
+    minutes: 3
+    intro: "Quatre questions avant le cours. Si tu as tout juste, survole le rappel et va directement au calcul."
+    questions:
+      - q: 'Pour $n$ variables indépendantes de même variance $\sigma^2$, que vaut la variance de leur moyenne $\bar{X}$ ?'
+        options: ['$\sigma^2 / n$', '$\sigma^2$', '$n\,\sigma^2$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Les variances de variables indépendantes s'additionnent : la somme a une variance $n\sigma^2$. Diviser par $n$ divise la variance par $n^2$.
+          formule: |-
+            \operatorname{Var}(\bar{X}) = \frac{1}{n^2}\,\operatorname{Var}\Big(\sum_{i=1}^{n} X_i\Big) = \frac{\sigma^2}{n}
+          exemple: >-
+            L'écart-type de la moyenne est $\sigma/\sqrt{n}$ : 100 fois plus de contrats, 10 fois moins de dispersion.
+          piege: >-
+            $n\sigma^2$ est la variance de la somme. Le risque total grandit, mais moins vite que le portefeuille.
+      - q: 'Que dit la loi des grands nombres ?'
+        options: ['La moyenne observée se rapproche de l''espérance quand $n$ grandit', 'Chaque contrat finit par coûter la moyenne', 'Les sinistres se compensent exactement']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            La loi des grands nombres (law of large numbers) porte sur la moyenne d'un grand nombre de variables indépendantes de même loi, pas sur chaque contrat.
+          formule: |-
+            \bar{X}_n \xrightarrow[n \to \infty]{} E[X]
+          exemple: >-
+            Un contrat coûte 0 € ou 10 000 €, jamais 100 €. Mais le coût moyen de 10 000 contrats reste proche de 100 €.
+          piege: >-
+            Elle ne promet aucune compensation exacte, ni aucun bénéfice : elle rend la moyenne prévisible.
+      - q: 'Le théorème central limite permet d''approcher la loi de la somme de $n$ sinistres par…'
+        options: ['une loi normale', 'une loi de Poisson', 'une loi uniforme']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Pour $n$ grand, la somme de variables indépendantes de même loi, de variance finie, est approximativement normale.
+          formule: |-
+            \frac{S_n - n\mu}{\sigma\sqrt{n}} \approx \mathcal{N}(0, 1)
+          exemple: >-
+            C'est ce qui permet de calculer une probabilité de perte du portefeuille avec la seule table de la loi normale.
+          piege: >-
+            Pour des sinistres très asymétriques ou un petit portefeuille, l'approximation normale sous-estime la queue.
+      - q: 'La mutualisation fonctionne bien quand les risques sont…'
+        options: ['nombreux, indépendants et comparables', 'peu nombreux mais très gros', 'fortement corrélés']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            La réduction en $1/\sqrt{n}$ suppose l'indépendance. Une tempête ou une pandémie touche beaucoup de contrats à la fois : cette part du risque ne se dilue pas.
+          formule: |-
+            \operatorname{Var}(\bar{X}) = \frac{\sigma^2}{n} + \frac{n-1}{n}\,\rho\,\sigma^2 \xrightarrow[n \to \infty]{} \rho\,\sigma^2
+          exemple: >-
+            Avec une corrélation $\rho > 0$, la variance de la moyenne ne descend jamais sous $\rho\sigma^2$.
+          piege: >-
+            La mutualisation rend les pertes prévisibles ; elle ne rend pas l'assureur rentable. Le tarif, les frais et la réassurance comptent aussi.
+
+  - type: video
+    titre: "L'intuition en vidéo"
+    minutes: 7
+    texte: >-
+      La leçon Actu-Basics A2.01 montre, avec un portefeuille de téléphones, pourquoi le coût moyen devient
+      prévisible quand le nombre de contrats augmente, et sous quelles hypothèses. Elle est en ligne en anglais.
+
+  - type: rappel
+    titre: "Le rappel"
+    minutes: 8
+    blocs:
+      - p: >-
+          Pour $n$ contrats indépendants de coûts $X_1, \dots, X_n$, de même espérance $\mu$ et de même variance
+          $\sigma^2$, la <b>charge totale</b> <i>(aggregate loss)</i> $S_n$ et le <b>coût moyen</b> $\bar{X}_n$ ont :
+      - formule: |
+          \begin{gathered}
+          E[S_n] = n\mu \qquad \operatorname{Var}(S_n) = n\sigma^2 \\[6pt]
+          E[\bar{X}_n] = \mu \qquad \sigma_{\bar{X}_n} = \frac{\sigma}{\sqrt{n}}
+          \end{gathered}
+      - p: >-
+          C'est la <b>mutualisation</b> <i>(pooling of risks)</i> : le risque par contrat baisse comme $1/\sqrt{n}$. La
+          <b>loi des grands nombres</b> <i>(law of large numbers)</i> dit que $\bar{X}_n$ tend vers $\mu$ ; le
+          <b>théorème central limite</b> <i>(central limit theorem)</i> dit à quelle vitesse, et avec quelle loi.
+      - formule: |
+          P\big(\bar{X}_n > \mu + c\big) \approx 1 - \Phi\!\left(\frac{c\,\sqrt{n}}{\sigma}\right)
+      - p: >-
+          Exemple fictif : chaque contrat a 1 % de chance d'un sinistre de 10 000 €. Alors $\mu = 100$ € et
+          $\sigma = 994{,}99$ €. Avec 100 contrats, l'écart-type du coût moyen vaut 99,50 € ; avec 10 000 contrats,
+          9,95 €.
+      - p: >-
+          Pour que la prime suffise avec probabilité 95 %, il faut ajouter un <b>chargement de sécurité</b>
+          <i>(safety loading)</i> de $1{,}645\,\sigma/\sqrt{n}$ par contrat : 16,37 € pour 10 000 contrats.
+      - note: >-
+          Ces hypothèses (indépendance, taille, homogénéité) ne tiennent jamais parfaitement. Les catastrophes naturelles
+          créent de la corrélation ; c'est pour elles qu'existent la réassurance et le capital de solvabilité (A8).
+      - sources:
+          - {titre: "Klugman, Panjer et Willmot, Loss Models, chap. 9", detail: "Modèles de charge agrégée et approximation normale"}
+          - {titre: "SOA, Probability (P) Exam", url: "https://www.soa.org/education/exam-req/edu-exam-p-detail/", detail: "Syllabus officiel de l'examen"}
+
+  - type: quiz
+    titre: "Vérifie"
+    minutes: 4
+    intro: "Quatre questions sur le portefeuille fictif : 1 % de chance d'un sinistre de 10 000 € par contrat."
+    questions:
+      - q: 'Quel est l''écart-type du coût d''un seul contrat ?'
+        options: ['994,99 €', '100 €', '9 900 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Le coût vaut $10\,000 \times B$, avec $B$ une Bernoulli de paramètre 0,01.
+          formule: |-
+            \sigma = 10\,000\,\sqrt{0{,}01 \times 0{,}99}
+          exemple: >-
+            $\sigma^2 = 990\,000$ et $\sigma = 994{,}99$ € : presque dix fois la moyenne de 100 €.
+          piege: >-
+            100 € est l'espérance. 9 900 € oublie la racine carrée de la variance de Bernoulli.
+      - q: 'Avec 10 000 contrats, probabilité que le coût moyen dépasse 110 € ?'
+        options: ['15,7 %', '46,0 %', '5 %']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Approximation normale du coût moyen, d'écart-type $\sigma/\sqrt{n}$.
+          formule: |-
+            z = \frac{110 - 100}{994{,}99 / \sqrt{10\,000}}
+          exemple: >-
+            $z = 10 / 9{,}95 = 1{,}005$ et $1 - \Phi(1{,}005) = 0{,}157$.
+          piege: >-
+            46,0 % est le résultat pour 100 contrats seulement : la mutualisation y est encore faible.
+      - q: 'Combien de contrats faut-il pour que l''écart-type du coût moyen tombe à 5 % de la moyenne ?'
+        options: ['39 600', '10 000', '200']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On veut $\sigma / (\mu\sqrt{n}) = 0{,}05$, donc $n = (\sigma / (0{,}05\,\mu))^2$.
+          formule: |-
+            n = \left(\frac{994{,}99}{0{,}05 \times 100}\right)^{2}
+          exemple: >-
+            $(198{,}997)^2 = 39\,600$ contrats.
+          piege: >-
+            Avec 10 000 contrats, le rapport vaut 9,95 %, pas 5 %. Diviser le risque par 2 demande 4 fois plus de contrats.
+      - q: 'Si tous les contrats sont exposés à la même tempête, la mutualisation…'
+        options: ['réduit beaucoup moins le risque', 'le réduit encore plus', 'n''est pas affectée']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            La part commune du risque ne se dilue pas : la variance du coût moyen tend vers $\rho\sigma^2$, pas vers 0.
+          formule: |-
+            \operatorname{Var}(\bar{X}_n) \to \rho\,\sigma^2
+          exemple: >-
+            C'est pourquoi un assureur limite son exposition par zone géographique et achète de la réassurance catastrophe.
+          piege: >-
+            Ajouter des contrats de la même zone n'ajoute pas de diversification face à la tempête.
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: "Portefeuille fictif : 1 % de chance d'un sinistre de 10 000 € par contrat, contrats indépendants. Saisis tes résultats au centime, et la probabilité à 4 décimales."
+    donnees:
+      entetes: ['$p$', '$C$', '$n$']
+      lignes: [['0,01', '10 000', '10 000']]
+    champs:
+      - {cle: sigma, libelle: '$\sigma$', valeur: 994.9874, tolerance: 0.015}
+      - {cle: sigma_n, libelle: '$\sigma / \sqrt{n}$', valeur: 9.9499, tolerance: 0.015}
+      - {cle: prob, libelle: '$P(\bar{X}_n > 110)$', valeur: 0.157439, tolerance: 0.0015}
+      - {cle: prime, libelle: '$\mu + 1{,}645\,\sigma/\sqrt{n}$', valeur: 116.3675, tolerance: 0.015}
+    solution: |
+      $\mu = 100$, $\sigma^2 = 10\,000^2 \times 0{,}01 \times 0{,}99 = 990\,000$, $\sigma = 994{,}99$ et $\sigma/\sqrt{n} = 9{,}95$.
+      $z = 10 / 9{,}95 = 1{,}005$, donc $P = 1 - \Phi(1{,}005) = 0{,}1574$. Prime à 95 % : $100 + 1{,}645 \times 9{,}95 = 116{,}37$ €.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 8
+    intro: "Écris le corps des trois fonctions, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a2/s04_mutualisation.py
+    depart: |
+      import math
+      import random
+
+      def sd_of_mean(sigma, n):
+          """Standard deviation of the average of n independent costs with standard deviation sigma."""
+          raise NotImplementedError
+
+      def prob_mean_exceeds(threshold, mu, sigma, n):
+          """Normal approximation of P(mean cost > threshold) for n independent policies."""
+          raise NotImplementedError
+
+      def simulate_mean_cost(n, p, claim, seed=1):
+          """Simulate one portfolio of n policies (claim with probability p) and return the average cost."""
+          raise NotImplementedError
+    tests:
+      - {nom: '$\sigma/\sqrt{n}$ vaut 9,94987 pour 10 000 contrats', expr: "abs(sd_of_mean(994.98744, 10000) - 9.949874) < 1e-5"}
+      - {nom: 'Probabilité de dépasser 110 € : 0,15744', expr: "abs(prob_mean_exceeds(110, 100, 994.98744, 10000) - 0.15744) < 0.00001"}
+      - {nom: 'Au seuil de la moyenne, la probabilité vaut 1/2', expr: "abs(prob_mean_exceeds(100, 100, 50, 7) - 0.5) < 1e-12"}
+      - {nom: 'Plus de contrats, moins de risque de dépasser', expr: "prob_mean_exceeds(110, 100, 995, 40000) < prob_mean_exceeds(110, 100, 995, 10000)"}
+      - {nom: 'La simulation est reproductible', expr: "simulate_mean_cost(1000, 0.01, 10000, seed=3) == simulate_mean_cost(1000, 0.01, 10000, seed=3)"}
+      - {nom: 'Avec 200 000 contrats, la moyenne simulée est proche de 100 €', expr: "abs(simulate_mean_cost(200000, 0.01, 10000) - 100) < 10"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Mutualisation", "pooling of risks", "Pooling makes the average claim cost predictable, not profitable."]
+      - ["Loi des grands nombres", "law of large numbers", "The law of large numbers applies to the average, not to each policy."]
+      - ["Théorème central limite", "central limit theorem", "We used the central limit theorem to approximate the aggregate loss."]
+      - ["Charge totale", "aggregate loss, total claims", "The aggregate loss has a mean of one million euros."]
+      - ["Chargement de sécurité", "safety loading, risk margin", "A safety loading of 16% keeps the probability of loss below 5%."]
+      - ["Risque de cumul", "accumulation risk, correlated risk", "A windstorm creates accumulation risk that pooling cannot remove."]

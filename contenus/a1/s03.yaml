@@ -1,0 +1,223 @@
+# Séance 3 du module A1 (Mathématiques financières) : valeur accumulée, perpétuités et annuités variables.
+# Chiffres : taux fictif de 5 %, croissance fictive de 2 %. Les valeurs sont recalculées par tests/test_contenus.py et tests/a1/test_s03_annuites.py.
+id: a1/s03
+module: a1
+titre: "Perpétuités et annuités variables"
+en: "Perpetuities and varying annuities"
+duree: 30
+taux: 0.05
+
+actu_basics:
+  episode: "A1 · Financial mathematics"
+  statut: "à proposer"
+  accroche_fr: "Combien vaut une rente qui ne s'arrête jamais ?"
+  accroche_en: "What is an income that never stops worth?"
+
+etapes:
+  - type: quiz
+    titre: "Test de positionnement"
+    minutes: 3
+    intro: "Quatre questions avant le cours. Si tu as tout juste, survole le rappel et va directement au calcul."
+    questions:
+      - q: 'Que vaut une perpétuité immédiate de 1 par an, au taux $i$ ?'
+        options: ['$\dfrac{1}{i}$', '$\dfrac{1}{d}$', 'Elle est infinie']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Une perpétuité (perpetuity) paie pour toujours, mais les paiements lointains sont fortement actualisés. La somme converge dès que $i > 0$.
+          formule: |-
+            a_{\overline{\infty}|} = \lim_{n \to \infty} \frac{1 - v^n}{i} = \frac{1}{i}
+          exemple: >-
+            À 5 %, toucher 1 € par an pour toujours vaut 20 € aujourd'hui : placés à 5 %, 20 € rapportent exactement 1 € par an.
+          piege: >-
+            $1/d$ est la perpétuité due, payée en début d'année : $1/d = 1/i + 1$.
+      - q: 'Que représente $s_{\overline{n}|}$ ?'
+        options: ['La valeur, au temps $n$, de $n$ paiements de 1 en fin d''année', 'La valeur actuelle de $n$ paiements de 1', 'La somme des intérêts reçus']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            $s_{\overline{n}|}$ est la valeur accumulée (accumulated value) : on capitalise chaque paiement jusqu'au temps $n$, au lieu de l'actualiser au temps 0.
+          formule: |-
+            s_{\overline{n}|} = \sum_{k=0}^{n-1} (1+i)^k = \frac{(1+i)^n - 1}{i} = (1+i)^n\,a_{\overline{n}|}
+          exemple: >-
+            À 5 % sur 10 ans : $s_{\overline{10}|} = 12{,}5779$, et $1{,}05^{10} \times 7{,}7217 = 12{,}5779$.
+          piege: >-
+            $s_{\overline{n}|}$ et $a_{\overline{n}|}$ décrivent les mêmes flux à deux dates différentes : $s_{\overline{n}|} = (1+i)^n\,a_{\overline{n}|}$.
+      - q: 'L''annuité croissante $(Ia)_{\overline{n}|}$ verse…'
+        options: ['1, 2, 3, …, $n$ en fin d''années 1 à $n$', '$n$, $n-1$, …, 1', '1 chaque année, indexé sur l''inflation']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Le $I$ signifie « increasing » : le paiement de l'année $k$ vaut $k$. L'annuité décroissante $(Da)_{\overline{n}|}$ verse $n$, puis $n-1$, jusqu'à 1.
+          formule: |-
+            (Ia)_{\overline{n}|} = \sum_{k=1}^{n} k\,v^k = \frac{\ddot{a}_{\overline{n}|} - n\,v^n}{i}
+          exemple: >-
+            À 5 % sur 10 ans : $(Ia)_{\overline{10}|} = 39{,}3738$.
+          piege: >-
+            Une rente indexée sur l'inflation croît de façon géométrique, pas arithmétique : c'est une autre formule.
+      - q: 'Une perpétuité verse 1 dans un an, puis croît de $g$ par an, avec $g < i$. Elle vaut…'
+        options: ['$\dfrac{1}{i - g}$', '$\dfrac{1}{i + g}$', '$\dfrac{1+g}{i}$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Chaque terme vaut $(1+g)^{k-1} v^k$ : une suite géométrique de raison $\frac{1+g}{1+i} < 1$.
+          formule: |-
+            \sum_{k \ge 1} (1+g)^{k-1} v^k = \frac{1}{i - g} \qquad (g < i)
+          exemple: >-
+            À 5 % avec $g = 2\,\%$ : $1 / 0{,}03 = 33{,}33$, contre 20 sans croissance.
+          piege: >-
+            Si $g \ge i$, la somme diverge : la formule n'a plus de sens. C'est la formule de Gordon-Shapiro des analystes financiers.
+
+  - type: video
+    titre: "L'intuition en vidéo"
+    minutes: 3
+    texte: >-
+      Ce thème n'a pas encore sa vidéo Actu-Basics. Elle montrera pourquoi une rente sans fin a un prix fini,
+      et comment une petite croissance annuelle change beaucoup ce prix.
+
+  - type: rappel
+    titre: "Le rappel"
+    minutes: 8
+    blocs:
+      - p: >-
+          La <b>valeur accumulée</b> <i>(accumulated value)</i> d'une annuité est sa valeur à la date du dernier
+          paiement. Elle se déduit de la valeur actuelle en capitalisant sur $n$ années.
+      - formule: |
+          \begin{gathered}
+          s_{\overline{n}|} = \frac{(1+i)^n - 1}{i} = (1+i)^n\,a_{\overline{n}|} \qquad \ddot{s}_{\overline{n}|} = (1+i)\,s_{\overline{n}|}
+          \end{gathered}
+      - p: >-
+          Une <b>perpétuité</b> <i>(perpetuity)</i> paie sans fin. Sa valeur est la limite de l'annuité quand $n \to \infty$ :
+          un capital $1/i$ placé au taux $i$ produit exactement 1 par an, sans jamais s'épuiser.
+      - formule: |
+          a_{\overline{\infty}|} = \frac{1}{i} \qquad \ddot{a}_{\overline{\infty}|} = \frac{1}{d} = \frac{1}{i} + 1
+      - p: >-
+          Les <b>annuités variables</b> <i>(varying annuities)</i> changent de montant chaque année. Les deux familles
+          classiques sont l'annuité <b>arithmétique</b> (croissante ou décroissante d'une unité par an) et l'annuité
+          <b>géométrique</b> (croissance d'un pourcentage fixe).
+      - formule: |
+          \begin{gathered}
+          (Ia)_{\overline{n}|} = \frac{\ddot{a}_{\overline{n}|} - n\,v^n}{i} \qquad (Da)_{\overline{n}|} = \frac{n - a_{\overline{n}|}}{i} \\[6pt]
+          (Ia)_{\overline{n}|} + (Da)_{\overline{n}|} = (n+1)\,a_{\overline{n}|} \\[6pt]
+          \sum_{k=1}^{n} (1+g)^{k-1} v^k = \frac{1 - \left(\frac{1+g}{1+i}\right)^{n}}{i - g} \quad (g \ne i)
+          \end{gathered}
+      - p: >-
+          La relation $(Ia) + (Da) = (n+1)\,a$ se lit sur les flux : chaque année, $k + (n+1-k) = n+1$. C'est un bon
+          moyen de vérifier un calcul.
+      - note: >-
+          Les rentes de retraite indexées sont des annuités géométriques. Pour un régime à prestations définies, un taux
+          d'indexation de 2 % change la valeur des engagements presque autant qu'une baisse du taux d'actualisation.
+      - sources:
+          - {titre: "Kellison, The Theory of Interest, chap. 3 et 4", detail: "Valeur accumulée, perpétuités, annuités arithmétiques et géométriques"}
+          - {titre: "SOA, Financial Mathematics (FM) Exam", url: "https://www.soa.org/education/exam-req/edu-exam-fm-detail/", detail: "Syllabus officiel de l'examen"}
+
+  - type: quiz
+    titre: "Vérifie"
+    minutes: 4
+    intro: "Quatre questions. Réponds sans relire le rappel."
+    questions:
+      - q: 'Une fondation veut verser 10 000 € par an pour toujours, à partir de dans un an. À 5 %, quel capital lui faut-il ?'
+        options: ['200 000 €', '210 000 €', '500 000 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            C'est une perpétuité immédiate de 10 000 € : capital $= 10\,000 / i$.
+          formule: |-
+            P = \frac{C}{i}
+          exemple: >-
+            $10\,000 / 0{,}05 = 200\,000$ €. Chaque année, les intérêts de 10 000 € sont versés et le capital reste intact.
+          piege: >-
+            210 000 € correspond au premier paiement versé tout de suite (perpétuité due : $10\,000 / d$).
+      - q: 'Dans 10 ans, combien aura-t-on en versant 1 000 € à la fin de chaque année, à 5 % ?'
+        options: ['12 578 €', '10 000 €', '7 722 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On cherche la valeur au temps 10 : c'est une valeur accumulée.
+          formule: |-
+            1\,000 \times s_{\overline{10}|} = 1\,000 \times \frac{1{,}05^{10} - 1}{0{,}05}
+          exemple: >-
+            $1{,}05^{10} = 1{,}628895$, donc $s_{\overline{10}|} = 12{,}5779$ et le total vaut 12 577,89 €.
+          piege: >-
+            7 722 € est la valeur actuelle des mêmes versements, au temps 0. 10 000 € oublie les intérêts.
+      - q: 'À 5 % sur 10 ans, $(Da)_{\overline{10}|}$ est-elle plus grande ou plus petite que $(Ia)_{\overline{10}|}$ ?'
+        options: ['Plus grande', 'Plus petite', 'Égale']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Les deux versent le même total (55). L'annuité décroissante verse les gros montants au début, donc moins actualisés.
+          formule: |-
+            (Da)_{\overline{n}|} = (n+1)\,a_{\overline{n}|} - (Ia)_{\overline{n}|}
+          exemple: >-
+            $(Da)_{\overline{10}|} = 45{,}5653$ et $(Ia)_{\overline{10}|} = 39{,}3738$ ; leur somme vaut $11 \times 7{,}7217 = 84{,}9391$.
+          piege: >-
+            Sans intérêt, les deux vaudraient 55. Avec intérêt, l'ordre des paiements compte.
+      - q: 'Une rente verse 1 000 € dans un an, puis croît de 2 % par an pendant 10 ans au total. À 5 %, elle vaut environ…'
+        options: ['8 388 €', '7 722 €', '33 333 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Annuité géométrique : premier paiement 1 000 €, raison $1{,}02$, actualisée à 5 %, sur 10 ans.
+          formule: |-
+            1\,000 \times \frac{1 - (1{,}02/1{,}05)^{10}}{0{,}05 - 0{,}02}
+          exemple: >-
+            $(1{,}02/1{,}05)^{10} = 0{,}748357$, donc la valeur vaut $1\,000 \times 0{,}251643 / 0{,}03 = 8\,388{,}11$ €.
+          piege: >-
+            33 333 € est la perpétuité croissante, sans fin. 7 722 € ignore la croissance.
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: "Taux de 5 %, sur 10 ans. Calcule avec une calculatrice, puis saisis tes résultats à 4 décimales."
+    donnees:
+      entetes: ['$i$', '$n$', '$g$']
+      lignes: [['5 %', '10', '2 %']]
+    champs:
+      - {cle: s, libelle: '$s_{\overline{10}|}$', valeur: 12.5778925, tolerance: 0.0015}
+      - {cle: ia, libelle: '$(Ia)_{\overline{10}|}$', valeur: 39.3737828, tolerance: 0.0015}
+      - {cle: da, libelle: '$(Da)_{\overline{10}|}$', valeur: 45.5653014, tolerance: 0.0015}
+      - {cle: geo, libelle: '$\sum_{k=1}^{10} (1+g)^{k-1}\,v^k$', valeur: 8.3881057, tolerance: 0.0015}
+    solution: |
+      $v^{10} = 0{,}613913$, $a_{\overline{10}|} = 7{,}7217$, $\ddot{a}_{\overline{10}|} = 8{,}1078$, $s_{\overline{10}|} = 0{,}628895 / 0{,}05 = 12{,}5779$.
+      $(Ia)_{\overline{10}|} = (8{,}1078 - 10 \times 0{,}613913) / 0{,}05 = 39{,}3738$ ; $(Da)_{\overline{10}|} = (10 - 7{,}7217) / 0{,}05 = 45{,}5653$ ; géométrique : $0{,}251643 / 0{,}03 = 8{,}3881$.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 8
+    intro: "Écris le corps des quatre fonctions, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a1/s03_annuites.py
+    depart: |
+      def accumulated_value(n, i):
+          """s_n: value at time n of n payments of 1, at the end of years 1 .. n."""
+          raise NotImplementedError
+
+      def increasing_annuity(n, i):
+          """(Ia)_n: payments 1, 2, ..., n at the end of years 1 .. n."""
+          raise NotImplementedError
+
+      def decreasing_annuity(n, i):
+          """(Da)_n: payments n, n-1, ..., 1 at the end of years 1 .. n."""
+          raise NotImplementedError
+
+      def geometric_annuity(n, i, g):
+          """First payment 1 at time 1, then growing by g a year; n payments in all."""
+          raise NotImplementedError
+    tests:
+      - {nom: '$s_{\overline{10}|}$ vaut 12,57789 à 5 %', expr: "abs(accumulated_value(10, 0.05) - 12.57789) < 0.00001"}
+      - {nom: '$(Ia)_{\overline{10}|}$ vaut 39,37378 à 5 %', expr: "abs(increasing_annuity(10, 0.05) - 39.37378) < 0.00001"}
+      - {nom: '$(Da)_{\overline{10}|}$ vaut 45,56530 à 5 %', expr: "abs(decreasing_annuity(10, 0.05) - 45.56530) < 0.00001"}
+      - {nom: '$(Ia) + (Da) = (n+1)\,a_{\overline{n}|}$', expr: "abs(increasing_annuity(25, 0.03) + decreasing_annuity(25, 0.03) - 26 * (1 - 1.03 ** -25) / 0.03) < 1e-9"}
+      - {nom: 'Géométrique à 2 % : 8,38811', expr: "abs(geometric_annuity(10, 0.05, 0.02) - 8.38811) < 0.00001"}
+      - {nom: 'Cas $g = i$ : $n\,v$', expr: "abs(geometric_annuity(10, 0.05, 0.05) - 10 / 1.05) < 1e-9"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Valeur accumulée", "accumulated value", "The accumulated value of the deposits after ten years is 12,578 euros."]
+      - ["Perpétuité", "perpetuity", "A perpetuity of 1 is worth one over i."]
+      - ["Annuité croissante", "increasing annuity", "The benefit follows an increasing annuity of one unit a year."]
+      - ["Annuité décroissante", "decreasing annuity", "Term insurance on a loan often looks like a decreasing annuity."]
+      - ["Annuité géométrique", "geometric annuity, compound increasing annuity", "Indexed pensions are valued as a geometric annuity."]
+      - ["Taux d'indexation", "indexation rate, cost-of-living adjustment", "A 2% indexation rate increases the liability significantly."]

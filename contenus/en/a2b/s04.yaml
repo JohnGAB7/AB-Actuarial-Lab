@@ -1,0 +1,138 @@
+# English texts for session A2b.04. Numbers, answers and tests live in contenus/a2b/s04.yaml.
+titre: "Does the distribution fit the data? Goodness-of-fit tests"
+
+etapes:
+  - titre: "Placement check"
+    intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
+    questions:
+      - q: 'In a goodness-of-fit test, the null hypothesis $H_0$ is that…'
+        options: ['the data follow the proposed distribution', 'the data do not follow the proposed distribution', 'the parameters are zero']
+        pourquoi:
+          rappel: >-
+            We start from the model and ask whether the data stray too far from it for chance alone. A large test statistic leads to rejecting $H_0$.
+          exemple: >-
+            $H_0$: the number of claims per policy follows a Poisson distribution.
+          piege: >-
+            Not rejecting $H_0$ does not prove the distribution is right: only that the data cannot rule it out.
+      - q: 'Chi-square test with 4 classes and $\lambda$ estimated from the data. How many degrees of freedom?'
+        options: ['2', '3', '4']
+        pourquoi:
+          rappel: >-
+            Start from the number of classes, remove 1 because the counts add up to $n$, and 1 per estimated parameter.
+          formule: |-
+            \text{df} = k - 1 - p
+          exemple: >-
+            $4 - 1 - 1 = 2$ degrees of freedom.
+          piege: >-
+            3 forgets that $\lambda$ was estimated from the same data: the test would be too lenient.
+      - q: 'The test gives a p-value of 0.26. At the 5% level…'
+        options: ['we do not reject the distribution', 'we reject the distribution', 'the distribution is 74% true']
+        pourquoi:
+          rappel: >-
+            The p-value is the probability, under $H_0$, of observing a gap at least as large. We reject when it is below the level.
+          exemple: >-
+            0.26 is well above 0.05: a gap of this size often happens by chance.
+          piege: >-
+            The p-value is not the probability that $H_0$ is true.
+      - q: 'On a QQ plot, the largest claims are clearly above the line. This means that…'
+        options: ['the actual tail is heavier than the model''s', 'the model overestimates large claims', 'the data are badly sorted']
+        pourquoi:
+          rappel: >-
+            The QQ plot puts the observed quantiles against the model's quantiles. On the line, the model fits; above it, observations are larger than expected.
+          exemple: >-
+            Points lifting off at the top right: the model underestimates large claims, a heavier-tailed distribution is needed.
+          piege: >-
+            It is the other way round: the model underestimates large claims, it does not overestimate them.
+
+  - titre: "The intuition on video"
+    texte: >-
+      This topic does not have its long Actu-Basics lesson yet. The recap and the exercises that follow cover the whole
+      content of the session.
+
+  - titre: "The recap"
+    blocs:
+      - p: >-
+          A fitted distribution is still an assumption. A <b>goodness-of-fit test</b> <i>(test d'adéquation)</i> measures
+          the gap between the data and the model. The <b>chi-square test</b> <i>(khi-deux)</i> compares counts by class;
+          the <b>Kolmogorov-Smirnov test</b> <i>(Kolmogorov-Smirnov)</i> compares distribution functions.
+      - formule: |
+          \begin{gathered}
+          \chi^2 = \sum_{j=1}^{k} \frac{(O_j - E_j)^2}{E_j} \qquad \text{df} = k - 1 - p \\[6pt]
+          D = \max_x \big|F_n(x) - F_{\hat{\theta}}(x)\big| \qquad \text{AIC} = 2p - 2\,\ell(\hat{\theta})
+          \end{gathered}
+      - p: >-
+          For the chi-square test, merge classes so that each expected count exceeds 5. With 2 degrees of freedom, the
+          5% critical value is 5.99 and the p-value can be computed by hand: $p = e^{-\chi^2/2}$.
+      - p: >-
+          To choose between several distributions, compare their <b>Akaike information criterion (AIC)</b>
+          <i>(critère d'information d'Akaike)</i>: the lowest value wins. It rewards the likelihood and penalizes the
+          number of parameters. The <b>QQ plot</b> <i>(diagramme quantile-quantile)</i> shows where the distribution
+          breaks down, often in the tail.
+      - note: >-
+          When the parameters are estimated from the same data, the usual Kolmogorov-Smirnov critical values are too
+          lenient. And on a handful of claims, no test sees the tail: the actuary's judgment and market data count as much
+          as the p-value.
+      - sources:
+          - {titre: "Klugman, Panjer and Willmot, Loss Models, chap. 16", detail: "Model selection, chi-square, Kolmogorov-Smirnov, AIC"}
+          - {titre: "CAS, MAS-I (Modern Actuarial Statistics I)", detail: "Hypothesis testing and goodness of fit"}
+
+  - titre: "Check"
+    intro: "1,000 fictional policies: 610 with no claim, 300 with 1, 70 with 2, and 20 with exactly 3 (none above that). The observed mean is therefore $\\hat{\\lambda} = 0.5$. For the chi-square test, the final model class groups $N \\ge 3$."
+    questions:
+      - q: 'Under a Poisson distribution with parameter 0.5, how many policies with no claim do we expect?'
+        options: ['606.53', '610', '500']
+        pourquoi:
+          rappel: >-
+            Expected count = number of policies × probability of the class.
+          exemple: >-
+            Then $E_1 = 303.27$, $E_2 = 75.82$ and $E_{\ge 3} = 14.39$.
+          piege: >-
+            610 is the observed count. 500 mistakes $\lambda$ for a probability.
+      - q: 'We find $\chi^2 = 2.69$ with 2 degrees of freedom (critical value 5.99). Conclusion?'
+        options: ['We do not reject the Poisson distribution', 'We reject the Poisson distribution', 'We cannot conclude without the amounts']
+        pourquoi:
+          rappel: >-
+            The statistic is below the critical value; the p-value is $e^{-2.69/2} = 0.26$.
+          exemple: >-
+            The "3 or more" class contributes 2.19 of the 2.69: that is where early overdispersion would hide.
+          piege: >-
+            The test is about claim counts: the amounts play no part in it.
+      - q: 'Kolmogorov-Smirnov on the 8 claims of session 1, against the exponential with mean €1,881.25. The largest gap $D$ is…'
+        options: ['0.273', '0.107', '0.481']
+        pourquoi:
+          rappel: >-
+            Sort the claims and compare, on each side of every point, the empirical distribution $F_n$ with $F(x) = 1 - e^{-x/\theta}$.
+          exemple: >-
+            The largest gap is just before the smallest claim: the exponential expects 27% of claims below €600, and we observe none.
+          piege: >-
+            0.107 is the gap at the last point, and 0.481 the order of magnitude of the critical value, $1.36 / \sqrt{8}$.
+      - q: 'On the same 8 claims: AIC of 138.64 for the exponential, 141.75 for the Pareto (known $\theta = 2{,}000$ euros). What should we take away?'
+        options: ['The exponential fits these 8 points better, but they say nothing about the tail', 'The Pareto, because its AIC is higher', 'Both distributions are wrong']
+        pourquoi:
+          rappel: >-
+            The smallest AIC wins. Both distributions have a single estimated parameter here.
+          exemple: >-
+            With 8 claims, the AIC gap is small and blind to the tail. For reinsurance, the Pareto remains the prudent choice.
+          piege: >-
+            A higher AIC is worse, not better.
+
+  - titre: "By hand"
+    intro: 'The 1,000 policies of the check, Poisson distribution with parameter 0.5, classes merged from 3 upwards. Then the Kolmogorov-Smirnov $D$ on the 8 claims against the exponential. Enter your results to 4 decimal places.'
+    donnees:
+      lignes: [['610', '300', '70', '20']]
+    solution: |
+      Expected counts: $606.53$, $303.27$, $75.82$ and $1{,}000 - 985.61 = 14.39$. Contributions: $0.0198 + 0.0352 + 0.4462 + 2.1892 = 2.6905$, p-value $e^{-1.3452} = 0.2605$.
+      $D = F(600) - 0 = 1 - e^{-600/1{,}881.25} = 0.2731$.
+
+  - titre: "Your turn to code"
+    intro: "Write the body of the three functions, without AI. All the tests must pass."
+    tests:
+      - {nom: '606.53 policies expected with no claim'}
+      - {nom: 'The expected counts add up to 1,000'}
+      - {nom: '$\chi^2 = 2.6905$'}
+      - {nom: '$\chi^2 = 0$ if observed = expected'}
+      - {nom: 'Kolmogorov-Smirnov: $D = 0.2731$'}
+      - {nom: 'A single point in the middle of a uniform distribution: $D = 0.5$'}
+
+  - titre: "Vocabulary"
+    intro: "Tap a card: the French term and a job-interview sentence."

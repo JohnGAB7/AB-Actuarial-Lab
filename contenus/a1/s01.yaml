@@ -9,9 +9,11 @@ taux: 0.025
 
 actu_basics:
   episode: "A1 · Financial mathematics"
-  statut: "à proposer"
+  statut: "publiée en anglais"
   accroche_fr: "Pourquoi 1 € demain vaut moins que 1 € aujourd'hui ?"
   accroche_en: "Why is one euro tomorrow worth less than one euro today?"
+  videos:
+    - {id: uJ_eQqqQB6s, langue: en, titre: "$1,000 today or in 30 years: is it really the same money?", duree: "6:42"}
 
 etapes:
   - type: quiz
@@ -72,8 +74,8 @@ etapes:
     titre: "L'intuition en vidéo"
     minutes: 3
     texte: >-
-      La vidéo Actu-Basics de ce thème montrera la valeur du temps : un euro placé aujourd'hui rapporte des intérêts,
-      donc un euro promis plus tard vaut moins. Elle n'existe pas encore.
+      La leçon Actu-Basics A1.01 montre la valeur du temps : un euro placé aujourd'hui rapporte des intérêts,
+      donc un euro promis plus tard vaut moins. Elle est en ligne en anglais ; la version française suivra.
 
   - type: rappel
     titre: "Le rappel"

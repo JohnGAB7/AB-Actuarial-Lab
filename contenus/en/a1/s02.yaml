@@ -1,0 +1,137 @@
+# English texts for session A1.02. Numbers, answers and tests live in contenus/a1/s02.yaml.
+titre: "Nominal rates and monthly payments"
+
+etapes:
+  - titre: "Placement check"
+    intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
+    questions:
+      - q: 'A nominal rate of 6% compounded monthly gives an annual effective rate…'
+        options: ['equal to 6%', 'above 6%', 'below 6%']
+        pourquoi:
+          rappel: >-
+            A nominal rate $i^{(m)}$ is a quoted annual rate: $i^{(m)}/m$ is credited at each fraction of the year. Each month's interest then earns interest in turn.
+          exemple: >-
+            $(1 + 0.06/12)^{12} = 1.061678$: the effective rate is 6.17%.
+          piege: >-
+            A nominal rate is not an annual growth rate. Comparing it directly with an effective rate mixes two conventions.
+      - q: 'What does $i^{(m)}$ tend to as $m \to \infty$?'
+        pourquoi:
+          rappel: >-
+            Compounding more and more often amounts, in the limit, to compounding continuously. The nominal rate tends to the force of interest.
+          exemple: >-
+            At 4% effective: $i^{(2)} = 3.961\%$, $i^{(12)} = 3.928\%$, $\delta = 3.922\%$.
+          piege: >-
+            For a fixed effective rate, the nominal rate falls as $m$ grows. It never climbs back towards $i$.
+      - q: 'Which order always holds, for $i > 0$ and $m > 1$?'
+        pourquoi:
+          rappel: >-
+            Discount rates are paid at the start of the period, interest rates at the end. The shorter the period, the closer both families get to $\delta$.
+          exemple: >-
+            At 4%: $d = 3.846\%$, $d^{(12)} = 3.916\%$, $\delta = 3.922\%$, $i^{(12)} = 3.928\%$.
+          piege: >-
+            A discount rate is never larger than the equivalent interest rate: it is paid earlier, hence discounted.
+      - q: 'An annuity of 1 a year, paid as 12 monthly instalments of $\tfrac{1}{12}$ at the end of each month, is worth…'
+        pourquoi:
+          rappel: >-
+            Keep the numerator $1 - v^n$ of the annual annuity, and replace the effective rate with the nominal rate of the same frequency as the payments.
+          exemple: >-
+            At 4% over 10 years: $a_{\overline{10}|} = 8.1109$ and $a^{(12)}_{\overline{10}|} = 8.2585$.
+          piege: >-
+            $a^{(m)}_{\overline{n}|}$ pays 1 a year in total, not 1 a month. Receiving the money earlier in the year makes it slightly more valuable.
+
+  - titre: "The intuition on video"
+    texte: >-
+      This topic does not have its Actu-Basics video yet. It will show why a loan quoted at 6% a year,
+      repaid monthly, actually costs a little more than 6%.
+
+  - titre: "The recap"
+    blocs:
+      - p: >-
+          A <b>nominal rate</b> <i>(taux nominal)</i> $i^{(m)}$ is an annual rate convertible $m$ times a year:
+          $i^{(m)}/m$ is credited at the end of each period of $1/m$ year. Two rates are <b>equivalent</b>
+          <i>(taux équivalents)</i> if they grow a capital in the same way over one year.
+      - {}
+      - p: >-
+          The <b>annual effective rate</b> <i>(taux effectif annuel)</i> $i$ is the benchmark for comparing two offers.
+          The nominal rate is only a quoting convention: 6% convertible monthly is 6.17% effective.
+      - p: >-
+          When payments fall $m$ times a year, each of $1/m$, we get <b>annuities payable m-thly</b>
+          <i>(annuités fractionnées)</i>. Their formula keeps the shape of the annual annuity, with the nominal rate in the
+          denominator.
+      - {}
+      - p: >-
+          The <b>continuous annuity</b> <i>(annuité continue)</i> $\bar{a}_{\overline{n}|}$ is the limit as $m \to \infty$.
+          It approximates very frequent payments, such as a salary or a monthly pension.
+      - note: >-
+          Pensions and annuities are almost always paid monthly. In A3, you will move from $\ddot{a}_x$ to
+          $\ddot{a}^{(12)}_x$ with the same idea, plus a correction for mortality during the year.
+      - sources:
+          - {titre: "Kellison, The Theory of Interest, chap. 1 and 4", detail: "Nominal rates, equivalent rates, m-thly and continuous annuities"}
+          - {titre: "SOA, Financial Mathematics (FM) Exam", detail: "Official exam syllabus"}
+
+  - titre: "Check"
+    intro: "Four questions. Answer without rereading the recap."
+    questions:
+      - q: 'Bank A quotes 6% compounded monthly, bank B 6% compounded quarterly. For a deposit, which one pays more?'
+        options: ['A', 'B', 'They are equivalent']
+        pourquoi:
+          rappel: >-
+            To compare them, convert each nominal rate into an annual effective rate.
+          exemple: >-
+            A: $(1.005)^{12} - 1 = 6.168\%$. B: $(1.015)^{4} - 1 = 6.136\%$. A pays slightly more.
+          piege: >-
+            The same quoted rate does not give the same return: the compounding frequency matters.
+      - q: 'At 4% effective, what is $i^{(12)}$, roughly?'
+        options: ['3.93%', '4.00%', '4.07%']
+        pourquoi:
+          rappel: >-
+            Find the monthly rate $j$ such that $(1+j)^{12} = 1.04$, then multiply it by 12.
+          exemple: >-
+            $(1.04)^{1/12} = 1.0032737$, so $i^{(12)} = 12 \times 0.0032737 = 3.928\%$.
+          piege: >-
+            4%/12 a month would give an effective rate of 4.07%, too high. You do not divide an effective rate by 12.
+      - q: 'At the same rate, how does $a^{(12)}_{\overline{n}|}$ compare with $a_{\overline{n}|}$?'
+        options: ['larger', 'smaller', 'equal']
+        pourquoi:
+          rappel: >-
+            The same total is paid each year, but spread over the year instead of paid at year end: on average, the money arrives earlier.
+          exemple: >-
+            At 4%: $i / i^{(12)} = 1.0182$, so $a^{(12)}_{\overline{10}|} = 1.0182 \times 8.1109 = 8.2585$.
+          piege: >-
+            The gap stays small: it does not justify multiplying by 12 or dividing by 12.
+      - q: 'A loan is repaid with 120 monthly instalments of €100 at the end of each month, at 4% effective. Roughly how much was borrowed?'
+        options: ['€9,910', '€12,000', '€9,733']
+        pourquoi:
+          rappel: >-
+            The amount borrowed is the present value of the instalments. €100 a month makes €1,200 a year, paid in instalments.
+          exemple: >-
+            $1{,}200 \times 8.2585 = 9{,}910.25$ euros.
+          piege: >-
+            €12,000 ignores interest. €9,733 (that is $1{,}200 \times 8.1109$) assumes a single payment of €1,200 at year end.
+
+  - titre: "By hand"
+    intro: "Effective rate of 4%. Use a calculator, then enter your results to 4 decimal places."
+    donnees:
+      entetes: ['$i$', '$m$', '$n$']
+      lignes: [['4%', '12', '10']]
+    champs:
+      - {libelle: '$i^{(12)}$'}
+      - {libelle: '$d^{(12)}$'}
+      - {libelle: '$a^{(12)}_{\overline{10}|}$'}
+      - {libelle: '$\ddot{a}^{(12)}_{\overline{10}|}$'}
+    solution: |
+      $(1.04)^{1/12} = 1.0032737$, so $i^{(12)} = 0.039285$; $v^{1/12} = 0.9967369$, so $d^{(12)} = 0.039157$.
+      $1 - v^{10} = 0.324436$, so $a^{(12)}_{\overline{10}|} = 0.324436 / 0.039285 = 8.2585$ and $\ddot{a}^{(12)}_{\overline{10}|} = 0.324436 / 0.039157 = 8.2856$.
+
+  - titre: "Your turn to code"
+    intro: "Write the body of the three functions, without AI. All the tests must pass."
+    tests:
+      - {nom: '$i^{(12)}$ is 0.0392849 at 4%'}
+      - {nom: '6% monthly is 6.1678% effective'}
+      - {nom: 'Round trip: effective, then nominal, then effective'}
+      - {nom: '$a^{(12)}_{\overline{10}|}$ is 8.25854 at 4%'}
+      - {nom: '$\ddot{a}^{(12)}_{\overline{10}|}$ is 8.28558 at 4%'}
+      - {nom: 'With $m = 1$, we get back $a_{\overline{10}|} = 8.11090$'}
+
+  - titre: "Vocabulary"
+    intro: "Tap a card: the French term and a job-interview sentence."

@@ -1,0 +1,135 @@
+# English texts for session A1.04. Numbers, answers and tests live in contenus/a1/s04.yaml.
+titre: "Loans, amortization and yield rates"
+
+etapes:
+  - titre: "Placement check"
+    intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
+    questions:
+      - q: 'A loan $L$ is repaid by $n$ level payments at the end of each year, at rate $i$. The payment is…'
+        pourquoi:
+          rappel: >-
+            The loan is fair when the present value of the repayments equals the amount lent: $L = P\,a_{\overline{n}|}$.
+          exemple: >-
+            €10,000 at 6% over 5 years: $a_{\overline{5}|} = 4.2124$, so $P = 2{,}373.96$ euros.
+          piege: >-
+            $L/n$ repays the capital without any interest. $L(1+i)^n/n$ charges interest on a capital that, in reality, falls each year.
+      - q: 'The outstanding balance after $k$ payments is, by the prospective method…'
+        pourquoi:
+          rappel: >-
+            Prospective: we look ahead. What the borrower still owes is the present value of the remaining payments.
+          exemple: >-
+            After 2 payments: $2{,}373.96 \times a_{\overline{3}|} = 6{,}345.63$ euros.
+          piege: >-
+            $L - kP$ forgets that each payment contains interest. The second form, retrospective, gives the same result.
+      - q: 'With level payments, the share of capital repaid each year…'
+        options: ['increases', 'decreases', 'stays constant']
+        pourquoi:
+          rappel: >-
+            Interest is charged on the balance, which falls. With a fixed payment, the interest share falls, so the capital share rises.
+          exemple: >-
+            Year 1: €1,773.96 of capital. Year 3: €1,993.23, that is $1{,}773.96 \times 1.06^2$.
+          piege: >-
+            The same capital repaid each year is another kind of loan: constant amortization, with falling payments.
+      - q: 'The internal rate of return (IRR) of a project is the rate that…'
+        options: ['makes the net present value zero', 'maximizes the net present value', 'equals the risk-free rate']
+        pourquoi:
+          rappel: >-
+            Write the equation of value: the discounted sum of all cash flows, inflows minus outflows, equals zero.
+          exemple: >-
+            Investing €1,000 to receive €600 in 1 year and €600 in 2 years: the internal rate of return is 13.07%.
+          piege: >-
+            The net present value depends on the chosen rate; the internal rate of return is the one rate that makes it zero.
+
+  - titre: "The intuition on video"
+    texte: >-
+      This topic does not have its Actu-Basics video yet. It will follow a loan payment year after year,
+      to watch the interest share melt away and the capital share grow.
+
+  - titre: "The recap"
+    blocs:
+      - p: >-
+          A loan repaid by <b>level payments</b> <i>(annuités constantes)</i> is <b>amortized</b> <i>(amorti)</i>:
+          each payment $P$ first covers the year's interest on the <b>outstanding balance</b>
+          <i>(solde restant dû)</i>, and the rest repays the capital.
+      - {}
+      - p: >-
+          The balance can be computed in two ways. The <b>prospective</b> method discounts the future payments; the
+          <b>retrospective</b> method accumulates the loan and removes the payments already made. Both always give the
+          same number: it is the same idea as the life reserves in A4.
+      - {}
+      - p: >-
+          The <b>amortization schedule</b> <i>(tableau d'amortissement)</i> sets these quantities out year by year. The
+          capital share grows geometrically: $\text{PR}_{k+1} = (1+i)\,\text{PR}_k$.
+      - p: >-
+          To judge an investment, we look for the <b>internal rate of return</b> <i>(taux de rendement interne, IRR)</i>,
+          the rate $j$ that makes the <b>net present value</b> <i>(valeur actuelle nette, NPV)</i> of all cash flows zero.
+      - formule: |
+          \text{NPV}(j) = \sum_t C_t\,(1+j)^{-t} = 0
+      - note: >-
+          The reserves of a life policy are computed exactly like a loan balance: prospectively (future benefits minus
+          future premiums) or retrospectively. You will see it in A4.
+      - sources:
+          - {titre: "Kellison, The Theory of Interest, chap. 5 and 6", detail: "Yield rates, equation of value, loan amortization"}
+          - {titre: "SOA, Financial Mathematics (FM) Exam", detail: "Official exam syllabus"}
+
+  - titre: "Check"
+    intro: "Four questions. Answer without rereading the recap."
+    questions:
+      - q: 'A €10,000 loan at 6% over 5 years, level payments. How much interest is paid in the first year?'
+        options: ['€600', '€2,373.96', '€1,773.96']
+        pourquoi:
+          rappel: >-
+            In the first year, interest is charged on the whole amount borrowed.
+          exemple: >-
+            $0.06 \times 10{,}000 = 600$ euros. The rest of the payment, $2{,}373.96 - 600 = 1{,}773.96$ euros, repays capital.
+          piege: >-
+            €2,373.96 is the whole payment. €1,773.96 is the capital share.
+      - q: 'Same loan: how much interest in total over the 5 years?'
+        options: ['€1,869.82', '€3,000.00', '€600.00']
+        pourquoi:
+          rappel: >-
+            Total paid minus capital borrowed.
+          exemple: >-
+            $5 \times 2{,}373.96 - 10{,}000 = 1{,}869.82$ euros.
+          piege: >-
+            €3,000 counts €600 a year, as if the capital never fell.
+      - q: 'Do the prospective and retrospective methods give the same balance?'
+        options: ['Always, if the rate and payments follow the contract', 'Only at the end of the loan', 'No, the prospective one is always higher']
+        pourquoi:
+          rappel: >-
+            At the start, $L = P\,a_{\overline{n}|}$. Accumulating this equality for $k$ years takes you from one form to the other.
+          exemple: >-
+            After 2 years: $10{,}000 \times 1.1236 - 2{,}373.96 \times 2.06 = 6{,}345.63$ euros, as with the prospective method.
+          piege: >-
+            If actual payments depart from the contract (late payment, early repayment), the two methods diverge: you must then follow the actual cash flows.
+      - q: 'A project costs €1,000 and returns €600 in 1 year and €600 in 2 years. At 10%, its NPV is…'
+        options: ['€41.32', '€200.00', '€−41.32']
+        pourquoi:
+          rappel: >-
+            Discount each cash flow at 10% and subtract the investment.
+          exemple: >-
+            $-1{,}000 + 545.45 + 495.87 = 41.32$ euros. The NPV is positive at 10%, so the internal rate of return (13.07%) is above 10%.
+          piege: >-
+            €200 adds up the cash flows without discounting them.
+
+  - titre: "By hand"
+    intro: "A €10,000 loan at 6% over 5 years, level payments at the end of each year. Enter your results to the cent."
+    donnees:
+      entetes: ['$L$ (€)', '$i$', '$n$']
+      lignes: [['10,000', '6%', '5']]
+    solution: |
+      $a_{\overline{5}|} = 4.212364$, so $P = 10{,}000 / 4.212364 = 2{,}373.96$ euros. $B_2 = P\,a_{\overline{3}|} = 2{,}373.96 \times 2.673012 = 6{,}345.63$ euros.
+      $I_3 = 0.06 \times 6{,}345.63 = 380.74$ euros and $\text{PR}_3 = 2{,}373.96 - 380.74 = 1{,}993.23$ euros.
+
+  - titre: "Your turn to code"
+    intro: "Write the body of the three functions, without AI. All the tests must pass."
+    tests:
+      - {nom: 'Level payment of €2,373.96'}
+      - {nom: 'The schedule has 5 rows and ends at 0'}
+      - {nom: 'Interest in year 3: €380.74'}
+      - {nom: 'The capital shares add up to the loan'}
+      - {nom: 'Internal rate of return of 13.066%'}
+      - {nom: 'The internal rate of return of a loan is its rate'}
+
+  - titre: "Vocabulary"
+    intro: "Tap a card: the French term and a job-interview sentence."

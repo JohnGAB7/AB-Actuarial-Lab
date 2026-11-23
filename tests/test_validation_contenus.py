@@ -508,3 +508,17 @@ def test_overlay_reports_missing_translatable_text():
         valid_overlay_session(), {"titre": "Compound interest"}, session_id="a1/s01"
     )
     assert any("texte non traduit" in error for error in errors)
+
+
+def test_published_videos_need_a_youtube_id_a_language_and_a_title():
+    session = valid_session()
+    session["actu_basics"] = {"videos": [{"id": "uJ_eQqqQB6s", "langue": "en", "titre": "Lesson", "duree": "6:42"}]}
+    assert verifier_seance(session, session_id="fixture") == []
+    for bad in (
+        {"id": "javascript:x", "langue": "en", "titre": "Lesson"},
+        {"id": "uJ_eQqqQB6s", "langue": "de", "titre": "Lesson"},
+        {"id": "uJ_eQqqQB6s", "langue": "en", "titre": ""},
+        {"id": "uJ_eQqqQB6s", "langue": "en", "titre": "Lesson", "url": "https://example.com"},
+    ):
+        session["actu_basics"] = {"videos": [bad]}
+        assert verifier_seance(session, session_id="fixture"), bad

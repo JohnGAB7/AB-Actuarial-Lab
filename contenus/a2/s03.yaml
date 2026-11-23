@@ -1,0 +1,223 @@
+# Séance 3 du module A2 (Probabilités pour l'assurance) : lois continues du montant d'un sinistre.
+# Chiffres : paramètres fictifs. Les valeurs sont recalculées par tests/test_contenus.py et tests/a2/test_s03_continues.py.
+id: a2/s03
+module: a2
+titre: "Montant d'un sinistre : lois continues"
+en: "Claim size: continuous distributions"
+duree: 30
+
+actu_basics:
+  episode: "A2 · Probability for insurance"
+  statut: "à proposer"
+  accroche_fr: "Même coût moyen, risque très différent : la queue de la loi."
+  accroche_en: "Same average cost, very different risk: the tail of the distribution."
+
+etapes:
+  - type: quiz
+    titre: "Test de positionnement"
+    minutes: 3
+    intro: "Quatre questions avant le cours. Si tu as tout juste, survole le rappel et va directement au calcul."
+    questions:
+      - q: 'Pour une variable continue $X$ de fonction de répartition $F$, que vaut $P(a < X \le b)$ ?'
+        options: ['$F(b) - F(a)$', '$F(b)\,F(a)$', '$f(b) - f(a)$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            La fonction de répartition (cumulative distribution function) $F(x) = P(X \le x)$ cumule la probabilité jusqu'à $x$. La densité $f = F'$ donne une probabilité par unité, pas une probabilité.
+          formule: |-
+            P(a < X \le b) = F(b) - F(a) = \int_a^b f(x)\,dx
+          exemple: >-
+            Pour une variable continue, $P(X = x) = 0$ : seuls les intervalles ont une probabilité.
+          piege: >-
+            Une densité peut dépasser 1. Faire $f(b) - f(a)$ mélange densité et probabilité.
+      - q: 'Un montant de sinistre suit une loi exponentielle de moyenne $\theta$. Que vaut $P(X > x)$ ?'
+        options: ['$e^{-x/\theta}$', '$1 - e^{-x/\theta}$', '$x/\theta$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            La fonction de survie (survival function) $S(x) = 1 - F(x)$ est souvent plus naturelle en assurance : c'est la probabilité de dépasser un seuil.
+          formule: |-
+            F(x) = 1 - e^{-x/\theta} \qquad S(x) = e^{-x/\theta} \qquad E[X] = \theta
+          exemple: >-
+            Moyenne 2 000 € : $P(X > 5\,000) = e^{-2{,}5} = 0{,}0821$.
+          piege: >-
+            $1 - e^{-x/\theta}$ est $P(X \le x)$, le contraire.
+      - q: 'Si $\ln X \sim \mathcal{N}(\mu, \sigma^2)$, que vaut $E[X]$ ?'
+        options: ['$e^{\mu + \sigma^2/2}$', '$e^{\mu}$', '$\mu + \sigma^2/2$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            La loi lognormale (lognormal) a une queue à droite. Sa moyenne dépasse sa médiane $e^{\mu}$, à cause des gros sinistres.
+          formule: |-
+            E[X] = e^{\mu + \sigma^2/2} \qquad \operatorname{Var}(X) = \left(e^{\sigma^2} - 1\right) e^{2\mu + \sigma^2}
+          exemple: >-
+            $\mu = 7$, $\sigma = 1$ : médiane $e^7 = 1\,096{,}63$ €, moyenne $e^{7{,}5} = 1\,808{,}04$ €.
+          piege: >-
+            $e^{\mu}$ est la médiane, pas la moyenne. C'est l'inégalité de Jensen : $E[e^Y] > e^{E[Y]}$.
+      - q: 'Le quantile à 99 % d''une loi de sinistres est…'
+        options: ['le montant dépassé avec 1 % de probabilité', 'la moyenne des 1 % plus gros sinistres', '99 % de la moyenne']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Le quantile $q_p$ est l'inverse de la fonction de répartition : $F(q_p) = p$. En gestion des risques, on l'appelle Value at Risk.
+          formule: |-
+            q_p = F^{-1}(p) \qquad \text{exponentielle : } q_p = -\theta \ln(1 - p)
+          exemple: >-
+            Exponentielle de moyenne 2 000 € : $q_{0{,}99} = 2\,000 \ln 100 = 9\,210{,}34$ €.
+          piege: >-
+            La moyenne au-delà du quantile est la Tail Value at Risk, une autre mesure que tu verras en A8.
+
+  - type: video
+    titre: "L'intuition en vidéo"
+    minutes: 3
+    texte: >-
+      Ce thème n'a pas encore sa leçon Actu-Basics. Elle comparera deux lois de même moyenne, l'une à queue fine,
+      l'autre à queue épaisse, et ce que chacune coûte à l'assureur.
+
+  - type: rappel
+    titre: "Le rappel"
+    minutes: 8
+    blocs:
+      - p: >-
+          Le montant d'un sinistre est une <b>variable continue</b> <i>(continuous random variable)</i>, décrite par sa
+          <b>densité</b> <i>(density)</i> $f$, sa <b>fonction de répartition</b> <i>(distribution function)</i> $F$ et
+          sa <b>fonction de survie</b> <i>(survival function)</i> $S = 1 - F$.
+      - formule: |
+          \begin{gathered}
+          F(x) = \int_{0}^{x} f(t)\,dt \qquad E[X] = \int_0^{\infty} x\,f(x)\,dx = \int_0^{\infty} S(x)\,dx
+          \end{gathered}
+      - p: >-
+          Trois lois reviennent sans cesse. L'<b>exponentielle</b>, simple et sans mémoire. La <b>lognormale</b>, quand
+          le logarithme du montant est normal. La <b>Pareto</b> <i>(Pareto)</i>, à queue épaisse, pour les grands
+          sinistres (incendie, responsabilité civile).
+      - formule: |
+          \begin{gathered}
+          \text{Exponentielle : } S(x) = e^{-x/\theta} \qquad \text{Pareto : } S(x) = \left(\frac{\theta}{\theta + x}\right)^{\alpha} \\[6pt]
+          \text{Lognormale : } P(X > x) = 1 - \Phi\!\left(\frac{\ln x - \mu}{\sigma}\right)
+          \end{gathered}
+      - p: >-
+          À moyenne égale, la queue change tout. Une exponentielle et une Pareto ($\alpha = 3$, $\theta = 4\,000$) ont
+          toutes deux une moyenne de 2 000 €. La première dépasse 20 000 € avec probabilité $e^{-10} = 0{,}0045\,\%$, la
+          seconde avec probabilité $0{,}46\,\%$, cent fois plus.
+      - p: >-
+          Le <b>quantile</b> <i>(quantile, percentile)</i> $q_p = F^{-1}(p)$ répond à la question : quel montant n'est
+          dépassé qu'avec probabilité $1-p$ ? Pour la loi normale, $q_{0{,}95} = \mu + 1{,}645\,\sigma$.
+      - note: >-
+          En réassurance, le choix entre une queue fine et une queue épaisse décide du prix d'un traité en excédent de
+          sinistre. Une erreur sur la queue coûte plus cher qu'une erreur sur la moyenne.
+      - sources:
+          - {titre: "Klugman, Panjer et Willmot, Loss Models, chap. 2 à 5", detail: "Fonctions de répartition et de survie, lois de sévérité, queues"}
+          - {titre: "SOA, Probability (P) Exam", url: "https://www.soa.org/education/exam-req/edu-exam-p-detail/", detail: "Syllabus officiel de l'examen"}
+
+  - type: quiz
+    titre: "Vérifie"
+    minutes: 4
+    intro: "Quatre questions. Réponds sans relire le rappel."
+    questions:
+      - q: 'Sinistre exponentiel de moyenne 2 000 €. Montant médian ?'
+        options: ['1 386,29 €', '2 000 €', '1 000 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            La médiane vérifie $S(m) = 0{,}5$.
+          formule: |-
+            e^{-m/\theta} = 0{,}5 \;\Rightarrow\; m = \theta \ln 2
+          exemple: >-
+            $2\,000 \times 0{,}693147 = 1\,386{,}29$ € : la moitié des sinistres coûtent moins.
+          piege: >-
+            La moyenne dépasse la médiane : quelques gros sinistres tirent la moyenne vers le haut.
+      - q: 'Sinistre lognormal avec $\mu = 7$ et $\sigma = 1$. Probabilité de dépasser 5 000 € ?'
+        options: ['6,46 %', '8,21 %', '50 %']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On passe au logarithme, puis à la loi normale centrée réduite.
+          formule: |-
+            P(X > 5\,000) = 1 - \Phi\!\left(\frac{\ln 5\,000 - 7}{1}\right)
+          exemple: >-
+            $\ln 5\,000 = 8{,}5172$, donc $z = 1{,}5172$ et $1 - \Phi(1{,}5172) = 0{,}0646$.
+          piege: >-
+            8,21 % est le résultat de l'exponentielle de moyenne 2 000 €, une autre loi.
+      - q: 'Pareto avec $\alpha = 3$ et $\theta = 4\,000$. Probabilité de dépasser 5 000 € ?'
+        options: ['8,78 %', '0,46 %', '44,4 %']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On applique directement la fonction de survie de la Pareto.
+          formule: |-
+            S(5\,000) = \left(\frac{4\,000}{9\,000}\right)^{3}
+          exemple: >-
+            $(4/9)^3 = 64/729 = 0{,}0878$.
+          piege: >-
+            0,46 % est $S(20\,000)$. 44,4 % oublie l'exposant 3.
+      - q: 'Un montant suit une loi normale de moyenne 1 000 € et d''écart-type 200 €. Quantile à 95 % ?'
+        options: ['1 329 €', '1 392 €', '1 200 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Quantile de la normale : moyenne plus $z_p$ écarts-types, avec $z_{0{,}95} = 1{,}645$.
+          formule: |-
+            q_{0{,}95} = \mu + 1{,}645\,\sigma
+          exemple: >-
+            $1\,000 + 1{,}645 \times 200 = 1\,329$ €.
+          piege: >-
+            1 392 € utilise $z = 1{,}96$, le quantile à 97,5 % (bilatéral à 95 %).
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: '$X_1$ exponentielle de moyenne 2 000 € ; $X_2$ lognormale avec $\mu = 7$ et $\sigma = 1$. Saisis tes résultats à 4 décimales, les montants au centime.'
+    donnees:
+      entetes: ['$\theta$', '$\mu$', '$\sigma$', '$x$']
+      lignes: [['2 000', '7', '1', '5 000']]
+    champs:
+      - {cle: s1, libelle: '$P(X_1 > x)$', valeur: 0.082085, tolerance: 0.00015}
+      - {cle: q1, libelle: '$q_{0{,}99}(X_1)$', valeur: 9210.3404, tolerance: 0.015}
+      - {cle: m2, libelle: '$E[X_2]$', valeur: 1808.0424, tolerance: 0.015}
+      - {cle: s2, libelle: '$P(X_2 > x)$', valeur: 0.064609, tolerance: 0.00015}
+    solution: |
+      $e^{-5\,000/2\,000} = e^{-2{,}5} = 0{,}0821$ ; $q_{0{,}99} = -2\,000 \ln 0{,}01 = 9\,210{,}34$ €.
+      $E[X_2] = e^{7{,}5} = 1\,808{,}04$ € ; $z = \ln 5\,000 - 7 = 1{,}5172$ et $1 - \Phi(1{,}5172) = 0{,}0646$.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 8
+    intro: 'Écris le corps des quatre fonctions, sans IA. Les tests doivent tous passer. Indice : $\Phi(z) = \tfrac12\left[1 + \operatorname{erf}(z/\sqrt{2})\right]$.'
+    fichier: exercices/a2/s03_continues.py
+    depart: |
+      import math
+
+      def normal_cdf(z):
+          """Phi(z), the standard normal distribution function (use math.erf)."""
+          raise NotImplementedError
+
+      def exp_quantile(p, theta):
+          """Quantile of order p of an exponential distribution with mean theta."""
+          raise NotImplementedError
+
+      def lognormal_survival(x, mu, sigma):
+          """P(X > x) when ln X ~ Normal(mu, sigma**2)."""
+          raise NotImplementedError
+
+      def pareto_survival(x, alpha, theta):
+          """P(X > x) for a Pareto (Lomax) distribution: (theta / (theta + x)) ** alpha."""
+          raise NotImplementedError
+    tests:
+      - {nom: '$\Phi(1{,}644854) = 0{,}95$', expr: "abs(normal_cdf(1.644854) - 0.95) < 1e-6"}
+      - {nom: 'Symétrie : $\Phi(-z) = 1 - \Phi(z)$', expr: "abs(normal_cdf(-0.7) + normal_cdf(0.7) - 1) < 1e-12"}
+      - {nom: 'Quantile à 99 % : 9 210,34 €', expr: "abs(exp_quantile(0.99, 2000) - 9210.34) < 0.005"}
+      - {nom: 'Médiane exponentielle : $\theta \ln 2$', expr: "abs(exp_quantile(0.5, 2000) - 2000 * math.log(2)) < 1e-9"}
+      - {nom: 'Lognormale : $P(X > 5\,000) = 0{,}06461$', expr: "abs(lognormal_survival(5000, 7, 1) - 0.06461) < 0.00001"}
+      - {nom: 'Pareto : $P(X > 5\,000) = 64/729$', expr: "abs(pareto_survival(5000, 3, 4000) - 64 / 729) < 1e-12"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Densité, fonction de répartition", "density, cumulative distribution function", "The cumulative distribution function gives the probability of a claim below a threshold."]
+      - ["Fonction de survie", "survival function, exceedance probability", "The survival function at 20,000 is the chance of a large claim."]
+      - ["Loi lognormale", "lognormal distribution", "Property claims are often fitted with a lognormal distribution."]
+      - ["Loi de Pareto, queue épaisse", "Pareto distribution, heavy tail", "Liability claims have a heavy tail, so we use a Pareto."]
+      - ["Quantile", "quantile, percentile", "The 99th percentile of the claim size is about 9,200 euros."]
+      - ["Sinistre grave", "large claim", "One large claim can wipe out the profit of a small portfolio."]
