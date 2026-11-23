@@ -34,3 +34,4 @@ jobs:
           (cd _site && python -m http.server 8765 >/dev/null 2>&1 &)
           sleep 2
           node tests/navigateur/python_worker.js
+          node tests/navigateur/render_security.js
