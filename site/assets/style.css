@@ -567,3 +567,92 @@ a.mod .mod-n{color:var(--progress);font-weight:600}
 @media(prefers-reduced-motion:reduce){
   .formula{scroll-behavior:auto}
 }
+
+
+/* Mobile navigation correction — keep the brand and controls inside the viewport. */
+@media (max-width: 900px) {
+  .nav-in {
+    width: 100%;
+    gap: 8px;
+    min-width: 0;
+  }
+  .nav .brand {
+    flex: 1 1 120px;
+    min-width: 0;
+    white-space: normal;
+  }
+  .nav .brand-lockup {
+    min-width: 0;
+    max-width: 100%;
+    gap: 7px;
+  }
+  .nav .brand-mark {
+    width: 36px;
+    height: 36px;
+  }
+  .nav .brand-copy {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .nav .brand-copy strong {
+    font-size: clamp(.56rem, 2.1vw, .72rem);
+    line-height: 1.12;
+    letter-spacing: 0;
+  }
+  .nav .brand-copy small {
+    font-size: .52rem;
+    letter-spacing: .035em;
+  }
+  .nav .nav-menu {
+    flex: none;
+    margin-left: 0;
+  }
+  .nav .nav-menu summary {
+    width: 36px;
+    height: 36px;
+  }
+  .nav .langs {
+    flex: none;
+  }
+  .nav .acct {
+    flex: none;
+    width: 34px;
+    height: 34px;
+  }
+  .nav-sheet {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 72px);
+    right: max(16px, env(safe-area-inset-right, 0px));
+    left: auto;
+    width: min(320px, calc(100vw - 32px));
+    max-width: calc(100vw - 32px);
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - 88px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    z-index: 30;
+  }
+}
+@media (max-width: 380px) {
+  .nav .brand-mark {
+    width: 32px;
+    height: 32px;
+  }
+  .nav .brand-lockup {
+    gap: 5px;
+  }
+  .nav .brand-copy small {
+    font-size: .48rem;
+  }
+  .nav .nav-menu summary,
+  .nav .acct {
+    width: 32px;
+    height: 32px;
+  }
+  .nav .langs a,
+  .nav .langs span {
+    min-width: 25px;
+    height: 26px;
+    padding-inline: 6px;
+    font-size: .66rem;
+  }
+}
