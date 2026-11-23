@@ -10,8 +10,8 @@ etapes:
   - titre: "The recap"
     blocs:
       - p: >-
-          Your simulator works at integer ages: it knows $l_x$, $p_x$ and $q_x$. A full course, and the SOA exams,
-          also look at the <b>moment</b> of death. The tool for that is the
+          Your simulator works at integer ages: it knows $l_x$, $p_x$ and $q_x$. The SOA FAM syllabus also covers continuous-time survival models, beyond probabilities
+          at integer ages. The central tool is the
           <b>force of mortality</b> <i>(force de mortalité)</i> $\mu_x$, the instantaneous death rate at exact age $x$.
       - {}
       - p: >-
@@ -26,12 +26,16 @@ etapes:
           the year of death.
       - {}
       - note: >-
-          Under IAS 19, the choice of mortality table directly changes the DBO of an annuity
-          plan. You will measure it yourself in the A4+ extension.
+          Under IAS 19, the choice of mortality table directly affects the DBO of an annuity
+          plan. You will measure it yourself in the A4+ extension. In Canada, the applicable table depends on
+          the valuation type and effective date: the CPM2024 research report was published in March 2026. For
+          commuted values under section 3530 of the Standards of Practice, the combined CPM2024 table and
+          MI-2024 improvement scale have been promulgated with effect from April 1, 2027.
       - sources:
           - {titre: "Dickson, Hardy and Waters, Actuarial Mathematics for Life Contingent Risks, ch. 2 and 3", detail: "Survival models, force of mortality, fractional ages"}
           - {titre: "SOA, Fundamentals of Actuarial Mathematics (FAM) Exam", detail: "Official exam syllabus"}
-          - {titre: "CIA, 2024 Canadian Pensioner Mortality Research Project", detail: "CPM2014 remains the reference table for valuations"}
+          - {titre: "CIA, 2024 Canadian Pensioner Mortality Research Project", detail: "Published on March 11, 2026: updated mortality tables for Canadian pensioners and their spouses"}
+          - {titre: "CIA, 2026 promulgation of the mortality table — section 3530", detail: "Combined CPM2024 and MI-2024 apply from April 1, 2027 to commuted values covered by this section"}
 
   - titre: "Check"
     intro: "Four questions. Answer without rereading the recap."
