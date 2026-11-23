@@ -1,19 +1,19 @@
 # Modèle de menace — exécution Python des apprenants
 
-- **Statut :** proposition de conception, à relire ; aucune mesure de sécurité n'est encore implémentée par ce document.
+- **Statut :** modèle de menace documentaire, mis à jour après revue croisée ; l'implémentation Worker décrite ci-dessous est proposée dans la PR #11, encore ouverte et non fusionnée au moment de cette révision.
 - **Date :** 2026-11-23.
 - **Périmètre :** exécution du code Python saisi dans les séances du site Parcours Actuariel.
-- **Base examinée :** branche `main`, notamment `site/assets/seance.js`, `site/assets/compte.js`, `site/gabarits/seance.html`, `docs/SUPABASE.md` et `docs/AUDIT-INITIAL-2026-11.md`.
+- **Bases comparées :** `main` (exécution historique dans la page) et la branche `claude/python-worker` de la PR #11 (prototype Worker, non fusionné). Les constats ne doivent pas être présentés comme déjà déployés.
 
 ## 1. Résumé exécutif
 
-Aujourd'hui, `site/assets/seance.js` charge Pyodide dans le document de la séance et exécute le code de l'apprenant avec `py.runPython(value(), { globals: ns })`. Le même contexte de page contient l'interface et les scripts de l'application. Le code Python peut utiliser le pont JavaScript de Pyodide : il ne faut donc pas supposer que le code est limité aux objets Python ou au dictionnaire `ns`.
+Sur `main` au commit audité, `site/assets/seance.js` charge Pyodide dans le document de la séance et exécute le code avec `py.runPython(value(), { globals: ns })`. Le DOM, les scripts applicatifs et le stockage de la page se trouvent dans le même contexte : le pont JavaScript de Pyodide rend donc possible l'accès aux capacités du document.
 
-Le risque principal est une **confusion de frontière de confiance** : un programme fourni par l'apprenant reçoit actuellement les capacités du contexte JavaScript de la page. Il peut potentiellement manipuler l'interface, lire des données accessibles au document, utiliser les API du navigateur et effectuer des communications réseau. Une boucle non bornée peut également bloquer le fil principal.
+La PR #11 (`claude/python-worker`, commit audité `8514102c2210a61a5527debf1bdda88482dfcd9a`) propose une évolution distincte : Pyodide est chargé dans `site/assets/python-worker.js`, les échanges passent par messages, et la page peut terminer le Worker après un délai de 10 secondes ou via le bouton « Arrêter ». Le test navigateur Playwright ajouté dans cette PR vérifie notamment l'exécution d'un squelette et d'une solution, une boucle infinie, la réactivité/l'arrêt et l'absence d'accès direct à `document` et `localStorage` depuis le runtime.
 
-La première mesure de conception doit être de retirer l'exécution du contexte de la page et de ne lui transmettre aucun secret ni capacité privilégiée. Un Web Worker dédié est un bon premier palier pour isoler le DOM et préserver la réactivité de l'interface ; **un Worker seul n'est pas une frontière de sécurité complète**. Pour résister à du code délibérément hostile, il faut aussi étudier une isolation d'origine, une politique réseau restrictive et les limites réelles de l'hébergement statique.
+**État à ne pas confondre :** la PR #11 est encore ouverte et non fusionnée ; ces contrôles sont donc démontrés sur sa branche et dans sa CI, pas sur `main` ni nécessairement sur le site publié.
 
-Aucune architecture d'exécution n'est approuvée dans ce document. La décision technique viendra après revue croisée, validation des contraintes d'hébergement et tests de faisabilité.
+Le Worker retire l'accès direct au DOM et au `localStorage` du document principal et protège le fil principal contre une boucle bloquante. Il reste de même origine et expose encore certaines API du navigateur. Il ne faut donc pas le présenter comme une sandbox complète ni comme une protection contre du code délibérément hostile.
 
 ## 2. Périmètre et éléments observés
 
@@ -86,9 +86,20 @@ Le modèle ne considère pas la clé publishable comme un secret. En revanche, u
 
 - Pyodide expose un pont JavaScript ; le fait de passer un dictionnaire Python via `globals: ns` ne constitue pas une sandbox.
 - Un Web Worker n'a pas accès directement à `document`, `window` ni `localStorage`, mais son environnement expose d'autres API (par exemple `fetch`, `WebSocket`, `IndexedDB`, `importScripts` selon le contexte et les politiques). Il ne faut donc pas conclure qu'un Worker interdit le réseau ou tout accès aux données de même origine.
+- Dans le prototype de la PR #11, le Worker charge Pyodide via `importScripts` depuis jsDelivr. Les tests navigateur vérifient l'absence de `document` et de `localStorage`, mais ne démontrent pas le blocage de `fetch`, `WebSocket`, IndexedDB ou de tous les imports. Ces capacités restent des points à examiner.
 - Une politique CORS n'est pas une politique anti-exfiltration : certaines requêtes peuvent transmettre des données même si la réponse n'est pas lisible par le script.
 - Les navigateurs ne fournissent pas de quota mémoire strict, portable et fiable pour un Worker Web standard. Le délai et la terminaison limitent le risque sans garantir une borne mémoire dure.
 - Les tests actuels sont évalués après le code apprenant dans le même runtime. Un apprenant motivé peut manipuler l'environnement d'exécution ; les résultats doivent rester un feedback d'exercice, pas une certification inviolable.
+
+### CSP et contraintes propres à GitHub Pages
+
+GitHub Pages ne permet pas de configurer librement des en-têtes HTTP de réponse. Une CSP ajoutée par `<meta http-equiv="Content-Security-Policy">` est donc limitée : les directives `frame-ancestors`, `sandbox` et `report-uri` n'y sont pas appliquées. Elle peut notamment restreindre le chargement d'un Worker avec `worker-src`, mais ne constitue pas une politique réseau appliquée aux requêtes émises depuis un Worker de même origine.
+
+Un Worker classique chargé depuis une URL de même origine n'hérite pas de la CSP déclarée dans le document : sa politique dépend des en-têtes de sa propre réponse. L'héritage de la CSP du document concerne les Workers `blob:` et `data:`, pas ce Worker externe de même origine. Par conséquent, **on ne peut pas promettre un réseau fermé au moyen de la seule CSP meta sur GitHub Pages**.
+
+Neutraliser dans le Worker des API telles que `fetch`, `XMLHttpRequest`, `WebSocket` et `importScripts` après le chargement de Pyodide peut constituer une défense en profondeur, mais ne doit pas être présenté comme une frontière de sécurité robuste contre du code hostile capable d'exploiter d'autres capacités ou primitives.
+
+Une iframe `srcdoc` avec `sandbox="allow-scripts"` et sans `allow-same-origin` peut fournir un contexte à origine opaque, sans accès direct au stockage de l'origine principale. C'est une piste de prototype, pas une garantie automatique : il faut tester le chargement Pyodide/WASM depuis le CDN, les messages `postMessage`, la politique de contenu et les capacités résiduelles. Une origine dédiée avec des en-têtes contrôlés reste une option distincte si le modèle de menace l'exige.
 
 ## 5. Objectifs de sécurité
 
@@ -166,17 +177,18 @@ Toute solution future doit satisfaire les objectifs suivants :
 
 **Conclusion :** ne pas retenir à ce stade sans besoin produit, budget et modèle opérationnel explicites.
 
-## 7. Orientation provisoire
+## 7. Évaluation après revue de la PR #11
 
-Proposition de séquence, non décision d'implémentation :
+La PR #11 fournit déjà un prototype Worker avec délai de 10 secondes, terminaison par `worker.terminate()`, bouton d'arrêt et tests Playwright ciblés. Claude a vérifié que ces tests couvrent le squelette, une solution, la boucle infinie, la réactivité/l'arrêt et l'absence d'accès à `document` et `localStorage`. Cette PR reste toutefois ouverte : le prototype n'est pas encore intégré à `main`.
 
-1. **Prototype Worker** pour valider le chargement Pyodide, l'exécution asynchrone, le protocole de messages, le timeout et la terminaison.
-2. Vérifier les API accessibles depuis le Worker et établir comment le réseau et les imports seront bloqués ou autorisés.
-3. Vérifier la CSP réellement applicable sur GitHub Pages. Ne pas supposer que des en-têtes HTTP personnalisés sont configurables ; tester l'hébergement ou comparer une origine dédiée.
-4. Si le modèle de menace reste non satisfait, prototyper une iframe sandboxée/origine dédiée avant toute ouverture publique plus large.
-5. Garder l'exécution distante comme option séparée, avec analyse des coûts et de l'exploitation.
+Le modèle de menace doit distinguer deux scénarios :
 
-Aucune modification de `seance.js`, aucun nouveau Worker, aucune iframe et aucune modification de l'authentification ne sont inclus dans ce jalon documentaire.
+- **Usage actuel envisagé :** chaque apprenant exécute son propre code, sans partage de code entre comptes ; la session Supabase reste dans le `localStorage` de la page principale, hors du Worker ; la clé publishable n'accorde que le rôle `anon`, sous réserve de politiques RLS correctes. Le Worker réduit fortement le risque d'accès direct au DOM/stockage et de blocage de l'interface. Il constitue un palier proportionné pour ce scénario, sans garantir l'absence d'accès réseau.
+- **Menace hostile renforcée :** partage de code entre apprenants, exécution de code fourni par des tiers, besoin de confidentialité forte ou validation de compétences à valeur probante. Le Worker de même origine ne suffit pas à lui seul. Avant d'ouvrir ces usages, prototyper une iframe sandboxée à origine opaque ou une origine dédiée, avec tests réseau, stockage, messages et dépendances. Une exécution distante n'est à étudier qu'avec un besoin produit et un modèle opérationnel explicites.
+
+Sur GitHub Pages, ne pas faire dépendre la décision d'une CSP réseau qui ne peut pas être imposée par en-têtes HTTP. La neutralisation d'API dans le Worker peut réduire la surface, mais reste une défense en profondeur, pas une sandbox complète.
+
+Aucune modification du runtime n'est incluse dans cette PR documentaire ; l'implémentation Worker reste isolée dans la PR #11.
 
 ## 8. Critères d'acceptation avant adoption d'une implémentation
 
@@ -257,4 +269,4 @@ Les références suivantes sont des points de départ, pas une preuve que l'arch
 
 ## 12. Décision attendue
 
-Cette PR propose uniquement le modèle de menace et les critères de vérification. Après revue de Claude et clarification du niveau de menace accepté, une PR d'implémentation distincte pourra prototyper l'option retenue. Aucune fusion, publication ou modification de l'exécution actuelle n'est demandée ici.
+Cette PR propose uniquement le modèle de menace et les critères de vérification. La revue croisée a clarifié que le Worker de la PR #11 est un premier palier adapté au scénario actuel, sous réserve de ne pas le présenter comme une sandbox complète. La fusion de cette PR documentaire ne vaut ni validation de sécurité indépendante, ni autorisation d'ouverture à du code tiers ou partagé. Toute évolution vers une iframe sandboxée, une origine dédiée ou une exécution distante devra faire l'objet d'une conception et de tests distincts. Aucune fusion de code applicatif, publication ou modification de l'authentification n'est demandée ici.
