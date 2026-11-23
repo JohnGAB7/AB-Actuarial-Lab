@@ -21,6 +21,7 @@ Chaque séance dure environ 25 minutes et s'affiche **une étape à la fois** :
 | `tools/construire.py` | Construit `_site/` à partir des contenus. |
 | `exercices/` | Squelettes de code à compléter par JG. |
 | `tests/` | Tests des exercices, corrigé de contrôle et vérification des chiffres des séances. |
+| `a-produire/` | Un fichier par module maîtrisé : la matière que le projet Actu-Basics transforme en fiche et en vidéo. |
 | `suivi/` | Diagnostic, plan, notes et progression : seulement mes notes, jamais de support de cours ni de CV. |
 | `docs/ACTU-BASICS.md` | Comment une séance alimente aussi une vidéo Actu-Basics. |
 
