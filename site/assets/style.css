@@ -97,7 +97,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .flow{display:grid;gap:26px}
 .flow > p{max-width:var(--measure);font-size:1.07rem}
 .katex{font-size:1.06em}
-.formula{padding:26px 28px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line);box-shadow:0 1px 0 var(--line);overflow-x:auto;overflow-y:hidden;color:var(--ink)}
+.formula{position:relative;padding:26px 28px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line);box-shadow:0 1px 0 var(--line);overflow-x:auto;overflow-y:hidden;color:var(--ink)}
 .formula .katex-display{margin:0}
 .formula .katex{font-size:1.28em}
 .note{max-width:var(--measure);padding:20px 24px;border-radius:var(--r);background:var(--progress-soft);display:grid;gap:8px}
@@ -163,12 +163,12 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .why-v.ko{color:var(--bad)}
 .why-k{display:block;font:600 .72rem var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
 .why-f .katex-display{font-size:.92em}
-.why-f{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px 14px;overflow-x:auto}
+.why-f{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px 14px;overflow-x:auto}
 .score-row{display:flex;gap:14px;align-items:center;border-top:1px solid var(--line);padding-top:18px}
 .score{font:500 1.2rem var(--f-display);color:var(--ink)}
 
 /* Calcul */
-.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.tbl{position:relative;overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
 table{border-collapse:collapse;font-variant-numeric:tabular-nums;width:100%}
 th,td{font:400 1rem var(--f-mono);padding:12px 18px;text-align:right;white-space:nowrap}
 thead th{color:var(--muted);font-weight:500;border-bottom:1px solid var(--line)}
