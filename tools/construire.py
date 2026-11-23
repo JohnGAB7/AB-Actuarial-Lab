@@ -18,34 +18,18 @@ from string import Template
 
 import yaml
 
+from tools.validation_contenus import verifier_depot
+
 RACINE = Path(__file__).resolve().parents[1]
 CONTENUS = RACINE / "contenus"
 SITE = RACINE / "site"
 SORTIE = RACINE / "_site"
-TYPES = {"video", "rappel", "quiz", "calcul", "code", "vocabulaire"}
-
-
 def charger_parcours() -> dict:
     return yaml.safe_load((CONTENUS / "parcours.yaml").read_text(encoding="utf-8"))
 
 
 def charger_seance(sid: str) -> dict:
     return yaml.safe_load((CONTENUS / f"{sid}.yaml").read_text(encoding="utf-8"))
-
-
-def verifier_seance(s: dict) -> list[str]:
-    erreurs = []
-    for i, e in enumerate(s.get("etapes", []), 1):
-        if e.get("type") not in TYPES:
-            erreurs.append(f"{s['id']} étape {i} : type inconnu {e.get('type')!r}")
-        if e.get("type") == "quiz":
-            for q in e["questions"]:
-                if not 0 <= q["reponse"] < len(q["options"]):
-                    erreurs.append(f"{s['id']} : réponse hors des options pour « {q['q']} »")
-                p = q.get("pourquoi")
-                if not isinstance(p, dict) or not all(p.get(k) for k in ("rappel", "formule", "exemple")):
-                    erreurs.append(f"{s['id']} : explication sans rappel, formule et exemple pour « {q['q']} »")
-    return erreurs
 
 
 def seances(parcours: dict):
@@ -183,6 +167,11 @@ def config_supabase(env=None) -> dict:
 
 
 def construire() -> None:
+    # Validate the complete source corpus before touching the last successful build.
+    erreurs = verifier_depot()
+    if erreurs:
+        raise SystemExit("\n".join(erreurs))
+
     parcours = charger_parcours()
     if SORTIE.exists():
         shutil.rmtree(SORTIE)
@@ -192,10 +181,9 @@ def construire() -> None:
         "window.PA_CONFIG = " + json.dumps(config_supabase()) + ";\n", encoding="utf-8")
     g_seance = Template((SITE / "gabarits" / "seance.html").read_text(encoding="utf-8"))
     g_page = Template((SITE / "gabarits" / "page.html").read_text(encoding="utf-8"))
-    erreurs, infos = [], {}
+    infos = {}
     for dom, m, sid in seances(parcours):
         s = charger_seance(sid)
-        erreurs += verifier_seance(s)
         infos[sid] = s
         profondeur = "../" * (sid.count("/") + 1)
         donnees = dict(s, accueil=profondeur + "index.html", module_url=profondeur + m["id"] + "/index.html",
@@ -205,8 +193,6 @@ def construire() -> None:
         cible = SORTIE / sid / "index.html"
         cible.parent.mkdir(parents=True, exist_ok=True)
         cible.write_text(page, encoding="utf-8")
-    if erreurs:
-        sys.exit("\n".join(erreurs))
     plan = plan_json(parcours, {sid: (len(s["etapes"]), s["titre"]) for sid, s in infos.items()})
     titres = {sid: s["titre"] for sid, s in infos.items()}
 
@@ -229,9 +215,20 @@ def construire() -> None:
     print(f"Site construit dans {SORTIE}")
 
 
-if __name__ == "__main__":
-    if "--verifier" in sys.argv:
-        p = charger_parcours()
-        errs = [e for _, _, sid in seances(p) for e in verifier_seance(charger_seance(sid))]
-        sys.exit("\n".join(errs) if errs else 0)
+def main(argv: list[str] | None = None) -> int:
+    """Run the canonical content validation or build the static site."""
+    args = sys.argv[1:] if argv is None else argv
+    if "--verifier" in args:
+        erreurs = verifier_depot()
+        if erreurs:
+            print("\n".join(erreurs), file=sys.stderr)
+            return 1
+        print("Course plan and referenced sessions are structurally valid.")
+        return 0
+
     construire()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
