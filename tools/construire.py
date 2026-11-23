@@ -18,7 +18,12 @@ from string import Template
 
 import yaml
 
-from tools.validation_contenus import verifier_depot
+try:
+    # Package import in tests and other Python modules.
+    from .validation_contenus import verifier_depot, verifier_seance
+except ImportError:
+    # Direct script execution: python tools/construire.py
+    from validation_contenus import verifier_depot, verifier_seance
 
 RACINE = Path(__file__).resolve().parents[1]
 CONTENUS = RACINE / "contenus"
