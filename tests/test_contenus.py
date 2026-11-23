@@ -243,6 +243,33 @@ def test_calcul_a2b_s02():
     assert round(math.exp(-5000 / m), 3) == 0.070 and round(2000 / 7000, 3) == 0.286
     assert round(-8 * math.log(m) - 8, 4) == round(loglik, 4) == -68.3175
 
+def _student_cdf(t, nu, pas=20000):
+    """Student CDF by Simpson's rule, to check the quoted t quantile without scipy."""
+    c = math.gamma((nu + 1) / 2) / (math.sqrt(nu * math.pi) * math.gamma(nu / 2))
+    f = lambda x: c * (1 + x * x / nu) ** (-(nu + 1) / 2)
+    h = t / pas
+    s = f(0) + f(t) + sum((4 if k % 2 else 2) * f(k * h) for k in range(1, pas))
+    return 0.5 + s * h / 3
+
+
+def test_calcul_a2b_s03():
+    _, champs = _calcul("a2b/s03")
+    p, n = 120 / 2000, 2000
+    se = math.sqrt(p * (1 - p) / n)
+    besoin = 1.96**2 * p * (1 - p) / 0.01**2
+    _proche(champs, {"se": se, "bas": p - 1.96 * se, "haut": p + 1.96 * se, "n": math.ceil(besoin)}, tol=1e-4)
+    assert abs(_student_cdf(2.364624, 7) - 0.975) < 1e-6
+    assert [round(100 * x, 2) for x in (p - 1.96 * se, p + 1.96 * se, p - se, p + se)] == [4.96, 7.04, 5.47, 6.53]
+    assert round(besoin, 1) == 2166.7 and math.ceil(besoin) == 2167 and round(p * (1 - p) / 0.01**2) == 564
+    assert math.ceil(1.96 * p * (1 - p) / 0.01**2) == 1106 and round(100 * 1.96 * se, 2) == 1.04
+    xs = [1200, 800, 3500, 600, 2100, 950, 1700, 4200]
+    m = sum(xs) / 8
+    sem = math.sqrt(sum((x - m) ** 2 for x in xs) / 7 / 8)
+    assert [round(m + k * sem) for k in (-2.364624, 2.364624, -1.96, 1.96, -1, 1)] == [777, 2986, 966, 2797, 1414, 2348]
+    assert round(2.365 * 467.13, 1) == 1104.8 and round(2.364624 * sem, 1) == 1104.6 and round(2.365 / 1.96 - 1, 2) == 0.21
+    assert round(2.576 / 1.96, 2) == 1.31 and round(2.5 - 1.96 * 0.5, 2) == 1.52 and round(2.5 + 1.96 * 0.5, 2) == 3.48
+    assert round(2.5 - 1.96 * math.sqrt(2.5), 2) == -0.60 and round(2.5 + 1.96 * math.sqrt(2.5), 2) == 5.60
+
 def test_aucun_support_de_cours_ni_cv_dans_le_depot():
     """Supports de cours et CV restent dans la bibliothèque du projet, jamais sur un dépôt."""
     interdits = {".pdf", ".pptx", ".ppt", ".docx", ".doc", ".tex", ".xlsx"}

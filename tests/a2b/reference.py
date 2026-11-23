@@ -32,3 +32,20 @@ def exponential_loglik(xs, theta):
 
 def pareto_alpha_mle(xs, theta):
     return len(xs) / sum(math.log(1 + x / theta) for x in xs)
+
+
+# Session a2b/s03
+def mean_ci(xs, q):
+    m, s2 = sample_mean_var(xs)
+    half = q * math.sqrt(s2 / len(xs))
+    return m - half, m + half
+
+
+def proportion_ci(k, n, z=1.96):
+    p = k / n
+    half = z * math.sqrt(p * (1 - p) / n)
+    return p - half, p + half
+
+
+def sample_size(p, margin, z=1.96):
+    return math.ceil(z * z * p * (1 - p) / margin**2)
