@@ -39,7 +39,7 @@ const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 
   await p.locator('.row .btn', { hasText: 'Arrêter' }).click(); await p.waitForTimeout(300);
   out.responsive = responsive; out.stop = await summary(); console.log('stop:', responsive, out.stop);
   // 5. the sandbox has an opaque origin: it cannot read the parent DOM or either origin's storage.
-  await setCode("import js, time\nblocked = []\nfor label, obj, attr in [('parent-document', js.parent, 'document'), ('parent-storage', js.parent, 'localStorage'), ('sandbox-storage', js, 'localStorage')]:\n    try:\n        getattr(obj, attr)\n    except Exception:\n        blocked.append(label)\ntime.sleep(1)\nif len(blocked) != 3:\n    raise RuntimeError('BOUNDARY_FAILED=' + ','.join(blocked))\nraise RuntimeError('BOUNDARY_OK')\n");
+  await setCode("import js, time\nblocked = []\nfor label, obj, attr in [('parent-document', js.parent, 'document'), ('parent-storage', js.parent, 'localStorage'), ('sandbox-storage', js, 'localStorage')]:\n    try:\n        getattr(obj, attr)\n    except Exception:\n        blocked.append(label)\ndeadline = time.monotonic() + 1\nwhile time.monotonic() < deadline:\n    pass\nif len(blocked) != 3:\n    raise RuntimeError('BOUNDARY_FAILED=' + ','.join(blocked))\nraise RuntimeError('BOUNDARY_OK')\n");
   await clickRun();
   await p.waitForFunction(() => document.querySelector('.res-sum').textContent.includes('Exécution'), null, { timeout: 30000 });
   out.sandboxFlags = await p.locator('iframe[data-parcours-python-sandbox]').getAttribute('sandbox');
