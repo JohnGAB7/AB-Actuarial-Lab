@@ -323,7 +323,6 @@ def test_overlay_preserves_numeric_values_sign_exponent_and_units():
         "The rate is 2.5% and the margin is 1.2e-3‰.",
         "The rate is -2.5 and the margin is 1.2e-3‰.",
         "The rate is -2.5% and the margin is 1.2e+3‰.",
-        "The rate is -2.5% and the margin is 1.2e-3‰, but n+1 replaces n-1.",
     ):
         try:
             fusionner_overlay(base, {"texte": translated})
@@ -331,6 +330,17 @@ def test_overlay_preserves_numeric_values_sign_exponent_and_units():
             assert "chiffres différents" in str(exc)
         else:
             raise AssertionError(f"Numeric alteration was accepted: {translated}")
+
+
+def test_overlay_preserves_sign_in_indexed_terms():
+    base = {"texte": "Le terme n-1 est utilisé."}
+    assert fusionner_overlay(base, {"texte": "The term n-1 is used."})["texte"]
+    try:
+        fusionner_overlay(base, {"texte": "The term n+1 is used."})
+    except ValueError as exc:
+        assert "chiffres différents" in str(exc)
+    else:
+        raise AssertionError("The sign in n-1 was not preserved")
 
 
 def test_overlay_formula_may_only_translate_text_labels():
