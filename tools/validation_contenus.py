@@ -16,8 +16,8 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT_DIR = ROOT / "contenus"
-SESSION_ID = re.compile(r"^[a-z0-9][a-z0-9_-]*/[a-z0-9][a-z0-9_-]*$")
-PLAN_ID = re.compile(r"^[a-z0-9][a-z0-9_-]{0,39}$")
+SESSION_ID = re.compile(r"^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*$")
+PLAN_ID = re.compile(r"^[a-z0-9][a-z0-9-]{0,39}$")
 
 
 def _text(value: Any) -> bool:
