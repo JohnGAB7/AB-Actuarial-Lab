@@ -43,8 +43,12 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .brand-mark{display:block;width:42px;height:42px;flex:none}
 .brand-logo{display:block;width:100%;height:100%;object-fit:contain}
 .brand-logo-dark{display:none}
-:root:not([data-theme="light"]) .brand-logo-light{display:none}
-:root:not([data-theme="light"]) .brand-logo-dark{display:block}
+:root[data-theme="dark"] .brand-logo-light{display:none}
+:root[data-theme="dark"] .brand-logo-dark{display:block}
+@media (prefers-color-scheme:dark){
+ :root:not([data-theme="light"]) .brand-logo-light{display:none}
+ :root:not([data-theme="light"]) .brand-logo-dark{display:block}
+}
 .brand-copy{display:grid;gap:3px;line-height:1.05}
 .brand-copy strong{font:700 .78rem/1 var(--f-body);letter-spacing:.055em;color:var(--ink)}
 .brand-copy small{font:600 .56rem/1.2 var(--f-body);letter-spacing:.105em;color:var(--muted)}
