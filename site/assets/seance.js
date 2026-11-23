@@ -277,7 +277,7 @@ const R = {
   quiz(e, i) {
     const explication = (p) => {
       if (typeof p === "string") return `<p>${p}</p>`;
-      const ligne = (k, lib) => p[k] ? `<p class="why-l"><span class="why-k">${lib}</span>${p[k]}</p>` : "";
+      const ligne = (k, lib) => p[k] ? `<p class="why-l"><span class="why-k">${lib}</span><span class="why-sep">: </span>${p[k]}</p>` : "";
       return ligne("rappel", UI.recap) + (p.formule ? `<div class="why-f">$$${p.formule}$$</div>` : "")
         + ligne("exemple", UI.example) + ligne("piege", UI.pitfall);
     };
