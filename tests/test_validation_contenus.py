@@ -104,6 +104,29 @@ def test_code_step_rejects_paths_outside_the_exercise_directory():
     assert any("chemin relatif sûr" in error for error in errors)
 
 
+def test_plan_requires_english_home_and_domain_copy_for_bilingual_build():
+    plan = {
+        "titre": "Course",
+        "sous_titre": "Subtitle",
+        "domaines": [
+            {
+                "id": "foundations",
+                "titre": "Foundations",
+                "en": "Foundations",
+                "accroche": "Introduction",
+                "modules": [
+                    {"id": "a1", "titre": "Module", "en": "Module", "seances": []}
+                ],
+            }
+        ],
+    }
+
+    errors = verifier_parcours(plan)
+
+    assert any("sous_titre_en" in error for error in errors)
+    assert any("accroche_en" in error for error in errors)
+
+
 def test_plan_rejects_duplicate_session_references():
     plan = {
         "titre": "Course",
@@ -381,11 +404,13 @@ def _write_overlay_fixture(tmp_path, monkeypatch, *, overlay=None, include_overl
     plan = {
         "titre": "Parcours",
         "sous_titre": "Sous-titre",
+        "sous_titre_en": "Subtitle",
         "domaines": [{
             "id": "a1",
             "titre": "Fondamentaux",
             "en": "Foundations",
             "accroche": "Introduction",
+            "accroche_en": "Introduction",
             "modules": [{
                 "id": "a1",
                 "titre": "Module",
