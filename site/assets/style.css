@@ -407,5 +407,5 @@ a.mod .mod-n{color:var(--progress);font-weight:600}
 /* Keep the seven-domain desktop navigation inside the shared content width. */
 @media (min-width:901px){
  .nav-in{gap:16px}
- .nav-links a{padding-inline:8px}
+ .nav-links a{padding-inline:7px;font-size:.9rem}
 }
