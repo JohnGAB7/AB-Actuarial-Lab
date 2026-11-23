@@ -274,9 +274,8 @@ def test_calcul_a2b_s04():
     s, champs = _calcul("a2b/s04")
     # The displayed grouped tail is N >= 3, but the fictional raw sample has 20 exact threes.
     quiz = next(e for e in s["etapes"] if e.get("questions") and "contrats fictifs" in e.get("intro", ""))
-    assert "20 avec exactement 3 (aucun au-delà)" in quiz["intro"]
-    # The English overlay must preserve meaning; the builder validates numeric parity separately.
-    assert "20 with exactly 3 (none above 3)" in charger_seance("a2b/s04", "en")["etapes"][3]["intro"]
+    assert "20 avec exactement 3 sinistres (aucune observation dans les classes supérieures)" in quiz["intro"]
+    assert "20 with exactly 3 claims (no observations in higher classes)" in charger_seance("a2b/s04", "en")["etapes"][3]["intro"]
     obs = [610, 300, 70, 20]
     probs = [math.exp(-0.5) * 0.5**k / math.factorial(k) for k in range(3)]
     att = [1000 * q for q in probs] + [1000 * (1 - sum(probs))]
