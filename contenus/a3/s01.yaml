@@ -54,7 +54,7 @@ etapes:
           \end{gathered}
       - note: >-
           En IAS 19, le choix de la table de mortalité modifie directement la DBO d'un plan
-          de rentes. Tu le mesureras toi-même dans l'approfondissement A4+. Au Canada, la table applicable dépend
+          de rentes. Tu le mesureras toi-même dans l'approfondissement A4+. La table MK utilisée dans les calculs de cette séance est un exemple paramétrique issu du simulateur du dépôt, pas une table CPM. Au Canada, la table applicable dépend
           du type d'évaluation et de sa date : le rapport CPM2024 a été publié en mars 2026. Pour les valeurs
           actualisées des régimes de retraite visées par la section 3530, CPM2024 combinée et l'échelle MI-2024
           sont promulguées avec effet au 1er avril 2027.
