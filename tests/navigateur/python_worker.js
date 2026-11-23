@@ -43,7 +43,7 @@ const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 
   await clickRun(); await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 60000 });
   out.sandbox = await p.locator('.results li .tm').first().textContent(); console.log('sandbox:', out.sandbox);
   // Network and browser storage APIs are unavailable after Pyodide initialization.
-  await setCode("import js\nblocked = ['fetch', 'XMLHttpRequest', 'WebSocket', 'EventSource', 'BroadcastChannel', 'indexedDB', 'caches', 'importScripts', 'postMessage']\\navailable = [name for name in blocked if hasattr(js, name) and getattr(js, name) is not None]\\nraise RuntimeError('AVAILABLE=' + ','.join(available))\\n");
+  await setCode("import js\nblocked = ['fetch', 'XMLHttpRequest', 'WebSocket', 'EventSource', 'BroadcastChannel', 'indexedDB', 'caches', 'importScripts', 'postMessage']\navailable = [name for name in blocked if hasattr(js, name) and getattr(js, name) is not None]\nraise RuntimeError('AVAILABLE=' + ','.join(available))\n");
   await clickRun(); await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 30000 });
   out.capabilities = await p.locator('.results li .tm').first().textContent(); console.log('capabilities:', out.capabilities);
   // Oversized code is rejected before Pyodide is loaded.
