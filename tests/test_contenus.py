@@ -218,7 +218,7 @@ def test_traduction_ne_peut_pas_modifier_les_metadonnees_de_session():
         "titre": "Intérêt composé",
     }
 
-    with pytest.raises(ValueError, match="\.en"):
+    with pytest.raises(ValueError, match=r"\.en"):
         fusion(base, {"en": "Different metadata title"}, "a1/s01")
-    with pytest.raises(ValueError, match="\.actu_basics"):
+    with pytest.raises(ValueError, match=r"\.actu_basics"):
         fusion(base, {"actu_basics": {"statut": "published"}}, "a1/s01")
