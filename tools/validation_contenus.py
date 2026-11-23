@@ -17,6 +17,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT_DIR = ROOT / "contenus"
 SESSION_ID = re.compile(r"^[a-z0-9][a-z0-9_-]*/[a-z0-9][a-z0-9_-]*$")
+PLAN_ID = re.compile(r"^[a-z0-9][a-z0-9_-]{0,39}$")
 
 
 def _text(value: Any) -> bool:
@@ -445,6 +446,8 @@ def verifier_parcours(plan: Any) -> list[str]:
             errors.append(f"{label}: « id » doit être un texte non vide et unique.")
         else:
             domain_ids.add(domain_id)
+        if _text(domain_id) and PLAN_ID.fullmatch(domain_id) is None:
+            errors.append(f"{label}: identifiant de domaine invalide pour un segment de chemin sûr.")
         for key in ("titre", "en", "accroche"):
             if not _text(domain.get(key)):
                 errors.append(f"{label}: « {key} » doit être un texte non vide.")
@@ -463,6 +466,8 @@ def verifier_parcours(plan: Any) -> list[str]:
                 errors.append(f"{module_label}: « id » doit être un texte non vide et unique.")
             else:
                 module_ids.add(module_id)
+            if _text(module_id) and PLAN_ID.fullmatch(module_id) is None:
+                errors.append(f"{module_label}: identifiant de module invalide pour un segment de chemin sûr.")
             for key in ("titre", "en"):
                 if not _text(module.get(key)):
                     errors.append(f"{module_label}: « {key} » doit être un texte non vide.")
