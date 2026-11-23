@@ -161,6 +161,20 @@ def test_calcul_a2_s02():
     assert round(m, 10) == 0.4 and round(var, 10) == 0.44 and round(500**2 * var) == 110000
     assert round(math.sqrt(500**2 * var), 2) == 331.66 and round(20 * 0.05 * 0.95, 10) == 0.95
 
+
+def test_calcul_a2_s03():
+    _, champs = _calcul("a2/s03")
+    phi = lambda z: 0.5 * (1 + math.erf(z / math.sqrt(2)))
+    z = math.log(5000) - 7
+    _proche(champs, {"s1": math.exp(-2.5), "q1": -2000 * math.log(0.01), "m2": math.exp(7.5), "s2": 1 - phi(z)}, tol=1e-4)
+    assert round(2000 * math.log(2), 2) == 1386.29 and round(math.exp(7), 2) == 1096.63 and round(math.log(2), 6) == 0.693147
+    assert round(math.log(5000), 4) == 8.5172 and round(z, 4) == 1.5172
+    pareto = lambda x: (4000 / (4000 + x)) ** 3
+    assert round(pareto(5000), 4) == 0.0878 and abs(pareto(5000) - 64 / 729) < 1e-15 and round(pareto(20000) * 100, 2) == 0.46
+    assert round(math.exp(-10) * 100, 4) == 0.0045 and 4000 / (3 - 1) == 2000
+    assert round(phi(1.645), 3) == 0.95 and round(phi(1.96), 3) == 0.975
+    assert 1000 + 1.645 * 200 == 1329 and round(1000 + 1.96 * 200) == 1392
+
 def test_aucun_support_de_cours_ni_cv_dans_le_depot():
     """Supports de cours et CV restent dans la bibliothèque du projet, jamais sur un dépôt."""
     interdits = {".pdf", ".pptx", ".ppt", ".docx", ".doc", ".tex", ".xlsx"}

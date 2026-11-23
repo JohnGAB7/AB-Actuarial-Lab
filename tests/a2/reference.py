@@ -1,5 +1,6 @@
 """Independent solutions, used only to check that the tests and contents are right.
 Do not open before doing the exercise."""
+import math
 
 
 # Session a2/s01
@@ -30,3 +31,23 @@ def binomial_pmf(k, n, p):
 def mean_variance(pmf):
     m = sum(x * q for x, q in pmf.items())
     return m, sum(x * x * q for x, q in pmf.items()) - m * m
+
+
+# Session a2/s03
+def normal_cdf(z):
+    import math
+    return 0.5 * (1 + math.erf(z / math.sqrt(2)))
+
+
+def exp_quantile(p, theta):
+    import math
+    return -theta * math.log(1 - p)
+
+
+def lognormal_survival(x, mu, sigma):
+    import math
+    return 1 - normal_cdf((math.log(x) - mu) / sigma)
+
+
+def pareto_survival(x, alpha, theta):
+    return (theta / (theta + x)) ** alpha
