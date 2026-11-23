@@ -1,0 +1,144 @@
+# Séance 2 du module A3 (Vie et mortalité) : valeurs actuelles des assurances.
+# Chiffres : table MK (loi de Makeham) de la séance 1, taux technique fictif de 2,5 %.
+# Les valeurs sont recalculées par tests/test_contenus.py et tests/a3/test_s02_assurances.py.
+id: a3/s02
+module: a3
+titre: "Valeur actuelle d'une assurance"
+en: "Actuarial present value of life insurance"
+duree: 30
+table: {nom: MK, k: 1000450.59, s: 0.999106875782, g: 0.999549614043, c: 1.103798111448, omega: 116}
+taux: 0.025
+
+actu_basics:
+  episode: "A3 · Life insurance and mortality"
+  statut: "à proposer"
+  accroche_fr: "Combien vaut aujourd'hui une promesse de payer 1 € au décès ?"
+  accroche_en: "What is a promise to pay 1 at death worth today?"
+
+etapes:
+  - type: video
+    titre: "L'intuition en vidéo"
+    minutes: 3
+    texte: >-
+      La vidéo Actu-Basics de ce thème montrera l'idée centrale : un paiement incertain vaut la somme de ses
+      montants possibles, actualisés et pondérés par leur probabilité. Elle n'existe pas encore.
+
+  - type: rappel
+    titre: "Le rappel"
+    minutes: 8
+    blocs:
+      - p: >-
+          Une assurance promet un paiement dont la <b>date</b> dépend de la vie de l'assuré. Sa
+          <b>valeur actuelle actuarielle</b> <i>(actuarial present value, APV)</i> est l'espérance du paiement
+          actualisé. On note $v = 1/(1+i)$ le facteur d'actualisation <i>(discount factor)</i> au taux technique $i$.
+      - p: >-
+          Le plus simple est le <b>capital différé</b> <i>(pure endowment)</i> : on paie 1 dans $n$ ans si l'assuré
+          est encore en vie. Il faut actualiser sur $n$ ans et survivre $n$ ans.
+      - formule: |
+          {}_nE_x = v^n \, {}_np_x = v^n \, \frac{l_{x+n}}{l_x}
+      - p: >-
+          L'<b>assurance temporaire décès</b> <i>(term insurance)</i> paie 1 à la fin de l'année du décès, si le
+          décès survient dans les $n$ ans. Le décès a lieu dans l'année $k+1$ avec la probabilité
+          ${}_{k|}q_x = d_{x+k}/l_x$, où $d_x = l_x - l_{x+1}$.
+      - formule: |
+          A^{1}_{x:\overline{n}|} = \sum_{k=0}^{n-1} v^{k+1}\, {}_{k|}q_x = \sum_{k=0}^{n-1} v^{k+1}\, \frac{d_{x+k}}{l_x}
+      - p: >-
+          L'<b>assurance vie entière</b> <i>(whole life insurance)</i> est une temporaire qui court jusqu'à la fin de la
+          table. L'<b>assurance mixte</b> <i>(endowment insurance)</i> paie au décès ou au terme : c'est la somme
+          d'une temporaire et d'un capital différé.
+      - formule: |
+          \begin{gathered}
+          A_x = \sum_{k=0}^{\omega-x-1} v^{k+1}\, {}_{k|}q_x \\[6pt]
+          A_{x:\overline{n}|} = A^{1}_{x:\overline{n}|} + {}_nE_x
+          \end{gathered}
+      - p: >-
+          Ces valeurs se lisent comme des primes uniques <i>(net single premiums)</i> : pour un capital de
+          100 000 €, la prime unique nette d'une vie entière vaut $100\,000\,A_x$.
+      - note: >-
+          Le taux technique pèse lourd : plus $i$ est bas, plus $v$ est proche de 1 et plus les engagements
+          valent cher. C'est le même mécanisme que la baisse des taux d'actualisation en IAS 19.
+      - sources:
+          - {titre: "Dickson, Hardy et Waters, Actuarial Mathematics for Life Contingent Risks, chap. 4", detail: "Valeurs actuelles des assurances, temps discret et continu"}
+          - {titre: "SOA, Fundamentals of Actuarial Mathematics (FAM) Exam", url: "https://www.soa.org/education/exam-req/edu-exam-fam/", detail: "Syllabus officiel de l'examen"}
+
+  - type: quiz
+    titre: "Vérifie"
+    minutes: 4
+    intro: "Quatre questions. Réponds sans relire le rappel."
+    questions:
+      - q: 'Que vaut ${}_nE_x$ quand le taux $i$ vaut 0 ?'
+        options: ['$1$', '${}_np_x$', '$v^n$']
+        reponse: 1
+        pourquoi: 'Avec $i = 0$, $v = 1$ : il ne reste que la probabilité de survivre, ${}_np_x$.'
+      - q: 'Si le taux technique baisse, $A_x$…'
+        options: ['augmente', 'diminue', 'ne change pas']
+        reponse: 0
+        pourquoi: 'Chaque terme $v^{k+1}$ augmente quand $i$ baisse, donc la somme augmente.'
+      - q: 'Quelle égalité est juste ?'
+        options: ['$A_{x:\overline{n}|} = A^{1}_{x:\overline{n}|} - {}_nE_x$', '$A_{x:\overline{n}|} = A^{1}_{x:\overline{n}|} + {}_nE_x$', '$A_{x:\overline{n}|} = A_x\,{}_nE_x$']
+        reponse: 1
+        pourquoi: "La mixte paie au décès avant le terme (temporaire) ou au terme en cas de vie (capital différé). Les deux cas s'excluent, donc on additionne."
+      - q: 'Pourquoi $A_{65}$ est-il plus grand que $A_{40}$ ?'
+        options: ['Parce que le décès est plus proche, donc moins actualisé', 'Parce que le capital est plus élevé', 'Ce n''est pas le cas']
+        reponse: 0
+        pourquoi: 'Le paiement est certain dans les deux cas pour une vie entière. Seule sa date change : à 65 ans, il arrive plus tôt et il est moins actualisé.'
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 6
+    intro: "Table MK de la séance 1, taux de 2,5 %. Calcule pour un assuré de 65 ans sur 3 ans, puis saisis tes résultats à 4 décimales."
+    donnees:
+      entetes: ['$x$', '65', '66', '67', '68']
+      lignes: [['$l_x$', '716 046', '695 175', '672 905', '649 211']]
+    champs:
+      - {cle: temp, libelle: '$A^{1}_{65:\overline{3}|}$', valeur: 0.0887668, tolerance: 0.00015}
+      - {cle: diff, libelle: '${}_3E_{65}$', valeur: 0.8419249, tolerance: 0.00015}
+      - {cle: mixte, libelle: '$A_{65:\overline{3}|}$', valeur: 0.9306917, tolerance: 0.00015}
+    solution: |
+      Décès : $d_{65} = 20\,871$, $d_{66} = 22\,270$, $d_{67} = 23\,694$.
+      $A^{1}_{65:\overline{3}|} = \dfrac{20\,871\,v + 22\,270\,v^2 + 23\,694\,v^3}{716\,046} = 0{,}0888$, $\quad {}_3E_{65} = v^3\,\dfrac{649\,211}{716\,046} = 0{,}8419$.
+      Mixte : $0{,}0888 + 0{,}8419 = 0{,}9307$.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 8
+    intro: "Recopie ta fonction l(x) de la séance 1, puis écris les trois autres, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a3/s02_assurances.py
+    depart: |
+      K, S, G, C, OMEGA = 1000450.59, 0.999106875782, 0.999549614043, 1.103798111448, 116
+
+      def l(x):
+          """Number of survivors at integer age x (copy your session 1 code)."""
+          raise NotImplementedError
+
+      def pure_endowment(x, n, i):
+          """nE_x = v**n * l(x + n) / l(x)."""
+          raise NotImplementedError
+
+      def term_insurance(x, n, i):
+          """A1_{x:n} = sum over k = 0 .. n-1 of v**(k+1) * d(x+k) / l(x), paid at the end of the year of death."""
+          raise NotImplementedError
+
+      def whole_life(x, i):
+          """A_x: term insurance up to the end of the table (OMEGA)."""
+          raise NotImplementedError
+    tests:
+      - {nom: '${}_{10}E_{65}$ vaut 0,48603 à 2,5 %', expr: "abs(pure_endowment(65, 10, 0.025) - 0.48603) < 0.00001"}
+      - {nom: '$A^{1}_{65:\overline{10}|}$ vaut 0,32737 à 2,5 %', expr: "abs(term_insurance(65, 10, 0.025) - 0.32737) < 0.00001"}
+      - {nom: '$A_{40}$ vaut 0,46053 à 2,5 %', expr: "abs(whole_life(40, 0.025) - 0.46053) < 0.00001"}
+      - {nom: '$A_{65}$ vaut 0,73096 à 2,5 %', expr: "abs(whole_life(65, 0.025) - 0.73096) < 0.00001"}
+      - {nom: 'Avec $i = 0$, ${}_{10}E_{65} = {}_{10}p_{65}$', expr: "abs(pure_endowment(65, 10, 0) - l(75) / l(65)) < 1e-12"}
+      - {nom: '$A_x$ augmente quand le taux baisse', expr: "whole_life(65, 0.01) > whole_life(65, 0.025)"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Valeur actuelle actuarielle", "actuarial present value (APV)", "The APV is the expected value of the discounted benefit."]
+      - ["Capital différé", "pure endowment", "A pure endowment pays only if the policyholder survives to maturity."]
+      - ["Assurance temporaire décès", "term insurance", "Term insurance is cheap at young ages because deaths are rare."]
+      - ["Assurance vie entière", "whole life insurance", "Whole life insurance always pays, so only the timing is uncertain."]
+      - ["Assurance mixte", "endowment insurance", "An endowment policy is a term insurance plus a pure endowment."]
+      - ["Prime unique nette", "net single premium", "The net single premium is the benefit times its actuarial present value."]
+      - ["Taux technique", "valuation interest rate", "A lower valuation rate increases the reserves."]
