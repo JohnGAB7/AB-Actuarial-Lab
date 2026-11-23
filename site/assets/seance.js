@@ -22,6 +22,8 @@ const UI = {
     stopped: "Exécution arrêtée. Python se rechargera au prochain lancement.",
     timeout: (s) => `Arrêt après ${s} secondes : boucle infinie ou calcul trop long ?`,
     loadFail: "Python n'a pas pu se charger. Vérifie ta connexion, ou lance les tests du dépôt avec pytest.",
+    badReply: "Réponse invalide du moteur Python.", unreadable: "Réponse illisible du moteur Python.",
+    loadTimeout: (s) => `Le chargement de Python a dépassé ${s} secondes.`, cantSend: "Impossible d'envoyer le code au moteur Python.",
     locale: "fr-BE",
   },
   en: {
@@ -42,6 +44,8 @@ const UI = {
     stopped: "Run stopped. Python will reload next time.",
     timeout: (s) => `Stopped after ${s} seconds: infinite loop or a computation that is too long?`,
     loadFail: "Python could not load. Check your connection, or run the repository tests with pytest.",
+    badReply: "Invalid reply from the Python engine.", unreadable: "Unreadable reply from the Python engine.",
+    loadTimeout: (s) => `Loading Python took more than ${s} seconds.`, cantSend: "Could not send the code to the Python engine.",
     locale: "en-GB",
   },
 }[LANG];
@@ -322,31 +326,46 @@ const lastLine = (err) => String(err.message || err).trim().split("\n").pop();
 // Le code de l'apprenant tourne hors de la page : pas d'accès au DOM ni à la session du compte.
 // Limite de temps après le chargement ; « Arrêter » ou le dépassement termine le worker.
 const PY_LIMITE_MS = 10000;
+const PY_CHARGEMENT_LIMITE_MS = 60000;
+const PY_RESULTATS = new Set(["pass", "fail", "todo"]);
 let worker = null, pending = null, seq = 0;
 function stopPython(raison) {
   if (worker) { worker.terminate(); worker = null; }
-  if (pending) { const p = pending; pending = null; clearTimeout(p.timer); p.reject(new Error(raison || UI.stopped)); }
+  if (pending) {
+    const p = pending; pending = null; clearTimeout(p.timer);
+    p.reject(new Error(raison || UI.stopped));
+  }
 }
 function runPython(code, tests, onRunning) {
   stopPython();
-  if (!worker) {
-    worker = new Worker(new URL("python-worker.js", SCRIPT_URL));
-    worker.onmessage = (ev) => {
-      const m = ev.data; if (!pending || m.id !== pending.id) return;
-      if (m.phase === "running") {
-        onRunning && onRunning();
-        pending.timer = setTimeout(() => stopPython(UI.timeout(PY_LIMITE_MS / 1000)), PY_LIMITE_MS);
-        return;
-      }
-      const p = pending; pending = null; clearTimeout(p.timer);
-      if (m.phase === "done") p.resolve(m.results);
-      else p.reject(new Error(m.msg));
-    };
-    worker.onerror = () => stopPython(UI.loadFail);
-  }
+  worker = new Worker(new URL("python-worker.js", SCRIPT_URL));
+  worker.onmessage = (ev) => {
+    const m = ev.data;
+    if (!pending || !m || m.id !== pending.id) return;
+    if (m.phase === "running") {
+      if (onRunning) onRunning();
+      clearTimeout(pending.timer);
+      pending.timer = setTimeout(() => stopPython(UI.timeout(PY_LIMITE_MS / 1000)), PY_LIMITE_MS);
+      return;
+    }
+    const p = pending; pending = null; clearTimeout(p.timer);
+    if (m.phase === "done" && Array.isArray(m.results) &&
+        m.results.length === tests.length &&
+        m.results.every((r) => r && PY_RESULTATS.has(r.status) && typeof r.msg === "string" && r.msg.length <= 500)) {
+      p.resolve(m.results);
+    } else if (m.phase === "error" && typeof m.msg === "string") {
+      p.reject(new Error(m.msg.slice(0, 500)));
+    } else {
+      p.reject(new Error(UI.badReply));
+    }
+  };
+  worker.onerror = () => stopPython(UI.loadFail);
+  worker.onmessageerror = () => stopPython(UI.unreadable);
   return new Promise((resolve, reject) => {
     pending = { id: ++seq, resolve, reject, timer: null };
-    worker.postMessage({ id: seq, code, tests });
+    pending.timer = setTimeout(() => stopPython(UI.loadTimeout(PY_CHARGEMENT_LIMITE_MS / 1000)), PY_CHARGEMENT_LIMITE_MS);
+    try { worker.postMessage({ id: pending.id, code, tests }); }
+    catch { stopPython(UI.cantSend); }
   });
 }
 

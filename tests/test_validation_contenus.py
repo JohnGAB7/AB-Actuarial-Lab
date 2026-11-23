@@ -1,0 +1,115 @@
+"""Regression tests for strict course-content validation."""
+from tools.validation_contenus import verifier_depot, verifier_parcours, verifier_seance
+
+
+def valid_session():
+    return {
+        "id": "a1/s01",
+        "module": "a1",
+        "titre": "Session title",
+        "en": "Session title",
+        "duree": 25,
+        "etapes": [
+            {
+                "type": "video",
+                "titre": "Introduction",
+                "minutes": 3,
+                "texte": "A short introduction.",
+            }
+        ],
+    }
+
+
+def test_existing_course_plan_and_sessions_are_valid():
+    assert verifier_depot() == []
+
+
+def test_session_requires_core_metadata_and_a_nonempty_step_list():
+    session = valid_session()
+    del session["titre"]
+    session["etapes"] = []
+    errors = verifier_seance(session, session_id="fixture")
+    assert any("titre" in error for error in errors)
+    assert any("etapes" in error for error in errors)
+
+
+def test_quiz_rejects_an_answer_index_outside_the_options():
+    session = valid_session()
+    session["etapes"] = [
+        {
+            "type": "quiz",
+            "titre": "Check",
+            "minutes": 2,
+            "intro": "Choose one answer.",
+            "questions": [
+                {
+                    "q": "Question?",
+                    "options": ["A", "B"],
+                    "reponse": 2,
+                    "pourquoi": {
+                        "rappel": "Recall.",
+                        "formule": "x = 1",
+                        "exemple": "Example.",
+                    },
+                }
+            ],
+        }
+    ]
+    errors = verifier_seance(session, session_id="fixture")
+    assert any("index d'option existant" in error for error in errors)
+
+
+def test_calculation_rejects_table_rows_with_inconsistent_width():
+    session = valid_session()
+    session["etapes"] = [
+        {
+            "type": "calcul",
+            "titre": "Calculation",
+            "minutes": 5,
+            "intro": "Calculate the result.",
+            "donnees": {"entetes": ["x", "y"], "lignes": [["1"]]},
+            "champs": [
+                {"cle": "result", "libelle": "Result", "valeur": 1.0, "tolerance": 0.01}
+            ],
+            "solution": "The result is one.",
+        }
+    ]
+    errors = verifier_seance(session, session_id="fixture")
+    assert any("autant de cellules" in error for error in errors)
+
+
+def test_code_step_rejects_paths_outside_the_exercise_directory():
+    session = valid_session()
+    session["etapes"] = [
+        {
+            "type": "code",
+            "titre": "Python",
+            "minutes": 5,
+            "intro": "Write code.",
+            "fichier": "exercices/../../private.py",
+            "depart": "pass",
+            "tests": [{"nom": "test", "expr": "True"}],
+        }
+    ]
+    errors = verifier_seance(session, session_id="fixture")
+    assert any("chemin relatif sûr" in error for error in errors)
+
+
+def test_plan_rejects_duplicate_session_references():
+    plan = {
+        "titre": "Course",
+        "sous_titre": "Subtitle",
+        "domaines": [
+            {
+                "id": "foundations",
+                "titre": "Foundations",
+                "en": "Foundations",
+                "accroche": "Introduction",
+                "modules": [
+                    {"id": "a1", "titre": "Module", "en": "Module", "seances": ["a1/s01", "a1/s01"]}
+                ],
+            }
+        ],
+    }
+    errors = verifier_parcours(plan)
+    assert any("dupliquée" in error for error in errors)
