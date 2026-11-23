@@ -164,7 +164,6 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .opts{display:grid;gap:8px}
 .opt{display:flex;gap:14px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:13px 16px;border-radius:12px;transition:border-color .15s,background .15s}
 .opt .k{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font:600 .78rem var(--f-mono);background:var(--paper);color:var(--muted)}
-.opt .opt-separator{flex:none;color:var(--muted);font-weight:500}
 .opt:hover{border-color:var(--data)}
 .opt.right{border-color:var(--ok);background:var(--ok-soft)}
 .opt.right .k{background:var(--ok);color:var(--surface)}
