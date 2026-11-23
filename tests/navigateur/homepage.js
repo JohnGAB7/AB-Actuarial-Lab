@@ -13,6 +13,8 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
 
     await page.goto(new URL("index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
     await page.locator(".hero-visual").waitFor();
+    const shortLabels = await page.locator(".dom-t").allInnerTexts();
+    if (!shortLabels.length || shortLabels.some((label) => label.trim().length > 18)) failures.push("homepage domain labels should stay concise");
     await page.waitForFunction(() => Array.from(document.querySelectorAll(".brand-logo")).some((img) => img.complete && img.naturalWidth > 0), null, { timeout: 15000 });
     const brand = await page.evaluate(() => ({
       title: document.title,
@@ -20,8 +22,8 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       logoLoaded: Array.from(document.querySelectorAll(".brand-logo")).some((img) => img.complete && img.naturalWidth > 0)
     }));
     console.log("brand FR:", brand);
-    if (!brand.title.startsWith("ACTU-BASICS — Parcours Actuariel")) failures.push("French site title");
-    if (!brand.label.includes("PARCOURS ACTUARIEL")) failures.push("French sub-brand lockup");
+    if (!brand.title.startsWith("Laboratoire d’apprentissage actuariel par ACTU-BASICS")) failures.push("French site title");
+    if (!brand.label.includes("LABORATOIRE ACTUARIEL") || !brand.label.includes("PAR ACTU-BASICS")) failures.push("French sub-brand lockup");
     if (!brand.logoLoaded) failures.push("official ACTU-BASICS logo did not load");
     const mobile = await page.evaluate(() => ({
       lang: document.documentElement.lang,
@@ -61,11 +63,13 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       brand: document.querySelector(".brand-copy")?.textContent || ""
     }));
     console.log("mobile EN:", englishMobile);
+    const shortLabelsEN = await page.locator(".dom-t").allInnerTexts();
+    if (!shortLabelsEN.length || shortLabelsEN.some((label) => label.trim().length > 18)) failures.push("English homepage domain labels should stay concise");
     if (englishMobile.lang !== "en") failures.push("English homepage language");
     if (englishMobile.scrollWidth > englishMobile.width + 1) failures.push("English mobile horizontal overflow");
     if (!/Understand the idea/.test(englishMobile.title)) failures.push("English editorial content");
-    if (!englishMobile.siteTitle.startsWith("ACTU-BASICS — Actuarial Learning Path")) failures.push("English site title");
-    if (!englishMobile.brand.includes("ACTUARIAL LEARNING PATH")) failures.push("English sub-brand lockup");
+    if (!englishMobile.siteTitle.startsWith("Actuarial Learning Lab by ACTU-BASICS")) failures.push("English site title");
+    if (!englishMobile.brand.includes("ACTUARIAL LEARNING LAB") || !englishMobile.brand.includes("BY ACTU-BASICS")) failures.push("English sub-brand lockup");
 
     await page.setViewportSize({ width: 1440, height: 900 });
     const desktop = await page.evaluate(() => ({

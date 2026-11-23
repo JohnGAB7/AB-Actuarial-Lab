@@ -1,8 +1,10 @@
-# ACTU-BASICS — Parcours Actuariel
+# Actuarial Learning Lab by ACTU-BASICS
 
-Cette plateforme est une déclinaison spécialisée d'ACTU-BASICS : elle approfondit l'actuariat à travers un parcours bilingue, des séances interactives, des laboratoires et des applications pratiques. Elle reprend les logos officiels ACTU-BASICS sans les redessiner ni les modifier.
+Version française : **Laboratoire d’apprentissage actuariel par ACTU-BASICS**.
 
-Parcours personnel de remise à niveau en actuariat : diagnostic, plan, notes, exercices et suivi de progression.
+Un espace bilingue pour explorer l’actuariat par des explications, des expériences interactives, des calculs guidés et des laboratoires de modélisation. La plateforme reprend les logos officiels ACTU-BASICS sans les redessiner ni les modifier.
+
+Un laboratoire d’apprentissage progressif : diagnostic, parcours guidé, notes, exercices, expériences interactives et suivi de progression.
 L'ossature suit les modules A1 à A8 du « Parcours Actuariat » d'Actu-Basics (`docs/actuariat/PARCOURS-ACTUARIAT-v3.md`) ;
 chaque module maîtrisé devient ensuite une fiche et une vidéo Actu-Basics.
 Chaque séance dure environ 25 minutes et s'affiche **une étape à la fois** :
