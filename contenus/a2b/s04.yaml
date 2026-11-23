@@ -105,7 +105,7 @@ etapes:
   - type: quiz
     titre: "Vérifie"
     minutes: 4
-    intro: "1 000 contrats fictifs : 610 sans sinistre, 300 avec 1, 70 avec 2 et 20 avec exactement 3 (aucun au-delà). La moyenne observée est donc $\\hat{\\lambda} = 0{,}5$. Pour le khi-deux, la dernière classe théorique regroupe $N \\ge 3$."
+    intro: "1 000 contrats fictifs : 610 sans sinistre, 300 avec 1, 70 avec 2 et 20 avec exactement 3 sinistres (aucune observation dans les classes supérieures). La moyenne observée est donc $\\hat{\\lambda} = 0{,}5$. Le khi-deux regroupe les classes observées à partir du seuil retenu."
     questions:
       - q: 'Sous la loi de Poisson de paramètre 0,5, combien de contrats sans sinistre attend-on ?'
         options: ['606,53', '610', '500']
