@@ -4,7 +4,7 @@
 
 ## 1. Décision d'orientation
 
-Faire évoluer progressivement `parcours-actuariel` vers une plateforme internationale d'apprentissage, de pratique et de développement des compétences actuarielles.
+Faire évoluer progressivement `AB-Actuarial-Lab` vers une plateforme internationale d'apprentissage, de pratique et de développement des compétences actuarielles.
 
 Le projet poursuit deux objectifs indissociables :
 
