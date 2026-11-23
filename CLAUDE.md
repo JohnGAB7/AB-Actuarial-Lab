@@ -1,4 +1,4 @@
-# Règles du dépôt parcours-actuariel
+# Règles du dépôt AB-Actuarial-Lab
 
 - Dépôt **public**. Les supports de cours de JG sont protégés : ne jamais les committer, ni les citer, ni les paraphraser de près. Les rappels sont rédigés de zéro.
 - Supports de cours et CV de JG : **jamais sur un dépôt GitHub**, public ou privé. Ils restent dans la bibliothèque du projet. Règle non négociable.
