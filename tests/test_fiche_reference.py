@@ -163,3 +163,9 @@ def test_reference_sheet_rejects_malformed_types_without_raising():
     assert any("duree_minutes" in error for error in errors)
     assert any("niveau" in error for error in errors)
     assert any("outils" in error for error in errors)
+
+
+def test_legacy_session_without_reference_sheet_remains_compatible():
+    legacy = _session(None)
+    del legacy["fiche"]
+    assert verifier_seance(legacy, session_id="a1/s01") == []
