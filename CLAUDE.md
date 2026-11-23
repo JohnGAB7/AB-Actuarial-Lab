@@ -3,7 +3,7 @@
 - Dépôt **public**. Les supports de cours de JG sont protégés : ne jamais les committer, ni les citer, ni les paraphraser de près. Les rappels sont rédigés de zéro.
 - Supports de cours et CV de JG : **jamais sur un dépôt GitHub**, public ou privé. Ils restent dans la bibliothèque du projet. Règle non négociable.
 - Sur ce dépôt, seulement les notes et le code de JG. Aucune donnée personnelle (coordonnées, employeur, projets de vie). Aucun secret, aucun jeton.
-- Ossature : modules A1 à A8 du Parcours Actuariat d'Actu-Basics (v3). Les approfondissements au-delà sont marqués « + ».
+- Ossature : modules A1 à A8 du Parcours Actuariat d'Actu-Basics (v3), rangés en domaines (Fondamentaux, Vie, Retraite, Non-vie, ALM, Risque, Outils) dans `contenus/parcours.yaml`. Les approfondissements au-delà sont marqués « + ».
 - Quand un module est maîtrisé par JG, déposer `a-produire/<module>.md` (notions, exercices corrigés, pièges, vocabulaire anglais, pour la vidéo) à partir de `a-produire/_modele.md`. Actu-Basics s'en sert pour la fiche et la vidéo.
 - Données : fictives ou paramètres publics, avec leur source.
 - Rien n'est fusionné ni publié sans l'accord explicite de JG. Tout passe par une branche et une PR.
