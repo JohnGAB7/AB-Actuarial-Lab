@@ -1,0 +1,162 @@
+# Séance 1 du module A1 (Mathématiques financières) : intérêt composé, actualisation, annuités certaines.
+# Chiffres : taux fictif de 2,5 %. Les valeurs sont recalculées par tests/test_contenus.py et tests/a1/test_s01_interet.py.
+id: a1/s01
+module: a1
+titre: "Intérêt composé et annuités certaines"
+en: "Compound interest and annuities certain"
+duree: 30
+taux: 0.025
+
+actu_basics:
+  episode: "A1 · Financial mathematics"
+  statut: "à proposer"
+  accroche_fr: "Pourquoi 1 € demain vaut moins que 1 € aujourd'hui ?"
+  accroche_en: "Why is one euro tomorrow worth less than one euro today?"
+
+etapes:
+  - type: quiz
+    titre: "Test de positionnement"
+    minutes: 3
+    intro: "Quatre questions avant le cours. Si tu as tout juste, survole le rappel et va directement au calcul."
+    questions:
+      - q: 'À un taux annuel $i$, que vaut le taux d''escompte $d$ ?'
+        options: ['$d = i\,(1+i)$', '$d = \dfrac{i}{1+i}$', '$d = 1 + i$']
+        reponse: 1
+        pourquoi: '$d$ est l''intérêt payé en début de période : $d = i\,v = i/(1+i)$.'
+      - q: 'Quelle relation lie l''annuité due $\ddot{a}_{\overline{n}|}$ et l''annuité immédiate $a_{\overline{n}|}$ ?'
+        options: ['$\ddot{a}_{\overline{n}|} = (1+i)\,a_{\overline{n}|}$', '$\ddot{a}_{\overline{n}|} = v\,a_{\overline{n}|}$', '$\ddot{a}_{\overline{n}|} = a_{\overline{n}|} - 1$']
+        reponse: 0
+        pourquoi: 'Chaque paiement arrive un an plus tôt, donc il est moins actualisé d''un facteur $1+i$.'
+      - q: 'Que vaut la force d''intérêt $\delta$ pour un taux annuel $i$ ?'
+        options: ['$\delta = i$', '$\delta = \ln(1+i)$', '$\delta = e^{i}$']
+        reponse: 1
+        pourquoi: 'On capitalise en continu : $e^{\delta} = 1 + i$.'
+      - q: 'Que vaut $a_{\overline{n}|}$ quand $i = 0$ ?'
+        options: ['$0$', '$n$', '$n - 1$']
+        reponse: 1
+        pourquoi: 'Sans actualisation, $n$ paiements de 1 valent $n$.'
+
+  - type: video
+    titre: "L'intuition en vidéo"
+    minutes: 3
+    texte: >-
+      La vidéo Actu-Basics de ce thème montrera la valeur du temps : un euro placé aujourd'hui rapporte des intérêts,
+      donc un euro promis plus tard vaut moins. Elle n'existe pas encore.
+
+  - type: rappel
+    titre: "Le rappel"
+    minutes: 8
+    blocs:
+      - p: >-
+          Placé au <b>taux d'intérêt effectif annuel</b> <i>(annual effective interest rate)</i> $i$, un capital de 1
+          devient $(1+i)^t$ après $t$ années : c'est l'<b>intérêt composé</b> <i>(compound interest)</i>. À l'inverse,
+          le <b>facteur d'actualisation</b> <i>(discount factor)</i> $v$ ramène un montant futur à aujourd'hui.
+      - formule: |
+          \begin{gathered}
+          v = \frac{1}{1+i} \qquad d = \frac{i}{1+i} = i\,v \qquad \delta = \ln(1+i) \\[6pt]
+          (1+i)^t = e^{\delta t}
+          \end{gathered}
+      - p: >-
+          $d$ est le <b>taux d'escompte</b> <i>(rate of discount)</i>, l'intérêt payé en début d'année. $\delta$ est la
+          <b>force d'intérêt</b> <i>(force of interest)</i>, l'équivalent continu du taux. C'est le pendant financier de
+          la force de mortalité que tu verras en A3.
+      - p: >-
+          Une <b>annuité certaine</b> <i>(annuity certain)</i> verse 1 chaque année pendant $n$ ans, sans condition de
+          survie. Si le paiement tombe en fin d'année, l'annuité est <b>immédiate</b> <i>(annuity immediate)</i>.
+          S'il tombe en début d'année, elle est <b>due</b> <i>(annuity due)</i>.
+      - formule: |
+          \begin{gathered}
+          a_{\overline{n}|} = \sum_{k=1}^{n} v^k = \frac{1 - v^n}{i} \\[6pt]
+          \ddot{a}_{\overline{n}|} = \sum_{k=0}^{n-1} v^k = \frac{1 - v^n}{d} = (1+i)\,a_{\overline{n}|}
+          \end{gathered}
+      - p: >-
+          Plus généralement, la <b>valeur actuelle</b> <i>(present value)</i> d'une suite de flux $C_t$ est la somme
+          des flux actualisés. Tout le reste du parcours, des rentes viagères aux provisions, repose sur cette somme.
+      - formule: |
+          VA = \sum_t C_t\, v^t
+      - note: >-
+          En A3, une rente viagère sera une annuité certaine dont chaque paiement est multiplié par une
+          probabilité de survie : $\ddot{a}_x = \sum_k v^k\,{}_kp_x$.
+      - sources:
+          - {titre: "Kellison, The Theory of Interest, chap. 1 à 3", detail: "Intérêt composé, taux équivalents, annuités certaines"}
+          - {titre: "SOA, Financial Mathematics (FM) Exam", url: "https://www.soa.org/education/exam-req/edu-exam-fm-detail/", detail: "Syllabus officiel de l'examen"}
+
+  - type: quiz
+    titre: "Vérifie"
+    minutes: 4
+    intro: "Quatre questions. Réponds sans relire le rappel."
+    questions:
+      - q: 'À 2,5 %, combien vaut aujourd''hui 1 000 € payés dans 10 ans, environ ?'
+        options: ['781 €', '975 €', '1 280 €']
+        reponse: 0
+        pourquoi: '$1\,000\,v^{10} = 1\,000 / 1{,}025^{10} = 781{,}20$. $1\,280$ est la valeur capitalisée, pas actualisée.'
+      - q: 'Si le taux monte, $a_{\overline{n}|}$…'
+        options: ['augmente', 'diminue', 'ne change pas']
+        reponse: 1
+        pourquoi: 'Chaque $v^k$ diminue quand $i$ monte, donc la somme diminue.'
+      - q: 'Pourquoi $d < i$ ?'
+        options: ['Parce que $d$ est payé en début d''année, sur un capital actualisé', 'Parce que $d$ est un taux continu', 'Ce n''est pas le cas']
+        reponse: 0
+        pourquoi: '$d = i\,v$ : c''est le même intérêt, mais payé un an plus tôt, donc actualisé.'
+      - q: 'Quelle formule donne $a_{\overline{n}|}$ ?'
+        options: ['$\dfrac{1 - v^n}{i}$', '$\dfrac{1 - v^n}{d}$', '$\dfrac{(1+i)^n - 1}{i}$']
+        reponse: 0
+        pourquoi: 'La deuxième est $\ddot{a}_{\overline{n}|}$. La troisième est la valeur accumulée $s_{\overline{n}|}$ (accumulated value).'
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: "Taux de 2,5 %. Calcule avec une calculatrice, puis saisis tes résultats à 4 décimales."
+    donnees:
+      entetes: ['$i$', '$n$']
+      lignes: [['2,5 %', '3']]
+    champs:
+      - {cle: d, libelle: '$d$', valeur: 0.0243902, tolerance: 0.00015}
+      - {cle: delta, libelle: '$\delta$', valeur: 0.0246926, tolerance: 0.00015}
+      - {cle: a, libelle: '$a_{\overline{3}|}$', valeur: 2.8560236, tolerance: 0.00015}
+      - {cle: ad, libelle: '$\ddot{a}_{\overline{3}|}$', valeur: 2.9274242, tolerance: 0.00015}
+    solution: |
+      $v = 1/1{,}025 = 0{,}975610$, $\quad d = 0{,}025 \times v = 0{,}0244$, $\quad \delta = \ln 1{,}025 = 0{,}0247$.
+      $a_{\overline{3}|} = v + v^2 + v^3 = 2{,}8560$, $\quad \ddot{a}_{\overline{3}|} = 1 + v + v^2 = 2{,}9274 = 1{,}025 \times 2{,}8560$.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 8
+    intro: "Écris le corps des quatre fonctions, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a1/s01_interet.py
+    depart: |
+      def discount_factor(i, t):
+          """v**t = (1 + i)**(-t)."""
+          raise NotImplementedError
+
+      def annuity_immediate(n, i):
+          """a_n: n payments of 1, at the end of years 1 .. n."""
+          raise NotImplementedError
+
+      def annuity_due(n, i):
+          """a-double-dot_n: n payments of 1, at the start of years 0 .. n-1."""
+          raise NotImplementedError
+
+      def present_value(cash_flows, i):
+          """Present value of a dict {time: amount}."""
+          raise NotImplementedError
+    tests:
+      - {nom: '$v^{10}$ vaut 0,78120 à 2,5 %', expr: "abs(discount_factor(0.025, 10) - 0.78120) < 0.00001"}
+      - {nom: '$a_{\overline{10}|}$ vaut 8,75206 à 2,5 %', expr: "abs(annuity_immediate(10, 0.025) - 8.75206) < 0.00001"}
+      - {nom: '$\ddot{a}_{\overline{10}|}$ vaut 8,97087 à 2,5 %', expr: "abs(annuity_due(10, 0.025) - 8.97087) < 0.00001"}
+      - {nom: '$\ddot{a}_{\overline{n}|} = (1+i)\,a_{\overline{n}|}$', expr: "abs(annuity_due(20, 0.04) - 1.04 * annuity_immediate(20, 0.04)) < 1e-9"}
+      - {nom: 'Avec $i = 0$, $a_{\overline{n}|} = n$', expr: "abs(annuity_immediate(7, 0) - 7) < 1e-12"}
+      - {nom: '1 000 € à 5 ans et 500 € à 10 ans valent 1 274,45 €', expr: "abs(present_value({5: 1000, 10: 500}, 0.025) - 1274.45) < 0.01"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Taux d'intérêt effectif annuel", "annual effective interest rate", "All cash flows are discounted at an annual effective rate of 2.5%."]
+      - ["Facteur d'actualisation", "discount factor", "The discount factor shrinks as the interest rate rises."]
+      - ["Taux d'escompte", "rate of discount", "The rate of discount applies to interest paid in advance."]
+      - ["Force d'intérêt", "force of interest", "The force of interest is the continuous counterpart of the annual rate."]
+      - ["Annuité immédiate, annuité due", "annuity immediate, annuity due", "An annuity due is worth one plus i times the annuity immediate."]
+      - ["Valeur actuelle", "present value", "I computed the present value of the projected benefit payments."]
+      - ["Valeur accumulée", "accumulated value", "The accumulated value grows with compound interest."]

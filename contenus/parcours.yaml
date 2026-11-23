@@ -10,7 +10,7 @@ blocs:
     en: "Foundations"
     periode: "A1 à A2b"
     modules:
-      - {id: a1, titre: "A1 · Mathématiques financières", en: "Financial mathematics"}
+      - {id: a1, titre: "A1 · Mathématiques financières", en: "Financial mathematics", seances: [a1/s01]}
       - {id: a2, titre: "A2 · Probabilités pour l'assurance", en: "Probability for insurance"}
       - {id: a2b, titre: "A2b · Statistique pour l'assurance", en: "Statistics for insurance"}
   - id: vie
