@@ -205,8 +205,8 @@ def entete(parcours: dict, racine: str, autre: str, langue: str, actif: str = ""
         f'<header class="nav gutter"><div class="nav-in">'
         f'{marque(racine, langue)}'
         f'<nav class="nav-links" aria-label="{t["domaines"]}">{liens}</nav>'
-        f'<details class="nav-menu"><summary aria-label="{t["menu"]}"><span></span><span></span></summary>'
-        f'<nav class="nav-sheet" aria-label="{t["domaines"]}">{liens}</nav></details>'
+        f'<details class="nav-menu"><summary aria-label="{t["menu"]}" aria-controls="nav-sheet" aria-expanded="false"><span></span><span></span></summary>'
+        f'<nav class="nav-sheet" id="nav-sheet" aria-label="{t["domaines"]}">{liens}</nav></details>'
         f'{bascule(langue, autre)}'
         f'<a class="acct" href="{racine}compte/index.html" aria-label="{t["compte"]}">{ICONE_COMPTE}</a>'
         f'</div></header>')
