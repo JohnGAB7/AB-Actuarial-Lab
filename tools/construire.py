@@ -148,6 +148,32 @@ def mod_sous(m: dict, langue: str) -> str:
     return m["en"] if langue == "fr" else m["titre"].split(" · ", 1)[-1]
 
 
+def titre_site(langue: str) -> str:
+    """Official product title under the ACTU-BASICS parent brand."""
+    return "ACTU-BASICS — Actuarial Learning Path" if langue == "en" else "ACTU-BASICS — Parcours Actuariel"
+
+
+def marque(racine: str, langue: str) -> str:
+    """Use the official, unmodified ACTU-BASICS logo in the matching language and theme."""
+    suffixe = "-en" if langue == "en" else ""
+    libelle = "ACTUARIAL LEARNING PATH" if langue == "en" else "PARCOURS ACTUARIEL"
+    source = "https://raw.githubusercontent.com/JohnGAB7/Actu-Basics/080890b8acd452c790f3e10664a63d0b3e43aa21/assets/brand/actu-basics/"
+    return (
+        f'<a class="brand brand-lockup" href="{racine}index.html" aria-label="ACTU-BASICS — {libelle}">'
+        f'<picture class="brand-mark">'
+        f'<img class="brand-logo brand-logo-light" src="{source}logo-light{suffixe}.png" alt="" width="44" height="44">'
+        f'<img class="brand-logo brand-logo-dark" src="{source}logo-dark{suffixe}.png" alt="" width="44" height="44">'
+        f'</picture><span class="brand-copy"><strong>ACTU-BASICS</strong><small>{libelle}</small></span></a>'
+    )
+
+
+def favicon_url(langue: str) -> str:
+    suffixe = "-en" if langue == "en" else ""
+    return ("https://raw.githubusercontent.com/JohnGAB7/Actu-Basics/"
+            "080890b8acd452c790f3e10664a63d0b3e43aa21/assets/brand/actu-basics/"
+            f"logo-light{suffixe}.png")
+
+
 def bascule(langue: str, autre: str) -> str:
     """FR | EN switch: the current language is marked, the other one links to the same page in that language."""
     def cote(code):
@@ -166,7 +192,7 @@ def entete(parcours: dict, racine: str, autre: str, langue: str, actif: str = ""
         for d in parcours["domaines"])
     return (
         f'<header class="nav gutter"><div class="nav-in">'
-        f'<a class="brand" href="{racine}index.html">Parcours <b>actuariel</b></a>'
+        {marque(racine, langue)}
         f'<nav class="nav-links" aria-label="{t["domaines"]}">{liens}</nav>'
         f'<details class="nav-menu"><summary aria-label="{t["menu"]}"><span></span><span></span></summary>'
         f'<nav class="nav-sheet" aria-label="{t["domaines"]}">{liens}</nav></details>'
@@ -180,7 +206,7 @@ def pied(parcours: dict, racine: str, autre: str, langue: str) -> str:
     liens = "".join(f'<a href="{racine}{d["id"]}/index.html">{e(dom_titre(d, langue))}</a>' for d in parcours["domaines"])
     return (
         f'<footer class="pied gutter"><div class="pied-in">'
-        f'<div class="pied-col"><a class="brand" href="{racine}index.html">Parcours <b>actuariel</b></a><p>{t["pied"]}</p></div>'
+        f'<div class="pied-col">{marque(racine, langue)}<p>{t["pied"]}</p></div>'
         f'<nav class="pied-col" aria-label="{t["domaines"]}"><span class="eyebrow">{t["domaines"]}</span>{liens}</nav>'
         f'<nav class="pied-col" aria-label="{t["compte_t"]}"><span class="eyebrow">{t["compte_t"]}</span>'
         f'<a href="{racine}compte/index.html">{t["compte"]}</a><a href="{racine}compte/index.html#confidentialite">{t["confid"]}</a>'
@@ -392,7 +418,7 @@ def construire() -> None:
             donnees = dict(s, accueil=racine + "index.html", module_url=racine + m["id"] + "/index.html",
                            module_titre=mod_titre(m, langue), domaine_titre=dom_titre(dom, langue))
             page = g_seance.substitute(
-                titre=e(s["titre"]), base=base, accueil=donnees["accueil"], lang=langue, autre=autre,
+                titre=e(s["titre"]), site_title=e(titre_site(langue)), marque=marque(racine, langue), base=base, accueil=donnees["accueil"], lang=langue, autre=autre,
                 bascule=bascule(langue, autre), alt_fr=base + sid + "/index.html", alt_en=base + "en/" + sid + "/index.html", compte=t["compte"], racine=racine,
                 progression=t["progression"], etapes=t["etapes"],
                 donnees=json.dumps(donnees, ensure_ascii=False).replace("</", "<\\/"))
@@ -414,15 +440,16 @@ def construire() -> None:
                 pied=pied(parcours, racine, autre, langue)), encoding="utf-8")
 
         nom = parcours["titre"]
-        ecrire("", nom, parcours["sous_titre"] if langue == "fr" else parcours["sous_titre_en"],
+        nom_site = titre_site(langue)
+        ecrire("", nom_site, parcours["sous_titre"] if langue == "fr" else parcours["sous_titre_en"],
                page_accueil(parcours, titres, langue), classe="accueil")
         for k, d in enumerate(parcours["domaines"], 1):
-            ecrire(d["id"], f'{dom_titre(d, langue)} · {nom}', dom_accroche(d, langue), page_domaine(parcours, d, k, langue), actif=d["id"])
+            ecrire(d["id"], f'{dom_titre(d, langue)} · {nom_site}', dom_accroche(d, langue), page_domaine(parcours, d, k, langue), actif=d["id"])
             for m in d["modules"]:
                 if m.get("seances"):
-                    ecrire(m["id"], f'{mod_titre(m, langue)} · {nom}', mod_sous(m, langue), page_module(d, m, infos, langue), actif=d["id"])
+                    ecrire(m["id"], f'{mod_titre(m, langue)} · {nom_site}', mod_sous(m, langue), page_module(d, m, infos, langue), actif=d["id"])
         compte = (SITE / "gabarits" / ("compte.html" if langue == "fr" else "compte.en.html")).read_text(encoding="utf-8")
-        ecrire("compte", f'{t["compte"]} · {nom}', t["compte_desc"], compte)
+        ecrire("compte", f'{t["compte"]} · {nom_site}', t["compte_desc"], compte)
     (SORTIE / ".nojekyll").write_text("", encoding="utf-8")
     print(f"Site construit dans {SORTIE}")
 
