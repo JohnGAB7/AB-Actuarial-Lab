@@ -56,3 +56,4 @@ jobs:
           sleep 2
           node tests/navigateur/python_worker.js
           node tests/navigateur/render_security.js
+          node tests/navigateur/homepage.js

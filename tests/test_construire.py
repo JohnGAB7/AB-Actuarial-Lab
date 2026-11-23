@@ -47,3 +47,22 @@ def test_english_pages_write_formula_numbers_the_english_way():
     formules = [q["pourquoi"].get("formule", "") for e in s["etapes"] if e["type"] == "quiz" for q in e["questions"]]
     assert not any("{,}" in f for f in formules if "0" in f and "." not in f)
     assert any("0.2 \\times 0.15" in f for f in formules)
+
+
+def test_homepage_is_bilingual_and_keeps_resume_progression_hook():
+    parcours = builder.charger_parcours()
+    first = next(builder.seances(parcours))[2]
+    session = builder.charger_seance(first)
+    titles = {first: (len(session["etapes"]), session["titre"])}
+
+    french = builder.page_accueil(parcours, titles, "fr")
+    english = builder.page_accueil(parcours, titles, "en")
+
+    assert 'data-reprendre' in french and 'data-reprendre' in english
+    assert 'class="hero-visual"' in french and 'class="hero-visual"' in english
+    assert "Construis tes fondamentaux actuariels." in french
+    assert "Build your actuarial foundations." in english
+    assert "EXPLORER LE PARCOURS" in french
+    assert "EXPLORE THE CURRICULUM" in english
+    assert f'>{sum(1 for _ in builder.seances(parcours)):02d}<' in french
+    assert "FR · EN" in french and "FR · EN" in english

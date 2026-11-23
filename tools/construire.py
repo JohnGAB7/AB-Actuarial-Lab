@@ -196,7 +196,9 @@ def plan_json(parcours: dict, titres: dict) -> str:
 
 
 def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
+    """Premium learner-first homepage; all counts and links come from the actual curriculum."""
     t = TXT[langue]
+    en = langue == "en"
     cartes = []
     for k, d in enumerate(parcours["domaines"], 1):
         n = sum(len(m.get("seances", [])) for m in d["modules"])
@@ -208,17 +210,89 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
             f'<span class="dom-a">{e(dom_accroche(d, langue))}</span>'
             f'<span class="dom-f"><span class="dom-s">{etat}</span><span class="barre" aria-hidden="true"><i></i></span></span></a>')
     premiere = next(seances(parcours))[2]
-    sous_titre = parcours["sous_titre"] if langue == "fr" else parcours["sous_titre_en"]
+    premier_dom, premier_module, _ = next(seances(parcours))
+    nb_seances = sum(1 for _ in seances(parcours))
+    nb_modules = sum(len(d["modules"]) for d in parcours["domaines"])
+    sous_titre = parcours["sous_titre"] if not en else parcours["sous_titre_en"]
+    titre_premiere = titres[premiere][1]
+    if en:
+        intro_kicker = "THE ACTUARIAL LEARNING STUDIO"
+        intro_title = "Understand the idea. See the mathematics. Make it work."
+        intro_text = "A structured path from foundations to actuarial practice — built around clear explanations, meaningful experiments and hands-on modelling."
+        stat_sessions, stat_domains, stat_languages = "SESSIONS", "LEARNING AREAS", "LANGUAGES"
+        start_kicker, start_title = "A GOOD PLACE TO BEGIN", "Build your actuarial foundations."
+        start_text = "Start with financial mathematics: the language of rates, cash flows, discounting and annuities that supports much of actuarial work."
+        start_action = "Explore the first session"
+        domains_kicker, domains_heading = "EXPLORE THE CURRICULUM", "Choose a field. Follow the connections."
+        domains_text = "Follow the suggested order or explore a discipline that speaks to your goals. Your progress stays on this device without an account."
+        method_kicker, method_heading = "A DIFFERENT WAY TO LEARN", "From intuition to professional practice."
+        method = [
+            ("01", "Understand", "Start with a question, an intuition or a real actuarial situation."),
+            ("02", "Make it visible", "Connect the idea to a formula, a diagram or an interactive experiment."),
+            ("03", "Put it to work", "Calculate, test your reasoning and write code against a practical problem."),
+        ]
+        method_note = "Not just more content. A clearer path from knowing a formula to understanding when and why to use it."
+        hero_art_label = "FROM DATA TO DECISION"
+        hero_art = [("01", "OBSERVE", "A real question"), ("02", "MODEL", "A mathematical structure"), ("03", "DECIDE", "An explained result")]
+        hero_cta = "Start learning"
+        domains_count = "domains"
+    else:
+        intro_kicker = "LE STUDIO D'APPRENTISSAGE ACTUARIEL"
+        intro_title = "Comprendre l'idée. Voir les mathématiques. Les mettre au travail."
+        intro_text = "Un parcours structuré des fondamentaux à la pratique actuarielle, construit autour d'explications claires, d'expériences pertinentes et de modélisation concrète."
+        stat_sessions, stat_domains, stat_languages = "SÉANCES", "DOMAINES", "LANGUES"
+        start_kicker, start_title = "UN BON POINT DE DÉPART", "Construis tes fondamentaux actuariels."
+        start_text = "Commence par les mathématiques financières : le langage des taux, des flux, de l'actualisation et des annuités qui soutient une grande partie du travail actuariel."
+        start_action = "Découvrir la première séance"
+        domains_kicker, domains_heading = "EXPLORER LE PARCOURS", "Choisis un domaine. Découvre les liens."
+        domains_text = "Suis l'ordre conseillé ou explore une discipline qui correspond à tes objectifs. Ta progression reste sur cet appareil, sans création de compte."
+        method_kicker, method_heading = "UNE AUTRE FAÇON D'APPRENDRE", "De l'intuition à la pratique professionnelle."
+        method = [
+            ("01", "Comprendre", "Partir d'une question, d'une intuition ou d'une situation actuarielle réelle."),
+            ("02", "Rendre visible", "Relier l'idée à une formule, un schéma ou une expérience interactive."),
+            ("03", "Mettre en pratique", "Calculer, vérifier ton raisonnement et écrire du code sur un problème concret."),
+        ]
+        method_note = "Pas seulement davantage de contenu : un chemin plus clair entre connaître une formule et comprendre quand et pourquoi l'utiliser."
+        hero_art_label = "DE LA DONNÉE À LA DÉCISION"
+        hero_art = [("01", "OBSERVER", "Une question réelle"), ("02", "MODÉLISER", "Une structure mathématique"), ("03", "DÉCIDER", "Un résultat expliqué")]
+        hero_cta = "Commencer le parcours"
+        domains_count = "domaines"
+    art = "".join(
+        f'<div class="hero-step"><span class="hero-step-n mono">{num}</span>'
+        f'<span class="hero-step-copy"><b>{label}</b><small>{desc}</small></span></div>'
+        for num, label, desc in hero_art)
+    method_html = "".join(
+        f'<article class="method-card"><span class="method-n mono">{num}</span><h3>{title}</h3><p>{desc}</p></article>'
+        for num, title, desc in method)
     return (
         f'<section class="hero"><div class="hero-in gutter">'
-        f'<span class="eyebrow">{t["eyebrow"]}</span><h1>{t["h1"]}</h1>'
+        f'<div class="hero-copy"><span class="eyebrow">{t["eyebrow"]}</span><h1>{t["h1"]}</h1>'
         f'<p>{e(sous_titre)} {t["hero"]}</p>'
-        f'<div class="hero-cta"><a class="cta" href="{premiere}/index.html" data-reprendre>{t["commencer"]} : {e(titres[premiere][1])} →</a>'
-        f'<a class="cta-2" href="compte/index.html">{ICONE_COMPTE}{t["compte"]}</a></div>'
+        f'<div class="hero-cta"><a class="cta" href="{premiere}/index.html" data-reprendre>{hero_cta} · {e(titre_premiere)} →</a>'
+        f'<a class="cta-2" href="compte/index.html">{ICONE_COMPTE}{t["compte"]}</a></div></div>'
+        f'<aside class="hero-visual" aria-label="{hero_art_label}"><span class="hero-visual-label">{hero_art_label}</span>'
+        f'<div class="hero-steps">{art}</div><span class="hero-visual-foot">{("ACTUARIAL THINKING · LEARN / MODEL / PRACTICE" if en else "PENSÉE ACTUARIELLE · APPRENDRE / MODÉLISER / PRATIQUER")}</span></aside>'
         f'</div></section>'
-        f'<main class="home gutter">'
-        f'<div class="home-head"><span class="eyebrow">{t["les_domaines"]}</span><h2>{t["h2"]}</h2><p class="lead">{e(t["lead"])}</p></div>'
-        f'<div class="doms">{"".join(cartes)}</div></main>').replace("Start :", "Start:")
+        f'<main class="home home-redesign gutter">'
+        f'<section class="home-intro"><div class="home-intro-copy"><span class="eyebrow">{intro_kicker}</span>'
+        f'<h2>{intro_title}</h2><p>{intro_text}</p></div>'
+        f'<div class="home-stats" aria-label="{("Curriculum overview" if en else "Aperçu du parcours")}">'
+        f'<div class="home-stat"><strong>{nb_seances:02d}</strong><span>{stat_sessions}</span></div>'
+        f'<div class="home-stat"><strong>{len(parcours["domaines"]):02d}</strong><span>{stat_domains}</span></div>'
+        f'<div class="home-stat"><strong>FR · EN</strong><span>{stat_languages}</span></div></div></section>'
+        f'<section class="start-feature"><div class="start-feature-copy"><span class="eyebrow">{start_kicker}</span>'
+        f'<h2>{start_title}</h2><p>{start_text}</p>'
+        f'<a class="start-link" href="{premiere}/index.html">{start_action} <span aria-hidden="true">↗</span></a></div>'
+        f'<div class="start-feature-meta"><span class="start-index mono">01 / {nb_modules:02d}</span>'
+        f'<span class="start-domain">{e(dom_titre(premier_dom, langue))}</span>'
+        f'<strong>{e(mod_titre(premier_module, langue))}</strong>'
+        f'<span class="start-duration">{( "One session at a time" if en else "Une séance à la fois")}</span></div></section>'
+        f'<section class="home-domains"><div class="home-head"><span class="eyebrow">{domains_kicker}</span>'
+        f'<h2>{domains_heading}</h2><p class="lead">{domains_text}</p></div>'
+        f'<div class="doms">{"".join(cartes)}</div></section>'
+        f'<section class="home-method"><div class="home-head"><span class="eyebrow">{method_kicker}</span>'
+        f'<h2>{method_heading}</h2></div><div class="method-grid">{method_html}</div>'
+        f'<p class="method-note">{method_note}</p></section></main>')
 
 
 def page_domaine(parcours: dict, d: dict, k: int, langue: str) -> str:
