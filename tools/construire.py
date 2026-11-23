@@ -192,7 +192,7 @@ def entete(parcours: dict, racine: str, autre: str, langue: str, actif: str = ""
         for d in parcours["domaines"])
     return (
         f'<header class="nav gutter"><div class="nav-in">'
-        {marque(racine, langue)}
+        f'{marque(racine, langue)}'
         f'<nav class="nav-links" aria-label="{t["domaines"]}">{liens}</nav>'
         f'<details class="nav-menu"><summary aria-label="{t["menu"]}"><span></span><span></span></summary>'
         f'<nav class="nav-sheet" aria-label="{t["domaines"]}">{liens}</nav></details>'
@@ -418,7 +418,7 @@ def construire() -> None:
             donnees = dict(s, accueil=racine + "index.html", module_url=racine + m["id"] + "/index.html",
                            module_titre=mod_titre(m, langue), domaine_titre=dom_titre(dom, langue))
             page = g_seance.substitute(
-                titre=e(s["titre"]), site_title=e(titre_site(langue)), marque=marque(racine, langue), base=base, accueil=donnees["accueil"], lang=langue, autre=autre,
+                titre=e(s["titre"]), site_title=e(titre_site(langue)), marque=marque(racine, langue), favicon=favicon_url(langue), base=base, accueil=donnees["accueil"], lang=langue, autre=autre,
                 bascule=bascule(langue, autre), alt_fr=base + sid + "/index.html", alt_en=base + "en/" + sid + "/index.html", compte=t["compte"], racine=racine,
                 progression=t["progression"], etapes=t["etapes"],
                 donnees=json.dumps(donnees, ensure_ascii=False).replace("</", "<\\/"))
@@ -433,13 +433,12 @@ def construire() -> None:
             cible = (sortie / chemin / "index.html") if chemin else sortie / "index.html"
             cible.parent.mkdir(parents=True, exist_ok=True)
             cible.write_text(g_page.substitute(
-                titre=e(titre), description=e(description), base=base, classe=classe, plan=plan, lang=langue,
+                titre=e(titre), description=e(description), favicon=favicon_url(langue), base=base, classe=classe, plan=plan, lang=langue,
                 alt_fr=base + (chemin + "/" if chemin else "") + "index.html",
                 alt_en=base + "en/" + (chemin + "/" if chemin else "") + "index.html",
                 entete=entete(parcours, racine, autre, langue, actif), contenu=contenu,
                 pied=pied(parcours, racine, autre, langue)), encoding="utf-8")
 
-        nom = parcours["titre"]
         nom_site = titre_site(langue)
         ecrire("", nom_site, parcours["sous_titre"] if langue == "fr" else parcours["sous_titre_en"],
                page_accueil(parcours, titres, langue), classe="accueil")
