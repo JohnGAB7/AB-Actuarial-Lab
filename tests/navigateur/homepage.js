@@ -13,6 +13,16 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
 
     await page.goto(new URL("index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
     await page.locator(".hero-visual").waitFor();
+    await page.waitForFunction(() => Array.from(document.querySelectorAll(".brand-logo")).some((img) => img.complete && img.naturalWidth > 0), null, { timeout: 15000 });
+    const brand = await page.evaluate(() => ({
+      title: document.title,
+      label: document.querySelector(".brand-copy")?.textContent || "",
+      logoLoaded: Array.from(document.querySelectorAll(".brand-logo")).some((img) => img.complete && img.naturalWidth > 0)
+    }));
+    console.log("brand FR:", brand);
+    if (!brand.title.startsWith("ACTU-BASICS — Parcours Actuariel")) failures.push("French site title");
+    if (!brand.label.includes("PARCOURS ACTUARIEL")) failures.push("French sub-brand lockup");
+    if (!brand.logoLoaded) failures.push("official ACTU-BASICS logo did not load");
     const mobile = await page.evaluate(() => ({
       lang: document.documentElement.lang,
       width: window.innerWidth,
@@ -46,12 +56,16 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       lang: document.documentElement.lang,
       scrollWidth: document.documentElement.scrollWidth,
       width: window.innerWidth,
-      title: document.querySelector(".home-intro h2").textContent
+      title: document.querySelector(".home-intro h2").textContent,
+      siteTitle: document.title,
+      brand: document.querySelector(".brand-copy")?.textContent || ""
     }));
     console.log("mobile EN:", englishMobile);
     if (englishMobile.lang !== "en") failures.push("English homepage language");
     if (englishMobile.scrollWidth > englishMobile.width + 1) failures.push("English mobile horizontal overflow");
     if (!/Understand the idea/.test(englishMobile.title)) failures.push("English editorial content");
+    if (!englishMobile.siteTitle.startsWith("ACTU-BASICS — Actuarial Learning Path")) failures.push("English site title");
+    if (!englishMobile.brand.includes("ACTUARIAL LEARNING PATH")) failures.push("English sub-brand lockup");
 
     await page.setViewportSize({ width: 1440, height: 900 });
     const desktop = await page.evaluate(() => ({
