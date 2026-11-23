@@ -61,7 +61,7 @@ const DROP_TAGS = new Set([
 ]);
 function rich(value) {
   const template = document.createElement("template");
-  template.innerHTML = String(value ?? "").replace(/(<(?:strong|b)>[A-Z]<\\/(?:strong|b)>)\\s*[-–—]\\s*(?=<)/g, "$1 ");
+  template.innerHTML = String(value ?? "").replace(/(<(?:strong|b)>[A-Z]<\/(?:strong|b)>)\s*[-–—]\s*(?=<)/g, "$1 ");
   const fragment = document.createDocumentFragment();
   const copy = (node, parent) => {
     if (node.nodeType === Node.TEXT_NODE) {
