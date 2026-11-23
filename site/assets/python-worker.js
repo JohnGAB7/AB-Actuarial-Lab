@@ -8,6 +8,7 @@ const MAX_TOTAL_TEST_CHARS = 20000;
 const MAX_ERROR_CHARS = 500;
 let py = null;
 let busy = false;
+const sendToPage = self.postMessage.bind(self);
 
 async function ready() {
   if (!py) {
@@ -23,7 +24,7 @@ async function ready() {
 function restrictRuntimeCapabilities() {
   const blocked = [
     "fetch", "XMLHttpRequest", "WebSocket", "EventSource", "BroadcastChannel",
-    "indexedDB", "caches", "importScripts", "Worker", "SharedWorker", "WebTransport",
+    "indexedDB", "caches", "importScripts", "Worker", "SharedWorker", "WebTransport", "postMessage",
   ];
   for (const name of blocked) {
     try {
@@ -65,20 +66,20 @@ self.onmessage = async (ev) => {
   const data = ev.data;
   const id = data && Number.isSafeInteger(data.id) ? data.id : null;
   if (busy) {
-    self.postMessage({ id, phase: "error", msg: "Une exécution est déjà en cours." });
+    sendToPage({ id, phase: "error", msg: "Une exécution est déjà en cours." });
     return;
   }
   try {
     validateRequest(data);
   } catch (err) {
-    self.postMessage({ id, phase: "error", msg: messageOf(err) });
+    sendToPage({ id, phase: "error", msg: messageOf(err) });
     return;
   }
 
   busy = true;
   try {
     const p = await ready();
-    self.postMessage({ id, phase: "running" });
+    sendToPage({ id, phase: "running" });
     const ns = p.globals.get("dict")();
     let setupErr = null;
     try { p.runPython(data.code, { globals: ns }); } catch (err) { setupErr = messageOf(err); }
@@ -97,9 +98,9 @@ self.onmessage = async (ev) => {
       }
     });
     if (ns.destroy) ns.destroy();
-    self.postMessage({ id, phase: "done", results });
+    sendToPage({ id, phase: "done", results });
   } catch (err) {
-    self.postMessage({ id, phase: "error", msg: messageOf(err) });
+    sendToPage({ id, phase: "error", msg: messageOf(err) });
   } finally {
     busy = false;
   }
