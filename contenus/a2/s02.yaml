@@ -1,0 +1,216 @@
+# Séance 2 du module A2 (Probabilités pour l'assurance) : variables discrètes, binomiale, Poisson, espérance et variance.
+# Chiffres : fréquences de sinistres fictives. Les valeurs sont recalculées par tests/test_contenus.py et tests/a2/test_s02_discretes.py.
+id: a2/s02
+module: a2
+titre: "Nombre de sinistres : binomiale et Poisson"
+en: "Claim counts: binomial and Poisson"
+duree: 30
+
+actu_basics:
+  episode: "A2 · Probability for insurance"
+  statut: "à proposer"
+  accroche_fr: "Combien de sinistres l'an prochain ? Une loi, pas un chiffre."
+  accroche_en: "How many claims next year? A distribution, not a number."
+
+etapes:
+  - type: quiz
+    titre: "Test de positionnement"
+    minutes: 3
+    intro: "Quatre questions avant le cours. Si tu as tout juste, survole le rappel et va directement au calcul."
+    questions:
+      - q: 'Pour $N \sim \text{Poisson}(\lambda)$, que vaut $P(N = k)$ ?'
+        options: ['$e^{-\lambda}\,\dfrac{\lambda^k}{k!}$', '$\lambda^k\,(1-\lambda)$', '$\dbinom{n}{k}\lambda^k$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            La loi de Poisson compte des événements rares et indépendants sur une période : sinistres d'un contrat, accidents d'une flotte.
+          formule: |-
+            P(N = k) = e^{-\lambda}\,\frac{\lambda^k}{k!}, \quad k = 0, 1, 2, \dots
+          exemple: >-
+            Avec $\lambda = 0{,}3$ : $P(N = 0) = e^{-0{,}3} = 0{,}7408$ et $P(N = 1) = 0{,}3\,e^{-0{,}3} = 0{,}2222$.
+          piege: >-
+            $\lambda$ n'est pas une probabilité : c'est un nombre moyen d'événements, qui peut dépasser 1.
+      - q: 'Pour une loi de Poisson de paramètre $\lambda$, espérance et variance valent…'
+        options: ['$\lambda$ et $\lambda$', '$\lambda$ et $\lambda^2$', '$\lambda$ et $\sqrt{\lambda}$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            C'est la signature de la loi de Poisson : moyenne et variance égales. Sur des données réelles, on vérifie souvent ce point en premier.
+          formule: |-
+            E[N] = \operatorname{Var}(N) = \lambda
+          exemple: >-
+            Si l'on observe une moyenne de 0,3 sinistre et une variance de 0,5, la loi de Poisson est trop serrée : il y a surdispersion (overdispersion).
+          piege: >-
+            $\sqrt{\lambda}$ est l'écart-type, pas la variance.
+      - q: 'Pour $X \sim \text{Binomiale}(n, p)$, la variance vaut…'
+        options: ['$n\,p\,(1-p)$', '$n\,p$', '$p\,(1-p)$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            $X$ est la somme de $n$ variables de Bernoulli indépendantes, chacune de variance $p(1-p)$. Les variances s'additionnent.
+          formule: |-
+            E[X] = n\,p \qquad \operatorname{Var}(X) = n\,p\,(1-p)
+          exemple: >-
+            20 contrats à 5 % : $E[X] = 1$ et $\operatorname{Var}(X) = 20 \times 0{,}05 \times 0{,}95 = 0{,}95$.
+          piege: >-
+            $np$ est l'espérance. $p(1-p)$ est la variance d'un seul contrat.
+      - q: 'Que vaut $\operatorname{Var}(X)$ en fonction des moments ?'
+        options: ['$E[X^2] - (E[X])^2$', '$E[X^2]$', '$(E[X])^2 - E[X^2]$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            La variance mesure l'écart quadratique moyen à l'espérance. En développant le carré, on obtient la forme de calcul.
+          formule: |-
+            \operatorname{Var}(X) = E\big[(X - E[X])^2\big] = E[X^2] - (E[X])^2
+          exemple: >-
+            0, 1 ou 2 sinistres avec probabilités 0,7, 0,2 et 0,1 : $E[X] = 0{,}4$, $E[X^2] = 0{,}6$, donc $\operatorname{Var}(X) = 0{,}6 - 0{,}16 = 0{,}44$.
+          piege: >-
+            L'ordre inverse donnerait une variance négative, ce qui est impossible.
+
+  - type: video
+    titre: "L'intuition en vidéo"
+    minutes: 3
+    texte: >-
+      Ce thème n'a pas encore sa leçon Actu-Basics. Elle montrera pourquoi l'assureur ne prévoit pas « 3 sinistres »,
+      mais une loi : 0, 1, 2… chacun avec sa probabilité.
+
+  - type: rappel
+    titre: "Le rappel"
+    minutes: 8
+    blocs:
+      - p: >-
+          Une <b>variable aléatoire discrète</b> <i>(discrete random variable)</i> prend des valeurs isolées, comme un
+          nombre de sinistres. Elle est décrite par sa <b>loi</b> <i>(probability mass function)</i>, résumée par son
+          <b>espérance</b> <i>(expected value)</i> et sa <b>variance</b> <i>(variance)</i>.
+      - formule: |
+          \begin{gathered}
+          E[X] = \sum_k k\,P(X = k) \qquad \operatorname{Var}(X) = E[X^2] - (E[X])^2 \\[6pt]
+          E[aX + b] = a\,E[X] + b \qquad \operatorname{Var}(aX + b) = a^2 \operatorname{Var}(X)
+          \end{gathered}
+      - p: >-
+          Trois lois servent sans cesse en assurance. La <b>Bernoulli</b> : un contrat a un sinistre ou non. La
+          <b>binomiale</b> <i>(binomial)</i> : nombre de contrats sinistrés parmi $n$ indépendants. La <b>Poisson</b> :
+          nombre de sinistres quand chaque contrat peut en avoir plusieurs, rares et indépendants.
+      - formule: |
+          \begin{gathered}
+          P(X = k) = \binom{n}{k} p^k (1-p)^{n-k} \qquad E[X] = np \qquad \operatorname{Var}(X) = np(1-p) \\[6pt]
+          P(N = k) = e^{-\lambda}\,\frac{\lambda^k}{k!} \qquad E[N] = \operatorname{Var}(N) = \lambda
+          \end{gathered}
+      - p: >-
+          Quand $n$ est grand et $p$ petit, la binomiale ressemble à une Poisson de paramètre $\lambda = np$. Avec 20
+          contrats à 5 %, $P(X = 0) = 0{,}3585$, contre $e^{-1} = 0{,}3679$ pour la Poisson.
+      - note: >-
+          En tarification non-vie (A6), la fréquence de sinistres se modélise d'abord par une Poisson. Si la variance
+          observée dépasse nettement la moyenne, on passe à une binomiale négative.
+      - sources:
+          - {titre: "Klugman, Panjer et Willmot, Loss Models, chap. 6", detail: "Lois de fréquence : Poisson, binomiale, binomiale négative"}
+          - {titre: "SOA, Probability (P) Exam", url: "https://www.soa.org/education/exam-req/edu-exam-p-detail/", detail: "Syllabus officiel de l'examen"}
+
+  - type: quiz
+    titre: "Vérifie"
+    minutes: 4
+    intro: "Quatre questions. Réponds sans relire le rappel."
+    questions:
+      - q: 'Un contrat a $N \sim \text{Poisson}(0{,}3)$ sinistres par an. Probabilité d''au moins 2 sinistres ?'
+        options: ['3,69 %', '25,92 %', '0,33 %']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On retire de 1 les probabilités de 0 et de 1 sinistre.
+          formule: |-
+            P(N \ge 2) = 1 - e^{-0{,}3}(1 + 0{,}3)
+          exemple: >-
+            $1 - 0{,}7408 - 0{,}2222 = 0{,}0369$.
+          piege: >-
+            25,92 % est $P(N \ge 1)$. 0,33 % est $P(N = 3)$ seulement.
+      - q: '20 contrats indépendants à 5 % chacun. Probabilité qu''exactement un soit sinistré ?'
+        options: ['37,7 %', '5 %', '64,2 %']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Loi binomiale : on choisit lequel est sinistré, puis les 19 autres ne le sont pas.
+          formule: |-
+            P(X = 1) = 20 \times 0{,}05 \times 0{,}95^{19}
+          exemple: >-
+            $20 \times 0{,}05 \times 0{,}377354 = 0{,}3774$.
+          piege: >-
+            64,2 % est la probabilité d'au moins un contrat sinistré.
+      - q: 'Une flotte compte $N \sim \text{Poisson}(4)$ accidents par an. Écart-type de $N$ ?'
+        options: ['2', '4', '16']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Variance = $\lambda$, donc écart-type = $\sqrt{\lambda}$.
+          formule: |-
+            \sigma_N = \sqrt{\lambda}
+          exemple: >-
+            $\sqrt{4} = 2$ accidents. Les années à 2 ou 6 accidents sont donc tout à fait normales.
+          piege: >-
+            4 est la variance, 16 est $\lambda^2$.
+      - q: 'Une variable $X$ vaut 0, 1 ou 2 avec probabilités 0,7, 0,2, 0,1. Si l''on paie 500 € par sinistre, la variance du coût vaut…'
+        options: ['110 000', '220', '200']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Un facteur multiplie la variance par son carré.
+          formule: |-
+            \operatorname{Var}(500\,X) = 500^2 \operatorname{Var}(X)
+          exemple: >-
+            $\operatorname{Var}(X) = 0{,}44$, donc $250\,000 \times 0{,}44 = 110\,000$ (en euros au carré), soit un écart-type de 331,66 €.
+          piege: >-
+            220 multiplie par 500 au lieu de $500^2$. 200 est l'espérance du coût.
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: '$N$ suit une loi de Poisson de paramètre 0,3 ; $X$ une binomiale de paramètres 20 et 0,05. Saisis tes résultats à 4 décimales.'
+    donnees:
+      entetes: ['$\lambda$', '$n$', '$p$']
+      lignes: [['0,3', '20', '0,05']]
+    champs:
+      - {cle: p0, libelle: '$P(N = 0)$', valeur: 0.7408182, tolerance: 0.00015}
+      - {cle: p2, libelle: '$P(N \ge 2)$', valeur: 0.0369363, tolerance: 0.00015}
+      - {cle: b1, libelle: '$P(X = 1)$', valeur: 0.3773536, tolerance: 0.00015}
+      - {cle: b0, libelle: '$P(X \ge 1)$', valeur: 0.6415141, tolerance: 0.00015}
+    solution: |
+      $P(N = 0) = e^{-0{,}3} = 0{,}7408$, $P(N = 1) = 0{,}2222$, donc $P(N \ge 2) = 0{,}0369$.
+      $0{,}95^{20} = 0{,}3585$, donc $P(X \ge 1) = 0{,}6415$ ; $P(X = 1) = 20 \times 0{,}05 \times 0{,}95^{19} = 0{,}3774$.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 8
+    intro: "Écris le corps des trois fonctions, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a2/s02_discretes.py
+    depart: |
+      import math
+
+      def poisson_pmf(k, lam):
+          """P(N = k) for N ~ Poisson(lam)."""
+          raise NotImplementedError
+
+      def binomial_pmf(k, n, p):
+          """P(X = k) for X ~ Binomial(n, p)."""
+          raise NotImplementedError
+
+      def mean_variance(pmf):
+          """(E[X], Var(X)) for a dict {value: probability}."""
+          raise NotImplementedError
+    tests:
+      - {nom: 'Poisson(0,3) : $P(N = 0) = 0{,}74082$', expr: "abs(poisson_pmf(0, 0.3) - 0.74082) < 0.00001"}
+      - {nom: 'Les probabilités de Poisson somment à 1', expr: "abs(sum(poisson_pmf(k, 4) for k in range(60)) - 1) < 1e-12"}
+      - {nom: 'Binomiale(20 ; 0,05) : $P(X = 1) = 0{,}37735$', expr: "abs(binomial_pmf(1, 20, 0.05) - 0.37735) < 0.00001"}
+      - {nom: 'Moyenne binomiale : $np$', expr: "abs(mean_variance({k: binomial_pmf(k, 20, 0.05) for k in range(21)})[0] - 1) < 1e-12"}
+      - {nom: 'Variance binomiale : $np(1-p)$', expr: "abs(mean_variance({k: binomial_pmf(k, 20, 0.05) for k in range(21)})[1] - 0.95) < 1e-12"}
+      - {nom: 'Loi 0,7 / 0,2 / 0,1 : moyenne 0,4 et variance 0,44', expr: "all(abs(a - b) < 1e-12 for a, b in zip(mean_variance({0: 0.7, 1: 0.2, 2: 0.1}), (0.4, 0.44)))"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Variable aléatoire discrète", "discrete random variable", "The number of claims is a discrete random variable."]
+      - ["Loi de probabilité", "probability mass function", "We fitted a probability mass function to the claim counts."]
+      - ["Espérance, variance", "expected value, variance", "The expected value is 0.3 claims, with a variance of 0.3."]
+      - ["Loi de Poisson", "Poisson distribution", "Claim frequency is usually modelled with a Poisson distribution first."]
+      - ["Loi binomiale", "binomial distribution", "The number of policies with a claim follows a binomial distribution."]
+      - ["Surdispersion", "overdispersion", "The data show overdispersion, so we moved to a negative binomial."]

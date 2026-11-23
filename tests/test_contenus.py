@@ -139,6 +139,28 @@ def test_calcul_a1_s05():
     p3 = lambda yy: 50 / (1 + yy) + 50 / (1 + yy) ** 2 + 1050 / (1 + yy) ** 3
     assert p3(0.0396) > prix3 > p3(0.0398)
 
+
+def test_calcul_a2_s01():
+    _, champs = _calcul("a2/s01")
+    ps = 0.2 * 0.15 + 0.8 * 0.05
+    _proche(champs, {"ps": ps, "pjs": 0.2 * 0.15 / ps, "aucun": 0.95**10, "un": 1 - 0.95**10})
+    assert round(ps, 10) == 0.07 and round(0.03 / ps, 4) == 0.4286 and round(0.05**2, 4) == 0.0025
+    assert round(0.95**10, 6) == 0.598737 and round(1 - 0.95**10, 6) == 0.401263
+
+
+def test_calcul_a2_s02():
+    _, champs = _calcul("a2/s02")
+    pois = lambda k, lam: math.exp(-lam) * lam**k / math.factorial(k)
+    binom = lambda k, n, p: math.comb(n, k) * p**k * (1 - p) ** (n - k)
+    _proche(champs, {"p0": pois(0, 0.3), "p2": 1 - pois(0, 0.3) - pois(1, 0.3),
+                     "b1": binom(1, 20, 0.05), "b0": 1 - binom(0, 20, 0.05)})
+    assert round(pois(1, 0.3), 4) == 0.2222 and round(1 - pois(0, 0.3), 4) == 0.2592 and round(pois(3, 0.3), 4) == 0.0033
+    assert round(binom(0, 20, 0.05), 4) == 0.3585 and round(math.exp(-1), 4) == 0.3679 and round(0.95**19, 6) == 0.377354
+    m = 0.2 + 0.2
+    var = 0.2 + 0.4 - m**2
+    assert round(m, 10) == 0.4 and round(var, 10) == 0.44 and round(500**2 * var) == 110000
+    assert round(math.sqrt(500**2 * var), 2) == 331.66 and round(20 * 0.05 * 0.95, 10) == 0.95
+
 def test_aucun_support_de_cours_ni_cv_dans_le_depot():
     """Supports de cours et CV restent dans la bibliothèque du projet, jamais sur un dépôt."""
     interdits = {".pdf", ".pptx", ".ppt", ".docx", ".doc", ".tex", ".xlsx"}

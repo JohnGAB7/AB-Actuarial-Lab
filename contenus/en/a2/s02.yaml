@@ -1,0 +1,127 @@
+# English texts for session A2.02. Numbers, answers and tests live in contenus/a2/s02.yaml.
+titre: "Claim counts: binomial and Poisson"
+
+etapes:
+  - titre: "Placement check"
+    intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
+    questions:
+      - q: 'For $N \sim \text{Poisson}(\lambda)$, what is $P(N = k)$?'
+        pourquoi:
+          rappel: >-
+            The Poisson distribution counts rare, independent events over a period: claims on a policy, accidents in a fleet.
+          exemple: >-
+            With $\lambda = 0.3$: $P(N = 0) = e^{-0.3} = 0.7408$ and $P(N = 1) = 0.3\,e^{-0.3} = 0.2222$.
+          piege: >-
+            $\lambda$ is not a probability: it is an average number of events, which can exceed 1.
+      - q: 'For a Poisson distribution with parameter $\lambda$, the mean and variance are…'
+        options: ['$\lambda$ and $\lambda$', '$\lambda$ and $\lambda^2$', '$\lambda$ and $\sqrt{\lambda}$']
+        pourquoi:
+          rappel: >-
+            This is the signature of the Poisson distribution: equal mean and variance. On real data, it is often the first thing to check.
+          exemple: >-
+            If we observe a mean of 0.3 claims and a variance of 0.5, the Poisson is too tight: there is overdispersion.
+          piege: >-
+            $\sqrt{\lambda}$ is the standard deviation, not the variance.
+      - q: 'For $X \sim \text{Binomial}(n, p)$, the variance is…'
+        pourquoi:
+          rappel: >-
+            $X$ is the sum of $n$ independent Bernoulli variables, each with variance $p(1-p)$. Variances add up.
+          exemple: >-
+            20 policies at 5%: $E[X] = 1$ and $\operatorname{Var}(X) = 20 \times 0.05 \times 0.95 = 0.95$.
+          piege: >-
+            $np$ is the mean. $p(1-p)$ is the variance of a single policy.
+      - q: 'What is $\operatorname{Var}(X)$ in terms of moments?'
+        pourquoi:
+          rappel: >-
+            The variance measures the mean squared distance from the expected value. Expanding the square gives the working formula.
+          exemple: >-
+            0, 1 or 2 claims with probabilities 0.7, 0.2 and 0.1: $E[X] = 0.4$, $E[X^2] = 0.6$, so $\operatorname{Var}(X) = 0.6 - 0.16 = 0.44$.
+          piege: >-
+            The reverse order would give a negative variance, which is impossible.
+
+  - titre: "The intuition on video"
+    texte: >-
+      This topic does not have its Actu-Basics lesson yet. It will show why an insurer does not forecast "3 claims",
+      but a distribution: 0, 1, 2… each with its probability.
+
+  - titre: "The recap"
+    blocs:
+      - p: >-
+          A <b>discrete random variable</b> <i>(variable aléatoire discrète)</i> takes isolated values, such as a number
+          of claims. It is described by its <b>probability mass function</b> <i>(loi)</i>, summed up by its
+          <b>expected value</b> <i>(espérance)</i> and its <b>variance</b> <i>(variance)</i>.
+      - {}
+      - p: >-
+          Three distributions are used all the time in insurance. The <b>Bernoulli</b>: a policy has a claim or not. The
+          <b>binomial</b> <i>(binomiale)</i>: the number of policies with a claim among $n$ independent ones. The
+          <b>Poisson</b>: the number of claims when each policy can have several, rare and independent.
+      - {}
+      - p: >-
+          When $n$ is large and $p$ small, the binomial looks like a Poisson with parameter $\lambda = np$. With 20
+          policies at 5%, $P(X = 0) = 0.3585$, against $e^{-1} = 0.3679$ for the Poisson.
+      - note: >-
+          In non-life pricing (A6), claim frequency is first modelled with a Poisson. If the observed variance clearly
+          exceeds the mean, we move to a negative binomial.
+      - sources:
+          - {titre: "Klugman, Panjer and Willmot, Loss Models, chap. 6", detail: "Frequency distributions: Poisson, binomial, negative binomial"}
+          - {titre: "SOA, Probability (P) Exam", detail: "Official exam syllabus"}
+
+  - titre: "Check"
+    intro: "Four questions. Answer without rereading the recap."
+    questions:
+      - q: 'A policy has $N \sim \text{Poisson}(0.3)$ claims a year. Probability of at least 2 claims?'
+        options: ['3.69%', '25.92%', '0.33%']
+        pourquoi:
+          rappel: >-
+            Subtract from 1 the probabilities of 0 and 1 claim.
+          exemple: >-
+            $1 - 0.7408 - 0.2222 = 0.0369$.
+          piege: >-
+            25.92% is $P(N \ge 1)$. 0.33% is $P(N = 3)$ only.
+      - q: '20 independent policies at 5% each. Probability that exactly one has a claim?'
+        options: ['37.7%', '5%', '64.2%']
+        pourquoi:
+          rappel: >-
+            Binomial distribution: choose which one has the claim, then the other 19 do not.
+          exemple: >-
+            $20 \times 0.05 \times 0.377354 = 0.3774$.
+          piege: >-
+            64.2% is the probability that at least one policy has a claim.
+      - q: 'A fleet has $N \sim \text{Poisson}(4)$ accidents a year. Standard deviation of $N$?'
+        pourquoi:
+          rappel: >-
+            Variance = $\lambda$, so standard deviation = $\sqrt{\lambda}$.
+          exemple: >-
+            $\sqrt{4} = 2$ accidents. Years with 2 or 6 accidents are therefore perfectly normal.
+          piege: >-
+            4 is the variance, 16 is $\lambda^2$.
+      - q: 'A variable $X$ is 0, 1 or 2 with probabilities 0.7, 0.2, 0.1. If €500 is paid per claim, the variance of the cost is…'
+        options: ['110,000', '220', '200']
+        pourquoi:
+          rappel: >-
+            A factor multiplies the variance by its square.
+          exemple: >-
+            $\operatorname{Var}(X) = 0.44$, so $250{,}000 \times 0.44 = 110{,}000$ (in euros squared), a standard deviation of €331.66.
+          piege: >-
+            220 multiplies by 500 instead of $500^2$. 200 is the expected cost.
+
+  - titre: "By hand"
+    intro: '$N$ follows a Poisson distribution with parameter 0.3; $X$ a binomial with parameters 20 and 0.05. Enter your results to 4 decimal places.'
+    donnees:
+      lignes: [['0.3', '20', '0.05']]
+    solution: |
+      $P(N = 0) = e^{-0.3} = 0.7408$, $P(N = 1) = 0.2222$, so $P(N \ge 2) = 0.0369$.
+      $0.95^{20} = 0.3585$, so $P(X \ge 1) = 0.6415$; $P(X = 1) = 20 \times 0.05 \times 0.95^{19} = 0.3774$.
+
+  - titre: "Your turn to code"
+    intro: "Write the body of the three functions, without AI. All the tests must pass."
+    tests:
+      - {nom: 'Poisson(0.3): $P(N = 0) = 0.74082$'}
+      - {nom: 'The Poisson probabilities add up to 1'}
+      - {nom: 'Binomial(20, 0.05): $P(X = 1) = 0.37735$'}
+      - {nom: 'Binomial mean: $np$'}
+      - {nom: 'Binomial variance: $np(1-p)$'}
+      - {nom: 'Distribution 0.7 / 0.2 / 0.1: mean 0.4 and variance 0.44'}
+
+  - titre: "Vocabulary"
+    intro: "Tap a card: the French term and a job-interview sentence."
