@@ -9,11 +9,9 @@ taux: 0.025
 
 actu_basics:
   episode: "A1 · Financial mathematics"
-  statut: "publiée en anglais"
+  statut: "sur le site"
   accroche_fr: "Pourquoi 1 € demain vaut moins que 1 € aujourd'hui ?"
   accroche_en: "Why is one euro tomorrow worth less than one euro today?"
-  videos:
-    - {id: uJ_eQqqQB6s, langue: en, titre: "$1,000 today or in 30 years: is it really the same money?", duree: "6:42"}
 
 etapes:
   - type: quiz
@@ -71,11 +69,20 @@ etapes:
             La formule fermée $(1 - v^n)/i$ donne $0/0$ quand $i = 0$. En code, traite ce cas à part ou somme les termes un par un.
 
   - type: video
-    titre: "L'intuition en vidéo"
-    minutes: 3
+    titre: "La vidéo de la séance"
+    minutes: 15
     texte: >-
-      La leçon Actu-Basics A1.01 montre la valeur du temps : un euro placé aujourd'hui rapporte des intérêts,
-      donc un euro promis plus tard vaut moins. Elle est en ligne en anglais ; la version française suivra.
+      Toute la séance en une vidéo Actu-Basics, en 7 chapitres : taux d'intérêt et intérêt simple, intérêt composé,
+      actualisation, taux d'escompte, taux équivalents, annuités certaines, puis un exercice corrigé. Elle s'appuie
+      sur des faits réels (Livret A, bons du Trésor américain, TAEG, jackpot Powerball de 2023). Regarde-la en
+      entier avant le rappel, ou par chapitre si tu révises.
+    media:
+      fr:
+        src: "videos/a1-s01-interet-et-annuites-fr.mp4"
+        sous_titres: "videos/a1-s01-interet-et-annuites-fr.vtt"
+      en:
+        src: "videos/a1-s01-interest-and-annuities-en.mp4"
+        sous_titres: "videos/a1-s01-interest-and-annuities-en.vtt"
 
   - type: rappel
     titre: "Le rappel"

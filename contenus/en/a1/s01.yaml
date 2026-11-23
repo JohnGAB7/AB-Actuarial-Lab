@@ -38,10 +38,12 @@ etapes:
           piege: >-
             The closed form $(1 - v^n)/i$ gives $0/0$ when $i = 0$. In code, handle that case separately or sum the terms one by one.
 
-  - titre: "The intuition on video"
+  - titre: "The session video"
     texte: >-
-      Actu-Basics lesson A1.01 shows the time value of money: a euro invested today earns interest,
-      so a euro promised later is worth less. It is online in English; the French version will follow.
+      The whole session in one Actu-Basics video, in 7 chapters: interest rate and simple interest, compound interest,
+      discounting, rate of discount, equivalent rates, annuities certain, then a worked exercise. It draws on
+      real facts (France's Livret A, US Treasury bills, the APR, the 2023 Powerball jackpot). Watch it in full
+      before the recap, or chapter by chapter when you revise.
 
   - titre: "The recap"
     blocs:

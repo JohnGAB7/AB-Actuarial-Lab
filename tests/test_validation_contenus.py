@@ -510,6 +510,27 @@ def test_overlay_reports_missing_translatable_text():
     assert any("texte non traduit" in error for error in errors)
 
 
+def test_video_media_requires_existing_files_for_both_languages():
+    session = valid_session()
+    session["etapes"][0]["media"] = {"fr": {"src": "videos/missing-fr.mp4"}}
+    assert any("une vidéo par langue" in error for error in verifier_seance(session, session_id="fixture"))
+    session["etapes"][0]["media"] = {
+        "fr": {"src": "videos/missing-fr.mp4"},
+        "en": {"src": "../secret.mp4", "sous_titres": "videos/x.srt"},
+    }
+    errors = verifier_seance(session, session_id="fixture")
+    assert any("introuvable" in error for error in errors)
+    assert sum("doit être un chemin" in error for error in errors) == 2
+
+
+def test_a1_s01_video_files_are_on_the_site():
+    session = yaml.safe_load((validation.CONTENT_DIR / "a1" / "s01.yaml").read_text(encoding="utf-8"))
+    media = next(step["media"] for step in session["etapes"] if step["type"] == "video")
+    for langue in ("fr", "en"):
+        assert (validation.ASSETS_DIR / media[langue]["src"]).is_file()
+        assert (validation.ASSETS_DIR / media[langue]["sous_titres"]).is_file()
+
+
 def test_published_videos_need_a_youtube_id_a_language_and_a_title():
     session = valid_session()
     session["actu_basics"] = {"videos": [{"id": "uJ_eQqqQB6s", "langue": "en", "titre": "Lesson", "duree": "6:42"}]}
