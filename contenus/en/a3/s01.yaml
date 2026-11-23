@@ -27,7 +27,7 @@ etapes:
       - {}
       - note: >-
           Under IAS 19, the choice of mortality table directly affects the DBO of an annuity
-          plan. You will measure it yourself in the A4+ extension. In Canada, the applicable table depends on
+          plan. You will measure it yourself in the A4+ extension. The MK table used in this session's calculations is a parametric example from the repository's simulator, not a CPM table. In Canada, the applicable table depends on
           the valuation type and effective date: the CPM2024 research report was published in March 2026. For
           commuted values under section 3530 of the Standards of Practice, the combined CPM2024 table and
           MI-2024 improvement scale have been promulgated with effect from April 1, 2027.
