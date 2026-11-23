@@ -223,7 +223,7 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
         start_kicker, start_title = "A GOOD PLACE TO BEGIN", "Build your actuarial foundations."
         start_text = "Start with financial mathematics: the language of rates, cash flows, discounting and annuities that supports much of actuarial work."
         start_action = "Explore the first session"
-        domains_kicker, domains_title = "EXPLORE THE CURRICULUM", domains_heading = "Choose a field. Follow the connections."
+        domains_kicker, domains_heading = "EXPLORE THE CURRICULUM", "Choose a field. Follow the connections."
         domains_text = "Follow the suggested order or explore a discipline that speaks to your goals. Your progress stays on this device without an account."
         method_kicker, method_title = "A DIFFERENT WAY TO LEARN", method_heading = "From intuition to professional practice."
         method = [
@@ -245,7 +245,7 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
         start_kicker, start_title = "UN BON POINT DE DÉPART", "Construis tes fondamentaux actuariels."
         start_text = "Commence par les mathématiques financières : le langage des taux, des flux, de l'actualisation et des annuités qui soutient une grande partie du travail actuariel."
         start_action = "Découvrir la première séance"
-        domains_kicker, domains_title = "EXPLORER LE PARCOURS", domains_heading = "Choisis un domaine. Découvre les liens."
+        domains_kicker, domains_heading = "EXPLORER LE PARCOURS", "Choisis un domaine. Découvre les liens."
         domains_text = "Suis l'ordre conseillé ou explore une discipline qui correspond à tes objectifs. Ta progression reste sur cet appareil, sans création de compte."
         method_kicker, method_title = "UNE AUTRE FAÇON D'APPRENDRE", method_heading = "De l'intuition à la pratique professionnelle."
         method = [
