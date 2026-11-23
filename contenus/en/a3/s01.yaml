@@ -44,7 +44,7 @@ etapes:
         options: ["Linearly", "Exponentially, up to a constant", "It is constant"]
         pourquoi:
           rappel: >-
-            The Makeham law adds a constant mortality $A$, independent of age (accidents), to an ageing mortality that grows exponentially (Gompertz's law).
+            The Makeham law adds a constant mortality component $A$, independent of age, to an age-related mortality component that grows exponentially (Gompertz's law).
           exemple: >-
             MK table: $c = 1.1038$. The age-related part rises by about 10% a year and doubles every $\ln 2 / \ln c \approx 7$ years.
           piege: >-
