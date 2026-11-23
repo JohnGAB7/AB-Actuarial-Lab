@@ -171,6 +171,8 @@ def test_traduction_preserve_signe_unite_et_exposant():
         fusion(base_codes, {"solution": "Use A3, x3 and ch1; then calculate n-1."}, "test")
     with pytest.raises(ValueError):
         fusion(base_codes, {"solution": "Use A3, x2 and ch2; then calculate n-1."}, "test")
+    with pytest.raises(ValueError):
+        fusion(base_codes, {"solution": "Use A3, x2 and ch1; then calculate n+1."}, "test")
 
 
 def test_tableaux_anglais_identiques_au_francais():
