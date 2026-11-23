@@ -54,7 +54,7 @@ def nombres(texte: str, langue: str) -> list[str]:
         t = re.sub(r"(?<=\d),(?=\d{3}\b)", "", t)
     # Keep sign, exponent and percentage/per-mille unit: comparing unsigned digit runs
     # would accept -2.5 % -> 2.5 % or 2.5 % -> 2.5, both material changes.
-    motif = r"(?<![\w.])[+\-−]?\d+(?:\.\d+)?(?:[eE][+\-−]?\d+)?(?:\s*\\?[%‰])?"
+    motif = r"(?:(?<![\w.])[+\-−])?(?<![\d.])\d+(?:\.\d+)?(?:[eE][+\-−]?\d+)?(?:\s*\\?[%‰])?"
     return sorted(x.replace("−", "-").replace(" ", "").replace(r"\%", "%") for x in re.findall(motif, t))
 
 
