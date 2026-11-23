@@ -94,7 +94,226 @@ etapes:
           piege: >-
             0,97 ne garde que la première année. 2,91 ajoute à tort le terme $k = 0$, qui vaut toujours ${}_0p_x = 1$.
       - q: 'Sous l''hypothèse UDD, quel lien entre $\mathring{e}_x$ et $e_x$ ?'
-        options: ['$\mathring{e}_x = e_x$', '$\mathring{e}_x = e_x + \tfrac12$', '$\mathring{e}_x = e_x - \tfrac12$']
+        options:
+          - '$\mathring{e}_x = e_x
+        reponse: 1
+        pourquoi:
+          rappel: >-
+            Sous UDD (uniform distribution of deaths), les décès d'une année sont répartis uniformément : ${}_tq_x = t\,q_x$ pour $0 \le t \le 1$. La fraction d'année vécue l'année du décès vaut donc $\tfrac12$ en moyenne.
+          formule: |-
+            \begin{gathered} T_x = K_x + U, \quad U \sim \mathcal{U}(0,1) \\[4pt] \Rightarrow\; \mathring{e}_x = e_x + \tfrac12 \end{gathered}
+          exemple: >-
+            Table MK : $e_{65} = 12{,}316$ ans, donc $\mathring{e}_{65} \approx 12{,}816$ ans.
+          piege: >-
+            $\mathring{e}_x$ ajoute la fraction de l'année du décès : elle ne peut pas être plus petite que $e_x$.
+      - q: "Une table plus prudente pour un plan de rentes doit…"
+        options: ['augmenter les $q_x$', 'diminuer les $q_x$', 'ne rien changer']
+        reponse: 1
+        pourquoi:
+          rappel: >-
+            Une rente paie tant que l'assuré vit. Moins de décès, c'est plus de paiements, donc un engagement plus élevé : c'est le risque de longévité (longevity risk).
+          formule: |-
+            \begin{gathered} \ddot{a}_x = \sum_{k \ge 0} v^k\,{}_kp_x \\[4pt] q_x \downarrow \;\Rightarrow\; {}_kp_x \uparrow \;\Rightarrow\; \ddot{a}_x \uparrow \end{gathered}
+          exemple: >-
+            C'est pourquoi on applique aux tables de rentes des améliorations de mortalité (mortality improvement) qui abaissent les $q_x$ futurs.
+          piege: >-
+            Pour un capital décès, c'est l'inverse : la prudence demande des $q_x$ plus élevés. La prudence dépend toujours du risque couvert.
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: "Table MK, effectifs arrondis à l'unité. Calcule avec une calculatrice, puis saisis tes résultats à 4 décimales."
+    donnees:
+      entetes: ['$x$', '65', '66', '67', '68']
+      lignes: [['$l_x$', '716 046', '695 175', '672 905', '649 211']]
+    champs:
+      - {cle: p1, libelle: '${}_1p_{65}$', valeur: 0.9708524, tolerance: 0.00015}
+      - {cle: p2, libelle: '${}_2p_{65}$', valeur: 0.9397511, tolerance: 0.00015}
+      - {cle: p3, libelle: '${}_3p_{65}$', valeur: 0.9066611, tolerance: 0.00015}
+      - {cle: e3, libelle: '$\sum_{k=1}^{3} {}_kp_{65}$', valeur: 2.8172646, tolerance: 0.00015}
+    solution: |
+      ${}_1p_{65} = \dfrac{695\,175}{716\,046} = 0{,}9709$, $\quad {}_2p_{65} = \dfrac{672\,905}{716\,046} = 0{,}9398$, $\quad {}_3p_{65} = \dfrac{649\,211}{716\,046} = 0{,}9067$.
+      Somme : $2{,}8174$. Sur la table complète, $e_{65} = 12{,}32$ ans.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 6
+    intro: "Écris le corps des deux fonctions, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a3/s01_survie.py
+    depart: |
+      K, S, G, C, OMEGA = 1000450.59, 0.999106875782, 0.999549614043, 1.103798111448, 116
+
+      def l(x):
+          """Number of survivors at integer age x, Makeham law: k * s**x * g**(c**x)."""
+          raise NotImplementedError
+
+      def curtate_life_expectancy(x):
+          """e_x = sum of k_p_x for k = 1 .. OMEGA - x."""
+          raise NotImplementedError
+    tests:
+      - {nom: '$l(65)$ vaut 716 046 à l''unité près', expr: "abs(l(65) - 716046) < 1"}
+      - {nom: '$e_{40}$ vaut 32,138', expr: "abs(curtate_life_expectancy(40) - 32.138) < 0.001"}
+      - {nom: '$e_{65}$ vaut 12,316', expr: "abs(curtate_life_expectancy(65) - 12.316) < 0.001"}
+      - {nom: '$e_{65}$ est plus petit que $e_{40}$', expr: "curtate_life_expectancy(65) < curtate_life_expectancy(40)"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Force de mortalité", "force of mortality", "The force of mortality increases exponentially with age under Makeham's law."]
+      - ["Espérance de vie abrégée", "curtate life expectancy", "The curtate expectation only counts complete years lived."]
+      - ["Probabilité de survie", "survival probability", "I computed the ten-year survival probability from the life table."]
+      - ["Table de mortalité", "mortality table, life table", "In Canada, the applicable pension mortality table depends on the valuation date and governing standard."]
+      - ["Répartition uniforme des décès", "uniform distribution of deaths (UDD)", "Under UDD, the complete expectation is about half a year higher."]
+      - ["Risque de longévité", "longevity risk", "Lower mortality rates increase the DBO of an annuity plan."]
+
+          - '$\mathring{e}_x = e_x + \tfrac12
+        reponse: 1
+        pourquoi:
+          rappel: >-
+            Sous UDD (uniform distribution of deaths), les décès d'une année sont répartis uniformément : ${}_tq_x = t\,q_x$ pour $0 \le t \le 1$. La fraction d'année vécue l'année du décès vaut donc $\tfrac12$ en moyenne.
+          formule: |-
+            \begin{gathered} T_x = K_x + U, \quad U \sim \mathcal{U}(0,1) \\[4pt] \Rightarrow\; \mathring{e}_x = e_x + \tfrac12 \end{gathered}
+          exemple: >-
+            Table MK : $e_{65} = 12{,}316$ ans, donc $\mathring{e}_{65} \approx 12{,}816$ ans.
+          piege: >-
+            $\mathring{e}_x$ ajoute la fraction de l'année du décès : elle ne peut pas être plus petite que $e_x$.
+      - q: "Une table plus prudente pour un plan de rentes doit…"
+        options: ['augmenter les $q_x$', 'diminuer les $q_x$', 'ne rien changer']
+        reponse: 1
+        pourquoi:
+          rappel: >-
+            Une rente paie tant que l'assuré vit. Moins de décès, c'est plus de paiements, donc un engagement plus élevé : c'est le risque de longévité (longevity risk).
+          formule: |-
+            \begin{gathered} \ddot{a}_x = \sum_{k \ge 0} v^k\,{}_kp_x \\[4pt] q_x \downarrow \;\Rightarrow\; {}_kp_x \uparrow \;\Rightarrow\; \ddot{a}_x \uparrow \end{gathered}
+          exemple: >-
+            C'est pourquoi on applique aux tables de rentes des améliorations de mortalité (mortality improvement) qui abaissent les $q_x$ futurs.
+          piege: >-
+            Pour un capital décès, c'est l'inverse : la prudence demande des $q_x$ plus élevés. La prudence dépend toujours du risque couvert.
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: "Table MK, effectifs arrondis à l'unité. Calcule avec une calculatrice, puis saisis tes résultats à 4 décimales."
+    donnees:
+      entetes: ['$x$', '65', '66', '67', '68']
+      lignes: [['$l_x$', '716 046', '695 175', '672 905', '649 211']]
+    champs:
+      - {cle: p1, libelle: '${}_1p_{65}$', valeur: 0.9708524, tolerance: 0.00015}
+      - {cle: p2, libelle: '${}_2p_{65}$', valeur: 0.9397511, tolerance: 0.00015}
+      - {cle: p3, libelle: '${}_3p_{65}$', valeur: 0.9066611, tolerance: 0.00015}
+      - {cle: e3, libelle: '$\sum_{k=1}^{3} {}_kp_{65}$', valeur: 2.8172646, tolerance: 0.00015}
+    solution: |
+      ${}_1p_{65} = \dfrac{695\,175}{716\,046} = 0{,}9709$, $\quad {}_2p_{65} = \dfrac{672\,905}{716\,046} = 0{,}9398$, $\quad {}_3p_{65} = \dfrac{649\,211}{716\,046} = 0{,}9067$.
+      Somme : $2{,}8174$. Sur la table complète, $e_{65} = 12{,}32$ ans.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 6
+    intro: "Écris le corps des deux fonctions, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a3/s01_survie.py
+    depart: |
+      K, S, G, C, OMEGA = 1000450.59, 0.999106875782, 0.999549614043, 1.103798111448, 116
+
+      def l(x):
+          """Number of survivors at integer age x, Makeham law: k * s**x * g**(c**x)."""
+          raise NotImplementedError
+
+      def curtate_life_expectancy(x):
+          """e_x = sum of k_p_x for k = 1 .. OMEGA - x."""
+          raise NotImplementedError
+    tests:
+      - {nom: '$l(65)$ vaut 716 046 à l''unité près', expr: "abs(l(65) - 716046) < 1"}
+      - {nom: '$e_{40}$ vaut 32,138', expr: "abs(curtate_life_expectancy(40) - 32.138) < 0.001"}
+      - {nom: '$e_{65}$ vaut 12,316', expr: "abs(curtate_life_expectancy(65) - 12.316) < 0.001"}
+      - {nom: '$e_{65}$ est plus petit que $e_{40}$', expr: "curtate_life_expectancy(65) < curtate_life_expectancy(40)"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Force de mortalité", "force of mortality", "The force of mortality increases exponentially with age under Makeham's law."]
+      - ["Espérance de vie abrégée", "curtate life expectancy", "The curtate expectation only counts complete years lived."]
+      - ["Probabilité de survie", "survival probability", "I computed the ten-year survival probability from the life table."]
+      - ["Table de mortalité", "mortality table, life table", "In Canada, the applicable pension mortality table depends on the valuation date and governing standard."]
+      - ["Répartition uniforme des décès", "uniform distribution of deaths (UDD)", "Under UDD, the complete expectation is about half a year higher."]
+      - ["Risque de longévité", "longevity risk", "Lower mortality rates increase the DBO of an annuity plan."]
+
+          - '$\mathring{e}_x = e_x - \tfrac12
+        reponse: 1
+        pourquoi:
+          rappel: >-
+            Sous UDD (uniform distribution of deaths), les décès d'une année sont répartis uniformément : ${}_tq_x = t\,q_x$ pour $0 \le t \le 1$. La fraction d'année vécue l'année du décès vaut donc $\tfrac12$ en moyenne.
+          formule: |-
+            \begin{gathered} T_x = K_x + U, \quad U \sim \mathcal{U}(0,1) \\[4pt] \Rightarrow\; \mathring{e}_x = e_x + \tfrac12 \end{gathered}
+          exemple: >-
+            Table MK : $e_{65} = 12{,}316$ ans, donc $\mathring{e}_{65} \approx 12{,}816$ ans.
+          piege: >-
+            $\mathring{e}_x$ ajoute la fraction de l'année du décès : elle ne peut pas être plus petite que $e_x$.
+      - q: "Une table plus prudente pour un plan de rentes doit…"
+        options: ['augmenter les $q_x$', 'diminuer les $q_x$', 'ne rien changer']
+        reponse: 1
+        pourquoi:
+          rappel: >-
+            Une rente paie tant que l'assuré vit. Moins de décès, c'est plus de paiements, donc un engagement plus élevé : c'est le risque de longévité (longevity risk).
+          formule: |-
+            \begin{gathered} \ddot{a}_x = \sum_{k \ge 0} v^k\,{}_kp_x \\[4pt] q_x \downarrow \;\Rightarrow\; {}_kp_x \uparrow \;\Rightarrow\; \ddot{a}_x \uparrow \end{gathered}
+          exemple: >-
+            C'est pourquoi on applique aux tables de rentes des améliorations de mortalité (mortality improvement) qui abaissent les $q_x$ futurs.
+          piege: >-
+            Pour un capital décès, c'est l'inverse : la prudence demande des $q_x$ plus élevés. La prudence dépend toujours du risque couvert.
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: "Table MK, effectifs arrondis à l'unité. Calcule avec une calculatrice, puis saisis tes résultats à 4 décimales."
+    donnees:
+      entetes: ['$x$', '65', '66', '67', '68']
+      lignes: [['$l_x$', '716 046', '695 175', '672 905', '649 211']]
+    champs:
+      - {cle: p1, libelle: '${}_1p_{65}$', valeur: 0.9708524, tolerance: 0.00015}
+      - {cle: p2, libelle: '${}_2p_{65}$', valeur: 0.9397511, tolerance: 0.00015}
+      - {cle: p3, libelle: '${}_3p_{65}$', valeur: 0.9066611, tolerance: 0.00015}
+      - {cle: e3, libelle: '$\sum_{k=1}^{3} {}_kp_{65}$', valeur: 2.8172646, tolerance: 0.00015}
+    solution: |
+      ${}_1p_{65} = \dfrac{695\,175}{716\,046} = 0{,}9709$, $\quad {}_2p_{65} = \dfrac{672\,905}{716\,046} = 0{,}9398$, $\quad {}_3p_{65} = \dfrac{649\,211}{716\,046} = 0{,}9067$.
+      Somme : $2{,}8174$. Sur la table complète, $e_{65} = 12{,}32$ ans.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 6
+    intro: "Écris le corps des deux fonctions, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a3/s01_survie.py
+    depart: |
+      K, S, G, C, OMEGA = 1000450.59, 0.999106875782, 0.999549614043, 1.103798111448, 116
+
+      def l(x):
+          """Number of survivors at integer age x, Makeham law: k * s**x * g**(c**x)."""
+          raise NotImplementedError
+
+      def curtate_life_expectancy(x):
+          """e_x = sum of k_p_x for k = 1 .. OMEGA - x."""
+          raise NotImplementedError
+    tests:
+      - {nom: '$l(65)$ vaut 716 046 à l''unité près', expr: "abs(l(65) - 716046) < 1"}
+      - {nom: '$e_{40}$ vaut 32,138', expr: "abs(curtate_life_expectancy(40) - 32.138) < 0.001"}
+      - {nom: '$e_{65}$ vaut 12,316', expr: "abs(curtate_life_expectancy(65) - 12.316) < 0.001"}
+      - {nom: '$e_{65}$ est plus petit que $e_{40}$', expr: "curtate_life_expectancy(65) < curtate_life_expectancy(40)"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Force de mortalité", "force of mortality", "The force of mortality increases exponentially with age under Makeham's law."]
+      - ["Espérance de vie abrégée", "curtate life expectancy", "The curtate expectation only counts complete years lived."]
+      - ["Probabilité de survie", "survival probability", "I computed the ten-year survival probability from the life table."]
+      - ["Table de mortalité", "mortality table, life table", "In Canada, the applicable pension mortality table depends on the valuation date and governing standard."]
+      - ["Répartition uniforme des décès", "uniform distribution of deaths (UDD)", "Under UDD, the complete expectation is about half a year higher."]
+      - ["Risque de longévité", "longevity risk", "Lower mortality rates increase the DBO of an annuity plan."]
+
         reponse: 1
         pourquoi:
           rappel: >-
