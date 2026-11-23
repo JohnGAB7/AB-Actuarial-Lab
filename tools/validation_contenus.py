@@ -12,6 +12,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from tools.fiche_reference import verifier_fiche
+
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -96,7 +98,8 @@ def _verifier_videos(videos: Any, label: str) -> list[str]:
 NON_TRADUISIBLES = {
     "id", "module", "en", "actu_basics", "type", "minutes", "duree", "table", "taux",
     "reponse", "valeur", "tolerance", "cle", "expr", "fichier", "depart", "interactif",
-    "url", "cartes", "statut", "formule", "media",
+    "url", "cartes", "statut", "formule", "media", "niveau", "outils",
+    "terme_fr", "terme_en", "cible",
 }
 LANGUES_MEDIA = ("fr", "en")
 # Video files served from site/assets/ (Actu-Basics videos, on the site until they are published on YouTube).
@@ -251,9 +254,11 @@ def verifier_seance(session: Any, *, session_id: str = "<inconnue>") -> list[str
 
     errors.extend(_unknown_keys(
         session,
-        {"id", "module", "titre", "en", "duree", "taux", "table", "actu_basics", "etapes"},
+        {"id", "module", "titre", "en", "duree", "taux", "table", "actu_basics", "etapes", "fiche"},
         session_id,
     ))
+    if "fiche" in session:
+        errors.extend(verifier_fiche(session["fiche"], session_id=session_id))
     table = session.get("table")
     if table is not None:
         if not isinstance(table, dict):
