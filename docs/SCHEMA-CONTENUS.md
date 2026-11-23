@@ -23,7 +23,7 @@ Chaque étape possède les champs communs `type`, `titre`, `minutes`, puis les c
 
 | Type | Champs spécifiques |
 | --- | --- |
-| `video` | `texte` |
+| `video` | `texte`, `media` (facultatif) |
 | `rappel` | `blocs` |
 | `quiz` | `intro`, `questions` |
 | `calcul` | `intro`, `donnees`, `champs`, `solution` |
@@ -31,6 +31,7 @@ Chaque étape possède les champs communs `type`, `titre`, `minutes`, puis les c
 | `vocabulaire` | `intro`, `cartes` |
 
 Structures imbriquées :
+- Média d'une vidéo : `media.fr` et `media.en`, chacun `src` (`videos/<nom>.mp4`) et `sous_titres` (facultatif, `videos/<nom>.vtt`), chemins relatifs à `site/assets/`. Les fichiers doivent exister. Sans `media`, le site affiche « Vidéo en préparation ».
 - Bloc de rappel : un ou plusieurs de `p`, `formule`, `note`, `interactif`, `sources`.
 - Source : `titre`, `detail`, `url` (facultatif).
 - Question de quiz : `q`, `options`, `reponse`, `pourquoi`.

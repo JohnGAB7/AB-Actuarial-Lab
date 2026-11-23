@@ -127,6 +127,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 /* Vidéo */
 .video{aspect-ratio:16/9;max-width:100%;border-radius:calc(var(--r) + 4px);background:radial-gradient(120% 120% at 100% 0%,var(--night-2),var(--night));color:var(--on-night);display:grid;padding:clamp(20px,5vw,44px);align-content:end;overflow:hidden;position:relative}
 .video::after{content:"";position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;border:1px solid rgba(255,255,255,.08)}
+.video-player{display:block;width:100%;aspect-ratio:16/9;border-radius:calc(var(--r) + 4px);background:var(--night)}
 .video-in{display:grid;gap:14px;position:relative;z-index:1}
 .eyebrow.light{color:var(--on-night-muted)}
 .video-q{font:400 clamp(1.4rem,3.4vw,2.2rem)/1.2 var(--f-display);max-width:24ch}

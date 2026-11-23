@@ -69,8 +69,12 @@ def _safe_exercise_path(value: Any) -> Path | None:
 NON_TRADUISIBLES = {
     "id", "module", "en", "actu_basics", "type", "minutes", "duree", "table", "taux",
     "reponse", "valeur", "tolerance", "cle", "expr", "fichier", "depart", "interactif",
-    "url", "cartes", "statut", "formule",
+    "url", "cartes", "statut", "formule", "media",
 }
+LANGUES_MEDIA = ("fr", "en")
+# Video files served from site/assets/ (Actu-Basics videos, on the site until they are published on YouTube).
+MEDIA_PATH = re.compile(r"^videos/[a-z0-9][a-z0-9-]*\.(mp4|vtt)$")
+ASSETS_DIR = ROOT / "site" / "assets"
 
 
 def _nombres_texte(texte: str, langue: str) -> list[str]:
@@ -190,6 +194,28 @@ def verifier_overlay_traduction(
     inspect(session, overlay, session_id)
     return [f"{path} : texte non traduit" for path in missing]
 
+def _verifier_media(media: Any, label: str) -> list[str]:
+    """Video files of a « video » step: one MP4 (and optional WebVTT subtitles) per language, under site/assets/videos/."""
+    if not isinstance(media, dict) or set(media) != set(LANGUES_MEDIA):
+        return [f"{label}: « media » doit donner une vidéo par langue ({', '.join(LANGUES_MEDIA)})."]
+    errors: list[str] = []
+    for langue in LANGUES_MEDIA:
+        item, where = media[langue], f"{label}, media.{langue}"
+        if not isinstance(item, dict) or "src" not in item:
+            errors.append(f"{where}: « src » est requis.")
+            continue
+        errors.extend(_unknown_keys(item, {"src", "sous_titres"}, where))
+        for key, ext in (("src", ".mp4"), ("sous_titres", ".vtt")):
+            if key not in item:
+                continue
+            value = item[key]
+            if not isinstance(value, str) or not MEDIA_PATH.match(value) or not value.endswith(ext):
+                errors.append(f"{where}: « {key} » doit être un chemin videos/<nom>{ext} relatif à site/assets/.")
+            elif not (ASSETS_DIR / value).is_file():
+                errors.append(f"{where}: fichier introuvable site/assets/{value}.")
+    return errors
+
+
 def verifier_seance(session: Any, *, session_id: str = "<inconnue>") -> list[str]:
     """Return all structural errors found in one session mapping."""
     errors: list[str] = []
@@ -250,7 +276,7 @@ def verifier_seance(session: Any, *, session_id: str = "<inconnue>") -> list[str
             errors.append(f"{label}: type d'étape inconnu {step_type!r}.")
             continue
         step_keys = {
-            "video": {"type", "titre", "minutes", "texte"},
+            "video": {"type", "titre", "minutes", "texte", "media"},
             "rappel": {"type", "titre", "minutes", "blocs"},
             "quiz": {"type", "titre", "minutes", "intro", "questions"},
             "calcul": {"type", "titre", "minutes", "intro", "donnees", "champs", "solution"},
@@ -266,6 +292,8 @@ def verifier_seance(session: Any, *, session_id: str = "<inconnue>") -> list[str
         if step_type == "video":
             if not _text(step.get("texte")):
                 errors.append(f"{label}: « texte » est requis pour une vidéo.")
+            if "media" in step:
+                errors.extend(_verifier_media(step["media"], label))
 
         elif step_type == "rappel":
             blocks = step.get("blocs")

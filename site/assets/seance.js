@@ -9,7 +9,7 @@ const UI = {
     prev: "← Précédente", next: "Suivante →", finish: "Terminer",
     labAria: "Force de mortalité de la table MK selon l'âge, échelle logarithmique", age: "Âge", years: " ans",
     labEyebrow: "Manipule", labHint: "Fais glisser l'âge : la table MK de ton simulateur répond.",
-    videoSoon: "Vidéo en préparation", job: "Dans ton métier", further: "Pour aller plus loin",
+    videoSoon: "Vidéo en préparation", subtitles: "Français", job: "Dans ton métier", further: "Pour aller plus loin",
     recap: "Rappel", example: "Exemple", pitfall: "Piège", right: "Juste.", wrong: "Pas tout à fait.",
     score: (k, n) => `${k} sur ${n}`, scoreLbl: "Score",
     check: "Vérifier", toFill: "à remplir", good: "juste", bad: "à revoir", solution: "Voir la solution", placeholder: "0,0000",
@@ -31,7 +31,7 @@ const UI = {
     prev: "← Previous", next: "Next →", finish: "Finish",
     labAria: "Force of mortality of the MK table by age, log scale", age: "Age", years: " years",
     labEyebrow: "Try it", labHint: "Drag the age: the MK table from your simulator responds.",
-    videoSoon: "Video in preparation", job: "On the job", further: "Further reading",
+    videoSoon: "Video in preparation", subtitles: "English", job: "On the job", further: "Further reading",
     recap: "Recap", example: "Example", pitfall: "Pitfall", right: "Correct.", wrong: "Not quite.",
     score: (k, n) => `${k} of ${n}`, scoreLbl: "Score",
     check: "Check", toFill: "to fill in", good: "correct", bad: "try again", solution: "Show the solution", placeholder: "0.0000",
@@ -215,6 +215,15 @@ function interactif() {
 /* ---------- Étapes ---------- */
 const R = {
   video(e) {
+    // Actu-Basics video of the session, served from assets/videos/ until it is published on YouTube.
+    const m = e.media && e.media[LANG];
+    if (m && m.src) {
+      const asset = (p) => new URL(p, SCRIPT_URL).href;
+      const player = el("video", { class: "video-player", controls: "", preload: "metadata", playsinline: "" },
+        el("source", { src: asset(m.src), type: "video/mp4" }),
+        m.sous_titres ? el("track", { kind: "subtitles", src: asset(m.sous_titres), srclang: LANG, label: UI.subtitles }) : null);
+      return [player, el("p", {}, e.texte)];
+    }
     const ab = S.actu_basics || {};
     return [el("div", { class: "video" },
       el("div", { class: "video-in" },
