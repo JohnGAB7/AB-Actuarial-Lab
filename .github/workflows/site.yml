@@ -18,6 +18,25 @@ jobs:
           python-version: "3.12"
       - run: python -m pip install -r requirements.txt
       - run: python tools/construire.py
+        env:
+          # Public values only (project URL and publishable key), set in Settings > Secrets and variables > Actions > Variables.
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+      - name: Comptes Supabase
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          if grep -q '"url"' _site/assets/config.js; then
+            echo "::notice title=Comptes::Comptes activés, projet $SUPABASE_URL"
+            # The table must exist and stay closed to anonymous visitors (RLS + revoke from anon).
+            code=$(curl -s -o rest.json -w '%{http_code}' "$SUPABASE_URL/rest/v1/progression?select=seance_id&limit=1" -H "apikey: $SUPABASE_PUBLISHABLE_KEY")
+            echo "::notice title=Table progression::HTTP $code $(head -c 200 rest.json)"
+            email=$(curl -s "$SUPABASE_URL/auth/v1/settings" -H "apikey: $SUPABASE_PUBLISHABLE_KEY" | python -c 'import json,sys; print(json.load(sys.stdin).get("external",{}).get("email"))')
+            echo "::notice title=Connexion par e-mail::activée = $email"
+          else
+            echo "::warning title=Comptes::Variables SUPABASE_URL et SUPABASE_PUBLISHABLE_KEY absentes : comptes désactivés"
+          fi
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

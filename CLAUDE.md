@@ -12,3 +12,4 @@
 - Chaque chiffre d'une séance est recalculé dans `tests/test_contenus.py`.
 - Calculs lourds : sur GitHub Actions.
 - Design : une étape par écran, pas de page surchargée. Couleurs et polices dans `site/assets/style.css` uniquement.
+- Comptes (Supabase) : seule la clé publique `sb_publishable_…` atteint le navigateur, via les variables Actions `SUPABASE_URL` et `SUPABASE_PUBLISHABLE_KEY`. Jamais de clé secrète ni `service_role`. Toute table a la RLS. Voir `docs/SUPABASE.md`.

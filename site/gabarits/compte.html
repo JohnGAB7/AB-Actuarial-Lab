@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Mon compte · Parcours actuariel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="bar gutter"><div class="bar-in">
+  <a class="brand" href="../index.html">Parcours <b>actuariel</b></a>
+</div></header>
+<main class="stage compte gutter" data-compte>
+  <div class="step-head">
+    <span class="eyebrow">Compte · Account</span>
+    <h1>Ta progression, sur tous tes appareils.</h1>
+    <p class="lead">Le compte est facultatif. Sans compte, le site enregistre ta progression dans ce navigateur. Avec un compte, tes étapes terminées et ton code Python te suivent partout.</p>
+  </div>
+
+  <p class="statut" data-statut role="status" aria-live="polite"></p>
+
+  <form class="compte-form" data-form hidden>
+    <label for="email">Ton adresse e-mail</label>
+    <div class="compte-row">
+      <input id="email" type="email" autocomplete="email" required placeholder="prenom@exemple.com">
+      <button class="btn" type="submit">Recevoir un lien</button>
+    </div>
+    <p class="aide">Pas de mot de passe : tu reçois un lien de connexion <i>(magic link)</i> par e-mail.</p>
+  </form>
+
+  <div class="compte-ok" data-connecte hidden>
+    <p>Connecté avec <b data-email></b>.</p>
+    <div class="compte-row">
+      <button class="btn" type="button" data-sync>Synchroniser maintenant</button>
+      <button class="btn ghost" type="button" data-deconnexion>Se déconnecter</button>
+    </div>
+    <button class="lien-danger" type="button" data-supprimer>Supprimer mon compte</button>
+    <div class="confirmer" data-confirmer hidden>
+      <p>Ton compte et ta progression en ligne seront supprimés définitivement. Ce navigateur garde sa copie locale.</p>
+      <div class="compte-row">
+        <button class="btn danger" type="button" data-oui>Oui, supprimer</button>
+        <button class="btn ghost" type="button" data-annuler>Annuler</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="vie-privee" id="confidentialite">
+    <span class="eyebrow">Confidentialité · Privacy</span>
+    <ul>
+      <li><b>Ce qui est enregistré</b> : ton adresse e-mail, les étapes terminées de chaque séance, ton code Python des exercices.</li>
+      <li><b>Où</b> : chez Supabase, dans un centre de données de l'Union européenne. Chaque ligne n'est lisible que par toi (Row Level Security).</li>
+      <li><b>Pourquoi</b> : seulement pour retrouver ta progression sur un autre appareil. Pas de publicité, pas de suivi, pas de revente.</li>
+      <li><b>Durée</b> : tant que ton compte existe. Le bouton « Supprimer mon compte » efface tout, immédiatement.</li>
+    </ul>
+  </section>
+</main>
+<script src="../assets/config.js"></script>
+<script src="../assets/compte.js" data-base="../"></script>
+</body>
+</html>

@@ -33,7 +33,15 @@ function tex(src, display = true) {
   else d.textContent = src;
   return d;
 }
-function markDone(i) { progress[i] = true; store.set(":etapes", progress); segs(current()); }
+// Signale un changement local : compte.js le synchronise avec le compte, si l'apprenant est connecté.
+let changeTimer = null;
+function changed() { clearTimeout(changeTimer); changeTimer = setTimeout(() => document.dispatchEvent(new CustomEvent("parcours:change", { detail: S.id })), 1500); }
+function markDone(i) {
+  const neuf = !progress[i];
+  progress[i] = true; store.set(":etapes", progress); segs(current());
+  if (neuf) changed();
+}
+function saveCode(v) { store.set(":code", v); store.set(":code-at", new Date().toISOString()); changed(); }
 function current() {
   const m = location.hash.match(/^#etape-(\d+)$/);
   const i = m ? parseInt(m[1], 10) - 1 : 0;
@@ -215,10 +223,10 @@ const R = {
         viewportMargin: Infinity,
         extraKeys: { Tab: (c) => c.replaceSelection("    "), "Ctrl-Enter": () => run.click(), "Cmd-Enter": () => run.click() },
       });
-      cm.on("change", () => store.set(":code", cm.getValue()));
+      cm.on("change", (c, ch) => { if (ch.origin !== "setValue") saveCode(cm.getValue()); });
     });
-    ta.addEventListener("input", () => store.set(":code", ta.value));
-    reset.addEventListener("click", () => { if (cm) cm.setValue(e.depart); else ta.value = e.depart; store.set(":code", e.depart); });
+    ta.addEventListener("input", () => saveCode(ta.value));
+    reset.addEventListener("click", () => { if (cm) cm.setValue(e.depart); else ta.value = e.depart; saveCode(e.depart); });
     run.addEventListener("click", async () => {
       run.disabled = true; summary.textContent = "Chargement de Python… (quelques secondes la première fois)";
       [...res.children].forEach((li) => { li.className = "run"; li.querySelector(".tm").textContent = ""; });
@@ -313,4 +321,11 @@ addEventListener("keydown", (ev) => {
   if (ev.key === "ArrowLeft") $("#prev").click();
 });
 addEventListener("hashchange", render);
+// Progression arrivée d'un autre appareil : on recharge l'état local et on réaffiche l'étape.
+document.addEventListener("parcours:remote", (ev) => {
+  if (!(ev.detail || []).includes(S.id)) return;
+  progress = store.get(":etapes", {});
+  const enEdition = document.activeElement && document.activeElement.closest && document.activeElement.closest(".CodeMirror, textarea");
+  if (enEdition) segs(current()); else render();
+});
 render();

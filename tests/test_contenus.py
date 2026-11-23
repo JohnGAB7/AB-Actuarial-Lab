@@ -77,3 +77,33 @@ def test_fichiers_a_produire_suivent_le_modele():
         positions = [texte.find(s) for s in SECTIONS_A_PRODUIRE]
         assert -1 not in positions, f"{f.name} : section manquante"
         assert positions == sorted(positions), f"{f.name} : sections dans le désordre"
+
+
+def test_config_supabase_refuse_les_cles_secretes():
+    import pytest
+    from tools.construire import config_supabase
+    url = "https://abcdefghijklmnopqrst.supabase.co"
+    assert config_supabase({}) == {}
+    assert config_supabase({"SUPABASE_URL": url, "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_abc"}) == {"url": url, "key": "sb_publishable_abc"}
+    for cle in ["sb_secret_abc", "eyJhbGciOi.service_role.x", ""]:
+        with pytest.raises(SystemExit):
+            config_supabase({"SUPABASE_URL": url, "SUPABASE_PUBLISHABLE_KEY": cle})
+    with pytest.raises(SystemExit):
+        config_supabase({"SUPABASE_URL": "https://exemple.com", "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_abc"})
+
+
+def test_migration_active_rls_sur_chaque_table():
+    for f in sorted((RACINE / "supabase" / "migrations").glob("*.sql")):
+        sql = f.read_text(encoding="utf-8").lower()
+        for table in __import__("re").findall(r"create table if not exists (public\.\w+)", sql):
+            assert f"alter table {table} enable row level security" in sql, f"{f.name} : RLS manquante sur {table}"
+
+
+def test_aucune_cle_secrete_dans_le_depot():
+    """Une vraie clé secrète Supabase (ou un JWT) ne doit jamais être committée."""
+    import re
+    motif = re.compile(r"sb_secret_[A-Za-z0-9_-]{10,}|eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}")
+    for p in RACINE.rglob("*"):
+        if ".git" in p.parts or "_site" in p.parts or "vendor" in p.parts or not p.is_file() or p.suffix in {".pyc", ".png"}:
+            continue
+        assert not motif.search(p.read_text(encoding="utf-8", errors="ignore")), p
