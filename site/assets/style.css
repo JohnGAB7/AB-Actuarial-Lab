@@ -162,6 +162,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .why-v{font-weight:600}
 .why-v.ok{color:var(--ok)}
 .why-v.ko{color:var(--bad)}
+.why-sep{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .why-k{display:block;font:600 .72rem var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
 .why-f .katex-display{font-size:.92em}
 .why-f{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px 14px;overflow-x:auto}

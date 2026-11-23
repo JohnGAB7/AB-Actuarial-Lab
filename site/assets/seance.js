@@ -277,7 +277,7 @@ const R = {
   quiz(e, i) {
     const explication = (p) => {
       if (typeof p === "string") return `<p>${p}</p>`;
-      const ligne = (k, lib) => p[k] ? `<p class="why-l"><span class="why-k">${lib}</span>${p[k]}</p>` : "";
+      const ligne = (k, lib) => p[k] ? `<p class="why-l"><span class="why-k">${lib}</span><span class="why-sep">: </span>${p[k]}</p>` : "";
       return ligne("rappel", UI.recap) + (p.formule ? `<div class="why-f">$$${p.formule}$$</div>` : "")
         + ligne("exemple", UI.example) + ligne("piege", UI.pitfall);
     };
@@ -401,50 +401,147 @@ const R = {
 };
 const lastLine = (err) => String(err.message || err).trim().split("\n").pop();
 
-/* ---------- Python dans un Web Worker ---------- */
-// Le code de l'apprenant tourne hors de la page : pas d'accès au DOM ni à la session du compte.
-// Limite de temps après le chargement ; « Arrêter » ou le dépassement termine le worker.
+/* ---------- Python dans une iframe sandboxée à origine opaque ---------- */
+// Le code tourne dans un Worker Blob créé depuis une iframe opaque. Le Worker hérite
+// de la CSP initiale, ne possède ni DOM ni accès parent, et peut être tué en supprimant l'iframe.
 const PY_LIMITE_MS = 10000;
 const PY_CHARGEMENT_LIMITE_MS = 60000;
+const PY_MAX_CODE = 50000;
+const PY_MAX_TESTS = 30;
+const PY_MAX_TEST_CHARS = 2000;
+const PY_MAX_TOTAL_TEST_CHARS = 20000;
+const PY_MAX_ERROR_CHARS = 500;
 const PY_RESULTATS = new Set(["pass", "fail", "todo"]);
-let worker = null, pending = null, seq = 0;
+let pythonFrame = null, pythonPort = null, pending = null, seq = 0;
+
+function closePythonSandbox() {
+  if (pythonPort) {
+    pythonPort.onmessage = null;
+    pythonPort.onmessageerror = null;
+    pythonPort.close();
+    pythonPort = null;
+  }
+  if (pythonFrame) {
+    pythonFrame.remove();
+    pythonFrame = null;
+  }
+}
+
 function stopPython(raison) {
-  if (worker) { worker.terminate(); worker = null; }
+  closePythonSandbox();
   if (pending) {
     const p = pending; pending = null; clearTimeout(p.timer);
     p.reject(new Error(raison || UI.stopped));
   }
 }
+
+function pythonSandboxDocument() {
+  const nonce = Array.from(crypto.getRandomValues(new Uint8Array(18)),
+    (b) => b.toString(16).padStart(2, "0")).join("");
+  const bootstrapPolicy = "default-src 'none'; script-src 'nonce-" + nonce +
+    "' https://cdn.jsdelivr.net/pyodide/v0.27.7/full/ 'wasm-unsafe-eval'; " +
+    "connect-src https://cdn.jsdelivr.net/pyodide/v0.27.7/full/; " +
+    "worker-src blob:; style-src 'unsafe-inline'; img-src 'none'; font-src 'none'; media-src 'none'; " +
+    "object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'";
+  const bootstrap = "\n(() => {\n  let port = null;\n  let worker = null;\n  let workerPort = null;\n  let workerUrl = null;\n  let ready = false;\n  function lockIframe() {\n    const lockdown = document.createElement(\"meta\");\n    lockdown.httpEquiv = \"Content-Security-Policy\";\n    lockdown.content = \"default-src 'none'; script-src 'none'; connect-src 'none'; \" +\n      \"img-src 'none'; font-src 'none'; media-src 'none'; style-src 'none'; \" +\n      \"object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; \" +\n      \"worker-src 'none'; manifest-src 'none'\";\n    document.head.append(lockdown);\n  }\n  function initialize(event) {\n    if (port || event.source !== parent || !event.data || event.data.type !== \"parcours-python-init\" || event.ports.length !== 1) return;\n    window.removeEventListener(\"message\", initialize);\n    port = event.ports[0];\n    port.onmessage = (messageEvent) => {\n      if (ready && workerPort) workerPort.postMessage(messageEvent.data);\n    };\n    port.start();\n    try {\n      const source = \"\\nlet py = null;\\nlet port = null;\\nconst MAX_CODE = 50000, MAX_TESTS = 30, MAX_TEST_CHARS = 2000, MAX_TOTAL_TEST_CHARS = 20000, MAX_ERROR = 500;\\nconst errorText = (error) => String((error && error.message) || error).trim().split(\\\"\\\\n\\\").pop().slice(0, MAX_ERROR);\\n\\nfunction restrictRuntimeCapabilities() {\\n  const blocked = [\\n    \\\"fetch\\\", \\\"XMLHttpRequest\\\", \\\"WebSocket\\\", \\\"WebSocketStream\\\", \\\"EventSource\\\", \\\"WebTransport\\\",\\n    \\\"RTCPeerConnection\\\", \\\"webkitRTCPeerConnection\\\", \\\"BroadcastChannel\\\", \\\"indexedDB\\\", \\\"caches\\\",\\n    \\\"importScripts\\\", \\\"Worker\\\", \\\"SharedWorker\\\", \\\"postMessage\\\", \\\"loadPyodide\\\"\\n  ];\\n  for (const name of blocked) {\\n    try {\\n      Object.defineProperty(self, name, {\\n        configurable: false,\\n        enumerable: false,\\n        get: () => undefined\\n      });\\n    } catch {\\n      try { self[name] = undefined; } catch {}\\n    }\\n  }\\n  const nav = self.navigator;\\n  try { Object.defineProperty(nav, \\\"sendBeacon\\\", { configurable: false, enumerable: false, value: undefined }); } catch {\\n    try { nav.sendBeacon = undefined; } catch {}\\n  }\\n  let proto = Object.getPrototypeOf(nav);\\n  while (proto) {\\n    if (Object.prototype.hasOwnProperty.call(proto, \\\"sendBeacon\\\")) {\\n      try { Object.defineProperty(proto, \\\"sendBeacon\\\", { configurable: false, enumerable: false, value: undefined }); } catch {\\n        try { proto.sendBeacon = undefined; } catch {}\\n      }\\n      break;\\n    }\\n    proto = Object.getPrototypeOf(proto);\\n  }\\n}\\n\\nfunction validateRequest(data) {\\n  if (!data || !Number.isSafeInteger(data.id) || data.id < 1 ||\\n      typeof data.code !== \\\"string\\\" || data.code.length > MAX_CODE ||\\n      !Array.isArray(data.tests) || data.tests.length < 1 || data.tests.length > MAX_TESTS) {\\n    throw new Error(\\\"Requête Python invalide.\\\");\\n  }\\n  let total = 0;\\n  for (const expression of data.tests) {\\n    if (typeof expression !== \\\"string\\\" || expression.length > MAX_TEST_CHARS) {\\n      throw new Error(\\\"Expression de test invalide ou trop longue.\\\");\\n    }\\n    total += expression.length;\\n  }\\n  if (total > MAX_TOTAL_TEST_CHARS) throw new Error(\\\"Ensemble des tests trop volumineux.\\\");\\n}\\n\\nasync function execute(data) {\\n  validateRequest(data);\\n  port.postMessage({ id: data.id, phase: \\\"running\\\" });\\n  const namespace = py.globals.get(\\\"dict\\\")();\\n  let setupError = null;\\n  try {\\n    await py.runPythonAsync(data.code, { globals: namespace });\\n  } catch (error) {\\n    setupError = errorText(error);\\n  }\\n  const results = [];\\n  for (const expression of data.tests) {\\n    if (setupError) {\\n      results.push({ status: \\\"fail\\\", msg: setupError });\\n      continue;\\n    }\\n    try {\\n      const value = await py.runPythonAsync(expression, { globals: namespace });\\n      const ok = value === true || (typeof value === \\\"number\\\" && value !== 0);\\n      if (value && typeof value.destroy === \\\"function\\\") value.destroy();\\n      results.push({ status: ok ? \\\"pass\\\" : \\\"fail\\\", msg: ok ? \\\"\\\" : \\\"unexpected\\\" });\\n    } catch (error) {\\n      const msg = errorText(error);\\n      results.push(/NotImplementedError/.test(msg)\\n        ? { status: \\\"todo\\\", msg: \\\"\\\" }\\n        : { status: \\\"fail\\\", msg });\\n    }\\n  }\\n  try { if (namespace.destroy) namespace.destroy(); } catch {}\\n  port.postMessage({ id: data.id, phase: \\\"done\\\", results });\\n}\\n\\nasync function connect(event) {\\n  if (port || !event.data || event.data.type !== \\\"connect\\\" || event.ports.length !== 1) return;\\n  self.removeEventListener(\\\"message\\\", connect);\\n  port = event.ports[0];\\n  port.onmessage = async (messageEvent) => {\\n    try {\\n      await execute(messageEvent.data);\\n    } catch (error) {\\n      port.postMessage({ id: messageEvent.data && messageEvent.data.id, phase: \\\"error\\\", msg: errorText(error) });\\n    }\\n  };\\n  port.start();\\n  try {\\n    importScripts(\\\"https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js\\\");\\n    py = await loadPyodide({\\n      indexURL: \\\"https://cdn.jsdelivr.net/pyodide/v0.27.7/full/\\\",\\n      stdout: () => {},\\n      stderr: () => {}\\n    });\\n    let cspBlocked = false;\\n    const onViolation = (event) => {\\n      if (event.effectiveDirective === \\\"connect-src\\\" && String(event.blockedURI).includes(\\\"example.com\\\")) {\\n        cspBlocked = true;\\n      }\\n    };\\n    self.addEventListener(\\\"securitypolicyviolation\\\", onViolation);\\n    try { await fetch(\\\"https://example.com/\\\", { mode: \\\"no-cors\\\" }); } catch {}\\n    await new Promise((resolve) => setTimeout(resolve, 50));\\n    self.removeEventListener(\\\"securitypolicyviolation\\\", onViolation);\\n    restrictRuntimeCapabilities();\\n    port.postMessage({ phase: \\\"ready\\\", networkBlocked: cspBlocked });\\n  } catch (error) {\\n    port.postMessage({ phase: \\\"error\\\", msg: errorText(error) });\\n  }\\n}\\nself.addEventListener(\\\"message\\\", connect);\\n\";\n      workerUrl = URL.createObjectURL(new Blob([source], { type: \"text/javascript\" }));\n      const channel = new MessageChannel();\n      workerPort = channel.port1;\n      workerPort.onmessage = (messageEvent) => {\n        const message = messageEvent.data;\n        if (message && message.phase === \"ready\" && !ready) {\n          ready = true;\n          lockIframe();\n          if (workerUrl) { URL.revokeObjectURL(workerUrl); workerUrl = null; }\n        }\n        if (port) port.postMessage(message);\n      };\n      workerPort.onmessageerror = () => {\n        if (port) port.postMessage({ phase: \"error\", msg: \"Réponse illisible du moteur Python.\" });\n      };\n      workerPort.start();\n      worker = new Worker(workerUrl);\n      worker.onerror = () => {\n        if (port) port.postMessage({ phase: \"error\", msg: \"Le moteur Python a échoué.\" });\n        if (workerUrl) { URL.revokeObjectURL(workerUrl); workerUrl = null; }\n      };\n      worker.onmessageerror = () => {\n        if (port) port.postMessage({ phase: \"error\", msg: \"Réponse illisible du moteur Python.\" });\n      };\n      worker.postMessage({ type: \"connect\" }, [channel.port2]);\n    } catch (error) {\n      if (port) port.postMessage({ phase: \"error\", msg: String((error && error.message) || error).slice(0, 500) });\n    }\n  }\n  window.addEventListener(\"message\", initialize);\n})();\n";
+  return "<!doctype html><html><head><meta charset=\"utf-8\">" +
+    "<meta http-equiv=\"Content-Security-Policy\" content=\"" + bootstrapPolicy + "\"></head><body>" +
+    "<script nonce=\"" + nonce + "\">" + bootstrap + "</script></body></html>";
+}
+
 function runPython(code, tests, onRunning) {
   stopPython();
-  worker = new Worker(new URL("python-worker.js", SCRIPT_URL));
-  worker.onmessage = (ev) => {
-    const m = ev.data;
-    if (!pending || !m || m.id !== pending.id) return;
-    if (m.phase === "running") {
-      if (onRunning) onRunning();
-      clearTimeout(pending.timer);
-      pending.timer = setTimeout(() => stopPython(UI.timeout(PY_LIMITE_MS / 1000)), PY_LIMITE_MS);
+  if (typeof code !== "string" || code.length > PY_MAX_CODE) {
+    return Promise.reject(new Error("Code trop long (maximum " + PY_MAX_CODE + " caractères)."));
+  }
+  if (!Array.isArray(tests) || tests.length < 1 || tests.length > PY_MAX_TESTS) {
+    return Promise.reject(new Error("Nombre de tests invalide (maximum " + PY_MAX_TESTS + ")."));
+  }
+  let total = 0;
+  for (const expression of tests) {
+    if (typeof expression !== "string" || expression.length > PY_MAX_TEST_CHARS) {
+      return Promise.reject(new Error("Expression de test invalide ou trop longue."));
+    }
+    total += expression.length;
+  }
+  if (total > PY_MAX_TOTAL_TEST_CHARS) {
+    return Promise.reject(new Error("Ensemble des tests trop volumineux."));
+  }
+
+  return new Promise((resolve, reject) => {
+    const id = ++seq;
+    const frame = document.createElement("iframe");
+    frame.setAttribute("sandbox", "allow-scripts");
+    frame.setAttribute("data-parcours-python-sandbox", "true");
+    frame.setAttribute("aria-hidden", "true");
+    frame.tabIndex = -1;
+    frame.referrerPolicy = "no-referrer";
+    frame.title = "Isolated Python execution";
+    frame.style.cssText = "position:fixed;width:1px;height:1px;left:-10000px;top:0;border:0;visibility:hidden";
+    pythonFrame = frame;
+    pending = { id, resolve, reject, timer: null, phase: "loading" };
+
+    let channel;
+    try {
+      channel = new MessageChannel();
+      pythonPort = channel.port1;
+    } catch {
+      stopPython(UI.loadFail);
       return;
     }
-    const p = pending; pending = null; clearTimeout(p.timer);
-    if (m.phase === "done" && Array.isArray(m.results) &&
-        m.results.length === tests.length &&
-        m.results.every((r) => r && PY_RESULTATS.has(r.status) && typeof r.msg === "string" && r.msg.length <= 500)) {
-      p.resolve(m.results);
-    } else if (m.phase === "error" && typeof m.msg === "string") {
-      p.reject(new Error(m.msg.slice(0, 500)));
-    } else {
-      p.reject(new Error(UI.badReply));
-    }
-  };
-  worker.onerror = () => stopPython(UI.loadFail);
-  worker.onmessageerror = () => stopPython(UI.unreadable);
-  return new Promise((resolve, reject) => {
-    pending = { id: ++seq, resolve, reject, timer: null };
+
+    pythonPort.onmessage = (event) => {
+      const message = event.data;
+      if (!pending || !message) return;
+      if (message.phase === "ready" && pending.phase === "loading") {
+        frame.setAttribute("data-network-blocked", String(message.networkBlocked === true));
+        if (message.networkBlocked !== true) {
+          stopPython("La politique réseau du moteur Python n'a pas bloqué les destinations externes.");
+          return;
+        }
+        pending.phase = "ready";
+        if (pythonFrame) pythonFrame.dataset.networkBlocked = "true";
+        try { pythonPort.postMessage({ id, code, tests }); }
+        catch { stopPython(UI.cantSend); }
+        return;
+      }
+      if (message.phase === "error") {
+        stopPython(typeof message.msg === "string" ? message.msg.slice(0, PY_MAX_ERROR_CHARS) : UI.loadFail);
+        return;
+      }
+      if (message.id !== pending.id) return;
+      if (message.phase === "running" && pending.phase === "ready") {
+        pending.phase = "running";
+        if (onRunning) onRunning();
+        clearTimeout(pending.timer);
+        pending.timer = setTimeout(() => stopPython(UI.timeout(PY_LIMITE_MS / 1000)), PY_LIMITE_MS);
+        return;
+      }
+      if (message.phase === "done") {
+        const valid = Array.isArray(message.results) &&
+          message.results.length === tests.length &&
+          message.results.every((result) => result && PY_RESULTATS.has(result.status) &&
+            typeof result.msg === "string" && result.msg.length <= PY_MAX_ERROR_CHARS);
+        if (!valid) {
+          stopPython(UI.badReply);
+          return;
+        }
+        const p = pending; pending = null; clearTimeout(p.timer);
+        closePythonSandbox();
+        p.resolve(message.results);
+      }
+    };
+    pythonPort.onmessageerror = () => stopPython(UI.unreadable);
+    pythonPort.start();
+    frame.addEventListener("load", () => {
+      if (!pending || pending.id !== id) return;
+      try { frame.contentWindow.postMessage({ type: "parcours-python-init" }, "*", [channel.port2]); }
+      catch { stopPython(UI.cantSend); }
+    }, { once: true });
+    frame.onerror = () => stopPython(UI.loadFail);
+    frame.srcdoc = pythonSandboxDocument();
+    document.body.append(frame);
     pending.timer = setTimeout(() => stopPython(UI.loadTimeout(PY_CHARGEMENT_LIMITE_MS / 1000)), PY_CHARGEMENT_LIMITE_MS);
-    try { worker.postMessage({ id: pending.id, code, tests }); }
-    catch { stopPython(UI.cantSend); }
   });
 }
 

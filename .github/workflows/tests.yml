@@ -37,8 +37,9 @@ jobs:
             echo "== $f"; psql -v ON_ERROR_STOP=1 -q -f "$f"
           done
   navigateur:
-    # Browser test of the Python Web Worker: skeleton, solution, infinite loop timeout, Stop button, no DOM or storage access.
+    # Browser test of the opaque-origin iframe and nested Pyodide Worker: execution, hard stop, origin boundary and CSP network denial.
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

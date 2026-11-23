@@ -1,13 +1,15 @@
 const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
-// Browser test of the Python Web Worker. Run: node tests/navigateur/python_worker.js (site served on :8765).
+// Browser test of the opaque-origin sandboxed Python frame. Run: node tests/navigateur/python_worker.js (site served on :8765).
 // PYODIDE_LOCAL=<dir> serves Pyodide from a local npm package instead of the CDN (offline machines).
 const PKG = process.env.PYODIDE_LOCAL ? process.env.PYODIDE_LOCAL.replace(/\/?$/, '/') : null;
 const BASE = process.env.SITE_URL || 'http://localhost:8765/';
 const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 'application/json', '.zip': 'application/zip' };
 (async () => {
-  const b = await chromium.launch();
+  let b;
+  try {
+  b = await chromium.launch();
   const ctx = await b.newContext({ viewport: { width: 1000, height: 900 } });
   if (PKG) await ctx.route('https://cdn.jsdelivr.net/pyodide/v0.27.7/full/**', (r) => {
     const f = PKG + path.basename(new URL(r.request().url()).pathname);
@@ -16,7 +18,7 @@ const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 
   });
   const p = await ctx.newPage();
   const out = {};
-  const errs = []; p.on('pageerror', (e) => errs.push(e.message)); p.on('console', (m) => { if (m.type() === 'error') errs.push('console: ' + m.text()); });
+  const errs = []; p.on('pageerror', (e) => errs.push(e.message)); p.on('console', (m) => { if (m.type() === 'error' && !/Refused to connect/.test(m.text())) errs.push('console: ' + m.text()); });
   const setCode = async (code) => p.evaluate((c) => { document.querySelector('.CodeMirror').CodeMirror.setValue(c); }, code);
   await p.goto(BASE + 'a1/s01/index.html#etape-6'); await p.waitForTimeout(800);
   const clickRun = () => p.locator('.row .btn').first().click();
@@ -38,14 +40,14 @@ const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 
   const responsive = await p.evaluate(() => 1 + 1);
   await p.locator('.row .btn', { hasText: 'Arrêter' }).click(); await p.waitForTimeout(300);
   out.responsive = responsive; out.stop = await summary(); console.log('stop:', responsive, out.stop);
-  // 5. no access to localStorage or the DOM from Python
-  await setCode("import js\nleaks = [n for n in ('localStorage', 'document') if hasattr(js, n)]\nraise RuntimeError('LEAKS=' + ','.join(leaks))\n");
-  await clickRun(); await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 60000 });
-  out.sandbox = await p.locator('.results li .tm').first().textContent(); console.log('sandbox:', out.sandbox);
-  // Network and browser storage APIs are unavailable after Pyodide initialization.
-  await setCode("import js\nblocked = ['fetch', 'XMLHttpRequest', 'WebSocket', 'EventSource', 'BroadcastChannel', 'indexedDB', 'caches', 'importScripts', 'postMessage']\navailable = [name for name in blocked if hasattr(js, name) and getattr(js, name) is not None]\nraise RuntimeError('AVAILABLE=' + ','.join(available))\n");
-  await clickRun(); await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 30000 });
-  out.capabilities = await p.locator('.results li .tm').first().textContent(); console.log('capabilities:', out.capabilities);
+  // 5. verify the Worker has no window/DOM/storage and no ordinary network transports.
+  await setCode("import js, time\nforbidden_globals = ['document', 'window', 'parent', 'localStorage', 'sessionStorage']\nleaks = []\nfor name in forbidden_globals:\n    try:\n        if hasattr(js, name) and getattr(js, name) is not None:\n            leaks.append(name)\n    except Exception:\n        pass\nforbidden_transports = ['fetch', 'XMLHttpRequest', 'WebSocket', 'WebSocketStream', 'EventSource', 'WebTransport', 'RTCPeerConnection', 'webkitRTCPeerConnection', 'BroadcastChannel', 'indexedDB', 'caches', 'importScripts', 'Worker', 'SharedWorker', 'postMessage', 'loadPyodide']\navailable = []\nfor name in forbidden_transports:\n    try:\n        if hasattr(js, name) and getattr(js, name) is not None:\n            available.append(name)\n    except Exception:\n        pass\ndeadline = time.monotonic() + 1\nwhile time.monotonic() < deadline:\n    pass\nif leaks or available:\n    raise RuntimeError('SECURITY_CHECKS_FAILED; globals=' + ','.join(leaks) + '; transports=' + ','.join(available))\nraise RuntimeError('SECURITY_CHECKS_OK')\n");
+  await clickRun();
+  await p.waitForFunction(() => document.querySelector('.res-sum').textContent.includes('Exécution'), null, { timeout: 30000 });
+  out.sandboxFlags = await p.locator('iframe[data-parcours-python-sandbox]').getAttribute('sandbox');
+  out.networkBlocked = await p.locator('iframe[data-parcours-python-sandbox]').getAttribute('data-network-blocked');
+  await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 30000 });
+  out.security = await p.locator('.results li .tm').first().textContent(); console.log('security:', out.security, out.sandboxFlags);
   // Oversized code is rejected before Pyodide is loaded.
   await setCode('x'.repeat(50001));
   await clickRun(); await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 5000 });
@@ -56,10 +58,14 @@ const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 
   if (!/6 tests passent/.test(out.solution)) fails.push('solution');
   if (!/Arrêt après 10 secondes/.test(out.loop)) fails.push('loop timeout');
   if (out.responsive !== 2 || !/arrêtée/.test(out.stop)) fails.push('stop');
-  if (out.sandbox !== 'RuntimeError: LEAKS=') fails.push('sandbox: ' + out.sandbox);
-  if (out.capabilities !== 'RuntimeError: AVAILABLE=') fails.push('runtime capabilities: ' + out.capabilities);
+  if (out.security !== 'RuntimeError: SECURITY_CHECKS_OK' || out.sandboxFlags !== 'allow-scripts' || out.networkBlocked !== 'true') fails.push('sandbox security checks: ' + out.security + ' / ' + out.sandboxFlags + ' / CSP=' + out.networkBlocked);
   if (!/Code trop long/.test(out.inputLimit)) fails.push('input limit');
   if (errs.length) fails.push('page errors');
   if (fails.length) { console.error('FAILED:', fails.join('; ')); process.exitCode = 1; } else console.log('OK');
-  await b.close();
+  } catch (error) {
+    console.error('TEST HARNESS ERROR:', error && error.stack || error);
+    process.exitCode = 1;
+  } finally {
+    if (b) await b.close();
+  }
 })();
