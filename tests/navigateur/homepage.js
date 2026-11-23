@@ -89,14 +89,40 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
     await page.locator(".opt").first().waitFor();
     const frenchOptions = await page.locator(".opt").allInnerTexts();
     console.log("quiz options FR:", frenchOptions);
-    if (!frenchOptions.length || !frenchOptions.every((value) => /^[A-Z]\s-\s/.test(value.trim()))) failures.push("French quiz option separator");
+    if (!frenchOptions.length || !frenchOptions.every((value) => /^[A-Z]\\s+(?!-)/.test(value.trim()))) failures.push("French quiz options should use letter enumeration without a dash");
     if (await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)) failures.push("session mobile horizontal overflow");
 
     await page.goto(new URL("en/a1/s01/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
     await page.locator(".opt").first().waitFor();
     const englishOptions = await page.locator(".opt").allInnerTexts();
     console.log("quiz options EN:", englishOptions);
-    if (!englishOptions.length || !englishOptions.every((value) => /^[A-Z]\s-\s/.test(value.trim()))) failures.push("English quiz option separator");
+    if (!englishOptions.length || !englishOptions.every((value) => /^[A-Z]\\s+(?!-)/.test(value.trim()))) failures.push("English quiz options should use letter enumeration without a dash");
+
+
+    // Wide lesson workspace: the progress rail stays visible and the canvas uses the available desktop width.
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(new URL("a1/s01/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
+    await page.locator(".lesson-shell").waitFor();
+    const lessonDesktop = await page.evaluate(() => ({
+      columns: getComputedStyle(document.querySelector(".lesson-shell")).gridTemplateColumns,
+      rail: document.querySelector(".lesson-rail")?.getBoundingClientRect().width || 0,
+      canvas: document.querySelector(".stage")?.getBoundingClientRect().width || 0,
+      labels: document.querySelectorAll(".rail-step-name").length,
+      overflow: document.documentElement.scrollWidth > window.innerWidth
+    }));
+    console.log("lesson desktop:", lessonDesktop);
+    if (lessonDesktop.rail < 180 || lessonDesktop.canvas < 800) failures.push("desktop lesson workspace does not use available width");
+    if (!lessonDesktop.labels) failures.push("desktop lesson step labels missing");
+    if (lessonDesktop.overflow) failures.push("desktop lesson horizontal overflow");
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    const lessonMobile = await page.evaluate(() => ({
+      overflow: document.documentElement.scrollWidth > window.innerWidth,
+      rail: getComputedStyle(document.querySelector(".lesson-rail")).position,
+      namesHidden: Array.from(document.querySelectorAll(".rail-step-name")).every((el) => getComputedStyle(el).display === "none")
+    }));
+    console.log("lesson mobile:", lessonMobile);
+    if (lessonMobile.overflow) failures.push("lesson mobile horizontal overflow");
 
     if (errors.length) failures.push("page errors: " + errors.join("; "));
     if (failures.length) {
