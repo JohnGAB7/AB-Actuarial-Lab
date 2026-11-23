@@ -10,20 +10,15 @@ Le compte est facultatif. Sans compte, la progression reste dans le navigateur. 
 
 ## Mise en place (une seule fois, par JG)
 
-Le site utilise le projet Supabase `jg-s-learning-english-lab`, l'ancien laboratoire de Learning English, réaffecté à ce parcours (décision de JG, 23 novembre 2026). Le site principal Learning English garde son propre projet.
-
-1. **Renommer le projet** (facultatif, conseillé). *Project Settings > General > Project name* : `parcours-actuariel`. Le nom n'apparaît pas dans le code ; il évite les confusions.
-2. **Faire le tri.** Dans *Table Editor*, regarder les tables du schéma `public` laissées par le laboratoire. Si une table s'appelle déjà `progression`, me le dire avant d'aller plus loin. Les autres peuvent rester, ou être supprimées si elles ne servent plus. Dans *Authentication > Users*, les comptes de test du laboratoire peuvent être supprimés.
-3. **Créer la table.** Dans *SQL Editor*, coller le contenu de `supabase/migrations/001_progression.sql` et cliquer sur *Run*.
-4. **Autoriser le site.** Dans *Authentication > URL Configuration* :
+1. **Créer le projet.** Sur supabase.com, nouveau projet `parcours-actuariel`, plan gratuit, région **Europe (Frankfurt, eu-central-1)**.
+2. **Créer la table.** Dans *SQL Editor*, coller le contenu de `supabase/migrations/001_progression.sql` et cliquer sur *Run*.
+3. **Autoriser le site.** Dans *Authentication > URL Configuration* :
    - *Site URL* : `https://johngab7.github.io/parcours-actuariel/`
-   - *Redirect URLs* : ajouter `https://johngab7.github.io/parcours-actuariel/**`, et retirer les adresses du laboratoire.
-5. **Donner les deux valeurs publiques au site.** Dans *Project Settings > API Keys*, copier l'URL du projet et la clé *publishable*. Puis, sur GitHub : *Settings > Secrets and variables > Actions > onglet Variables > New repository variable* :
+   - *Redirect URLs* : ajouter `https://johngab7.github.io/parcours-actuariel/**`
+4. **Donner les deux valeurs publiques au site.** Dans *Project Settings > API Keys*, copier l'URL du projet et la clé *publishable*. Puis, sur GitHub : *Settings > Secrets and variables > Actions > onglet Variables > New repository variable* :
    - `SUPABASE_URL` = `https://<ref>.supabase.co`
    - `SUPABASE_PUBLISHABLE_KEY` = `sb_publishable_…`
-6. **Me prévenir.** Je fusionne la PR, le site se redéploie avec les comptes, et je vérifie la connexion.
-
-La page de confidentialité indique un centre de données dans l'Union européenne : vérifier la région du projet dans *Project Settings > General*. Si elle est hors UE, me le dire pour corriger la page.
+5. **Relancer le déploiement.** *Actions > site > Run workflow* sur `main`.
 
 ## Données
 
