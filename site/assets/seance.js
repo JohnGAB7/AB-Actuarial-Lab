@@ -1,12 +1,98 @@
 // Affiche une séance une étape à la fois. Le contenu vient du JSON intégré à la page (généré depuis contenus/*.yaml).
 // Formules : KaTeX. Éditeur : CodeMirror 5. Python : Pyodide, chargé au premier lancement des tests.
 const S = JSON.parse(document.getElementById("seance").textContent);
+// Interface en français ou en anglais selon <html lang>. Les textes des séances viennent déjà traduits du JSON.
+const LANG = document.documentElement.lang === "en" ? "en" : "fr";
+const UI = {
+  fr: {
+    step: (j, t) => `Étape ${j} : ${t}`, stepOf: (i, n, m) => `Étape ${i} sur ${n} · ${m} min`,
+    prev: "← Précédente", next: "Suivante →", finish: "Terminer",
+    labAria: "Force de mortalité de la table MK selon l'âge, échelle logarithmique", age: "Âge", years: " ans",
+    labEyebrow: "Manipule", labHint: "Fais glisser l'âge : la table MK de ton simulateur répond.",
+    videoSoon: "Vidéo en préparation", job: "Dans ton métier", further: "Pour aller plus loin",
+    recap: "Rappel", example: "Exemple", pitfall: "Piège", right: "Juste.", wrong: "Pas tout à fait.",
+    score: (k, n) => `${k} sur ${n}`, scoreLbl: "Score",
+    check: "Vérifier", toFill: "à remplir", good: "juste", bad: "à revoir", solution: "Voir la solution", placeholder: "0,0000",
+    codeAria: "Ton code Python", runHint: "Lance les tests quand ta fonction est prête.", run: "Lancer les tests",
+    reset: "Code de départ", stop: "Arrêter", loading: "Chargement de Python… (quelques secondes la première fois)", running: "Exécution…",
+    todo: "fonction pas encore écrite", unexpected: "valeur inattendue",
+    allPass: (n) => `Les ${n} tests passent. Bravo.`, somePass: (k, n) => `${k} test${k > 1 ? "s" : ""} sur ${n} passe${k > 1 ? "nt" : ""}.`,
+    repo: "Même exercice dans le dépôt : ", repoEnd: ". Les tests y tournent aussi sur GitHub Actions.",
+    flip: "Voir l'anglais →",
+    stopped: "Exécution arrêtée. Python se rechargera au prochain lancement.",
+    timeout: (s) => `Arrêt après ${s} secondes : boucle infinie ou calcul trop long ?`,
+    loadFail: "Python n'a pas pu se charger. Vérifie ta connexion, ou lance les tests du dépôt avec pytest.",
+    badReply: "Réponse invalide du moteur Python.", unreadable: "Réponse illisible du moteur Python.",
+    loadTimeout: (s) => `Le chargement de Python a dépassé ${s} secondes.`, cantSend: "Impossible d'envoyer le code au moteur Python.",
+    locale: "fr-BE",
+  },
+  en: {
+    step: (j, t) => `Step ${j}: ${t}`, stepOf: (i, n, m) => `Step ${i} of ${n} · ${m} min`,
+    prev: "← Previous", next: "Next →", finish: "Finish",
+    labAria: "Force of mortality of the MK table by age, log scale", age: "Age", years: " years",
+    labEyebrow: "Try it", labHint: "Drag the age: the MK table from your simulator responds.",
+    videoSoon: "Video in preparation", job: "On the job", further: "Further reading",
+    recap: "Recap", example: "Example", pitfall: "Pitfall", right: "Correct.", wrong: "Not quite.",
+    score: (k, n) => `${k} of ${n}`, scoreLbl: "Score",
+    check: "Check", toFill: "to fill in", good: "correct", bad: "try again", solution: "Show the solution", placeholder: "0.0000",
+    codeAria: "Your Python code", runHint: "Run the tests when your function is ready.", run: "Run the tests",
+    reset: "Starter code", stop: "Stop", loading: "Loading Python… (a few seconds the first time)", running: "Running…",
+    todo: "function not written yet", unexpected: "unexpected value",
+    allPass: (n) => `All ${n} tests pass. Well done.`, somePass: (k, n) => `${k} of ${n} test${n > 1 ? "s" : ""} pass${k === 1 ? "es" : ""}.`,
+    repo: "Same exercise in the repository: ", repoEnd: ". The tests also run there on GitHub Actions.",
+    flip: "See the French →",
+    stopped: "Run stopped. Python will reload next time.",
+    timeout: (s) => `Stopped after ${s} seconds: infinite loop or a computation that is too long?`,
+    loadFail: "Python could not load. Check your connection, or run the repository tests with pytest.",
+    badReply: "Invalid reply from the Python engine.", unreadable: "Unreadable reply from the Python engine.",
+    loadTimeout: (s) => `Loading Python took more than ${s} seconds.`, cantSend: "Could not send the code to the Python engine.",
+    locale: "en-GB",
+  },
+}[LANG];
 const SCRIPT_URL = document.currentScript ? document.currentScript.src : location.href;
 const $ = (s, r = document) => r.querySelector(s);
+
+// YAML text is untrusted at the rendering boundary. Keep only the small inline
+// formatting vocabulary used by the course; discard attributes and active nodes.
+const RICH_TAGS = new Set(["B", "STRONG", "I", "EM", "SUB", "SUP", "CODE", "BR"]);
+const DROP_TAGS = new Set([
+  "SCRIPT", "STYLE", "SVG", "MATH", "IFRAME", "OBJECT", "EMBED", "TEMPLATE",
+  "NOSCRIPT", "IMG", "VIDEO", "AUDIO", "FORM", "INPUT", "LINK", "META", "BASE",
+]);
+function rich(value) {
+  const template = document.createElement("template");
+  template.innerHTML = String(value ?? "");
+  const fragment = document.createDocumentFragment();
+  const copy = (node, parent) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      parent.append(document.createTextNode(node.nodeValue || ""));
+      return;
+    }
+    if (node.nodeType !== Node.ELEMENT_NODE || DROP_TAGS.has(node.tagName)) return;
+    if (RICH_TAGS.has(node.tagName)) {
+      const safe = document.createElement(node.tagName.toLowerCase());
+      parent.append(safe);
+      node.childNodes.forEach((child) => copy(child, safe));
+      return;
+    }
+    node.childNodes.forEach((child) => copy(child, parent));
+  };
+  template.content.childNodes.forEach((node) => copy(node, fragment));
+  return fragment;
+}
+function sourceUrl(value) {
+  if (typeof value !== "string" || !value.trim()) return null;
+  try {
+    const url = new URL(value, location.href);
+    return url.protocol === "https:" && !url.username && !url.password ? url.href : null;
+  } catch {
+    return null;
+  }
+}
 const el = (tag, attrs = {}, ...kids) => {
   const e = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) {
-    if (k === "html") e.innerHTML = v; else if (k === "class") e.className = v; else e.setAttribute(k, v);
+    if (k === "html") e.append(rich(v)); else if (k === "class") e.className = v; else e.setAttribute(k, v);
   }
   e.append(...kids.filter((k) => k !== null && k !== undefined && k !== ""));
   return e;
@@ -18,7 +104,7 @@ const store = {
 };
 let progress = store.get(":etapes", {});
 const N = S.etapes.length;
-const fr = (v, d) => v.toLocaleString("fr-BE", { minimumFractionDigits: d, maximumFractionDigits: d });
+const fr = (v, d) => v.toLocaleString(UI.locale, { minimumFractionDigits: d, maximumFractionDigits: d });
 
 function math(node) {
   if (window.renderMathInElement) {
@@ -50,7 +136,7 @@ function current() {
 }
 function segs(i) {
   $("#segs").replaceChildren(...S.etapes.map((e, j) => {
-    const a = el("a", { href: "#etape-" + (j + 1), class: (progress[j] ? "ok " : "") + (j === i ? "on" : ""), "aria-label": `Étape ${j + 1} : ${e.titre}` });
+    const a = el("a", { href: "#etape-" + (j + 1), class: (progress[j] ? "ok " : "") + (j === i ? "on" : ""), "aria-label": UI.step(j + 1, e.titre) });
     if (j === i) a.setAttribute("aria-current", "step");
     return a;
   }));
@@ -64,18 +150,18 @@ const ex = (x) => { let s = 0; for (let k = 1; k <= T.omega - x; k++) s += lx(x 
 
 function interactif() {
   let age = 65;
-  const cv = el("canvas", { role: "img", "aria-label": "Force de mortalité de la table MK selon l'âge, échelle logarithmique" });
-  const slider = el("input", { type: "range", min: "20", max: "100", step: "1", value: String(age), id: "age", "aria-label": "Âge" });
+  const cv = el("canvas", { role: "img", "aria-label": UI.labAria });
+  const slider = el("input", { type: "range", min: "20", max: "100", step: "1", value: String(age), id: "age", "aria-label": UI.age });
   const out = {
     age: el("output", { class: "big" }),
     mu: el("output"), q: el("output"), e: el("output"), ec: el("output"),
   };
   const stat = (label, o) => el("div", { class: "stat" }, el("span", { class: "lbl", html: label }), o);
   const panel = el("div", { class: "lab-stats" },
-    el("div", { class: "stat age" }, el("span", { class: "lbl" }, "Âge"), out.age),
+    el("div", { class: "stat age" }, el("span", { class: "lbl" }, UI.age), out.age),
     stat("$\\mu_x$", out.mu), stat("$q_x$", out.q), stat("$e_x$", out.e), stat("$\\mathring{e}_x$", out.ec));
   const box = el("figure", { class: "lab" },
-    el("div", { class: "lab-head" }, el("span", { class: "eyebrow" }, "Manipule"), el("span", { class: "hint" }, "Fais glisser l'âge : la table MK de ton simulateur répond.")),
+    el("div", { class: "lab-head" }, el("span", { class: "eyebrow" }, UI.labEyebrow), el("span", { class: "hint" }, UI.labHint)),
     cv, el("div", { class: "lab-slider" }, el("span", { class: "mono" }, "20"), slider, el("span", { class: "mono" }, "100")), panel);
 
   const draw = () => {
@@ -91,7 +177,7 @@ function interactif() {
     c.font = "11px 'JetBrains Mono', ui-monospace, monospace"; c.lineWidth = 1;
     [0.001, 0.01, 0.1, 1].forEach((v) => {
       c.strokeStyle = col("--line"); c.beginPath(); c.moveTo(L, py(v)); c.lineTo(W - R, py(v)); c.stroke();
-      c.fillStyle = col("--muted"); c.textAlign = "right"; c.fillText(String(v).replace(".", ","), L - 8, py(v) + 4);
+      c.fillStyle = col("--muted"); c.textAlign = "right"; c.fillText(LANG === "fr" ? String(v).replace(".", ",") : String(v), L - 8, py(v) + 4);
     });
     [20, 40, 60, 80, 100].forEach((x) => { c.fillStyle = col("--muted"); c.textAlign = "center"; c.fillText(String(x), px(x), H - 8); });
     // aire sous la courbe
@@ -112,11 +198,11 @@ function interactif() {
   const update = () => {
     age = parseInt(slider.value, 10);
     const e = ex(age);
-    out.age.textContent = age + " ans";
+    out.age.textContent = age + UI.years;
     out.mu.textContent = fr(mu(age), 5);
     out.q.textContent = fr(1 - lx(age + 1) / lx(age), 5);
-    out.e.textContent = fr(e, 2) + " ans";
-    out.ec.textContent = "≈ " + fr(e + 0.5, 2) + " ans";
+    out.e.textContent = fr(e, 2) + UI.years;
+    out.ec.textContent = "≈ " + fr(e + 0.5, 2) + UI.years;
     draw();
   };
   slider.addEventListener("input", update);
@@ -133,19 +219,19 @@ const R = {
     return [el("div", { class: "video" },
       el("div", { class: "video-in" },
         el("span", { class: "eyebrow light" }, "Actu-Basics · " + (ab.episode || "")),
-        el("p", { class: "video-q" }, "« " + (ab.accroche_fr || "") + " »"),
-        el("span", { class: "pill" }, "Vidéo en préparation"))),
+        el("p", { class: "video-q" }, LANG === "en" ? "“" + (ab.accroche_en || "") + "”" : "« " + (ab.accroche_fr || "") + " »"),
+        el("span", { class: "pill" }, UI.videoSoon))),
       el("p", {}, e.texte)];
   },
   rappel(e) {
     return e.blocs.map((b) => {
       if (b.p) return el("p", { html: b.p });
       if (b.formule) return tex(b.formule);
-      if (b.note) return el("aside", { class: "note" }, el("span", { class: "eyebrow" }, "Dans ton métier"), el("p", { html: b.note }));
+      if (b.note) return el("aside", { class: "note" }, el("span", { class: "eyebrow" }, UI.job), el("p", { html: b.note }));
       if (b.interactif) return interactif();
-      if (b.sources) return el("section", { class: "sources" }, el("span", { class: "eyebrow" }, "Pour aller plus loin"),
+      if (b.sources) return el("section", { class: "sources" }, el("span", { class: "eyebrow" }, UI.further),
         el("ol", {}, ...b.sources.map((s) => el("li", {},
-          s.url ? el("a", { href: s.url, target: "_blank", rel: "noopener" }, s.titre) : el("span", { class: "src-t" }, s.titre),
+          sourceUrl(s.url) ? el("a", { href: sourceUrl(s.url), target: "_blank", rel: "noopener noreferrer" }, s.titre) : el("span", { class: "src-t" }, s.titre),
           el("span", { class: "src-d" }, s.detail)))));
       return "";
     });
@@ -154,12 +240,12 @@ const R = {
     const explication = (p) => {
       if (typeof p === "string") return `<p>${p}</p>`;
       const ligne = (k, lib) => p[k] ? `<p class="why-l"><span class="why-k">${lib}</span>${p[k]}</p>` : "";
-      return ligne("rappel", "Rappel") + (p.formule ? `<div class="why-f">$$${p.formule}$$</div>` : "")
-        + ligne("exemple", "Exemple") + ligne("piege", "Piège");
+      return ligne("rappel", UI.recap) + (p.formule ? `<div class="why-f">$$${p.formule}$$</div>` : "")
+        + ligne("exemple", UI.example) + ligne("piege", UI.pitfall);
     };
     const ok = new Set();
     const score = el("p", { class: "score" });
-    const upd = () => { score.textContent = `${ok.size} sur ${e.questions.length}`; };
+    const upd = () => { score.textContent = UI.score(ok.size, e.questions.length); };
     const qs = e.questions.map((it, qi) => {
       const why = el("div", { class: "why", html: "" }); why.hidden = true;
       const opts = el("div", { class: "opts", role: "group" }, ...it.options.map((t, j) => {
@@ -169,7 +255,10 @@ const R = {
           const good = j === it.reponse;
           b.classList.add(good ? "right" : "wrong");
           why.hidden = false;
-          why.innerHTML = `<p class="why-v ${good ? "ok" : "ko"}">${good ? "Juste." : "Pas tout à fait."}</p>` + explication(it.pourquoi);
+          why.replaceChildren(
+            el("p", { class: "why-v " + (good ? "ok" : "ko") }, good ? UI.right : UI.wrong),
+            rich(explication(it.pourquoi)),
+          );
           math(why);
           if (good) ok.add(qi); else ok.delete(qi);
           upd(); if (ok.size === e.questions.length) markDone(i);
@@ -179,7 +268,7 @@ const R = {
       return el("div", { class: "q" }, el("span", { class: "qn mono" }, String(qi + 1).padStart(2, "0")), el("div", { class: "q-body" }, el("h3", { html: it.q }), opts, why));
     });
     upd();
-    return [el("div", { class: "qs" }, ...qs), el("div", { class: "score-row" }, el("span", { class: "eyebrow" }, "Score"), score)];
+    return [el("div", { class: "qs" }, ...qs), el("div", { class: "score-row" }, el("span", { class: "eyebrow" }, UI.scoreLbl), score)];
   },
   calcul(e, i) {
     const t = el("div", { class: "tbl" }, el("table", {},
@@ -188,9 +277,9 @@ const R = {
     const fields = el("div", { class: "fields" }, ...e.champs.map((c) => el("div", { class: "field" },
       el("label", { for: "c_" + c.cle, html: c.libelle }),
       el("span", { class: "eq" }, "="),
-      el("input", { id: "c_" + c.cle, inputmode: "decimal", placeholder: "0,0000", autocomplete: "off" }),
+      el("input", { id: "c_" + c.cle, inputmode: "decimal", placeholder: UI.placeholder, autocomplete: "off" }),
       el("span", { class: "st", id: "st_" + c.cle, "aria-live": "polite" }))));
-    const check = el("button", { class: "btn", type: "button" }, "Vérifier");
+    const check = el("button", { class: "btn", type: "button" }, UI.check);
     check.addEventListener("click", () => {
       let all = true;
       for (const c of e.champs) {
@@ -198,22 +287,22 @@ const R = {
         const good = raw !== "" && Math.abs(parseFloat(raw) - c.valeur) <= c.tolerance;
         const st = $("#st_" + c.cle);
         st.className = "st " + (raw === "" ? "" : good ? "good" : "bad");
-        st.textContent = raw === "" ? "à remplir" : good ? "juste" : "à revoir";
+        st.textContent = raw === "" ? UI.toFill : good ? UI.good : UI.bad;
         all = all && good;
       }
       if (all) markDone(i);
     });
-    const sol = el("details", { class: "solution" }, el("summary", {}, "Voir la solution"), el("div", { html: e.solution.replace(/\n/g, "<br>") }));
+    const sol = el("details", { class: "solution" }, el("summary", {}, UI.solution), el("div", { html: e.solution.replace(/\n/g, "<br>") }));
     return [t, fields, el("div", { class: "row" }, check), sol];
   },
   code(e, i) {
-    const ta = el("textarea", { id: "code", spellcheck: "false", "aria-label": "Ton code Python" });
+    const ta = el("textarea", { id: "code", spellcheck: "false", "aria-label": UI.codeAria });
     ta.value = store.get(":code", null) || e.depart;
     const res = el("ol", { class: "results", "aria-live": "polite" },
       ...e.tests.map((t) => el("li", { class: "idle" }, el("span", { class: "dot" }), el("span", { class: "tn", html: t.nom }), el("span", { class: "tm" }))));
-    const summary = el("p", { class: "res-sum" }, "Lance les tests quand ta fonction est prête.");
-    const run = el("button", { class: "btn", type: "button" }, el("span", {}, "Lancer les tests"), el("kbd", {}, "Ctrl ↵"));
-    const reset = el("button", { class: "btn ghost", type: "button" }, "Code de départ");
+    const summary = el("p", { class: "res-sum" }, UI.runHint);
+    const run = el("button", { class: "btn", type: "button" }, el("span", {}, UI.run), el("kbd", {}, "Ctrl ↵"));
+    const reset = el("button", { class: "btn ghost", type: "button" }, UI.reset);
     const shell = el("div", { class: "editor" }, el("div", { class: "editor-bar" }, el("span", { class: "dots" }, el("i"), el("i"), el("i")), el("span", { class: "mono fname" }, e.fichier.split("/").pop())), ta);
     let cm = null;
     const value = () => (cm ? cm.getValue() : ta.value);
@@ -228,23 +317,23 @@ const R = {
     });
     ta.addEventListener("input", () => saveCode(ta.value));
     reset.addEventListener("click", () => { if (cm) cm.setValue(e.depart); else ta.value = e.depart; saveCode(e.depart); });
-    const stop = el("button", { class: "btn ghost", type: "button", hidden: "" }, "Arrêter");
+    const stop = el("button", { class: "btn ghost", type: "button", hidden: "" }, UI.stop);
     stop.addEventListener("click", () => { stopPython(); });
     run.addEventListener("click", async () => {
       run.disabled = true; stop.hidden = false;
       summary.className = "res-sum";
-      summary.textContent = "Chargement de Python… (quelques secondes la première fois)";
+      summary.textContent = UI.loading;
       [...res.children].forEach((li) => { li.className = "run"; li.querySelector(".tm").textContent = ""; });
       try {
-        const results = await runPython(value(), e.tests.map((t) => t.expr), () => { summary.textContent = "Exécution…"; });
+        const results = await runPython(value(), e.tests.map((t) => t.expr), () => { summary.textContent = UI.running; });
         let n = 0;
         results.forEach((r, k) => {
           const li = res.children[k], msg = li.querySelector(".tm");
           li.className = r.status;
           if (r.status === "pass") n++;
-          msg.textContent = r.status === "todo" ? "fonction pas encore écrite" : r.msg === "unexpected" ? "valeur inattendue" : r.msg;
+          msg.textContent = r.status === "todo" ? UI.todo : r.msg === "unexpected" ? UI.unexpected : r.msg;
         });
-        summary.textContent = n === e.tests.length ? `Les ${n} tests passent. Bravo.` : `${n} test${n > 1 ? "s" : ""} sur ${e.tests.length} passe${n > 1 ? "nt" : ""}.`;
+        summary.textContent = n === e.tests.length ? UI.allPass(n) : UI.somePass(n, e.tests.length);
         summary.className = "res-sum " + (n === e.tests.length ? "good" : "");
         if (n === e.tests.length) markDone(i);
       } catch (err) {
@@ -253,15 +342,17 @@ const R = {
       }
       run.disabled = false; stop.hidden = true;
     });
-    const where = el("p", { class: "hint" }, "Même exercice dans le dépôt : ", el("code", {}, e.fichier), ". Les tests y tournent aussi sur GitHub Actions.");
+    const where = el("p", { class: "hint" }, UI.repo, el("code", {}, e.fichier), UI.repoEnd);
     return [shell, el("div", { class: "row" }, run, stop, reset), el("div", { class: "results-box" }, summary, res), where];
   },
   vocabulaire(e, i) {
     const seen = new Set();
     return [el("div", { class: "cards" }, ...e.cartes.map(([f, en, exm], j) => {
+      // En anglais, la carte montre le terme anglais et révèle le terme français.
+      const [recto, verso] = LANG === "en" ? [en, f] : [f, en];
       const b = el("button", { class: "card", type: "button", "aria-expanded": "false" },
-        el("span", { class: "fr" }, f), el("span", { class: "tap" }, "Voir l'anglais →"),
-        el("span", { class: "back" }, el("b", {}, en), el("i", {}, exm)));
+        el("span", { class: "fr" }, recto), el("span", { class: "tap" }, UI.flip),
+        el("span", { class: "back" }, el("b", {}, verso), el("i", {}, exm)));
       b.addEventListener("click", () => {
         const on = b.classList.toggle("flip"); b.setAttribute("aria-expanded", String(on));
         seen.add(j); if (seen.size === e.cartes.length) markDone(i);
@@ -283,7 +374,7 @@ function stopPython(raison) {
   if (worker) { worker.terminate(); worker = null; }
   if (pending) {
     const p = pending; pending = null; clearTimeout(p.timer);
-    p.reject(new Error(raison || "Exécution arrêtée. Python se rechargera au prochain lancement."));
+    p.reject(new Error(raison || UI.stopped));
   }
 }
 function runPython(code, tests, onRunning) {
@@ -295,7 +386,7 @@ function runPython(code, tests, onRunning) {
     if (m.phase === "running") {
       if (onRunning) onRunning();
       clearTimeout(pending.timer);
-      pending.timer = setTimeout(() => stopPython("Arrêt après 10 secondes : boucle infinie ou calcul trop long ?"), PY_LIMITE_MS);
+      pending.timer = setTimeout(() => stopPython(UI.timeout(PY_LIMITE_MS / 1000)), PY_LIMITE_MS);
       return;
     }
     const p = pending; pending = null; clearTimeout(p.timer);
@@ -306,16 +397,16 @@ function runPython(code, tests, onRunning) {
     } else if (m.phase === "error" && typeof m.msg === "string") {
       p.reject(new Error(m.msg.slice(0, 500)));
     } else {
-      p.reject(new Error("Réponse invalide du moteur Python."));
+      p.reject(new Error(UI.badReply));
     }
   };
-  worker.onerror = () => stopPython("Python n'a pas pu se charger. Vérifie ta connexion, ou lance les tests du dépôt avec pytest.");
-  worker.onmessageerror = () => stopPython("Réponse illisible du moteur Python.");
+  worker.onerror = () => stopPython(UI.loadFail);
+  worker.onmessageerror = () => stopPython(UI.unreadable);
   return new Promise((resolve, reject) => {
     pending = { id: ++seq, resolve, reject, timer: null };
-    pending.timer = setTimeout(() => stopPython("Le chargement de Python a dépassé 60 secondes."), PY_CHARGEMENT_LIMITE_MS);
+    pending.timer = setTimeout(() => stopPython(UI.loadTimeout(PY_CHARGEMENT_LIMITE_MS / 1000)), PY_CHARGEMENT_LIMITE_MS);
     try { worker.postMessage({ id: pending.id, code, tests }); }
-    catch { stopPython("Impossible d'envoyer le code au moteur Python."); }
+    catch { stopPython(UI.cantSend); }
   });
 }
 
@@ -325,7 +416,7 @@ function render() {
   const stage = $("#stage");
   stage.replaceChildren(
     el("div", { class: "step-head" },
-      el("span", { class: "eyebrow" }, `Étape ${i + 1} sur ${N} · ${e.minutes} min`),
+      el("span", { class: "eyebrow" }, UI.stepOf(i + 1, N, e.minutes)),
       el("h1", {}, e.titre),
       e.intro ? el("p", { class: "lead", html: e.intro }) : null),
     el("div", { class: "flow" }, ...R[e.type](e, i)));
@@ -333,7 +424,8 @@ function render() {
   stage.classList.remove("enter"); void stage.offsetWidth; stage.classList.add("enter");
   if (e.type === "rappel" || e.type === "video") markDone(i);
   $("#prev").disabled = i === 0;
-  $("#next").textContent = i === N - 1 ? "Terminer" : "Suivante →";
+  $("#prev").textContent = UI.prev;
+  $("#next").textContent = i === N - 1 ? UI.finish : UI.next;
   const w = $("#where"); w.replaceChildren(el("a", { href: S.module_url }, S.module_titre), ` · ${S.titre}`);
   document.title = `${e.titre} · ${S.titre}`;
   window.scrollTo({ top: 0 });

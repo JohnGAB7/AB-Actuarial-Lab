@@ -4,6 +4,8 @@
     python tools/construire.py --verifier # vérifie seulement les contenus
 
 Le contenu (YAML) est séparé de la présentation (site/gabarits, site/assets).
+Site bilingue : français à la racine, anglais sous en/. Les textes anglais d'une séance vivent dans
+contenus/en/<id>.yaml, qui ne contient que des textes : chiffres, réponses et tests restent dans le fichier français.
 """
 from __future__ import annotations
 
@@ -18,34 +20,48 @@ from string import Template
 
 import yaml
 
+# Run as a script (python tools/construire.py), the repository root is not on sys.path: add it for the tools package.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from tools.validation_contenus import (  # noqa: E402
+    fusionner_overlay,
+    verifier_depot,
+    verifier_overlay_traduction,
+    verifier_seance,
+)
+
 RACINE = Path(__file__).resolve().parents[1]
 CONTENUS = RACINE / "contenus"
 SITE = RACINE / "site"
 SORTIE = RACINE / "_site"
-TYPES = {"video", "rappel", "quiz", "calcul", "code", "vocabulaire"}
+LANGUES = ("fr", "en")
+# Compatibility alias for existing tests and downstream imports.
+fusion = fusionner_overlay
 
 
 def charger_parcours() -> dict:
     return yaml.safe_load((CONTENUS / "parcours.yaml").read_text(encoding="utf-8"))
 
 
-def charger_seance(sid: str) -> dict:
-    return yaml.safe_load((CONTENUS / f"{sid}.yaml").read_text(encoding="utf-8"))
+def charger_seance(sid: str, langue: str = "fr") -> dict:
+    s = yaml.safe_load((CONTENUS / f"{sid}.yaml").read_text(encoding="utf-8"))
+    if langue == "fr":
+        return s
+    return fusionner_overlay(
+        s, yaml.safe_load((CONTENUS / langue / f"{sid}.yaml").read_text(encoding="utf-8")), sid
+    )
 
 
-def verifier_seance(s: dict) -> list[str]:
-    erreurs = []
-    for i, e in enumerate(s.get("etapes", []), 1):
-        if e.get("type") not in TYPES:
-            erreurs.append(f"{s['id']} étape {i} : type inconnu {e.get('type')!r}")
-        if e.get("type") == "quiz":
-            for q in e["questions"]:
-                if not 0 <= q["reponse"] < len(q["options"]):
-                    erreurs.append(f"{s['id']} : réponse hors des options pour « {q['q']} »")
-                p = q.get("pourquoi")
-                if not isinstance(p, dict) or not all(p.get(k) for k in ("rappel", "formule", "exemple")):
-                    erreurs.append(f"{s['id']} : explication sans rappel, formule et exemple pour « {q['q']} »")
-    return erreurs
+def verifier_traduction(sid: str) -> list[str]:
+    """Compatibility wrapper around the canonical overlay validator."""
+    chemin = CONTENUS / "en" / f"{sid}.yaml"
+    if not chemin.is_file():
+        return [f"{sid} : traduction anglaise manquante (contenus/en/{sid}.yaml)"]
+    try:
+        base = charger_seance(sid)
+        overlay = yaml.safe_load(chemin.read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError) as err:
+        return [f"{sid} : impossible de lire l'overlay anglais ({err})."]
+    return verifier_overlay_traduction(base, overlay, session_id=sid)
 
 
 def seances(parcours: dict):
@@ -60,109 +76,178 @@ ICONE_COMPTE = ('<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="tr
                 'stroke="currentColor" stroke-width="1.7"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6" fill="none" '
                 'stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>')
 
+TXT = {
+    "fr": {
+        "domaines": "Domaines", "menu": "Menu des domaines", "compte": "Mon compte", "confid": "Confidentialité",
+        "source": "Code source", "compte_t": "Compte", "accueil": "Accueil", "fil": "Fil d'Ariane",
+        "pied": "Contenus rédigés pour ce site, sans reprise de supports de cours. Données fictives ou paramètres publics, avec leur source.",
+        "autre": "English", "autre_court": "EN", "autre_aria": "Read this page in English",
+        "seance": lambda n: f'{n} séance{"s" if n > 1 else ""}', "a_venir": "À venir", "bientot": "bientôt", "modules": "modules",
+        "eyebrow": "Fondamentaux · Vie · Retraite · Non-vie · ALM · Risque",
+        "h1": "Remettre la théorie <em>au travail.</em>",
+        "hero": "Un rappel court, des questions, un calcul à la main, puis ton propre code Python. Les termes anglais à chaque étape.",
+        "commencer": "Commencer", "les_domaines": "Les domaines", "h2": "Sept domaines, une séance de 25 minutes à la fois.",
+        "lead": "Commence par les fondamentaux, puis suis l'ordre conseillé. Les domaines marqués « bientôt » se rempliront au fil du parcours.",
+        "domaine": "Domaine", "suivant": "Domaine suivant", "module": "Module", "min_etapes": lambda d, n: f"{d} min · {n} étapes",
+        "commencer_f": "Commencer", "progression": "Progression de la séance", "etapes": "Étapes",
+        "compte_desc": "Compte facultatif pour retrouver ta progression partout.",
+    },
+    "en": {
+        "domaines": "Domains", "menu": "Domain menu", "compte": "My account", "confid": "Privacy",
+        "source": "Source code", "compte_t": "Account", "accueil": "Home", "fil": "Breadcrumbs",
+        "pied": "Content written for this site, with no reuse of course materials. Fictional data or public parameters, with their source.",
+        "autre": "Français", "autre_court": "FR", "autre_aria": "Lire cette page en français",
+        "seance": lambda n: f'{n} session{"s" if n > 1 else ""}', "a_venir": "Coming soon", "bientot": "soon", "modules": "modules",
+        "eyebrow": "Foundations · Life · Pensions · P&C · ALM · Risk",
+        "h1": "Put theory <em>back to work.</em>",
+        "hero": "A short recap, questions, a calculation by hand, then your own Python code. French and English terms at every step.",
+        "commencer": "Start", "les_domaines": "The domains", "h2": "Seven domains, one 25-minute session at a time.",
+        "lead": "Start with the foundations, then follow the suggested order. Domains marked “soon” will fill up as the path grows.",
+        "domaine": "Domain", "suivant": "Next domain", "module": "Module", "min_etapes": lambda d, n: f"{d} min · {n} steps",
+        "commencer_f": "Start", "progression": "Session progress", "etapes": "Steps",
+        "compte_desc": "Optional account to keep your progress on every device.",
+    },
+}
 
-def entete(parcours: dict, base: str, actif: str = "") -> str:
-    """Global header: brand, domain menu (inline on wide screens, a sheet on phones), account."""
+
+def dom_titre(d: dict, langue: str) -> str:
+    return d["titre"] if langue == "fr" else d["en"]
+
+
+def dom_sous(d: dict, langue: str) -> str:
+    return d["en"] if langue == "fr" else d["titre"]
+
+
+def dom_accroche(d: dict, langue: str) -> str:
+    return d["accroche"] if langue == "fr" else d["accroche_en"]
+
+
+def mod_titre(m: dict, langue: str) -> str:
+    if langue == "fr":
+        return m["titre"]
+    return m["titre"].split(" · ")[0] + " · " + m["en"]
+
+
+def mod_sous(m: dict, langue: str) -> str:
+    return m["en"] if langue == "fr" else m["titre"].split(" · ", 1)[-1]
+
+
+def bascule(langue: str, autre: str) -> str:
+    """FR | EN switch: the current language is marked, the other one links to the same page in that language."""
+    def cote(code):
+        if code == langue:
+            return f'<span aria-current="true">{code.upper()}</span>'
+        aria = TXT[langue]["autre_aria"]
+        return f'<a href="{autre}" hreflang="{code}" lang="{code}" aria-label="{aria}" data-langue="{code}">{code.upper()}</a>'
+    return f'<span class="langs" role="group" aria-label="Langue · Language">{cote("fr")}{cote("en")}</span>'
+
+
+def entete(parcours: dict, racine: str, autre: str, langue: str, actif: str = "") -> str:
+    """Global header: brand, domain menu (inline on wide screens, a sheet on phones), language switch, account."""
+    t = TXT[langue]
     liens = "".join(
-        f'<a href="{base}{d["id"]}/index.html"{" aria-current=\"page\"" if d["id"] == actif else ""}>{e(d["titre"])}</a>'
+        f'<a href="{racine}{d["id"]}/index.html"{" aria-current=\"page\"" if d["id"] == actif else ""}>{e(dom_titre(d, langue))}</a>'
         for d in parcours["domaines"])
     return (
         f'<header class="nav gutter"><div class="nav-in">'
-        f'<a class="brand" href="{base}index.html">Parcours <b>actuariel</b></a>'
-        f'<nav class="nav-links" aria-label="Domaines">{liens}</nav>'
-        f'<details class="nav-menu"><summary aria-label="Menu des domaines"><span></span><span></span></summary>'
-        f'<nav class="nav-sheet" aria-label="Domaines">{liens}</nav></details>'
-        f'<a class="acct" href="{base}compte/index.html" aria-label="Mon compte">{ICONE_COMPTE}</a>'
+        f'<a class="brand" href="{racine}index.html">Parcours <b>actuariel</b></a>'
+        f'<nav class="nav-links" aria-label="{t["domaines"]}">{liens}</nav>'
+        f'<details class="nav-menu"><summary aria-label="{t["menu"]}"><span></span><span></span></summary>'
+        f'<nav class="nav-sheet" aria-label="{t["domaines"]}">{liens}</nav></details>'
+        f'{bascule(langue, autre)}'
+        f'<a class="acct" href="{racine}compte/index.html" aria-label="{t["compte"]}">{ICONE_COMPTE}</a>'
         f'</div></header>')
 
 
-def pied(parcours: dict, base: str) -> str:
-    liens = "".join(f'<a href="{base}{d["id"]}/index.html">{e(d["titre"])}</a>' for d in parcours["domaines"])
+def pied(parcours: dict, racine: str, autre: str, langue: str) -> str:
+    t = TXT[langue]
+    liens = "".join(f'<a href="{racine}{d["id"]}/index.html">{e(dom_titre(d, langue))}</a>' for d in parcours["domaines"])
     return (
         f'<footer class="pied gutter"><div class="pied-in">'
-        f'<div class="pied-col"><a class="brand" href="{base}index.html">Parcours <b>actuariel</b></a>'
-        f'<p>Contenus rédigés pour ce site, sans reprise de supports de cours. Données fictives ou paramètres publics, avec leur source.</p></div>'
-        f'<nav class="pied-col" aria-label="Domaines"><span class="eyebrow">Domaines</span>{liens}</nav>'
-        f'<nav class="pied-col" aria-label="Compte"><span class="eyebrow">Compte</span>'
-        f'<a href="{base}compte/index.html">Mon compte</a><a href="{base}compte/index.html#confidentialite">Confidentialité</a>'
-        f'<a href="https://github.com/JohnGAB7/parcours-actuariel">Code source</a></nav>'
+        f'<div class="pied-col"><a class="brand" href="{racine}index.html">Parcours <b>actuariel</b></a><p>{t["pied"]}</p></div>'
+        f'<nav class="pied-col" aria-label="{t["domaines"]}"><span class="eyebrow">{t["domaines"]}</span>{liens}</nav>'
+        f'<nav class="pied-col" aria-label="{t["compte_t"]}"><span class="eyebrow">{t["compte_t"]}</span>'
+        f'<a href="{racine}compte/index.html">{t["compte"]}</a><a href="{racine}compte/index.html#confidentialite">{t["confid"]}</a>'
+        f'<a href="{autre}" lang="{"en" if langue == "fr" else "fr"}">{t["autre"]}</a>'
+        f'<a href="https://github.com/JohnGAB7/parcours-actuariel">{t["source"]}</a></nav>'
         f'</div></footer>')
 
 
-def plan_json(parcours: dict, etapes: dict) -> str:
+def plan_json(parcours: dict, titres: dict) -> str:
     """Course order with step counts, read by navigation.js to show progress and the "resume" target."""
-    plan = [{"d": dom["id"], "m": m["id"], "s": sid, "n": etapes[sid][0], "t": etapes[sid][1]} for dom, m, sid in seances(parcours)]
+    plan = [{"d": dom["id"], "m": m["id"], "s": sid, "n": titres[sid][0], "t": titres[sid][1]} for dom, m, sid in seances(parcours)]
     return json.dumps(plan, ensure_ascii=False).replace("</", "<\\/")
 
 
-def statut_module(m: dict) -> str:
-    n = len(m.get("seances", []))
-    return f'{n} séance{"s" if n > 1 else ""}' if n else "À venir"
-
-
-def page_accueil(parcours: dict, titres: dict) -> str:
+def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
+    t = TXT[langue]
     cartes = []
     for k, d in enumerate(parcours["domaines"], 1):
         n = sum(len(m.get("seances", [])) for m in d["modules"])
-        etat = f'{n} séance{"s" if n > 1 else ""} · {len(d["modules"])} modules' if n else f'{len(d["modules"])} modules · bientôt'
+        etat = f'{t["seance"](n)} · {len(d["modules"])} {t["modules"]}' if n else f'{len(d["modules"])} {t["modules"]} · {t["bientot"]}'
         cartes.append(
             f'<a class="dom{"" if n else " futur"}" href="{d["id"]}/index.html" data-domaine="{d["id"]}">'
             f'<span class="dom-n mono">{k:02d}</span>'
-            f'<span class="dom-t">{e(d["titre"])}</span><span class="dom-en">{e(d["en"])}</span>'
-            f'<span class="dom-a">{e(d["accroche"])}</span>'
+            f'<span class="dom-t">{e(dom_titre(d, langue))}</span><span class="dom-en">{e(dom_sous(d, langue))}</span>'
+            f'<span class="dom-a">{e(dom_accroche(d, langue))}</span>'
             f'<span class="dom-f"><span class="dom-s">{etat}</span><span class="barre" aria-hidden="true"><i></i></span></span></a>')
     premiere = next(seances(parcours))[2]
+    sous_titre = parcours["sous_titre"] if langue == "fr" else parcours["sous_titre_en"]
     return (
         f'<section class="hero"><div class="hero-in gutter">'
-        f'<span class="eyebrow">Fondamentaux · Vie · Retraite · Non-vie · ALM · Risque</span>'
-        f'<h1>Remettre la théorie <em>au travail.</em></h1>'
-        f'<p>{e(parcours["sous_titre"])} Un rappel court, des questions, un calcul à la main, puis ton propre code Python. Les termes anglais à chaque étape.</p>'
-        f'<div class="hero-cta"><a class="cta" href="{premiere}/index.html" data-reprendre>Commencer : {e(titres[premiere])} →</a>'
-        f'<a class="cta-2" href="compte/index.html">{ICONE_COMPTE}Mon compte</a></div>'
+        f'<span class="eyebrow">{t["eyebrow"]}</span><h1>{t["h1"]}</h1>'
+        f'<p>{e(sous_titre)} {t["hero"]}</p>'
+        f'<div class="hero-cta"><a class="cta" href="{premiere}/index.html" data-reprendre>{t["commencer"]} : {e(titres[premiere][1])} →</a>'
+        f'<a class="cta-2" href="compte/index.html">{ICONE_COMPTE}{t["compte"]}</a></div>'
         f'</div></section>'
         f'<main class="home gutter">'
-        f'<div class="home-head"><span class="eyebrow">Les domaines</span><h2>Sept domaines, une séance de 25 minutes à la fois.</h2>'
-        f'<p class="lead">Commence par les fondamentaux, puis suis l\'ordre conseillé. Les domaines marqués « bientôt » se rempliront au fil du parcours.</p></div>'
-        f'<div class="doms">{"".join(cartes)}</div></main>')
+        f'<div class="home-head"><span class="eyebrow">{t["les_domaines"]}</span><h2>{t["h2"]}</h2><p class="lead">{e(t["lead"])}</p></div>'
+        f'<div class="doms">{"".join(cartes)}</div></main>').replace("Start :", "Start:")
 
 
-def page_domaine(parcours: dict, d: dict, k: int) -> str:
+def page_domaine(parcours: dict, d: dict, k: int, langue: str) -> str:
+    t = TXT[langue]
     lignes = []
     for m in d["modules"]:
-        corps = (f'<span class="mod-t">{e(m["titre"])}</span><span class="mod-en">{e(m["en"])}</span>')
+        corps = f'<span class="mod-t">{e(mod_titre(m, langue))}</span><span class="mod-en">{e(mod_sous(m, langue))}</span>'
         if m.get("seances"):
             lignes.append(f'<li><a class="mod" href="../{m["id"]}/index.html" data-module="{m["id"]}"><span class="mod-c">{corps}</span>'
-                          f'<span class="mod-s"><span class="mod-n">{statut_module(m)}</span><span class="barre" aria-hidden="true"><i></i></span></span></a></li>')
+                          f'<span class="mod-s"><span class="mod-n">{t["seance"](len(m["seances"]))}</span>'
+                          f'<span class="barre" aria-hidden="true"><i></i></span></span></a></li>')
         else:
-            lignes.append(f'<li><span class="mod futur"><span class="mod-c">{corps}</span><span class="mod-s"><span class="mod-n">À venir</span></span></span></li>')
+            lignes.append(f'<li><span class="mod futur"><span class="mod-c">{corps}</span>'
+                          f'<span class="mod-s"><span class="mod-n">{t["a_venir"]}</span></span></span></li>')
     autres = parcours["domaines"]
     suivant = autres[k] if k < len(autres) else None
-    lien_suivant = (f'<a class="suite" href="../{suivant["id"]}/index.html"><span class="eyebrow">Domaine suivant</span>'
-                    f'<span>{e(suivant["titre"])} →</span></a>') if suivant else ""
+    lien_suivant = (f'<a class="suite" href="../{suivant["id"]}/index.html"><span class="eyebrow">{t["suivant"]}</span>'
+                    f'<span>{e(dom_titre(suivant, langue))} →</span></a>') if suivant else ""
     return (
         f'<main class="page gutter">'
-        f'<nav class="fil" aria-label="Fil d\'Ariane"><a href="../index.html">Accueil</a><span>/</span><span>{e(d["titre"])}</span></nav>'
-        f'<div class="page-head"><span class="eyebrow mono">Domaine {k:02d}</span><h1>{e(d["titre"])}</h1>'
-        f'<p class="en">{e(d["en"])}</p><p class="lead">{e(d["accroche"])}</p></div>'
+        f'<nav class="fil" aria-label="{e(t["fil"])}"><a href="../index.html">{t["accueil"]}</a><span>/</span><span>{e(dom_titre(d, langue))}</span></nav>'
+        f'<div class="page-head"><span class="eyebrow mono">{t["domaine"]} {k:02d}</span><h1>{e(dom_titre(d, langue))}</h1>'
+        f'<p class="en">{e(dom_sous(d, langue))}</p><p class="lead">{e(dom_accroche(d, langue))}</p></div>'
         f'<ol class="mods-l">{"".join(lignes)}</ol>{lien_suivant}</main>')
 
 
-def page_module(d: dict, m: dict, infos: dict) -> str:
+def page_module(d: dict, m: dict, infos: dict, langue: str) -> str:
+    t = TXT[langue]
     lignes = []
     for j, sid in enumerate(m["seances"], 1):
         s = infos[sid]
+        sous = s["en"] if langue == "fr" else charger_seance(sid)["titre"]
         lignes.append(
             f'<li><a class="sea" href="../{sid}/index.html" data-seance="{sid}">'
             f'<span class="sea-n mono">{j:02d}</span>'
-            f'<span class="sea-c"><span class="sea-t">{e(s["titre"])}</span><span class="sea-en">{e(s["en"])}</span></span>'
-            f'<span class="sea-s"><span class="sea-d">{s["duree"]} min · {len(s["etapes"])} étapes</span>'
-            f'<span class="barre" aria-hidden="true"><i></i></span><span class="sea-x" data-etat>Commencer</span></span></a></li>')
+            f'<span class="sea-c"><span class="sea-t">{e(s["titre"])}</span><span class="sea-en">{e(sous)}</span></span>'
+            f'<span class="sea-s"><span class="sea-d">{t["min_etapes"](s["duree"], len(s["etapes"]))}</span>'
+            f'<span class="barre" aria-hidden="true"><i></i></span><span class="sea-x" data-etat>{t["commencer_f"]}</span></span></a></li>')
+    code, nom = mod_titre(m, langue).split(" · ", 1)
     return (
         f'<main class="page gutter">'
-        f'<nav class="fil" aria-label="Fil d\'Ariane"><a href="../index.html">Accueil</a><span>/</span>'
-        f'<a href="../{d["id"]}/index.html">{e(d["titre"])}</a><span>/</span><span>{e(m["titre"].split(" · ")[0])}</span></nav>'
-        f'<div class="page-head"><span class="eyebrow">Module</span><h1>{e(m["titre"].split(" · ", 1)[-1])}</h1>'
-        f'<p class="en">{e(m["en"])}</p></div>'
+        f'<nav class="fil" aria-label="{e(t["fil"])}"><a href="../index.html">{t["accueil"]}</a><span>/</span>'
+        f'<a href="../{d["id"]}/index.html">{e(dom_titre(d, langue))}</a><span>/</span><span>{e(code)}</span></nav>'
+        f'<div class="page-head"><span class="eyebrow">{t["module"]}</span><h1>{e(nom)}</h1>'
+        f'<p class="en">{e(mod_sous(m, langue))}</p></div>'
         f'<ol class="seas">{"".join(lignes)}</ol></main>')
 
 
@@ -182,7 +267,20 @@ def config_supabase(env=None) -> dict:
     return {"url": url, "key": cle}
 
 
+def chemins(chemin: str, langue: str) -> tuple[str, str, str]:
+    """For a page at <chemin>/ in <langue>: (base to the site root for assets, root of this language, same page in the other language)."""
+    parties = [p for p in chemin.split("/") if p]
+    profondeur = len(parties) + (1 if langue == "en" else 0)
+    base = "../" * profondeur
+    racine = base + ("en/" if langue == "en" else "")
+    autre = base + ("" if langue == "en" else "en/") + (chemin + "/" if chemin else "") + "index.html"
+    return base, racine, autre
+
+
 def construire() -> None:
+    erreurs = verifier_depot()
+    if erreurs:
+        sys.exit("\n".join(erreurs))
     parcours = charger_parcours()
     if SORTIE.exists():
         shutil.rmtree(SORTIE)
@@ -192,46 +290,66 @@ def construire() -> None:
         "window.PA_CONFIG = " + json.dumps(config_supabase()) + ";\n", encoding="utf-8")
     g_seance = Template((SITE / "gabarits" / "seance.html").read_text(encoding="utf-8"))
     g_page = Template((SITE / "gabarits" / "page.html").read_text(encoding="utf-8"))
-    erreurs, infos = [], {}
-    for dom, m, sid in seances(parcours):
-        s = charger_seance(sid)
-        erreurs += verifier_seance(s)
-        infos[sid] = s
-        profondeur = "../" * (sid.count("/") + 1)
-        donnees = dict(s, accueil=profondeur + "index.html", module_url=profondeur + m["id"] + "/index.html",
-                       module_titre=m["titre"], domaine_titre=dom["titre"])
-        page = g_seance.substitute(titre=e(s["titre"]), base=profondeur, accueil=donnees["accueil"],
-                                   donnees=json.dumps(donnees, ensure_ascii=False).replace("</", "<\\/"))
-        cible = SORTIE / sid / "index.html"
-        cible.parent.mkdir(parents=True, exist_ok=True)
-        cible.write_text(page, encoding="utf-8")
-    if erreurs:
-        sys.exit("\n".join(erreurs))
-    plan = plan_json(parcours, {sid: (len(s["etapes"]), s["titre"]) for sid, s in infos.items()})
-    titres = {sid: s["titre"] for sid, s in infos.items()}
 
-    def ecrire(chemin: str, base: str, titre: str, description: str, contenu: str, actif: str = "", classe: str = "") -> None:
-        cible = SORTIE / chemin / "index.html" if chemin else SORTIE / "index.html"
-        cible.parent.mkdir(parents=True, exist_ok=True)
-        cible.write_text(g_page.substitute(
-            titre=e(titre), description=e(description), base=base, classe=classe, plan=plan,
-            entete=entete(parcours, base, actif), contenu=contenu, pied=pied(parcours, base)), encoding="utf-8")
+    for langue in LANGUES:
+        t = TXT[langue]
+        sortie = SORTIE if langue == "fr" else SORTIE / langue
+        infos = {}
+        for dom, m, sid in seances(parcours):
+            s = charger_seance(sid, langue)
+            infos[sid] = s
+            base, racine, autre = chemins(sid, langue)
+            donnees = dict(s, accueil=racine + "index.html", module_url=racine + m["id"] + "/index.html",
+                           module_titre=mod_titre(m, langue), domaine_titre=dom_titre(dom, langue))
+            page = g_seance.substitute(
+                titre=e(s["titre"]), base=base, accueil=donnees["accueil"], lang=langue, autre=autre,
+                bascule=bascule(langue, autre), alt_fr=base + sid + "/index.html", alt_en=base + "en/" + sid + "/index.html", compte=t["compte"], racine=racine,
+                progression=t["progression"], etapes=t["etapes"],
+                donnees=json.dumps(donnees, ensure_ascii=False).replace("</", "<\\/"))
+            cible = sortie / sid / "index.html"
+            cible.parent.mkdir(parents=True, exist_ok=True)
+            cible.write_text(page, encoding="utf-8")
+        plan = plan_json(parcours, {sid: (len(s["etapes"]), s["titre"]) for sid, s in infos.items()})
+        titres = {sid: (len(s["etapes"]), s["titre"]) for sid, s in infos.items()}
 
-    ecrire("", "", parcours["titre"], parcours["sous_titre"], page_accueil(parcours, titres), classe="accueil")
-    for k, d in enumerate(parcours["domaines"], 1):
-        ecrire(d["id"], "../", f'{d["titre"]} · {parcours["titre"]}', d["accroche"], page_domaine(parcours, d, k), actif=d["id"])
-        for m in d["modules"]:
-            if m.get("seances"):
-                ecrire(m["id"], "../", f'{m["titre"]} · {parcours["titre"]}', m["en"], page_module(d, m, infos), actif=d["id"])
-    compte = (SITE / "gabarits" / "compte.html").read_text(encoding="utf-8")
-    ecrire("compte", "../", f'Mon compte · {parcours["titre"]}', "Compte facultatif pour retrouver ta progression partout.", compte)
+        def ecrire(chemin, titre, description, contenu, actif="", classe=""):
+            base, racine, autre = chemins(chemin, langue)
+            cible = (sortie / chemin / "index.html") if chemin else sortie / "index.html"
+            cible.parent.mkdir(parents=True, exist_ok=True)
+            cible.write_text(g_page.substitute(
+                titre=e(titre), description=e(description), base=base, classe=classe, plan=plan, lang=langue,
+                alt_fr=base + (chemin + "/" if chemin else "") + "index.html",
+                alt_en=base + "en/" + (chemin + "/" if chemin else "") + "index.html",
+                entete=entete(parcours, racine, autre, langue, actif), contenu=contenu,
+                pied=pied(parcours, racine, autre, langue)), encoding="utf-8")
+
+        nom = parcours["titre"]
+        ecrire("", nom, parcours["sous_titre"] if langue == "fr" else parcours["sous_titre_en"],
+               page_accueil(parcours, titres, langue), classe="accueil")
+        for k, d in enumerate(parcours["domaines"], 1):
+            ecrire(d["id"], f'{dom_titre(d, langue)} · {nom}', dom_accroche(d, langue), page_domaine(parcours, d, k, langue), actif=d["id"])
+            for m in d["modules"]:
+                if m.get("seances"):
+                    ecrire(m["id"], f'{mod_titre(m, langue)} · {nom}', mod_sous(m, langue), page_module(d, m, infos, langue), actif=d["id"])
+        compte = (SITE / "gabarits" / ("compte.html" if langue == "fr" else "compte.en.html")).read_text(encoding="utf-8")
+        ecrire("compte", f'{t["compte"]} · {nom}', t["compte_desc"], compte)
     (SORTIE / ".nojekyll").write_text("", encoding="utf-8")
     print(f"Site construit dans {SORTIE}")
 
 
-if __name__ == "__main__":
-    if "--verifier" in sys.argv:
-        p = charger_parcours()
-        errs = [e for _, _, sid in seances(p) for e in verifier_seance(charger_seance(sid))]
-        sys.exit("\n".join(errs) if errs else 0)
+def main(argv: list[str] | None = None) -> int:
+    """Run canonical validation only, or build the bilingual static site."""
+    args = sys.argv[1:] if argv is None else argv
+    if "--verifier" in args:
+        errors = verifier_depot()
+        if errors:
+            print("\n".join(errors), file=sys.stderr)
+            return 1
+        print("Course plan and referenced sessions are structurally valid.")
+        return 0
     construire()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

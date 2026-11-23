@@ -107,3 +107,172 @@ def test_aucune_cle_secrete_dans_le_depot():
         if ".git" in p.parts or "_site" in p.parts or "vendor" in p.parts or not p.is_file() or p.suffix in {".pyc", ".png"}:
             continue
         assert not motif.search(p.read_text(encoding="utf-8", errors="ignore")), p
+
+
+def test_chaque_seance_a_sa_traduction_anglaise():
+    from tools.construire import verifier_traduction
+    for _, _, sid in seances(charger_parcours()):
+        assert verifier_traduction(sid) == [], sid
+
+
+def test_traduction_ne_touche_pas_aux_chiffres():
+    import pytest
+    from tools.construire import fusion
+    base = {"etapes": [{"type": "quiz", "questions": [{"q": "Question ?", "reponse": 1}]}]}
+    with pytest.raises(ValueError):
+        fusion(base, {"etapes": [{"questions": [{"reponse": 0}]}]}, "test")
+    with pytest.raises(ValueError):
+        fusion(base, {"etapes": [{}, {}]}, "test")
+    with pytest.raises(ValueError):
+        fusion(base, {"nouveau": "texte"}, "test")
+
+
+def test_traduction_ne_change_ni_formule_ni_nombre_ni_type():
+    import pytest
+    from tools.construire import fusion
+    base = {"formule": r"\text{VA} = \frac{1}{1{,}025}", "solution": "$d = 0{,}0244$ et 716 046 survivants.", "minutes": 3, "intro": "Quatre questions."}
+    ok = fusion(base, {"formule": r"\text{PV} = \frac{1}{1{,}025}", "solution": "$d = 0.0244$ and 716,046 survivors."}, "t")
+    assert ok["formule"].startswith(r"\text{PV}")
+    for trad in ({"formule": r"\text{PV} = \frac{1}{1{,}25}"},            # constant changed in a formula
+                 {"formule": r"\text{PV} = \frac{2}{1{,}025}"},
+                 {"solution": "$d = 0.244$ and 716,046 survivors."},     # number changed in a text
+                 {"solution": "$d = 0.0244$ and 716,046 survivors, 3 times."},
+                 {"intro": ""}, {"intro": "   "},                          # empty translation
+                 {"intro": 4},                                          # other type
+                 {"minutes": 4}):                                       # numeric field
+        with pytest.raises(ValueError):
+            fusion(base, trad, "t")
+
+
+def test_traduction_preserve_signe_unite_et_exposant():
+    import pytest
+    from tools.construire import fusion
+
+    base = {"solution": r"Le taux est -2{,}5\,\% et epsilon vaut 1e-5."}
+    valide = {"solution": "The rate is -2.5% and epsilon is 1e-5."}
+    assert fusion(base, valide, "test")["solution"] == valide["solution"]
+
+    # Same digits are not enough: sign, percentage unit and exponent sign carry meaning.
+    for invalide in (
+        {"solution": "The rate is 2.5% and epsilon is 1e-5."},
+        {"solution": "The rate is -2.5 and epsilon is 1e-5."},
+        {"solution": "The rate is -2.5% and epsilon is 1e5."},
+    ):
+        with pytest.raises(ValueError):
+            fusion(base, invalide, "test")
+
+    # Numbers embedded in identifiers must remain protected too (A3 must not become A4).
+    base_codes = {"solution": "Use A3, x2 and ch1; then calculate n-1."}
+    valide_codes = {"solution": "Use A3, x2 and ch1; then calculate n-1."}
+    assert fusion(base_codes, valide_codes, "test") == base_codes
+    with pytest.raises(ValueError):
+        fusion(base_codes, {"solution": "Use A4, x2 and ch1; then calculate n-1."}, "test")
+    with pytest.raises(ValueError):
+        fusion(base_codes, {"solution": "Use A3, x3 and ch1; then calculate n-1."}, "test")
+    with pytest.raises(ValueError):
+        fusion(base_codes, {"solution": "Use A3, x2 and ch2; then calculate n-1."}, "test")
+    with pytest.raises(ValueError):
+        fusion(base_codes, {"solution": "Use A3, x2 and ch1; then calculate n+1."}, "test")
+
+
+def test_tableaux_anglais_identiques_au_francais():
+    """The English tables only change the number format (2,5 % → 2.5%, 716 046 → 716,046)."""
+    def norme(v, langue):
+        v = str(v).replace(" ", "").replace("%", "")
+        return v.replace(",", "") if langue == "en" else v.replace(",", ".")
+    for _, _, sid in seances(charger_parcours()):
+        fr, en = charger_seance(sid), charger_seance(sid, "en")
+        for a, b in zip(fr["etapes"], en["etapes"]):
+            if a["type"] == "calcul":
+                assert [[norme(x, "fr") for x in l] for l in a["donnees"]["lignes"]] == \
+                       [[norme(x, "en") for x in l] for l in b["donnees"]["lignes"]], sid
+                assert a["champs"] == b["champs"]
+
+
+def test_site_bilingue(tmp_path, monkeypatch):
+    import tools.construire as c
+    monkeypatch.setattr(c, "SORTIE", tmp_path / "site")
+    c.construire()
+    for sid in [s for _, _, s in seances(charger_parcours())]:
+        fr = (tmp_path / "site" / sid / "index.html").read_text(encoding="utf-8")
+        en = (tmp_path / "site" / "en" / sid / "index.html").read_text(encoding="utf-8")
+        assert '<html lang="fr">' in fr and '<html lang="en">' in en
+        assert f'href="../../en/{sid}/index.html"' in fr and f'href="../../../{sid}/index.html"' in en
+        for page, base in ((fr, "../../"), (en, "../../../")):
+            assert f'hreflang="fr" href="{base}{sid}/index.html"' in page
+            assert f'hreflang="en" href="{base}en/{sid}/index.html"' in page
+    accueil = (tmp_path / "site" / "en" / "index.html").read_text(encoding="utf-8")
+    assert 'hreflang="fr" href="../index.html"' in accueil and "Foundations" in accueil
+
+    # Navigation pages and account pages must expose valid language alternates too.
+    for chemin in ("", "fondamentaux", "a1", "compte"):
+        profondeur = len([part for part in chemin.split("/") if part])
+        base_fr = "../" * profondeur
+        base_en = "../" * (profondeur + 1)
+        fr_path = tmp_path / "site" / chemin / "index.html" if chemin else tmp_path / "site" / "index.html"
+        en_path = tmp_path / "site" / "en" / chemin / "index.html" if chemin else tmp_path / "site" / "en" / "index.html"
+        fr_page = fr_path.read_text(encoding="utf-8")
+        en_page = en_path.read_text(encoding="utf-8")
+        suffix = (chemin + "/" if chemin else "") + "index.html"
+        assert f'hreflang="fr" href="{base_fr}{suffix}"' in fr_page
+        assert f'hreflang="en" href="{base_fr}en/{suffix}"' in fr_page
+        assert f'hreflang="fr" href="{base_en}{suffix}"' in en_page
+        assert f'hreflang="en" href="{base_en}en/{suffix}"' in en_page
+        assert f'href="{base_fr}en/{suffix}"' in fr_page
+        assert f'href="{base_en}{suffix}"' in en_page
+
+
+def test_traduction_ne_peut_pas_modifier_les_metadonnees_de_session():
+    import pytest
+    from tools.construire import fusion
+
+    base = {
+        "id": "a1/s01",
+        "module": "a1",
+        "en": "Compound interest and annuities certain",
+        "actu_basics": {
+            "episode": "A1 · Financial mathematics",
+            "statut": "à proposer",
+        },
+        "titre": "Intérêt composé",
+    }
+
+    with pytest.raises(ValueError, match=r"\.en"):
+        fusion(base, {"en": "Different metadata title"}, "a1/s01")
+    with pytest.raises(ValueError, match=r"\.actu_basics"):
+        fusion(base, {"actu_basics": {"statut": "published"}}, "a1/s01")
+
+
+def test_formules_makeham_et_udd():
+    """Garde les signes et l'égalité exacte de l'espérance complète sous UDD."""
+    import math
+
+    s = charger_seance("a3/s01")
+    recap = next(e for e in s["etapes"] if e["type"] == "rappel")
+    formules = [bloc.get("formule", "") for bloc in recap["blocs"]]
+    assert any(r"\underbrace{-\ln s}_{A} + \underbrace{-\,\ln g\,\ln c}_{B}\,c^{x}" in f for f in formules)
+    assert any(r"\mathring{e}_x = \int_0^{\infty} {}_tp_x\,\mathrm{d}t = e_x + \tfrac12" in f for f in formules)
+
+    table = s["table"]
+    k, a, g, c = table["k"], table["s"], table["g"], table["c"]
+
+    def log_l(x):
+        return math.log(k) + x * math.log(a) + c**x * math.log(g)
+
+    A = -math.log(a)
+    B = -math.log(g) * math.log(c)
+    for age in (0, 40, 65, 100):
+        h = 1e-5
+        derivative = -(log_l(age + h) - log_l(age - h)) / (2 * h)
+        assert math.isclose(derivative, A + B * c**age, rel_tol=1e-8, abs_tol=1e-10)
+
+
+def test_aucun_texte_court_ne_contient_de_saut_de_ligne():
+    """Options, titles and labels are one line: a newline there means a broken edit (e.g. a pasted copy of the file)."""
+    for _, _, sid in seances(charger_parcours()):
+        for langue in ("fr", "en"):
+            s = charger_seance(sid, langue)
+            for e in s["etapes"]:
+                assert "\n" not in e["titre"], (sid, langue)
+                for q in e.get("questions", []):
+                    assert all("\n" not in o for o in q["options"]), (sid, langue, q["q"])

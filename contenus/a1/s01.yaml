@@ -105,7 +105,7 @@ etapes:
           Plus généralement, la <b>valeur actuelle</b> <i>(present value)</i> d'une suite de flux $C_t$ est la somme
           des flux actualisés. Tout le reste du parcours, des rentes viagères aux provisions, repose sur cette somme.
       - formule: |
-          VA = \sum_t C_t\, v^t
+          \text{VA} = \sum_t C_t\, v^t
       - note: >-
           En A3, une rente viagère sera une annuité certaine dont chaque paiement est multiplié par une
           probabilité de survie : $\ddot{a}_x = \sum_k v^k\,{}_kp_x$.
@@ -125,7 +125,7 @@ etapes:
           rappel: >-
             Actualiser, c'est diviser par le facteur d'accumulation $(1+i)^t$, donc multiplier par $v^t$.
           formule: |-
-            VA = C\,v^t = \frac{C}{(1+i)^t}
+            \text{VA} = C\,v^t = \frac{C}{(1+i)^t}
           exemple: >-
             $1{,}025^{10} = 1{,}28008$, donc $1\,000 / 1{,}28008 = 781{,}20$ €.
           piege: >-

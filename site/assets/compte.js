@@ -9,6 +9,8 @@
  */
 (function () {
   "use strict";
+  var EN = document.documentElement.lang === "en";
+  var tr = function (fr, en) { return EN ? en : fr; };
   var CFG = window.PA_CONFIG || {};
   var BASE = (document.currentScript && document.currentScript.dataset.base) || "";
   var LIB = BASE + "assets/vendor/supabase/supabase.js";
@@ -95,28 +97,28 @@
     var $ = function (sel) { return root.querySelector(sel); };
     var statut = $("[data-statut]"), form = $("[data-form]"), connecte = $("[data-connecte]");
     var dire = function (txt, etat) { statut.textContent = txt; statut.dataset.etat = etat || ""; };
-    if (!actif) { form.hidden = true; connecte.hidden = true; dire("Les comptes ne sont pas encore activés sur ce site. Ta progression reste dans ce navigateur."); return; }
+    if (!actif) { form.hidden = true; connecte.hidden = true; dire(tr("Les comptes ne sont pas encore activés sur ce site. Ta progression reste dans ce navigateur.", "Accounts are not enabled on this site yet. Your progress stays in this browser.")); return; }
     var montrer = function (user) { form.hidden = !!user; connecte.hidden = !user; if (user) $("[data-email]").textContent = user.email || ""; };
-    dire("Vérification de ton compte…");
+    dire(tr("Vérification de ton compte…", "Checking your account…"));
     client().then(function (sb) {
       var enCours = false;
       var lancer = function (user) {
         if (enCours) return; enCours = true;
-        dire("Synchronisation de ta progression…");
+        dire(tr("Synchronisation de ta progression…", "Syncing your progress…"));
         sync(sb, user).then(function (r) {
-          dire("Progression enregistrée sur ton compte : " + r.total + " séance(s). " + r.recus + " mise(s) à jour sur cet appareil.", "ok");
+          dire(tr("Progression enregistrée sur ton compte : " + r.total + " séance(s). " + r.recus + " mise(s) à jour sur cet appareil.", "Progress saved to your account: " + r.total + " session(s). " + r.recus + " updated on this device."), "ok");
         }).catch(function () {
-          dire("La synchronisation a échoué. Ta progression reste dans ce navigateur ; réessaie plus tard.", "erreur");
+          dire(tr("La synchronisation a échoué. Ta progression reste dans ce navigateur ; réessaie plus tard.", "Sync failed. Your progress stays in this browser; try again later."), "erreur");
         }).then(function () { enCours = false; });
       };
       sb.auth.getSession().then(function (r) {
         var user = r.data && r.data.session && r.data.session.user;
         montrer(user);
-        if (user) lancer(user); else dire("Tu n'es pas connecté. Ta progression est enregistrée dans ce navigateur seulement.");
+        if (user) lancer(user); else dire(tr("Tu n'es pas connecté. Ta progression est enregistrée dans ce navigateur seulement.", "You are not signed in. Your progress is saved in this browser only."));
       });
       sb.auth.onAuthStateChange(function (ev, session) {
         if (ev === "SIGNED_IN" && session) { montrer(session.user); lancer(session.user); }
-        if (ev === "SIGNED_OUT") { montrer(null); dire("Déconnecté. Ta progression reste dans ce navigateur."); }
+        if (ev === "SIGNED_OUT") { montrer(null); dire(tr("Déconnecté. Ta progression reste dans ce navigateur.", "Signed out. Your progress stays in this browser.")); }
       });
       form.addEventListener("submit", function (ev) {
         ev.preventDefault();
@@ -124,8 +126,8 @@
         var btn = form.querySelector("button"); btn.disabled = true;
         sb.auth.signInWithOtp({ email: email, options: { emailRedirectTo: location.origin + location.pathname, shouldCreateUser: true } }).then(function (r) {
           btn.disabled = false;
-          if (r.error) dire("Impossible d'envoyer le lien. Vérifie l'adresse ou réessaie dans quelques minutes.", "erreur");
-          else dire("Regarde ta boîte mail : un lien de connexion t'a été envoyé. Ouvre-le sur cet appareil.", "ok");
+          if (r.error) dire(tr("Impossible d'envoyer le lien. Vérifie l'adresse ou réessaie dans quelques minutes.", "We couldn't send the link. Check the address or try again in a few minutes."), "erreur");
+          else dire(tr("Regarde ta boîte mail : un lien de connexion t'a été envoyé. Ouvre-le sur cet appareil.", "Check your inbox: we sent you a sign-in link. Open it on this device."), "ok");
         });
       });
       $("[data-sync]").addEventListener("click", function () { sb.auth.getUser().then(function (r) { if (r.data && r.data.user) lancer(r.data.user); }); });
@@ -135,14 +137,14 @@
       $("[data-annuler]").addEventListener("click", function () { conf.hidden = true; supp.hidden = false; });
       $("[data-oui]").addEventListener("click", function () {
         sb.rpc("supprimer_mon_compte").then(function (r) {
-          if (r.error) { dire("La suppression a échoué. Réessaie plus tard.", "erreur"); return; }
+          if (r.error) { dire(tr("La suppression a échoué. Réessaie plus tard.", "Deletion failed. Try again later."), "erreur"); return; }
           conf.hidden = true; supp.hidden = false;
-          sb.auth.signOut().then(function () { dire("Ton compte et ta progression en ligne sont supprimés. Ce navigateur garde sa copie locale.", "ok"); });
+          sb.auth.signOut().then(function () { dire(tr("Ton compte et ta progression en ligne sont supprimés. Ce navigateur garde sa copie locale.", "Your account and online progress are deleted. This browser keeps its local copy."), "ok"); });
         });
       });
     }).catch(function () {
       form.hidden = true; connecte.hidden = true;
-      dire("Les comptes sont indisponibles pour le moment. Ta progression reste dans ce navigateur.", "erreur");
+      dire(tr("Les comptes sont indisponibles pour le moment. Ta progression reste dans ce navigateur.", "Accounts are unavailable right now. Your progress stays in this browser."), "erreur");
     });
     return;
   }

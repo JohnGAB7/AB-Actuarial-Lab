@@ -1,0 +1,44 @@
+<main class="stage compte gutter" data-compte>
+  <div class="step-head">
+    <span class="eyebrow">Account · Compte</span>
+    <h1>Your progress, on all your devices.</h1>
+    <p class="lead">The account is optional. Without one, the site saves your progress in this browser. With an account, your finished steps and your Python code follow you everywhere.</p>
+  </div>
+
+  <p class="statut" data-statut role="status" aria-live="polite"></p>
+
+  <form class="compte-form" data-form hidden>
+    <label for="email">Your email address</label>
+    <div class="compte-row">
+      <input id="email" type="email" autocomplete="email" required placeholder="name@example.com">
+      <button class="btn" type="submit">Get a link</button>
+    </div>
+    <p class="aide">No password: you receive a sign-in link <i>(magic link)</i> by email.</p>
+  </form>
+
+  <div class="compte-ok" data-connecte hidden>
+    <p>Signed in as <b data-email></b>.</p>
+    <div class="compte-row">
+      <button class="btn" type="button" data-sync>Sync now</button>
+      <button class="btn ghost" type="button" data-deconnexion>Sign out</button>
+    </div>
+    <button class="lien-danger" type="button" data-supprimer>Delete my account</button>
+    <div class="confirmer" data-confirmer hidden>
+      <p>Your account and your online progress will be deleted for good. This browser keeps its local copy.</p>
+      <div class="compte-row">
+        <button class="btn danger" type="button" data-oui>Yes, delete</button>
+        <button class="btn ghost" type="button" data-annuler>Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="vie-privee" id="confidentialite">
+    <span class="eyebrow">Privacy · Confidentialité</span>
+    <ul>
+      <li><b>What is stored</b>: your email address, the finished steps of each session, and your Python code for the exercises.</li>
+      <li><b>Where</b>: at Supabase, in a data centre in the European Union. Each row can only be read by you (Row Level Security).</li>
+      <li><b>Why</b>: only to find your progress on another device. No advertising, no tracking, no resale.</li>
+      <li><b>How long</b>: as long as your account exists. The “Delete my account” button erases everything, immediately.</li>
+    </ul>
+  </section>
+</main>

@@ -1,0 +1,96 @@
+# English texts for session A3.01. Numbers, answers and tests live in contenus/a3/s01.yaml.
+titre: "Force of mortality and life expectancy"
+
+etapes:
+  - titre: "The intuition on video"
+    texte: >-
+      The Actu-Basics video on this topic gives the intuition: reading a table, going from lₓ to a probability,
+      then to a life expectancy. It does not exist yet. When it is published, it will appear here.
+
+  - titre: "The recap"
+    blocs:
+      - p: >-
+          Your simulator works at integer ages: it knows $l_x$, $p_x$ and $q_x$. The SOA FAM syllabus also covers continuous-time survival models, beyond probabilities
+          at integer ages. The central tool is the
+          <b>force of mortality</b> <i>(force de mortalité)</i> $\mu_x$, the instantaneous death rate at exact age $x$.
+      - {}
+      - p: >-
+          For the Makeham law in your repository, $l_x = k\,s^x\,g^{c^x}$. Differentiating $\ln l_x$ gives a force
+          that grows exponentially with age. With $A = -\ln s$ and $B = -\ln g\,\ln c$, this is the classic
+          form $A + Bc^x$, and Gompertz's law when $A = 0$.
+      - {}
+      - {}
+      - p: >-
+          The <b>curtate life expectancy</b> <i>(espérance de vie abrégée)</i> $e_x$ counts the whole years still
+          lived. The <b>complete life expectancy</b> <i>(espérance de vie complète)</i> $\mathring{e}_x$ adds the fraction of
+          the year of death.
+      - {}
+      - note: >-
+          Under IAS 19, the choice of mortality table directly affects the DBO of an annuity
+          plan. You will measure it yourself in the A4+ extension. The MK table used in this session's calculations is a parametric example from the repository's simulator, not a CPM table. In Canada, the applicable table depends on
+          the valuation type and effective date: the CPM2024 research report was published in March 2026. For
+          commuted values under section 3530 of the Standards of Practice, the combined CPM2024 table and
+          MI-2024 improvement scale have been promulgated with effect from April 1, 2027.
+      - sources:
+          - {titre: "Dickson, Hardy and Waters, Actuarial Mathematics for Life Contingent Risks, ch. 2 and 3", detail: "Survival models, force of mortality, fractional ages"}
+          - {titre: "SOA, Fundamentals of Actuarial Mathematics (FAM) Exam", detail: "Official exam syllabus"}
+          - {titre: "CIA, 2024 Canadian Pensioner Mortality Research Project", detail: "Published on March 11, 2026: updated mortality tables for Canadian pensioners and their spouses"}
+          - {titre: "CIA, 2026 promulgation of the mortality table — section 3530", detail: "Combined CPM2024 and MI-2024 apply from April 1, 2027 to commuted values covered by this section"}
+
+  - titre: "Check"
+    intro: "Four questions. Answer without rereading the recap."
+    questions:
+      - q: 'Under the Makeham law, how does $\mu_x$ change with age?'
+        options: ["Linearly", "Exponentially, up to a constant", "It is constant"]
+        pourquoi:
+          rappel: >-
+            The Makeham law adds a constant mortality component $A$, independent of age, to an age-related mortality component that grows exponentially (Gompertz's law).
+          exemple: >-
+            MK table: $c = 1.1038$. The age-related part rises by about 10% a year and doubles every $\ln 2 / \ln c \approx 7$ years.
+          piege: >-
+            "Constant" is the exponential law, with no ageing. "Linear" recalls De Moivre's law, where it is $l_x$ that is linear, with $\mu_x = 1/(\omega - x)$.
+      - q: 'With ${}_1p_{65} = 0.97$, ${}_2p_{65} = 0.94$ and a table that stops there, what is $e_{65}$?'
+        options: ['$0.97$', '$1.91$', '$2.91$']
+        pourquoi:
+          rappel: >-
+            The curtate life expectancy is the expected number of whole years still lived, $K_x$. The insured lives the $k$-th whole year if alive at age $x + k$.
+          exemple: >-
+            $e_{65} = 0.97 + 0.94 = 1.91$ years.
+          piege: >-
+            0.97 keeps only the first year. 2.91 wrongly adds the term $k = 0$, which is always ${}_0p_x = 1$.
+      - q: 'Under the UDD assumption, how are $\mathring{e}_x$ and $e_x$ related?'
+        pourquoi:
+          rappel: >-
+            Under UDD (uniform distribution of deaths), the deaths of a year are spread evenly: ${}_tq_x = t\,q_x$ for $0 \le t \le 1$. The fraction of a year lived in the year of death is therefore $\tfrac12$ on average.
+          exemple: >-
+            MK table: $e_{65} = 12.316$ years, so $\mathring{e}_{65} \approx 12.816$ years.
+          piege: >-
+            $\mathring{e}_x$ adds the fraction of the year of death: it cannot be smaller than $e_x$.
+      - q: "A more prudent table for an annuity plan should…"
+        options: ['increase the $q_x$', 'decrease the $q_x$', 'change nothing']
+        pourquoi:
+          rappel: >-
+            An annuity pays as long as the insured is alive. Fewer deaths means more payments, so a higher liability: this is longevity risk (risque de longévité).
+          exemple: >-
+            That is why annuity tables are given mortality improvement, which lowers the future $q_x$.
+          piege: >-
+            For a death benefit it is the other way round: prudence calls for higher $q_x$. Prudence always depends on the risk covered.
+
+  - titre: "By hand"
+    intro: "MK table, survivor counts rounded to the unit. Use a calculator, then enter your results to 4 decimal places."
+    donnees:
+      lignes: [['$l_x$', '716,046', '695,175', '672,905', '649,211']]
+    solution: |
+      ${}_1p_{65} = \dfrac{695{,}175}{716{,}046} = 0.9709$, $\quad {}_2p_{65} = \dfrac{672{,}905}{716{,}046} = 0.9398$, $\quad {}_3p_{65} = \dfrac{649{,}211}{716{,}046} = 0.9067$.
+      Sum: $2.8174$. On the full table, $e_{65} = 12.32$ years.
+
+  - titre: "Your turn to code"
+    intro: "Write the body of the two functions, without AI. All the tests must pass."
+    tests:
+      - {nom: '$l(65)$ is 716,046 to the nearest unit'}
+      - {nom: '$e_{40}$ is 32.138'}
+      - {nom: '$e_{65}$ is 12.316'}
+      - {nom: '$e_{65}$ is smaller than $e_{40}$'}
+
+  - titre: "Vocabulary"
+    intro: "Tap a card: the French term and a job-interview sentence."

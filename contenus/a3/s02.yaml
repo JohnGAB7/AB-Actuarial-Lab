@@ -85,7 +85,7 @@ etapes:
           rappel: >-
             $A_x$ est une somme de facteurs $v^{k+1}$ pondérés par des probabilités qui ne dépendent pas du taux. Quand $i$ baisse, chaque $v^{k+1}$ augmente.
           formule: |-
-            \begin{gathered} A_x = \sum_{k \ge 0} v^{k+1}\,{}_{k|}q_x \\[4pt] \sum_{k \ge 0} {}_{k|}q_x = 1 \;\Rightarrow\; A_x < 1 \end{gathered}
+            \begin{gathered} A_x = \sum_{k \ge 0} v^{k+1}\,{}_{k|}q_x \\[4pt] \sum_{k \ge 0} {}_{k|}q_x = 1 \;\Rightarrow\; A_x < 1 \quad (i > 0) \end{gathered}
           exemple: >-
             Table MK : $A_{65}$ vaut 0,7310 à 2,5 % et 0,8781 à 1 %.
           piege: >-
@@ -107,7 +107,7 @@ etapes:
         reponse: 0
         pourquoi:
           rappel: >-
-            Pour une vie entière, le paiement de 1 est certain ; seule sa date est aléatoire. Plus l'assuré est âgé, plus le décès est proche et moins il est actualisé.
+            Pour la table de Makeham utilisée ici, la mortalité augmente avec l'âge. Le paiement de 1 est certain ; seule sa date est aléatoire. À 65 ans, il intervient donc en moyenne plus tôt qu'à 40 ans et subit moins d'actualisation.
           formule: |-
             \begin{gathered} A_x = \mathbb{E}\!\left[v^{K_x + 1}\right] \;\ge\; v^{\,e_x + 1} \\[4pt] \text{(inégalité de Jensen)} \end{gathered}
           exemple: >-

@@ -1,0 +1,100 @@
+# English texts for session A3.02. Numbers, answers and tests live in contenus/a3/s02.yaml.
+titre: "Actuarial present value of life insurance"
+
+etapes:
+  - titre: "The intuition on video"
+    texte: >-
+      The Actu-Basics video on this topic will show the central idea: an uncertain payment is worth the sum of its
+      possible amounts, discounted and weighted by their probability. It does not exist yet.
+
+  - titre: "The recap"
+    blocs:
+      - p: >-
+          An insurance policy promises a payment whose <b>date</b> depends on the life of the insured. Its
+          <b>actuarial present value</b> <i>(valeur actuelle actuarielle, APV)</i> is the expected discounted
+          payment. We write $v = 1/(1+i)$ for the discount factor <i>(facteur d'actualisation)</i> at the valuation rate $i$.
+      - p: >-
+          The simplest is the <b>pure endowment</b> <i>(capital différé)</i>: it pays 1 in $n$ years if the insured
+          is still alive. You must discount over $n$ years and survive $n$ years.
+      - {}
+      - p: >-
+          <b>Term insurance</b> <i>(assurance temporaire décès)</i> pays 1 at the end of the year of death, if
+          death occurs within $n$ years. Death occurs in year $k+1$ with probability
+          ${}_{k|}q_x = d_{x+k}/l_x$, where $d_x = l_x - l_{x+1}$.
+      - {}
+      - p: >-
+          <b>Whole life insurance</b> <i>(assurance vie entière)</i> is a term insurance that runs to the end of the
+          table. <b>Endowment insurance</b> <i>(assurance mixte)</i> pays at death or at maturity: it is the sum
+          of a term insurance and a pure endowment.
+      - {}
+      - p: >-
+          These values read as <b>net single premiums</b> <i>(primes uniques nettes)</i>: for a benefit of
+          €100,000, the net single premium of a whole life policy is $100{,}000\,A_x$.
+      - note: >-
+          The valuation rate weighs heavily: the lower $i$, the closer $v$ is to 1 and the more the liabilities
+          are worth. It is the same mechanism as falling discount rates under IAS 19.
+      - sources:
+          - {titre: "Dickson, Hardy and Waters, Actuarial Mathematics for Life Contingent Risks, ch. 4", detail: "Present values of insurance benefits, discrete and continuous time"}
+          - {titre: "SOA, Fundamentals of Actuarial Mathematics (FAM) Exam", detail: "Official exam syllabus"}
+
+  - titre: "Check"
+    intro: "Four questions. Answer without rereading the recap."
+    questions:
+      - q: 'What is ${}_nE_x$ when the rate $i$ is 0?'
+        pourquoi:
+          rappel: >-
+            The pure endowment combines two effects: survival, ${}_np_x$, and discounting, $v^n$. When $i = 0$, only the discounting disappears.
+          exemple: >-
+            MK table: ${}_{10}p_{65} = 0.6222$. At 2.5%, ${}_{10}E_{65} = v^{10} \times 0.6222 = 0.7812 \times 0.6222 = 0.4860$.
+          piege: >-
+            1 would ignore the risk of death, and $v^n$ would ignore survival.
+      - q: 'If the valuation rate falls, $A_x$…'
+        options: ['increases', 'decreases', 'does not change']
+        pourquoi:
+          rappel: >-
+            $A_x$ is a sum of factors $v^{k+1}$ weighted by probabilities that do not depend on the rate. When $i$ falls, each $v^{k+1}$ rises.
+          exemple: >-
+            MK table: $A_{65}$ is 0.7310 at 2.5% and 0.8781 at 1%.
+          piege: >-
+            When $i \to 0$, $A_x \to 1$: whole life insurance always ends up paying 1, only the date matters.
+      - q: 'Which equality is correct?'
+        pourquoi:
+          rappel: >-
+            The endowment pays 1 in two mutually exclusive cases: death before maturity (the term insurance, paid at the end of the year of death) or survival to maturity (the pure endowment). So we add the two values.
+          exemple: >-
+            Hand calculation: $A_{65:\overline{3}|} = 0.0888 + 0.8419 = 0.9307$.
+          piege: >-
+            Subtracting makes no sense. The product $A_x\,{}_nE_x$ matches no contract: deferred whole life insurance is ${}_{n|}A_x = {}_nE_x\,A_{x+n}$, at age $x + n$.
+      - q: 'Why is $A_{65}$ larger than $A_{40}$?'
+        options: ['Because death is closer, so less discounted', 'Because the benefit is larger', 'It is not']
+        pourquoi:
+          rappel: >-
+            For the Makeham table used here, mortality increases with age. The payment of 1 is certain; only its date is random. At age 65, it therefore occurs earlier on average than at age 40 and is discounted less.
+          formule: |-
+            \begin{gathered} A_x = \mathbb{E}\!\left[v^{K_x + 1}\right] \;\ge\; v^{\,e_x + 1} \\[4pt] \text{(Jensen's inequality)} \end{gathered}
+          exemple: >-
+            MK table at 2.5%: $A_{40} = 0.4605$ and $A_{65} = 0.7310$.
+          piege: >-
+            The benefit is 1 in both cases. It is not the amount that changes, it is the date of payment.
+
+  - titre: "By hand"
+    intro: "MK table from session 1, rate of 2.5%. Compute for an insured aged 65 over 3 years, then enter your results to 4 decimal places."
+    donnees:
+      lignes: [['$l_x$', '716,046', '695,175', '672,905', '649,211']]
+    solution: |
+      Deaths: $d_{65} = 20{,}871$, $d_{66} = 22{,}270$, $d_{67} = 23{,}694$.
+      $A^{1}_{65:\overline{3}|} = \dfrac{20{,}871\,v + 22{,}270\,v^2 + 23{,}694\,v^3}{716{,}046} = 0.0888$, $\quad {}_3E_{65} = v^3\,\dfrac{649{,}211}{716{,}046} = 0.8419$.
+      Endowment: $0.0888 + 0.8419 = 0.9307$.
+
+  - titre: "Your turn to code"
+    intro: "Copy your l(x) function from session 1, then write the other three, without AI. All the tests must pass."
+    tests:
+      - {nom: '${}_{10}E_{65}$ is 0.48603 at 2.5%'}
+      - {nom: '$A^{1}_{65:\overline{10}|}$ is 0.32737 at 2.5%'}
+      - {nom: '$A_{40}$ is 0.46053 at 2.5%'}
+      - {nom: '$A_{65}$ is 0.73096 at 2.5%'}
+      - {nom: 'With $i = 0$, ${}_{10}E_{65} = {}_{10}p_{65}$'}
+      - {nom: '$A_x$ increases when the rate falls'}
+
+  - titre: "Vocabulary"
+    intro: "Tap a card: the French term and a job-interview sentence."
