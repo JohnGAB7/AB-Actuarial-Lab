@@ -63,10 +63,12 @@ const BASE = process.env.SITE_URL || 'http://localhost:8765/';
   }));
 
   const englishPage = await browser.newPage();
+  let englishPayloadInjected = false;
   englishPage.on('pageerror', (error) => errors.push(error.message));
   await englishPage.route('**/en/a1/s01/index.html', async (route) => {
     const response = await route.fetch();
     let body = await response.text();
+    englishPayloadInjected = body.includes('The rate of discount $d$ is');
     body = body.replace(
       'The rate of discount $d$ is',
       "<img src=x onerror='window.__xss=5'>The rate of discount $d$ is",
@@ -99,6 +101,7 @@ const BASE = process.env.SITE_URL || 'http://localhost:8765/';
   if (sources.plainSourceLabels !== 2) failures.push('unsafe source labels not retained as plain text');
   if (sources.bold === 0 || sources.italic === 0) failures.push('allowed bold/italic formatting was lost');
   if (sources.xss !== undefined) failures.push('source URL payload executed');
+  if (!englishPayloadInjected) failures.push('English XSS payload was not injected into the fixture');
   if (english.lang !== 'en') failures.push('English page did not retain its language');
   if (!english.text.includes('The rate of discount')) failures.push('English explanation text lost');
   if (english.activeElements !== 0) failures.push('active elements inserted from English content');
