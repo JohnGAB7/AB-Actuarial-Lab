@@ -535,3 +535,35 @@ a.mod .mod-n{color:var(--progress);font-weight:600}
  .stage{padding:clamp(44px,4.4vw,76px)}
  .flow{gap:clamp(30px,3vw,46px)}
 }
+
+
+/* Mathematical studio board — formulas become a deliberate visual teaching moment. */
+:root{
+  --board:#0B1626;
+  --board-ink:#EDF4FB;
+  --board-muted:#9FB2C8;
+  --board-grid:rgba(157,190,220,.075);
+}
+.formula{
+  color:var(--board-ink);
+  background:
+    linear-gradient(var(--board-grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--board-grid) 1px,transparent 1px),
+    radial-gradient(110% 130% at 100% 0%,#18324E 0%,var(--board) 66%);
+  background-size:28px 28px,28px 28px,auto;
+  border:1px solid #29425E;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 16px 34px rgba(3,12,24,.16);
+}
+.formula::before{
+  content:"";
+  position:absolute;
+  inset:0 0 auto;
+  height:3px;
+  background:linear-gradient(90deg,#D6A94D 0%,#5AB0EE 48%,transparent 100%);
+  opacity:.9;
+}
+.formula .katex,.formula .katex-display{color:var(--board-ink)}
+.formula .katex .mord.text,.formula .katex .mtext{color:var(--board-muted)}
+@media(prefers-reduced-motion:reduce){
+  .formula{scroll-behavior:auto}
+}
