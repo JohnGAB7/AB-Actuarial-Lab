@@ -32,6 +32,18 @@ def test_tableau_a3_s01_issu_de_la_table_mk():
         assert round(t["k"] * t["s"] ** x * t["g"] ** (t["c"] ** x)) == v
 
 
+def test_calcul_a3_s02_coherent_avec_le_tableau():
+    s = charger_seance("a3/s02")
+    calc = next(e for e in s["etapes"] if e["type"] == "calcul")
+    lx = [int(v.replace(" ", "")) for v in calc["donnees"]["lignes"][0][1:]]
+    v = 1 / (1 + s["taux"])
+    temp = sum(v ** (k + 1) * (lx[k] - lx[k + 1]) for k in range(3)) / lx[0]
+    diff = v**3 * lx[3] / lx[0]
+    attendu = {"temp": temp, "diff": diff, "mixte": temp + diff}
+    for c in calc["champs"]:
+        assert abs(c["valeur"] - attendu[c["cle"]]) < 1e-6, c["cle"]
+
+
 def test_aucun_support_de_cours_ni_cv_dans_le_depot():
     """Supports de cours et CV restent dans la bibliothèque du projet, jamais sur un dépôt."""
     interdits = {".pdf", ".pptx", ".ppt", ".docx", ".doc", ".tex", ".xlsx"}

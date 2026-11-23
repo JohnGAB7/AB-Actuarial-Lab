@@ -9,3 +9,16 @@ def l(x):
 
 def curtate_life_expectancy(x):
     return sum(l(x + k) for k in range(1, OMEGA - x + 1)) / l(x)
+
+
+def pure_endowment(x, n, i):
+    return (1 + i) ** -n * l(x + n) / l(x)
+
+
+def term_insurance(x, n, i):
+    v = 1 / (1 + i)
+    return sum(v ** (k + 1) * (l(x + k) - l(x + k + 1)) for k in range(n)) / l(x)
+
+
+def whole_life(x, i):
+    return term_insurance(x, OMEGA - x, i)

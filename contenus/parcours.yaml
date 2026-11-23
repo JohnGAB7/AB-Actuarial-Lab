@@ -18,7 +18,7 @@ blocs:
     en: "Life"
     periode: "A3, A4 et approfondissements"
     modules:
-      - {id: a3, titre: "A3 · Vie et mortalité", en: "Life insurance and mortality", seances: [a3/s01]}
+      - {id: a3, titre: "A3 · Vie et mortalité", en: "Life insurance and mortality", seances: [a3/s01, a3/s02]}
       - {id: a3-plus, titre: "A3+ · Temps continu, plusieurs têtes, tables prospectives (CPM2014)", en: "Continuous time, multiple lives, mortality improvement"}
       - {id: a4, titre: "A4 · Provisions vie", en: "Life reserves"}
       - {id: a4-plus, titre: "A4+ · Variable de perte, Zillmer, profit testing", en: "Loss random variable, Zillmer reserves, profit testing"}
