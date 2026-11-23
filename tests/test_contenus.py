@@ -1,4 +1,5 @@
 """Vérifie les contenus : structure des séances et chiffres recalculés indépendamment."""
+import math
 from pathlib import Path
 
 import yaml
@@ -54,6 +55,89 @@ def test_calcul_a1_s01():
     for c in calc["champs"]:
         assert abs(c["valeur"] - attendu[c["cle"]]) < 1e-6, c["cle"]
 
+
+
+def _calcul(sid):
+    s = charger_seance(sid)
+    return s, {c["cle"]: c["valeur"] for c in next(e for e in s["etapes"] if e["type"] == "calcul")["champs"]}
+
+
+def _proche(obtenu, attendu, tol=1e-6):
+    assert set(obtenu) == set(attendu), (sorted(obtenu), sorted(attendu))
+    for k in attendu:
+        assert abs(obtenu[k] - attendu[k]) < tol, (k, obtenu[k], attendu[k])
+
+
+def test_calcul_a1_s02():
+    s, champs = _calcul("a1/s02")
+    i, m, n = s["taux"], 12, 10
+    v = 1 / (1 + i)
+    im, dm = m * ((1 + i) ** (1 / m) - 1), m * (1 - v ** (1 / m))
+    _proche(champs, {"im": im, "dm": dm, "am": (1 - v**n) / im, "adm": (1 - v**n) / dm})
+    # Figures quoted in the quizzes.
+    assert round(((1 + 0.06 / 12) ** 12 - 1) * 100, 3) == 6.168
+    assert round(((1 + 0.06 / 4) ** 4 - 1) * 100, 3) == 6.136
+    assert round(((1 + 0.04 / 12) ** 12 - 1) * 100, 2) == 4.07
+    assert round(1200 * (1 - v**n) / im, 2) == 9910.25
+    assert round(1200 * (1 - v**n) / i) == 9733
+    assert round(i / im, 4) == 1.0182
+    assert round(1.005**12, 6) == 1.061678 and round((1 + i) ** (1 / 12), 7) == 1.0032737
+    assert round(v ** (1 / 12), 7) == 0.9967369 and round(1 - v**10, 6) == 0.324436
+    assert [round(x * 100, 3) for x in (i * v, dm, math.log(1 + i), im, 2 * ((1 + i) ** 0.5 - 1))] == [3.846, 3.916, 3.922, 3.928, 3.961]
+
+
+def test_calcul_a1_s03():
+    s, champs = _calcul("a1/s03")
+    i, n, g = s["taux"], 10, 0.02
+    v = 1 / (1 + i)
+    a = sum(v**k for k in range(1, n + 1))
+    ia = sum(k * v**k for k in range(1, n + 1))
+    da = sum((n + 1 - k) * v**k for k in range(1, n + 1))
+    geo = sum((1 + g) ** (k - 1) * v**k for k in range(1, n + 1))
+    _proche(champs, {"s": a * (1 + i) ** n, "ia": ia, "da": da, "geo": geo})
+    assert round(a, 4) == 7.7217 and round(a * (1 + i), 4) == 8.1078 and round(v**n, 6) == 0.613913
+    assert round((1 + i) ** n, 6) == 1.628895 and round(1000 * a * (1 + i) ** n, 2) == 12577.89
+    assert 10000 / i == 200000 and round(10000 / (i * v)) == 210000 and round(1 / (i - g), 2) == 33.33
+    assert round((n + 1) * a, 4) == 84.9391 and round(((1 + g) / (1 + i)) ** n, 6) == 0.748357
+    assert round(1000 * geo, 2) == 8388.11 and round(1000 * a) == 7722
+
+
+def test_calcul_a1_s04():
+    s, champs = _calcul("a1/s04")
+    i, n, loan = s["taux"], 5, 10000
+    v = 1 / (1 + i)
+    a = lambda k: (1 - v**k) / i
+    p = loan / a(n)
+    b, rows = loan, []
+    for _ in range(n):
+        interest = i * b
+        b -= p - interest
+        rows.append((interest, p - interest, b))
+    _proche(champs, {"p": p, "b2": rows[1][2], "i3": rows[2][0], "pr3": rows[2][1]}, tol=1e-3)
+    assert abs(rows[1][2] - (loan * (1 + i) ** 2 - p * ((1 + i) ** 2 - 1) / i)) < 1e-9
+    assert abs(rows[-1][2]) < 1e-9 and round(a(n), 6) == 4.212364 and round(a(3), 6) == 2.673012
+    assert round(rows[0][1], 2) == 1773.96 and round(n * p - loan, 2) == 1869.82
+    assert round((1 + i) ** 2, 4) == 1.1236
+    npv = lambda j: -1000 + 600 / (1 + j) + 600 / (1 + j) ** 2
+    assert round(npv(0.10), 2) == 41.32 and round(600 / 1.1, 2) == 545.45 and round(600 / 1.21, 2) == 495.87
+    assert abs(npv(0.130662)) < 1e-3 and npv(0.1306) > 0 > npv(0.1308)
+
+
+def test_calcul_a1_s05():
+    s, champs = _calcul("a1/s05")
+    y, spot = s["taux"], [0.03, 0.035, 0.04]
+    prix = lambda yy, n=5: sum(50 / (1 + yy) ** t for t in range(1, n + 1)) + 1000 / (1 + yy) ** n
+    prix3 = 50 / 1.03 + 50 / 1.035**2 + 1050 / 1.04**3
+    f12, f23 = 1.035**2 / 1.03 - 1, 1.04**3 / 1.035**2 - 1
+    _proche(champs, {"prix5": prix(y), "prix3": prix3, "f12": f12, "f23": f23}, tol=1e-4)
+    assert [round(prix(r), 2) for r in (0.04, 0.05, 0.06)] == [1044.52, 1000.0, 957.88]
+    a5 = (1 - 1.04**-5) / 0.04
+    assert round(a5, 4) == 4.4518 and round(1.04**-5, 4) == 0.8219 and round(10 * a5, 2) == 44.52
+    assert round((1 - 1.06**-5) / 0.06, 4) == 4.2124 and round(1.06**-5, 4) == 0.7473
+    assert round(1.035**2, 6) == 1.071225 and round(1.04**3, 6) == 1.124864 and round(1 + f23, 6) == 1.050073
+    assert [round(x, 2) for x in (50 / 1.03, 50 / 1.035**2, 1050 / 1.04**3)] == [48.54, 46.68, 933.45]
+    p3 = lambda yy: 50 / (1 + yy) + 50 / (1 + yy) ** 2 + 1050 / (1 + yy) ** 3
+    assert p3(0.0396) > prix3 > p3(0.0398)
 
 def test_aucun_support_de_cours_ni_cv_dans_le_depot():
     """Supports de cours et CV restent dans la bibliothèque du projet, jamais sur un dépôt."""

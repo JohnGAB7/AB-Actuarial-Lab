@@ -130,6 +130,15 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .video-in{display:grid;gap:14px;position:relative;z-index:1}
 .eyebrow.light{color:var(--on-night-muted)}
 .video-q{font:400 clamp(1.4rem,3.4vw,2.2rem)/1.2 var(--f-display);max-width:24ch}
+.videos{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.videos>:first-child{grid-column:1/-1}
+.video-play{border:0;width:100%;text-align:left;cursor:pointer;font:inherit;transition:transform .15s}
+.video-play:hover{transform:translateY(-2px)}
+.video-play:focus-visible{outline:3px solid var(--data);outline-offset:3px}
+.video-play.small{padding:18px}
+.video-play.small .video-q{font-size:1.05rem;max-width:none}
+.play{justify-self:start;font-size:.85rem;font-weight:600;padding:8px 14px;border-radius:999px;background:var(--on-night);color:var(--night)}
+.video-frame{grid-column:1/-1;width:100%;aspect-ratio:16/9;border:0;border-radius:calc(var(--r) + 4px);background:var(--night)}
 .pill{justify-self:start;font-size:.78rem;font-weight:600;padding:6px 12px;border-radius:999px;background:rgba(255,154,61,.16);color:#FFB46B}
 
 /* Quiz */

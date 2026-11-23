@@ -1,0 +1,139 @@
+# English texts for session A1.03. Numbers, answers and tests live in contenus/a1/s03.yaml.
+titre: "Perpetuities and varying annuities"
+
+etapes:
+  - titre: "Placement check"
+    intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
+    questions:
+      - q: 'What is a perpetuity immediate of 1 a year worth, at rate $i$?'
+        options: ['$\dfrac{1}{i}$', '$\dfrac{1}{d}$', 'It is infinite']
+        pourquoi:
+          rappel: >-
+            A perpetuity pays forever, but distant payments are heavily discounted. The sum converges as soon as $i > 0$.
+          exemple: >-
+            At 5%, receiving €1 a year forever is worth €20 today: invested at 5%, €20 earns exactly €1 a year.
+          piege: >-
+            $1/d$ is the perpetuity due, paid at the start of each year: $1/d = 1/i + 1$.
+      - q: 'What does $s_{\overline{n}|}$ represent?'
+        options: ['The value at time $n$ of $n$ payments of 1 at the end of each year', 'The present value of $n$ payments of 1', 'The total interest received']
+        pourquoi:
+          rappel: >-
+            $s_{\overline{n}|}$ is the accumulated value: each payment is accumulated to time $n$ instead of being discounted to time 0.
+          exemple: >-
+            At 5% over 10 years: $s_{\overline{10}|} = 12.5779$, and $1.05^{10} \times 7.7217 = 12.5779$.
+          piege: >-
+            $s_{\overline{n}|}$ and $a_{\overline{n}|}$ describe the same cash flows at two different dates: $s_{\overline{n}|} = (1+i)^n\,a_{\overline{n}|}$.
+      - q: 'The increasing annuity $(Ia)_{\overline{n}|}$ pays…'
+        options: ['1, 2, 3, …, $n$ at the end of years 1 to $n$', '$n$, $n-1$, …, 1', '1 a year, indexed to inflation']
+        pourquoi:
+          rappel: >-
+            The $I$ stands for "increasing": the payment in year $k$ is $k$. The decreasing annuity $(Da)_{\overline{n}|}$ pays $n$, then $n-1$, down to 1.
+          exemple: >-
+            At 5% over 10 years: $(Ia)_{\overline{10}|} = 39.3738$.
+          piege: >-
+            An inflation-indexed annuity grows geometrically, not arithmetically: that is a different formula.
+      - q: 'A perpetuity pays 1 in one year, then grows by $g$ a year, with $g < i$. It is worth…'
+        pourquoi:
+          rappel: >-
+            Each term is $(1+g)^{k-1} v^k$: a geometric series with ratio $\frac{1+g}{1+i} < 1$.
+          exemple: >-
+            At 5% with $g = 2\%$: $1 / 0.03 = 33.33$, against 20 with no growth.
+          piege: >-
+            If $g \ge i$, the sum diverges: the formula no longer makes sense. It is the Gordon growth model used by financial analysts.
+
+  - titre: "The intuition on video"
+    texte: >-
+      This topic does not have its Actu-Basics video yet. It will show why an income without end has a finite price,
+      and how a small yearly growth changes that price a lot.
+
+  - titre: "The recap"
+    blocs:
+      - p: >-
+          The <b>accumulated value</b> <i>(valeur accumulée)</i> of an annuity is its value at the date of the last
+          payment. It follows from the present value by accumulating over $n$ years.
+      - {}
+      - p: >-
+          A <b>perpetuity</b> <i>(perpétuité)</i> pays without end. Its value is the limit of the annuity as $n \to \infty$:
+          a capital of $1/i$ invested at rate $i$ produces exactly 1 a year, without ever running out.
+      - {}
+      - p: >-
+          <b>Varying annuities</b> <i>(annuités variables)</i> change amount each year. The two classic families are the
+          <b>arithmetic</b> annuity (increasing or decreasing by one unit a year) and the <b>geometric</b> annuity (growing
+          by a fixed percentage).
+      - {}
+      - p: >-
+          The relation $(Ia) + (Da) = (n+1)\,a$ can be read from the cash flows: each year, $k + (n+1-k) = n+1$. It is a
+          good way to check a calculation.
+      - note: >-
+          Indexed pensions are geometric annuities. For a defined benefit plan, an indexation rate of 2% changes the
+          value of the obligations almost as much as a fall in the discount rate.
+      - sources:
+          - {titre: "Kellison, The Theory of Interest, chap. 3 and 4", detail: "Accumulated value, perpetuities, arithmetic and geometric annuities"}
+          - {titre: "SOA, Financial Mathematics (FM) Exam", detail: "Official exam syllabus"}
+
+  - titre: "Check"
+    intro: "Four questions. Answer without rereading the recap."
+    questions:
+      - q: 'A foundation wants to pay €10,000 a year forever, starting in one year. At 5%, how much capital does it need?'
+        options: ['€200,000', '€210,000', '€500,000']
+        pourquoi:
+          rappel: >-
+            This is a perpetuity immediate of €10,000: capital $= 10{,}000 / i$.
+          exemple: >-
+            $10{,}000 / 0.05 = 200{,}000$ euros. Each year, the €10,000 of interest is paid out and the capital stays intact.
+          piege: >-
+            €210,000 corresponds to the first payment made right away (perpetuity due: $10{,}000 / d$).
+      - q: 'How much will you have in 10 years by paying in €1,000 at the end of each year, at 5%?'
+        options: ['€12,578', '€10,000', '€7,722']
+        pourquoi:
+          rappel: >-
+            We want the value at time 10: that is an accumulated value.
+          exemple: >-
+            $1.05^{10} = 1.628895$, so $s_{\overline{10}|} = 12.5779$ and the total is €12,577.89.
+          piege: >-
+            €7,722 is the present value of the same payments, at time 0. €10,000 ignores interest.
+      - q: 'At 5% over 10 years, is $(Da)_{\overline{10}|}$ larger or smaller than $(Ia)_{\overline{10}|}$?'
+        options: ['Larger', 'Smaller', 'Equal']
+        pourquoi:
+          rappel: >-
+            Both pay the same total (55). The decreasing annuity pays the large amounts first, so they are discounted less.
+          exemple: >-
+            $(Da)_{\overline{10}|} = 45.5653$ and $(Ia)_{\overline{10}|} = 39.3738$; their sum is $11 \times 7.7217 = 84.9391$.
+          piege: >-
+            Without interest, both would be worth 55. With interest, the order of the payments matters.
+      - q: 'An annuity pays €1,000 in one year, then grows by 2% a year, for 10 years in all. At 5%, it is worth about…'
+        options: ['€8,388', '€7,722', '€33,333']
+        pourquoi:
+          rappel: >-
+            Geometric annuity: first payment €1,000, ratio $1.02$, discounted at 5%, over 10 years.
+          exemple: >-
+            $(1.02/1.05)^{10} = 0.748357$, so the value is $1{,}000 \times 0.251643 / 0.03 = 8{,}388.11$ euros.
+          piege: >-
+            €33,333 is the growing perpetuity, without end. €7,722 ignores the growth.
+
+  - titre: "By hand"
+    intro: "Rate of 5%, over 10 years. Use a calculator, then enter your results to 4 decimal places."
+    donnees:
+      entetes: ['$i$', '$n$', '$g$']
+      lignes: [['5%', '10', '2%']]
+    champs:
+      - {libelle: '$s_{\overline{10}|}$'}
+      - {libelle: '$(Ia)_{\overline{10}|}$'}
+      - {libelle: '$(Da)_{\overline{10}|}$'}
+      - {}
+    solution: |
+      $v^{10} = 0.613913$, $a_{\overline{10}|} = 7.7217$, $\ddot{a}_{\overline{10}|} = 8.1078$, $s_{\overline{10}|} = 0.628895 / 0.05 = 12.5779$.
+      $(Ia)_{\overline{10}|} = (8.1078 - 10 \times 0.613913) / 0.05 = 39.3738$; $(Da)_{\overline{10}|} = (10 - 7.7217) / 0.05 = 45.5653$; geometric: $0.251643 / 0.03 = 8.3881$.
+
+  - titre: "Your turn to code"
+    intro: "Write the body of the four functions, without AI. All the tests must pass."
+    tests:
+      - {nom: '$s_{\overline{10}|}$ is 12.57789 at 5%'}
+      - {nom: '$(Ia)_{\overline{10}|}$ is 39.37378 at 5%'}
+      - {nom: '$(Da)_{\overline{10}|}$ is 45.56530 at 5%'}
+      - {nom: '$(Ia) + (Da) = (n+1)\,a_{\overline{n}|}$'}
+      - {nom: 'Geometric at 2%: 8.38811'}
+      - {nom: 'Case $g = i$: $n\,v$'}
+
+  - titre: "Vocabulary"
+    intro: "Tap a card: the French term and a job-interview sentence."

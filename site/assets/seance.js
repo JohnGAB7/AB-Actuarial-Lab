@@ -9,7 +9,7 @@ const UI = {
     prev: "← Précédente", next: "Suivante →", finish: "Terminer",
     labAria: "Force de mortalité de la table MK selon l'âge, échelle logarithmique", age: "Âge", years: " ans",
     labEyebrow: "Manipule", labHint: "Fais glisser l'âge : la table MK de ton simulateur répond.",
-    videoSoon: "Vidéo en préparation", job: "Dans ton métier", further: "Pour aller plus loin",
+    videoSoon: "Vidéo en préparation", play: "Regarder", otherLang: "en anglais", job: "Dans ton métier", further: "Pour aller plus loin",
     recap: "Rappel", example: "Exemple", pitfall: "Piège", right: "Juste.", wrong: "Pas tout à fait.",
     score: (k, n) => `${k} sur ${n}`, scoreLbl: "Score",
     check: "Vérifier", toFill: "à remplir", good: "juste", bad: "à revoir", solution: "Voir la solution", placeholder: "0,0000",
@@ -31,7 +31,7 @@ const UI = {
     prev: "← Previous", next: "Next →", finish: "Finish",
     labAria: "Force of mortality of the MK table by age, log scale", age: "Age", years: " years",
     labEyebrow: "Try it", labHint: "Drag the age: the MK table from your simulator responds.",
-    videoSoon: "Video in preparation", job: "On the job", further: "Further reading",
+    videoSoon: "Video in preparation", play: "Watch", otherLang: "in French", job: "On the job", further: "Further reading",
     recap: "Recap", example: "Example", pitfall: "Pitfall", right: "Correct.", wrong: "Not quite.",
     score: (k, n) => `${k} of ${n}`, scoreLbl: "Score",
     check: "Check", toFill: "to fill in", good: "correct", bad: "try again", solution: "Show the solution", placeholder: "0.0000",
@@ -212,16 +212,45 @@ function interactif() {
   return box;
 }
 
+/* ---------- Vidéos ---------- */
+// Nothing is loaded from YouTube until the learner clicks: no cookie, no request, no tracking before that.
+const YT_ID = /^[A-Za-z0-9_-]{11}$/;
+function lecteur(v, grand) {
+  const autre = v.langue !== LANG;
+  const meta = [v.duree, autre ? UI.otherLang : ""].filter(Boolean).join(" · ");
+  const bouton = el("button", { type: "button", class: "video video-play" + (grand ? "" : " small"), "aria-label": UI.play + " : " + v.titre },
+    el("div", { class: "video-in" },
+      el("span", { class: "eyebrow light" }, "Actu-Basics" + (meta ? " · " + meta : "")),
+      el("p", { class: "video-q" }, v.titre),
+      el("span", { class: "play", "aria-hidden": "true" }, "▶ " + UI.play)));
+  bouton.addEventListener("click", () => {
+    const f = el("iframe", {
+      class: "video-frame", title: v.titre, loading: "lazy", allowfullscreen: "",
+      allow: "autoplay; encrypted-media; picture-in-picture; fullscreen",
+      referrerpolicy: "strict-origin-when-cross-origin",
+      src: "https://www.youtube-nocookie.com/embed/" + v.id + "?autoplay=1&rel=0",
+    });
+    bouton.replaceWith(f);
+  });
+  return bouton;
+}
+
 /* ---------- Étapes ---------- */
 const R = {
   video(e) {
     const ab = S.actu_basics || {};
-    return [el("div", { class: "video" },
-      el("div", { class: "video-in" },
-        el("span", { class: "eyebrow light" }, "Actu-Basics · " + (ab.episode || "")),
-        el("p", { class: "video-q" }, LANG === "en" ? "“" + (ab.accroche_en || "") + "”" : "« " + (ab.accroche_fr || "") + " »"),
-        el("span", { class: "pill" }, UI.videoSoon))),
-      el("p", {}, e.texte)];
+    const vids = (ab.videos || []).filter((v) => YT_ID.test(v.id || ""));
+    if (!vids.length) {
+      return [el("div", { class: "video" },
+        el("div", { class: "video-in" },
+          el("span", { class: "eyebrow light" }, "Actu-Basics · " + (ab.episode || "")),
+          el("p", { class: "video-q" }, LANG === "en" ? "“" + (ab.accroche_en || "") + "”" : "« " + (ab.accroche_fr || "") + " »"),
+          el("span", { class: "pill" }, UI.videoSoon))),
+        el("p", {}, e.texte)];
+    }
+    // The page language first; the other language stays available, labelled as such.
+    vids.sort((a, b) => (a.langue === LANG ? 0 : 1) - (b.langue === LANG ? 0 : 1));
+    return [el("div", { class: "videos" }, ...vids.map((v, k) => lecteur(v, k === 0))), el("p", {}, e.texte)];
   },
   rappel(e) {
     return e.blocs.map((b) => {

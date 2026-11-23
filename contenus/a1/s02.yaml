@@ -1,0 +1,218 @@
+# Séance 2 du module A1 (Mathématiques financières) : taux nominaux, taux effectifs et paiements fractionnés.
+# Chiffres : taux effectif fictif de 4 %. Les valeurs sont recalculées par tests/test_contenus.py et tests/a1/test_s02_taux.py.
+id: a1/s02
+module: a1
+titre: "Taux nominaux et paiements mensuels"
+en: "Nominal rates and monthly payments"
+duree: 30
+taux: 0.04
+
+actu_basics:
+  episode: "A1 · Financial mathematics"
+  statut: "à proposer"
+  accroche_fr: "6 % par an, payés chaque mois : est-ce vraiment 6 % ?"
+  accroche_en: "6% a year, paid monthly: is it really 6%?"
+
+etapes:
+  - type: quiz
+    titre: "Test de positionnement"
+    minutes: 3
+    intro: "Quatre questions avant le cours. Si tu as tout juste, survole le rappel et va directement au calcul."
+    questions:
+      - q: 'Un taux nominal de 6 % capitalisé mensuellement donne un taux effectif annuel…'
+        options: ['égal à 6 %', 'supérieur à 6 %', 'inférieur à 6 %']
+        reponse: 1
+        pourquoi:
+          rappel: >-
+            Un taux nominal $i^{(m)}$ est un taux annuel « affiché » : on verse $i^{(m)}/m$ à chaque fraction d'année. Les intérêts de chaque mois produisent à leur tour des intérêts.
+          formule: |-
+            1 + i = \left(1 + \frac{i^{(m)}}{m}\right)^{m}
+          exemple: >-
+            $(1 + 0{,}06/12)^{12} = 1{,}061678$ : le taux effectif vaut 6,17 %.
+          piege: >-
+            Le taux nominal n'est pas un taux de croissance annuel. Le comparer directement à un taux effectif mélange deux conventions.
+      - q: 'Que vaut $i^{(m)}$ quand $m \to \infty$ ?'
+        options: ['$i$', '$\delta$', '$0$']
+        reponse: 1
+        pourquoi:
+          rappel: >-
+            Capitaliser de plus en plus souvent revient, à la limite, à capitaliser en continu. Le taux nominal tend vers la force d'intérêt.
+          formule: |-
+            \lim_{m \to \infty} m\left[(1+i)^{1/m} - 1\right] = \ln(1+i) = \delta
+          exemple: >-
+            À 4 % effectif : $i^{(2)} = 3{,}961\,\%$, $i^{(12)} = 3{,}928\,\%$, $\delta = 3{,}922\,\%$.
+          piege: >-
+            Le taux nominal baisse quand $m$ augmente, à taux effectif fixé. Il ne remonte jamais vers $i$.
+      - q: 'Quel ordre est toujours vrai, pour $i > 0$ et $m > 1$ ?'
+        options: ['$d < d^{(m)} < \delta < i^{(m)} < i$', '$i < i^{(m)} < \delta < d^{(m)} < d$', '$d^{(m)} < d < \delta < i < i^{(m)}$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Les taux d'escompte sont payés en début de période, les taux d'intérêt en fin de période. Plus la période est courte, plus les deux familles se rapprochent de $\delta$.
+          formule: |-
+            d < d^{(m)} < \delta < i^{(m)} < i
+          exemple: >-
+            À 4 % : $d = 3{,}846\,\%$, $d^{(12)} = 3{,}916\,\%$, $\delta = 3{,}922\,\%$, $i^{(12)} = 3{,}928\,\%$.
+          piege: >-
+            Un taux d'escompte n'est jamais plus grand que le taux d'intérêt équivalent : il est payé plus tôt, donc actualisé.
+      - q: 'Une annuité de 1 par an, versée en 12 mensualités de $\tfrac{1}{12}$ en fin de mois, vaut…'
+        options: ['$\dfrac{1 - v^n}{i^{(12)}}$', '$\dfrac{1 - v^n}{12\,i}$', '$12\,a_{\overline{n}|}$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On garde le numérateur $1 - v^n$ de l'annuité annuelle, et on remplace le taux effectif par le taux nominal de même fréquence que les paiements.
+          formule: |-
+            a^{(m)}_{\overline{n}|} = \frac{1 - v^n}{i^{(m)}} = \frac{i}{i^{(m)}}\,a_{\overline{n}|}
+          exemple: >-
+            À 4 % sur 10 ans : $a_{\overline{10}|} = 8{,}1109$ et $a^{(12)}_{\overline{10}|} = 8{,}2585$.
+          piege: >-
+            $a^{(m)}_{\overline{n}|}$ verse 1 par an au total, pas 1 par mois. Recevoir l'argent plus tôt dans l'année le rend un peu plus précieux.
+
+  - type: video
+    titre: "L'intuition en vidéo"
+    minutes: 3
+    texte: >-
+      Ce thème n'a pas encore sa vidéo Actu-Basics. Elle montrera pourquoi un crédit affiché à 6 % par an,
+      remboursé chaque mois, coûte en réalité un peu plus de 6 %.
+
+  - type: rappel
+    titre: "Le rappel"
+    minutes: 8
+    blocs:
+      - p: >-
+          Un <b>taux nominal</b> <i>(nominal rate)</i> $i^{(m)}$ est un taux annuel convertible $m$ fois par an : on
+          crédite $i^{(m)}/m$ à la fin de chaque période de $1/m$ année. Deux taux sont <b>équivalents</b>
+          <i>(equivalent rates)</i> s'ils font croître un capital de la même façon sur un an.
+      - formule: |
+          \begin{gathered}
+          1 + i = \left(1 + \frac{i^{(m)}}{m}\right)^{m} = \left(1 - \frac{d^{(m)}}{m}\right)^{-m} = e^{\delta} \\[6pt]
+          i^{(m)} = m\left[(1+i)^{1/m} - 1\right] \qquad d^{(m)} = m\left[1 - v^{1/m}\right]
+          \end{gathered}
+      - p: >-
+          Le <b>taux effectif annuel</b> <i>(annual effective rate)</i> $i$ est la référence pour comparer deux offres.
+          Le taux nominal n'est qu'une convention d'affichage : 6 % convertible mensuellement vaut 6,17 % effectif.
+      - p: >-
+          Quand les paiements tombent $m$ fois par an, chacun de $1/m$, on obtient les <b>annuités fractionnées</b>
+          <i>(annuities payable m-thly)</i>. Leur formule garde la forme de l'annuité annuelle, avec le taux nominal au
+          dénominateur.
+      - formule: |
+          \begin{gathered}
+          a^{(m)}_{\overline{n}|} = \frac{1 - v^n}{i^{(m)}} \qquad \ddot{a}^{(m)}_{\overline{n}|} = \frac{1 - v^n}{d^{(m)}} \\[6pt]
+          \bar{a}_{\overline{n}|} = \int_0^n v^t\,dt = \frac{1 - v^n}{\delta}
+          \end{gathered}
+      - p: >-
+          L'<b>annuité continue</b> <i>(continuous annuity)</i> $\bar{a}_{\overline{n}|}$ est la limite quand $m \to \infty$.
+          Elle sert d'approximation pour des paiements très fréquents, comme un salaire ou une pension mensuelle.
+      - note: >-
+          Les pensions et rentes sont presque toujours versées chaque mois. En A3, tu passeras de $\ddot{a}_x$ à
+          $\ddot{a}^{(12)}_x$ avec la même idée, plus une correction pour la mortalité en cours d'année.
+      - sources:
+          - {titre: "Kellison, The Theory of Interest, chap. 1 et 4", detail: "Taux nominaux, taux équivalents, annuités fractionnées et continues"}
+          - {titre: "SOA, Financial Mathematics (FM) Exam", url: "https://www.soa.org/education/exam-req/edu-exam-fm-detail/", detail: "Syllabus officiel de l'examen"}
+
+  - type: quiz
+    titre: "Vérifie"
+    minutes: 4
+    intro: "Quatre questions. Réponds sans relire le rappel."
+    questions:
+      - q: 'Une banque A affiche 6 % capitalisé mensuellement, une banque B 6 % capitalisé trimestriellement. Pour un dépôt, laquelle rapporte le plus ?'
+        options: ['A', 'B', 'Elles sont équivalentes']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Pour comparer, on convertit chaque taux nominal en taux effectif annuel.
+          formule: |-
+            1 + i = \left(1 + \frac{i^{(m)}}{m}\right)^{m}
+          exemple: >-
+            A : $(1{,}005)^{12} - 1 = 6{,}168\,\%$. B : $(1{,}015)^{4} - 1 = 6{,}136\,\%$. A rapporte un peu plus.
+          piege: >-
+            Le même taux affiché ne donne pas le même rendement : la fréquence de capitalisation compte.
+      - q: 'À 4 % effectif, que vaut $i^{(12)}$, environ ?'
+        options: ['3,93 %', '4,00 %', '4,07 %']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On cherche le taux mensuel $j$ tel que $(1+j)^{12} = 1{,}04$, puis on le multiplie par 12.
+          formule: |-
+            i^{(12)} = 12\left[(1{,}04)^{1/12} - 1\right]
+          exemple: >-
+            $(1{,}04)^{1/12} = 1{,}0032737$, donc $i^{(12)} = 12 \times 0{,}0032737 = 3{,}928\,\%$.
+          piege: >-
+            4 %/12 par mois donnerait un taux effectif de 4,07 %, trop élevé. On ne divise pas un taux effectif par 12.
+      - q: 'À taux égal, $a^{(12)}_{\overline{n}|}$ comparée à $a_{\overline{n}|}$ est…'
+        options: ['plus grande', 'plus petite', 'égale']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Même total versé chaque année, mais réparti sur l'année au lieu d'être payé en fin d'année : en moyenne, l'argent arrive plus tôt.
+          formule: |-
+            a^{(12)}_{\overline{n}|} = \frac{i}{i^{(12)}}\,a_{\overline{n}|}, \qquad \frac{i}{i^{(12)}} > 1
+          exemple: >-
+            À 4 % : $i / i^{(12)} = 1{,}0182$, donc $a^{(12)}_{\overline{10}|} = 1{,}0182 \times 8{,}1109 = 8{,}2585$.
+          piege: >-
+            L'écart reste petit : il ne justifie pas de multiplier par 12 ni de diviser par 12.
+      - q: 'Un prêt se rembourse en 120 mensualités de 100 € en fin de mois, à 4 % effectif. Que vaut le capital emprunté, environ ?'
+        options: ['9 910 €', '12 000 €', '9 733 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Le capital emprunté est la valeur actuelle des mensualités. 100 € par mois font 1 200 € par an, payés de façon fractionnée.
+          formule: |-
+            L = 1\,200 \times a^{(12)}_{\overline{10}|}
+          exemple: >-
+            $1\,200 \times 8{,}2585 = 9\,910{,}25$ €.
+          piege: >-
+            12 000 € oublie l'intérêt. 9 733 € (soit $1\,200 \times 8{,}1109$) suppose un seul paiement de 1 200 € en fin d'année.
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: "Taux effectif de 4 %. Calcule avec une calculatrice, puis saisis tes résultats à 4 décimales."
+    donnees:
+      entetes: ['$i$', '$m$', '$n$']
+      lignes: [['4 %', '12', '10']]
+    champs:
+      - {cle: im, libelle: '$i^{(12)}$', valeur: 0.0392849, tolerance: 0.00015}
+      - {cle: dm, libelle: '$d^{(12)}$', valeur: 0.0391567, tolerance: 0.00015}
+      - {cle: am, libelle: '$a^{(12)}_{\overline{10}|}$', valeur: 8.2585425, tolerance: 0.0015}
+      - {cle: adm, libelle: '$\ddot{a}^{(12)}_{\overline{10}|}$', valeur: 8.2855789, tolerance: 0.0015}
+    solution: |
+      $(1{,}04)^{1/12} = 1{,}0032737$, donc $i^{(12)} = 0{,}039285$ ; $v^{1/12} = 0{,}9967369$, donc $d^{(12)} = 0{,}039157$.
+      $1 - v^{10} = 0{,}324436$, donc $a^{(12)}_{\overline{10}|} = 0{,}324436 / 0{,}039285 = 8{,}2585$ et $\ddot{a}^{(12)}_{\overline{10}|} = 0{,}324436 / 0{,}039157 = 8{,}2856$.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 8
+    intro: "Écris le corps des trois fonctions, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a1/s02_taux.py
+    depart: |
+      def nominal_rate(i, m):
+          """i^(m): the nominal rate convertible m times a year, equivalent to the effective rate i."""
+          raise NotImplementedError
+
+      def effective_rate(i_m, m):
+          """The annual effective rate equivalent to the nominal rate i_m convertible m times a year."""
+          raise NotImplementedError
+
+      def annuity_mthly(n, i, m, due=False):
+          """Present value of 1 a year for n years, paid in m instalments of 1/m (in arrears, or in advance if due)."""
+          raise NotImplementedError
+    tests:
+      - {nom: '$i^{(12)}$ vaut 0,0392849 à 4 %', expr: "abs(nominal_rate(0.04, 12) - 0.0392849) < 1e-7"}
+      - {nom: '6 % mensuel vaut 6,1678 % effectif', expr: "abs(effective_rate(0.06, 12) - 0.0616778) < 1e-7"}
+      - {nom: 'Aller-retour : effectif, puis nominal, puis effectif', expr: "abs(effective_rate(nominal_rate(0.07, 4), 4) - 0.07) < 1e-12"}
+      - {nom: '$a^{(12)}_{\overline{10}|}$ vaut 8,25854 à 4 %', expr: "abs(annuity_mthly(10, 0.04, 12) - 8.25854) < 0.00001"}
+      - {nom: '$\ddot{a}^{(12)}_{\overline{10}|}$ vaut 8,28558 à 4 %', expr: "abs(annuity_mthly(10, 0.04, 12, due=True) - 8.28558) < 0.00001"}
+      - {nom: 'Avec $m = 1$, on retrouve $a_{\overline{10}|} = 8{,}11090$', expr: "abs(annuity_mthly(10, 0.04, 1) - 8.11090) < 0.00001"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Taux nominal", "nominal rate, convertible monthly", "The loan is quoted at a nominal rate of 6% convertible monthly."]
+      - ["Taux effectif annuel", "annual effective rate", "We always compare offers on an annual effective basis."]
+      - ["Taux équivalents", "equivalent rates", "These two rates are equivalent: they accumulate a capital in the same way."]
+      - ["Annuité fractionnée", "annuity payable monthly", "Pensions are an annuity payable monthly, not yearly."]
+      - ["Annuité continue", "continuous annuity", "A continuous annuity is a good approximation for salary-like payments."]
+      - ["Mensualité", "monthly instalment", "The borrower repays 120 monthly instalments of 100 euros."]

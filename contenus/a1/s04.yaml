@@ -1,0 +1,217 @@
+# Séance 4 du module A1 (Mathématiques financières) : amortissement d'un prêt et taux de rendement interne.
+# Chiffres : prêt fictif de 10 000 € à 6 % sur 5 ans. Les valeurs sont recalculées par tests/test_contenus.py et tests/a1/test_s04_prets.py.
+id: a1/s04
+module: a1
+titre: "Prêts, amortissement et taux de rendement"
+en: "Loans, amortization and yield rates"
+duree: 30
+taux: 0.06
+
+actu_basics:
+  episode: "A1 · Financial mathematics"
+  statut: "à proposer"
+  accroche_fr: "Dans une mensualité de crédit, combien sert vraiment à rembourser ?"
+  accroche_en: "In a loan payment, how much actually repays the loan?"
+
+etapes:
+  - type: quiz
+    titre: "Test de positionnement"
+    minutes: 3
+    intro: "Quatre questions avant le cours. Si tu as tout juste, survole le rappel et va directement au calcul."
+    questions:
+      - q: 'Un prêt $L$ est remboursé par $n$ annuités constantes en fin d''année, au taux $i$. L''annuité vaut…'
+        options: ['$\dfrac{L}{a_{\overline{n}|}}$', '$\dfrac{L}{n}$', '$L\,(1+i)^n / n$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Le prêt est juste quand la valeur actuelle des remboursements égale le montant prêté : $L = P\,a_{\overline{n}|}$.
+          formule: |-
+            P = \frac{L}{a_{\overline{n}|}} = \frac{L\,i}{1 - v^n}
+          exemple: >-
+            10 000 € à 6 % sur 5 ans : $a_{\overline{5}|} = 4{,}2124$, donc $P = 2\,373{,}96$ €.
+          piege: >-
+            $L/n$ rembourse le capital sans aucun intérêt. $L(1+i)^n/n$ compte des intérêts sur un capital qui, en réalité, baisse chaque année.
+      - q: 'Le solde restant dû (outstanding balance) après $k$ paiements vaut, par la méthode prospective…'
+        options: ['$P\,a_{\overline{n-k}|}$', '$L - k\,P$', '$P\,s_{\overline{k}|}$']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Prospectif (prospective) : on regarde vers l'avenir. Ce que l'emprunteur doit encore, c'est la valeur actuelle des paiements qui restent.
+          formule: |-
+            B_k = P\,a_{\overline{n-k}|} = L\,(1+i)^k - P\,s_{\overline{k}|}
+          exemple: >-
+            Après 2 paiements : $2\,373{,}96 \times a_{\overline{3}|} = 6\,345{,}63$ €.
+          piege: >-
+            $L - kP$ oublie que chaque paiement contient des intérêts. La seconde forme, rétrospective (retrospective), donne le même résultat.
+      - q: 'Dans un prêt à annuités constantes, la part de capital remboursée chaque année…'
+        options: ['augmente', 'diminue', 'reste constante']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Les intérêts portent sur le solde, qui baisse. À paiement fixe, la part d'intérêt baisse, donc la part de capital monte.
+          formule: |-
+            \text{PR}_k = P - i\,B_{k-1} = P\,v^{\,n-k+1}
+          exemple: >-
+            Année 1 : 1 773,96 € de capital. Année 3 : 1 993,23 €, soit $1\,773{,}96 \times 1{,}06^2$.
+          piege: >-
+            Un capital constant chaque année, c'est un autre type de prêt : l'amortissement constant, avec des paiements qui baissent.
+      - q: 'Le taux de rendement interne (internal rate of return, IRR) d''un projet est le taux qui…'
+        options: ['annule la valeur actuelle nette', 'maximise la valeur actuelle nette', 'égale le taux sans risque']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On écrit l'équation de valeur (equation of value) : la somme actualisée de tous les flux, entrées moins sorties, vaut zéro.
+          formule: |-
+            \sum_t C_t\,(1+j)^{-t} = 0
+          exemple: >-
+            Investir 1 000 € pour recevoir 600 € dans 1 an et 600 € dans 2 ans : le taux de rendement interne vaut 13,07 %.
+          piege: >-
+            La valeur actuelle nette dépend du taux choisi ; le taux de rendement interne est le seul taux qui la rend nulle.
+
+  - type: video
+    titre: "L'intuition en vidéo"
+    minutes: 3
+    texte: >-
+      Ce thème n'a pas encore sa vidéo Actu-Basics. Elle suivra une mensualité de crédit année après année,
+      pour voir la part d'intérêt fondre et la part de capital grandir.
+
+  - type: rappel
+    titre: "Le rappel"
+    minutes: 8
+    blocs:
+      - p: >-
+          Un prêt remboursé par <b>annuités constantes</b> <i>(level payments)</i> est <b>amorti</b> <i>(amortized)</i> :
+          chaque paiement $P$ couvre d'abord les intérêts de l'année sur le <b>solde restant dû</b>
+          <i>(outstanding balance)</i>, et le reste rembourse le capital.
+      - formule: |
+          \begin{gathered}
+          P = \frac{L}{a_{\overline{n}|}} \\[6pt]
+          I_k = i\,B_{k-1} \qquad \text{PR}_k = P - I_k \qquad B_k = B_{k-1} - \text{PR}_k
+          \end{gathered}
+      - p: >-
+          Le solde se calcule de deux façons. La méthode <b>prospective</b> actualise les paiements futurs ; la méthode
+          <b>rétrospective</b> capitalise le prêt et retire les paiements déjà faits. Les deux donnent toujours le même
+          nombre : c'est la même idée que les provisions mathématiques en A4.
+      - formule: |
+          B_k = P\,a_{\overline{n-k}|} = L\,(1+i)^k - P\,s_{\overline{k}|}
+      - p: >-
+          Le <b>tableau d'amortissement</b> <i>(amortization schedule)</i> range ces quantités année par année. La part de
+          capital croît géométriquement : $\text{PR}_{k+1} = (1+i)\,\text{PR}_k$.
+      - p: >-
+          Pour juger un placement, on cherche le <b>taux de rendement interne</b> <i>(internal rate of return, IRR)</i>,
+          le taux $j$ qui annule la <b>valeur actuelle nette</b> <i>(net present value, NPV)</i> de tous les flux.
+      - formule: |
+          \text{VAN}(j) = \sum_t C_t\,(1+j)^{-t} = 0
+      - note: >-
+          Les provisions mathématiques d'un contrat vie se calculent exactement comme un solde de prêt : prospectivement
+          (engagements futurs moins primes futures) ou rétrospectivement. Tu le verras en A4.
+      - sources:
+          - {titre: "Kellison, The Theory of Interest, chap. 5 et 6", detail: "Taux de rendement, équation de valeur, amortissement d'un prêt"}
+          - {titre: "SOA, Financial Mathematics (FM) Exam", url: "https://www.soa.org/education/exam-req/edu-exam-fm-detail/", detail: "Syllabus officiel de l'examen"}
+
+  - type: quiz
+    titre: "Vérifie"
+    minutes: 4
+    intro: "Quatre questions. Réponds sans relire le rappel."
+    questions:
+      - q: 'Prêt de 10 000 € à 6 % sur 5 ans, annuités constantes. Combien d''intérêts paie-t-on la première année ?'
+        options: ['600 €', '2 373,96 €', '1 773,96 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            La première année, les intérêts portent sur tout le capital emprunté.
+          formule: |-
+            I_1 = i\,L
+          exemple: >-
+            $0{,}06 \times 10\,000 = 600$ €. Le reste de l'annuité, $2\,373{,}96 - 600 = 1\,773{,}96$ €, rembourse le capital.
+          piege: >-
+            2 373,96 € est l'annuité entière. 1 773,96 € est la part de capital.
+      - q: 'Même prêt : combien d''intérêts au total sur les 5 ans ?'
+        options: ['1 869,82 €', '3 000,00 €', '600,00 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Total payé moins capital emprunté.
+          formule: |-
+            \sum_k I_k = n\,P - L
+          exemple: >-
+            $5 \times 2\,373{,}96 - 10\,000 = 1\,869{,}82$ €.
+          piege: >-
+            3 000 € compte 600 € par an, comme si le capital ne baissait jamais.
+      - q: 'Les méthodes prospective et rétrospective donnent-elles le même solde ?'
+        options: ['Toujours, si le taux et les paiements sont ceux du contrat', 'Seulement en fin de prêt', 'Non, la prospective est toujours plus élevée']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Au départ, $L = P\,a_{\overline{n}|}$. En capitalisant cette égalité $k$ ans, on passe d'une forme à l'autre.
+          formule: |-
+            L(1+i)^k - P\,s_{\overline{k}|} = P\left[(1+i)^k a_{\overline{n}|} - s_{\overline{k}|}\right] = P\,a_{\overline{n-k}|}
+          exemple: >-
+            Après 2 ans : $10\,000 \times 1{,}1236 - 2\,373{,}96 \times 2{,}06 = 6\,345{,}63$ €, comme la méthode prospective.
+          piege: >-
+            Si les paiements réels s'écartent du contrat (retard, remboursement anticipé), les deux méthodes divergent : il faut alors suivre les flux réels.
+      - q: 'Un projet coûte 1 000 € et rapporte 600 € dans 1 an et 600 € dans 2 ans. À 10 %, sa VAN vaut…'
+        options: ['41,32 €', '200,00 €', '−41,32 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On actualise chaque flux à 10 % et on retranche l'investissement.
+          formule: |-
+            \text{VAN} = -1\,000 + \frac{600}{1{,}1} + \frac{600}{1{,}1^2}
+          exemple: >-
+            $-1\,000 + 545{,}45 + 495{,}87 = 41{,}32$ €. La VAN est positive à 10 %, donc le taux de rendement interne (13,07 %) dépasse 10 %.
+          piege: >-
+            200 € additionne les flux sans les actualiser.
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: "Prêt de 10 000 € à 6 % sur 5 ans, annuités constantes en fin d'année. Saisis tes résultats au centime."
+    donnees:
+      entetes: ['$L$ (€)', '$i$', '$n$']
+      lignes: [['10 000', '6 %', '5']]
+    champs:
+      - {cle: p, libelle: '$P$', valeur: 2373.964, tolerance: 0.015}
+      - {cle: b2, libelle: '$B_2$', valeur: 6345.6342, tolerance: 0.015}
+      - {cle: i3, libelle: '$I_3$', valeur: 380.738, tolerance: 0.015}
+      - {cle: pr3, libelle: '$\text{PR}_3$', valeur: 1993.226, tolerance: 0.015}
+    solution: |
+      $a_{\overline{5}|} = 4{,}212364$, donc $P = 10\,000 / 4{,}212364 = 2\,373{,}96$ €. $B_2 = P\,a_{\overline{3}|} = 2\,373{,}96 \times 2{,}673012 = 6\,345{,}63$ €.
+      $I_3 = 0{,}06 \times 6\,345{,}63 = 380{,}74$ € et $\text{PR}_3 = 2\,373{,}96 - 380{,}74 = 1\,993{,}23$ €.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 8
+    intro: "Écris le corps des trois fonctions, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a1/s04_prets.py
+    depart: |
+      def level_payment(loan, n, i):
+          """Level payment at the end of each year that repays the loan in n years at rate i."""
+          raise NotImplementedError
+
+      def amortization_schedule(loan, n, i):
+          """List of n tuples (year, interest, principal repaid, balance after payment)."""
+          raise NotImplementedError
+
+      def irr(cash_flows, low=-0.99, high=1.0, tol=1e-10):
+          """Rate j that makes the NPV of {time: amount} zero, by bisection on [low, high]."""
+          raise NotImplementedError
+    tests:
+      - {nom: 'Annuité de 2 373,96 €', expr: "abs(level_payment(10000, 5, 0.06) - 2373.96) < 0.005"}
+      - {nom: 'Le tableau a 5 lignes et finit à 0', expr: "len(amortization_schedule(10000, 5, 0.06)) == 5 and abs(amortization_schedule(10000, 5, 0.06)[-1][3]) < 1e-6"}
+      - {nom: 'Intérêts de l''année 3 : 380,74 €', expr: "abs(amortization_schedule(10000, 5, 0.06)[2][1] - 380.74) < 0.005"}
+      - {nom: 'Les parts de capital somment au prêt', expr: "abs(sum(r[2] for r in amortization_schedule(25000, 12, 0.035)) - 25000) < 1e-6"}
+      - {nom: 'Taux de rendement interne de 13,066 %', expr: "abs(irr({0: -1000, 1: 600, 2: 600}) - 0.130662) < 1e-6"}
+      - {nom: 'Le taux de rendement interne d''un prêt est son taux', expr: "abs(irr({0: -10000, **{k: level_payment(10000, 5, 0.06) for k in range(1, 6)}}) - 0.06) < 1e-8"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Prêt amorti", "amortized loan", "The mortgage is an amortized loan with level monthly payments."]
+      - ["Solde restant dû", "outstanding balance, loan balance", "The outstanding balance after two years is 6,346 euros."]
+      - ["Tableau d'amortissement", "amortization schedule", "I built the amortization schedule in a spreadsheet."]
+      - ["Méthode prospective, rétrospective", "prospective method, retrospective method", "Both methods give the same balance when payments follow the contract."]
+      - ["Taux de rendement interne", "internal rate of return (IRR), yield rate", "The internal rate of return of the project is 13%."]
+      - ["Valeur actuelle nette", "net present value (NPV)", "At a 10% hurdle rate, the net present value is positive."]
