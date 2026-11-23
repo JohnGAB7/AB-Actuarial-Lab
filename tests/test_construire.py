@@ -81,3 +81,26 @@ def test_actu_basics_parent_brand_is_consistent_in_both_languages():
     assert "raw.githubusercontent.com/JohnGAB7/Actu-Basics/080890b8acd452c790f3e10664a63d0b3e43aa21" in french
     assert builder.titre_site("fr") == "ACTU-BASICS — Parcours Actuariel"
     assert builder.titre_site("en") == "ACTU-BASICS — Actuarial Learning Path"
+
+
+def test_short_domain_labels_keep_full_titles_off_navigation_surfaces():
+    parcours = builder.charger_parcours()
+    fr = [builder.dom_court(d, "fr") for d in parcours["domaines"]]
+    en = [builder.dom_court(d, "en") for d in parcours["domaines"]]
+    assert fr == ["Fondamentaux", "Vie", "Retraite", "Non-vie", "ALM", "Risque", "Outils"]
+    assert en == ["Foundations", "Life", "Pensions", "P&C", "ALM", "Risk", "Tools"]
+    first = next(builder.seances(parcours))[2]
+    session = builder.charger_seance(first)
+    homepage = builder.page_accueil(parcours, {first: (len(session["etapes"]), session["titre"])}, "fr")
+    assert "Pensions and employee benefits" not in homepage
+    assert "Asset-liability management" not in homepage
+    assert 'class="dom-t">Retraite</span>' in homepage
+
+
+def test_lab_brand_names_are_bilingual_and_parent_brand_is_explicit():
+    assert builder.titre_site("fr") == "Laboratoire d’apprentissage actuariel par ACTU-BASICS"
+    assert builder.titre_site("en") == "Actuarial Learning Lab by ACTU-BASICS"
+    assert "LABORATOIRE ACTUARIEL" in builder.marque("", "fr")
+    assert "PAR ACTU-BASICS" in builder.marque("", "fr")
+    assert "ACTUARIAL LEARNING LAB" in builder.marque("", "en")
+    assert "BY ACTU-BASICS" in builder.marque("", "en")
