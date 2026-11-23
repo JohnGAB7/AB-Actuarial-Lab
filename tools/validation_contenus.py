@@ -24,7 +24,12 @@ def _text(value: Any) -> bool:
 
 
 def _number(value: Any) -> bool:
-    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return False
+    try:
+        return math.isfinite(value)
+    except OverflowError:
+        return False
 
 
 def _positive_number(value: Any) -> bool:
@@ -85,7 +90,7 @@ def verifier_seance(session: Any, *, session_id: str = "<inconnue>") -> list[str
             continue
 
         step_type = step.get("type")
-        if step_type not in {"video", "rappel", "quiz", "calcul", "code", "vocabulaire"}:
+        if not isinstance(step_type, str) or step_type not in {"video", "rappel", "quiz", "calcul", "code", "vocabulaire"}:
             errors.append(f"{label}: type d'étape inconnu {step_type!r}.")
             continue
         if not _text(step.get("titre")):
@@ -184,8 +189,9 @@ def verifier_seance(session: Any, *, session_id: str = "<inconnue>") -> list[str
                         errors.append(f"{field_label}: « libelle » doit être un texte non vide.")
                     if not _number(field.get("valeur")):
                         errors.append(f"{field_label}: « valeur » doit être un nombre fini.")
-                    if not _positive_number(field.get("tolerance")):
-                        errors.append(f"{field_label}: « tolerance » doit être un nombre strictement positif.")
+                    tolerance = field.get("tolerance")
+                    if not _number(tolerance) or tolerance < 0:
+                        errors.append(f"{field_label}: « tolerance » doit être un nombre fini positif ou nul.")
             if not _text(step.get("solution")):
                 errors.append(f"{label}: « solution » doit être un texte non vide.")
 
