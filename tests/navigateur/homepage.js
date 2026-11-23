@@ -7,11 +7,11 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
   const failures = [];
   try {
     browser = await chromium.launch();
-    const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    const page = await browser.newPage({ viewport: { width: 390, height: 844 }, locale: "fr-FR" });
     const errors = [];
     page.on("pageerror", (error) => errors.push(error.message));
 
-    await page.goto(BASE, { waitUntil: "networkidle" });
+    await page.goto(new URL("index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
     await page.locator(".hero-visual").waitFor();
     const mobile = await page.evaluate(() => ({
       lang: document.documentElement.lang,
@@ -34,7 +34,7 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       const plan = JSON.parse(document.getElementById("plan").textContent);
       localStorage.setItem("parcours:" + plan[0].s + ":etapes", JSON.stringify({ "0": true }));
     });
-    await page.reload({ waitUntil: "networkidle" });
+    await page.reload({ waitUntil: "domcontentloaded" });
     const resumeText = await page.locator("[data-reprendre]").textContent();
     console.log("resume after local progress:", resumeText);
     if (!/Reprendre/.test(resumeText)) failures.push("local resume state");
