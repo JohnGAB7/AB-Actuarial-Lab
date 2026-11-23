@@ -169,6 +169,7 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
         if (item && (item.left < -1 || item.right > width + 1)) failures.push(key + " escapes viewport at " + width + "px");
       }
       await page.locator(".nav-menu summary").click();
+      await page.waitForFunction(() => document.querySelector(".nav-menu summary")?.getAttribute("aria-expanded") === "true");
       const dropdown = await page.locator(".nav-sheet").evaluate((el) => {
         const r = el.getBoundingClientRect();
         return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: r.width, height: r.height, expanded: el.closest("details").open, ariaExpanded: el.closest("details").querySelector("summary").getAttribute("aria-expanded") };
@@ -177,6 +178,7 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       if (dropdown.left < -1 || dropdown.right > width + 1) failures.push("mobile menu is clipped at " + width + "px");
       if (!dropdown.expanded || dropdown.ariaExpanded !== "true") failures.push("mobile menu expanded state is not announced at " + width + "px");
       await page.keyboard.press("Escape");
+      await page.waitForFunction(() => document.querySelector(".nav-menu summary")?.getAttribute("aria-expanded") === "false");
       if (await page.locator(".nav-menu").evaluate((el) => el.open)) failures.push("Escape does not close mobile menu at " + width + "px");
       if (await page.locator(".nav-menu summary").evaluate((el) => document.activeElement !== el)) failures.push("Escape does not restore menu focus at " + width + "px");
     }
