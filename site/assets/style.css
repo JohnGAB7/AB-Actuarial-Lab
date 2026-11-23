@@ -656,3 +656,18 @@ a.mod .mod-n{color:var(--progress);font-weight:600}
     font-size: .66rem;
   }
 }
+
+@media (min-width: 901px) and (max-width: 1360px) {
+  .nav-sheet {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 72px);
+    right: max(16px, env(safe-area-inset-right, 0px));
+    left: auto;
+    width: min(320px, calc(100vw - 32px));
+    max-width: calc(100vw - 32px);
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - 88px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    z-index: 30;
+  }
+}
