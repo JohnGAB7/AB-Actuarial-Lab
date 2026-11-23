@@ -204,6 +204,23 @@ def test_site_bilingue(tmp_path, monkeypatch):
     accueil = (tmp_path / "site" / "en" / "index.html").read_text(encoding="utf-8")
     assert 'hreflang="fr" href="../index.html"' in accueil and "Foundations" in accueil
 
+    # Navigation pages and account pages must expose valid language alternates too.
+    for chemin in ("", "fondamentaux", "a1", "compte"):
+        profondeur = len([part for part in chemin.split("/") if part])
+        base_fr = "../" * profondeur
+        base_en = "../" * (profondeur + 1)
+        fr_path = tmp_path / "site" / chemin / "index.html" if chemin else tmp_path / "site" / "index.html"
+        en_path = tmp_path / "site" / "en" / chemin / "index.html" if chemin else tmp_path / "site" / "en" / "index.html"
+        fr_page = fr_path.read_text(encoding="utf-8")
+        en_page = en_path.read_text(encoding="utf-8")
+        suffix = (chemin + "/" if chemin else "") + "index.html"
+        assert f'hreflang="fr" href="{base_fr}{suffix}"' in fr_page
+        assert f'hreflang="en" href="{base_fr}en/{suffix}"' in fr_page
+        assert f'hreflang="fr" href="{base_en}{suffix}"' in en_page
+        assert f'hreflang="en" href="{base_en}en/{suffix}"' in en_page
+        assert f'href="{base_fr}en/{suffix}"' in fr_page
+        assert f'href="{base_en}{suffix}"' in en_page
+
 
 def test_traduction_ne_peut_pas_modifier_les_metadonnees_de_session():
     import pytest
