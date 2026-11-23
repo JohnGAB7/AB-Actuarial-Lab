@@ -1,31 +1,29 @@
 # Modèle de menace — exécution Python des apprenants
 
-- **Statut :** modèle de menace documentaire, mis à jour après revue croisée ; l'implémentation Worker décrite ci-dessous est proposée dans la PR #11, encore ouverte et non fusionnée au moment de cette révision.
+- **Statut :** modèle de menace mis à jour pour l'architecture iframe opaque + Worker Blob imbriqué proposée dans la PR #25. Le Worker hérite d'une CSP initiale limitée au CDN Pyodide, n'a aucun DOM ni accès à l'origine principale et peut être arrêté en supprimant son iframe propriétaire ; cela reste une isolation côté navigateur, pas une sandbox OS/serveur avec quota mémoire dur.
 - **Date :** 2026-11-23.
 - **Périmètre :** exécution du code Python saisi dans les séances du site Parcours Actuariel.
-- **Bases comparées :** `main` (exécution historique dans la page) et la branche `claude/python-worker` de la PR #11 (prototype Worker, non fusionné). Les constats ne doivent pas être présentés comme déjà déployés.
+- **Base examinée :** branche `security/worker-network-capability-hardening`, qui remplace le Worker historique de même origine par un Worker Blob imbriqué dans une iframe sandboxée à origine opaque ; PR #25 ouverte, non fusionnée.
 
 ## 1. Résumé exécutif
 
-Sur `main` au commit audité, `site/assets/seance.js` charge Pyodide dans le document de la séance et exécute le code avec `py.runPython(value(), { globals: ns })`. Le DOM, les scripts applicatifs et le stockage de la page se trouvent dans le même contexte : le pont JavaScript de Pyodide rend donc possible l'accès aux capacités du document.
+La branche de la PR #25 remplace le Worker de même origine par une iframe `srcdoc` portant uniquement `sandbox="allow-scripts"` (sans `allow-same-origin`). Cette iframe à origine opaque crée un Worker Blob ; celui-ci hérite de la CSP initiale, charge Pyodide 0.27.7 depuis le répertoire CDN épinglé, puis vérifie explicitement qu'une connexion vers un domaine externe est bloquée par `connect-src`. Après ce contrôle, le Worker neutralise les transports réseau usuels et ne conserve qu'un canal `MessagePort` privé. L'iframe ajoute ensuite une CSP restrictive pour son propre document. Le parent ne transmet aucun jeton, session ni donnée de compte ; il transmet uniquement le code, les tests et reçoit des résultats bornés. L'arrêt ou le timeout de 10 secondes supprime l'iframe propriétaire et termine son Worker ; le chargement dispose de 60 secondes.
 
-La PR #11 (`claude/python-worker`, commit audité `8514102c2210a61a5527debf1bdda88482dfcd9a`) propose une évolution distincte : Pyodide est chargé dans `site/assets/python-worker.js`, les échanges passent par messages, et la page peut terminer le Worker après un délai de 10 secondes ou via le bouton « Arrêter ». Le test navigateur Playwright ajouté dans cette PR vérifie notamment l'exécution d'un squelette et d'une solution, une boucle infinie, la réactivité/l'arrêt et l'absence d'accès direct à `document` et `localStorage` depuis le runtime.
-
-**État à ne pas confondre :** la PR #11 est encore ouverte et non fusionnée ; ces contrôles sont donc démontrés sur sa branche et dans sa CI, pas sur `main` ni nécessairement sur le site publié.
-
-Le Worker retire l'accès direct au DOM et au `localStorage` du document principal et protège le fil principal contre une boucle bloquante. Il reste de même origine et expose encore certaines API du navigateur. Il ne faut donc pas le présenter comme une sandbox complète ni comme une protection contre du code délibérément hostile.
+Le test Playwright couvre le squelette, une solution, une boucle infinie, l'arrêt, la réactivité du parent, l'origine opaque, l'absence de DOM/stockage dans le Worker, le refus réseau constaté par un événement CSP, les transports neutralisés et le rejet d'un code trop long. Cette architecture sépare nettement les privilèges de l'application et du code apprenant. Elle ne fournit toutefois ni quota mémoire dur, ni garantie contre une vulnérabilité du navigateur ou une dépendance Pyodide compromise.
 
 ## 2. Périmètre et éléments observés
 
 ### 2.1 Flux d'exécution actuel
 
-1. Le navigateur charge `site/assets/seance.js`.
-2. Au premier clic sur « Lancer les tests », le script ajoute Pyodide 0.27.7 depuis jsDelivr et appelle `window.loadPyodide()`.
-3. Le code saisi est exécuté dans le runtime Pyodide avec `py.runPython(value(), { globals: ns })`.
-4. Les expressions de test provenant du contenu de séance sont ensuite exécutées dans le même runtime et le même dictionnaire `ns`.
-5. Les résultats sont affichés dans le document.
-6. Le code Python de l'apprenant est sauvegardé dans `localStorage`, puis peut être synchronisé avec Supabase si l'apprenant est connecté.
-
+1. Le navigateur charge `site/assets/seance.js` dans le contexte applicatif.
+2. Au clic sur « Lancer les tests », la page crée une iframe `srcdoc` avec `sandbox="allow-scripts"`, sans `allow-same-origin`, sans permissions supplémentaires et avec `referrerpolicy="no-referrer"`.
+3. L'iframe crée un Worker à partir d'un Blob. Le Worker hérite de la CSP initiale de l'iframe : `worker-src blob:`, scripts et connexions limités au répertoire CDN Pyodide épinglé.
+4. Le Worker charge Pyodide 0.27.7 via `importScripts`, puis vérifie qu'une requête `fetch` vers `https://example.com` provoque un événement `securitypolicyviolation` pour `connect-src`. Si cette preuve manque, l'exécution apprenant n'est pas lancée.
+5. Après ce contrôle, le Worker neutralise `fetch`, XHR, WebSocket, WebTransport, EventSource, WebRTC, les Workers imbriqués, les imports de scripts, le stockage navigateur et les canaux globaux de messages. Il conserve uniquement un `MessagePort` privé, capturé dans une fermeture.
+6. L'iframe ajoute une seconde CSP restrictive à son propre document. Le Worker conserve la politique héritée à sa création ; son accès réseau ordinaire reste limité au chemin CDN autorisé, tandis que les API de transport sont neutralisées.
+7. La page et l'iframe échangent via un premier `MessagePort`, l'iframe et le Worker via un second. Le code apprenant et les tests s'exécutent dans le même runtime et le même dictionnaire Python.
+8. La page valide strictement la forme, le nombre et la taille des résultats. Le timeout de 10 secondes ou le bouton « Arrêter » supprime l'iframe propriétaire et son Worker ; le chargement dispose de 60 secondes.
+9. Le code est conservé dans le stockage de la page principale et peut être synchronisé avec Supabase si l'apprenant est connecté ; aucun jeton, session ou donnée de compte n'est transmis à l'iframe ou au Worker.
 ### 2.2 Actifs à protéger
 
 | Actif | Emplacement / exposition observée | Impact en cas de compromission |
@@ -42,9 +40,10 @@ Le modèle ne considère pas la clé publishable comme un secret. En revanche, u
 
 ### 2.3 Frontières de confiance
 
-- **Code applicatif de la page :** scripts de l'interface, navigation, compte et synchronisation.
-- **Code apprenant :** entrée arbitraire ; il doit être traité comme non fiable, même s'il est écrit par l'apprenant lui-même.
-- **Contenu YAML et tests :** contenu versionné et relu dans le dépôt ; il est plus fiable que le code apprenant, mais son rendu HTML doit rester une surface distincte.
+- **Code applicatif de la page :** scripts de l'interface, navigation, compte et synchronisation, sur l'origine principale.
+- **Contexte Python :** iframe sandboxée à origine opaque ; elle peut accéder à son propre document, mais pas au DOM ou au stockage de l'origine principale.
+- **Code apprenant :** entrée arbitraire, exécutée dans l'iframe ; il doit être traité comme non fiable.
+- **Contenu YAML et tests :** contenu versionné et relu dans le dépôt ; les tests sont transmis à l'iframe mais ne constituent pas une preuve inviolable de compétence.
 - **Services distants :** CDN Pyodide, GitHub Pages et API Supabase.
 - **Navigateur et système de l'utilisateur :** environnement hors du contrôle du site ; le site ne peut pas garantir l'absence d'extensions malveillantes, de navigateur compromis ou d'outils de développement.
 
@@ -85,22 +84,21 @@ Le modèle ne considère pas la clé publishable comme un secret. En revanche, u
 ### Observations particulières
 
 - Pyodide expose un pont JavaScript ; le fait de passer un dictionnaire Python via `globals: ns` ne constitue pas une sandbox.
-- Un Web Worker n'a pas accès directement à `document`, `window` ni `localStorage`, mais son environnement expose d'autres API (par exemple `fetch`, `WebSocket`, `IndexedDB`, `importScripts` selon le contexte et les politiques). Il ne faut donc pas conclure qu'un Worker interdit le réseau ou tout accès aux données de même origine.
-- Dans le prototype de la PR #11, le Worker charge Pyodide via `importScripts` depuis jsDelivr. Les tests navigateur vérifient l'absence de `document` et de `localStorage`, mais ne démontrent pas le blocage de `fetch`, `WebSocket`, IndexedDB ou de tous les imports. Ces capacités restent des points à examiner.
-- Une politique CORS n'est pas une politique anti-exfiltration : certaines requêtes peuvent transmettre des données même si la réponse n'est pas lisible par le script.
-- Les navigateurs ne fournissent pas de quota mémoire strict, portable et fiable pour un Worker Web standard. Le délai et la terminaison limitent le risque sans garantir une borne mémoire dure.
-- Les tests actuels sont évalués après le code apprenant dans le même runtime. Un apprenant motivé peut manipuler l'environnement d'exécution ; les résultats doivent rester un feedback d'exercice, pas une certification inviolable.
-
+- L'iframe `sandbox="allow-scripts"` sans `allow-same-origin` reçoit une origine opaque. Le Worker Blob est créé depuis ce contexte et hérite de cette origine opaque ; il n'a ni `window`, ni `document`, ni accès à `parent`, au DOM ou au stockage de l'application.
+- Le Worker hérite de la CSP initiale de son document créateur. Celle-ci autorise uniquement le répertoire CDN Pyodide épinglé pour les scripts et connexions. Le Worker vérifie l'application effective de `connect-src` via l'événement `securitypolicyviolation` avant de recevoir du code apprenant ; le parent refuse de lancer l'exercice si cette preuve n'est pas reçue.
+- Après le contrôle CSP, le Worker neutralise les API réseau et de communication usuelles : `fetch`, XHR, WebSocket, WebSocketStream, EventSource, WebTransport, RTCPeerConnection, BroadcastChannel, IndexedDB, Cache API, importScripts, Worker/SharedWorker, `postMessage` global et `navigator.sendBeacon`. Le canal privé `MessagePort` est conservé dans une fermeture et n'est pas exposé au pont Pyodide.
+- L'iframe ajoute ensuite une seconde CSP restrictive à son propre document. Cette seconde politique ne remplace pas la CSP héritée par le Worker ; celui-ci conserve la politique initiale, avec le seul CDN Pyodide autorisé au niveau CSP et les API de transport masquées.
+- La page n'utilise pas de gestionnaire `message` global pour recevoir des résultats ; elle accepte uniquement les messages structurés du port associé à l'instance active. Le Worker ne possède pas de référence au parent et son `postMessage` global est neutralisé.
+- La suppression de l'iframe propriétaire termine le Worker imbriqué, y compris lorsqu'il est bloqué dans une boucle synchrone. Le test navigateur doit confirmer la réactivité du parent et l'arrêt effectif dans Chromium.
+- Le code apprenant et les expressions de test restent dans le même runtime et le même espace de noms. Un apprenant motivé peut manipuler l'environnement d'exécution ; les résultats restent un feedback d'exercice, pas une attestation inviolable.
+- Les navigateurs ne fournissent pas de quota mémoire strict, portable et fiable pour ce Worker. Une allocation extrême peut provoquer une pression mémoire ou un crash du processus avant le timeout ; une limite dure exige une isolation OS/serveur.
 ### CSP et contraintes propres à GitHub Pages
 
-GitHub Pages ne permet pas de configurer librement des en-têtes HTTP de réponse. Une CSP ajoutée par `<meta http-equiv="Content-Security-Policy">` est donc limitée : les directives `frame-ancestors`, `sandbox` et `report-uri` n'y sont pas appliquées. Elle peut notamment restreindre le chargement d'un Worker avec `worker-src`, mais ne constitue pas une politique réseau appliquée aux requêtes émises depuis un Worker de même origine.
+GitHub Pages ne permet pas de configurer librement des en-têtes HTTP de réponse. Le parent ne peut donc pas imposer une politique réseau par en-tête. L'architecture de la PR #25 utilise une iframe `srcdoc` avec l'attribut HTML `sandbox="allow-scripts"` (la restriction d'origine vient de cet attribut, pas de la CSP meta). La CSP initiale de l'iframe autorise un Worker Blob et limite les scripts/connexions au répertoire CDN Pyodide épinglé. Le Worker Blob hérite de cette politique lors de sa création. Une fois le Worker prêt, l'iframe ajoute une seconde CSP meta restrictive à son propre document ; cette seconde politique n'est pas présentée comme ayant modifié rétroactivement la politique héritée du Worker.
 
-Un Worker classique chargé depuis une URL de même origine n'hérite pas de la CSP déclarée dans le document : sa politique dépend des en-têtes de sa propre réponse. L'héritage de la CSP du document concerne les Workers `blob:` et `data:`, pas ce Worker externe de même origine. Par conséquent, **on ne peut pas promettre un réseau fermé au moyen de la seule CSP meta sur GitHub Pages**.
+Le Worker conserve une autorisation CSP de connexion vers le seul chemin CDN utilisé par Pyodide, mais les API réseau usuelles sont neutralisées après l'initialisation. Le test préalable exige un événement CSP explicite pour une requête externe ; un simple échec réseau ne suffit pas. Ce mécanisme est une défense en profondeur côté navigateur, pas un pare-feu système : une vulnérabilité du navigateur, de Pyodide ou un nouveau canal non identifié pourrait contourner ces restrictions.
 
-Neutraliser dans le Worker des API telles que `fetch`, `XMLHttpRequest`, `WebSocket` et `importScripts` après le chargement de Pyodide peut constituer une défense en profondeur, mais ne doit pas être présenté comme une frontière de sécurité robuste contre du code hostile capable d'exploiter d'autres capacités ou primitives.
-
-Une iframe `srcdoc` avec `sandbox="allow-scripts"` et sans `allow-same-origin` peut fournir un contexte à origine opaque, sans accès direct au stockage de l'origine principale. C'est une piste de prototype, pas une garantie automatique : il faut tester le chargement Pyodide/WASM depuis le CDN, les messages `postMessage`, la politique de contenu et les capacités résiduelles. Une origine dédiée avec des en-têtes contrôlés reste une option distincte si le modèle de menace l'exige.
-
+La CSP meta ne peut pas appliquer les directives `frame-ancestors`, `sandbox` ou `report-uri`. Elle ne fournit pas de quota mémoire/CPU au niveau OS. Une origine dédiée contrôlée par en-têtes HTTP ou un service d'exécution serveur isolé reste nécessaire si le modèle de menace exige une garantie réseau stricte, une limite mémoire dure ou l'exécution de code tiers à valeur sensible.
 ## 5. Objectifs de sécurité
 
 Toute solution future doit satisfaire les objectifs suivants :
@@ -147,7 +145,7 @@ Toute solution future doit satisfaire les objectifs suivants :
 - l'origine `null` ne doit jamais être considérée comme une authentification suffisante ; vérifier également `event.source` et un canal/nonce propre à l'instance ;
 - une iframe sur la même origine avec des permissions trop larges peut annuler le bénéfice attendu.
 
-**Conclusion :** option à prototyper si le Worker seul ne satisfait pas les critères de menace, avec une revue spécifique du modèle d'origine et du protocole de messages.
+**Conclusion :** prototype implémenté dans la PR #25. L'origine opaque, la CSP post-bootstrap et le canal privé sont vérifiés par des tests navigateur ciblés ; la solution reste une isolation côté navigateur, sans quota mémoire dur ni garantie de processus séparé.
 
 ### Option C — origine séparée dédiée au runtime
 
@@ -177,18 +175,16 @@ Toute solution future doit satisfaire les objectifs suivants :
 
 **Conclusion :** ne pas retenir à ce stade sans besoin produit, budget et modèle opérationnel explicites.
 
-## 7. Évaluation après revue de la PR #11
+## 7. Évaluation de l'architecture proposée dans la PR #25
 
-La PR #11 fournit déjà un prototype Worker avec délai de 10 secondes, terminaison par `worker.terminate()`, bouton d'arrêt et tests Playwright ciblés. Claude a vérifié que ces tests couvrent le squelette, une solution, la boucle infinie, la réactivité/l'arrêt et l'absence d'accès à `document` et `localStorage`. Cette PR reste toutefois ouverte : le prototype n'est pas encore intégré à `main`.
+La PR #11 avait introduit un Worker de même origine. La PR #25 remplace ce mécanisme sur sa branche par un Worker Blob imbriqué dans une iframe à origine opaque, avec plafonds d'entrée (50 000 caractères de code, 30 tests, 2 000 caractères par expression, 20 000 caractères cumulés), erreurs limitées à 500 caractères, timeout d'exécution de 10 secondes et timeout de chargement de 60 secondes. Le parent supprime l'iframe propriétaire à l'arrêt, ce qui termine le Worker imbriqué. La PR #25 reste ouverte et non fusionnée ; les résultats CI doivent être vérifiés sur son SHA exact avant toute conclusion.
 
 Le modèle de menace doit distinguer deux scénarios :
 
-- **Usage actuel envisagé :** chaque apprenant exécute son propre code, sans partage de code entre comptes ; la session Supabase reste dans le `localStorage` de la page principale, hors du Worker ; la clé publishable n'accorde que le rôle `anon`, sous réserve de politiques RLS correctes. Le Worker réduit fortement le risque d'accès direct au DOM/stockage et de blocage de l'interface. Il constitue un palier proportionné pour ce scénario, sans garantir l'absence d'accès réseau.
-- **Menace hostile renforcée :** partage de code entre apprenants, exécution de code fourni par des tiers, besoin de confidentialité forte ou validation de compétences à valeur probante. Le Worker de même origine ne suffit pas à lui seul. Avant d'ouvrir ces usages, prototyper une iframe sandboxée à origine opaque ou une origine dédiée, avec tests réseau, stockage, messages et dépendances. Une exécution distante n'est à étudier qu'avec un besoin produit et un modèle opérationnel explicites.
+- **Usage actuel envisagé :** chaque apprenant exécute son propre code, sans partage entre comptes ; la session Supabase et les données de progression restent dans le contexte principal et ne sont pas transmises à l'iframe. L'origine opaque bloque les accès DOM/stockage parent et la CSP ferme les connexions ordinaires après le bootstrap. C'est un palier client nettement plus fort, sans garantie contre toutes les navigations, vulnérabilités navigateur ou pressions mémoire.
+- **Menace hostile renforcée :** partage de code tiers, confidentialité forte ou validation de compétences à valeur probante. Le navigateur ne fournit toujours pas de quota mémoire dur ni d'isolation de processus garantie. Avant ces usages, une origine dédiée avec en-têtes HTTP contrôlés ou un service d'exécution serveur isolé reste préférable.
 
-Sur GitHub Pages, ne pas faire dépendre la décision d'une CSP réseau qui ne peut pas être imposée par en-têtes HTTP. La neutralisation d'API dans le Worker peut réduire la surface, mais reste une défense en profondeur, pas une sandbox complète.
-
-Aucune modification du runtime n'est incluse dans cette PR documentaire ; l'implémentation Worker reste isolée dans la PR #11.
+La PR #25 est une implémentation applicative active sur sa branche, mais pas encore intégrée à `main`. Aucun déploiement ni aucune adoption ne sont présumés.
 
 ## 8. Critères d'acceptation avant adoption d'une implémentation
 
@@ -270,3 +266,11 @@ Les références suivantes sont des points de départ, pas une preuve que l'arch
 ## 12. Décision attendue
 
 Cette PR propose uniquement le modèle de menace et les critères de vérification. La revue croisée a clarifié que le Worker de la PR #11 est un premier palier adapté au scénario actuel, sous réserve de ne pas le présenter comme une sandbox complète. La fusion de cette PR documentaire ne vaut ni validation de sécurité indépendante, ni autorisation d'ouverture à du code tiers ou partagé. Toute évolution vers une iframe sandboxée, une origine dédiée ou une exécution distante devra faire l'objet d'une conception et de tests distincts. Aucune fusion de code applicatif, publication ou modification de l'authentification n'est demandée ici.
+
+
+## Références techniques de l'architecture PR #25
+
+- Pyodide 0.27.7, utilisation dans un navigateur et Web Workers : https://pyodide.org/en/0.27.7/usage/index.html
+- Pyodide 0.27.7, prise en charge de `runPythonAsync` et du top-level await : https://pyodide.org/en/0.27.7/project/changelog.html
+- MDN, événement `securitypolicyviolation` dans un Worker : https://developer.mozilla.org/en-US/docs/Web/API/WorkerGlobalScope/securitypolicyviolation_event
+- MDN, `WorkerGlobalScope` et absence de contexte de navigation : https://developer.mozilla.org/en-US/docs/Web/API/WorkerGlobalScope
