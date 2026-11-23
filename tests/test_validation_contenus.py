@@ -104,6 +104,31 @@ def test_code_step_rejects_paths_outside_the_exercise_directory():
     assert any("chemin relatif sûr" in error for error in errors)
 
 
+def test_plan_identifiers_match_progress_storage_format():
+    plan = {
+        "titre": "Course",
+        "sous_titre": "Subtitle",
+        "sous_titre_en": "Subtitle",
+        "domaines": [
+            {
+                "id": "foundations_core",
+                "titre": "Foundations",
+                "en": "Foundations",
+                "accroche": "Introduction",
+                "accroche_en": "Introduction",
+                "modules": [
+                    {"id": "a1_core", "titre": "Module", "en": "Module", "seances": []}
+                ],
+            }
+        ],
+    }
+
+    errors = verifier_parcours(plan)
+
+    assert any("identifiant de domaine invalide" in error for error in errors)
+    assert any("identifiant de module invalide" in error for error in errors)
+
+
 def test_plan_requires_english_home_and_domain_copy_for_bilingual_build():
     plan = {
         "titre": "Course",
