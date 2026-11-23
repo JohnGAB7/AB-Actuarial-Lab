@@ -305,14 +305,14 @@ function render() {
   if (e.type === "rappel" || e.type === "video") markDone(i);
   $("#prev").disabled = i === 0;
   $("#next").textContent = i === N - 1 ? "Terminer" : "Suivante →";
-  $("#where").textContent = `${S.module_titre} · ${S.titre}`;
+  const w = $("#where"); w.replaceChildren(el("a", { href: S.module_url }, S.module_titre), ` · ${S.titre}`);
   document.title = `${e.titre} · ${S.titre}`;
   window.scrollTo({ top: 0 });
 }
 $("#prev").addEventListener("click", () => { const i = current(); if (i > 0) location.hash = "etape-" + i; });
 $("#next").addEventListener("click", () => {
   const i = current();
-  if (i === N - 1) location.href = S.accueil; else location.hash = "etape-" + (i + 2);
+  if (i === N - 1) location.href = S.module_url; else location.hash = "etape-" + (i + 2);
 });
 addEventListener("keydown", (ev) => {
   const t = ev.target;

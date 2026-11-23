@@ -1,49 +1,72 @@
-# Plan du parcours personnel de JG. L'ossature suit les modules A1 à A8 du « Parcours Actuariat »
-# d'Actu-Basics (docs/actuariat/PARCOURS-ACTUARIAT-v3.md). Les approfondissements marqués « + »
-# vont au-delà du programme Actu-Basics (niveau examens, pensions, IAS 19).
-# Chaque module maîtrisé devient ensuite une fiche et une vidéo Actu-Basics.
+# Plan du parcours personnel de JG, organisé en domaines (menu du site).
+# L'ossature suit les modules A1 à A8 du « Parcours Actuariat » d'Actu-Basics (docs/actuariat/PARCOURS-ACTUARIAT-v3.md).
+# Les approfondissements marqués « + » vont au-delà du programme Actu-Basics (niveau examens, pensions, IAS 19, ALM, Canada).
+# Chaque module maîtrisé devient ensuite une fiche et une vidéo Actu-Basics (a-produire/).
+# Un module sans « seances » s'affiche « à venir ». L'ordre des domaines et des modules est l'ordre conseillé.
 titre: "Parcours actuariel"
-sous_titre: "Une séance courte à la fois, des mathématiques financières à la solvabilité."
-blocs:
+sous_titre: "Une séance courte à la fois, des mathématiques financières à la gestion actif-passif."
+domaines:
   - id: fondamentaux
     titre: "Fondamentaux"
     en: "Foundations"
-    periode: "A1 à A2b"
+    accroche: "Le langage commun de tous les actuaires : intérêt, probabilités, statistique."
     modules:
       - {id: a1, titre: "A1 · Mathématiques financières", en: "Financial mathematics", seances: [a1/s01]}
       - {id: a2, titre: "A2 · Probabilités pour l'assurance", en: "Probability for insurance"}
       - {id: a2b, titre: "A2b · Statistique pour l'assurance", en: "Statistics for insurance"}
+
   - id: vie
     titre: "Vie"
-    en: "Life"
-    periode: "A3, A4 et approfondissements"
+    en: "Life insurance"
+    accroche: "Mortalité, assurances, rentes et provisions : la valeur d'une promesse sur une vie humaine."
     modules:
       - {id: a3, titre: "A3 · Vie et mortalité", en: "Life insurance and mortality", seances: [a3/s01, a3/s02]}
-      - {id: a3-plus, titre: "A3+ · Temps continu, plusieurs têtes, tables prospectives (CPM2014)", en: "Continuous time, multiple lives, mortality improvement"}
+      - {id: a3-plus, titre: "A3+ · Temps continu, plusieurs têtes, tables prospectives", en: "Continuous time, multiple lives, mortality improvement"}
       - {id: a4, titre: "A4 · Provisions vie", en: "Life reserves"}
       - {id: a4-plus, titre: "A4+ · Variable de perte, Zillmer, profit testing", en: "Loss random variable, Zillmer reserves, profit testing"}
-      - {id: a4-pens, titre: "A4+ · Décréments multiples, plans DB et IAS 19", en: "Multiple decrements, DB plans and IAS 19"}
+
+  - id: retraite
+    titre: "Retraite"
+    en: "Pensions and employee benefits"
+    accroche: "Plans à prestations définies, IAS 19 et évaluation des régimes de retraite au Canada."
+    modules:
+      - {id: a4-pens, titre: "R1+ · Décréments multiples et plans à prestations définies", en: "Multiple decrements and defined benefit plans"}
+      - {id: r2, titre: "R2+ · IAS 19 : DBO, coût des services, écarts actuariels", en: "IAS 19: DBO, service cost, remeasurements"}
+      - {id: r3, titre: "R3+ · Régimes canadiens : capitalisation, solvabilité, CPM2014", en: "Canadian pension plans: going concern, solvency, CPM2014"}
+
   - id: non-vie
     titre: "Non-vie"
     en: "Property and casualty"
-    periode: "A5 à A7"
+    accroche: "Fréquence, sévérité, tarification et provisions des sinistres."
     modules:
       - {id: a5, titre: "A5 · Sinistres non-vie", en: "Non-life claims"}
       - {id: a6, titre: "A6 · Tarification", en: "Pricing"}
       - {id: a6-plus, titre: "A6+ · GAM, GBM, élasticité et tarification sous contrainte", en: "GAM, GBM, price elasticity, constrained pricing"}
       - {id: a7, titre: "A7 · Provisionnement non-vie", en: "Non-life reserving"}
       - {id: a7-plus, titre: "A7+ · Bornhuetter-Ferguson, Cape Cod, bootstrap", en: "Bornhuetter-Ferguson, Cape Cod, bootstrap"}
+
+  - id: alm
+    titre: "ALM"
+    en: "Asset-liability management"
+    accroche: "Taux, duration et adossement : faire tenir ensemble l'actif et le passif."
+    modules:
+      - {id: alm1, titre: "ALM1+ · Duration, convexité et immunisation", en: "Duration, convexity and immunization"}
+      - {id: alm2, titre: "ALM2+ · Courbe des taux et scénarios économiques", en: "Yield curves and economic scenarios"}
+      - {id: alm3, titre: "ALM3+ · Adossement actif-passif d'un assureur vie", en: "Asset-liability matching for a life insurer"}
+
   - id: risque
     titre: "Risque et solvabilité"
     en: "Risk and solvency"
-    periode: "A8"
+    accroche: "Mesures de risque, capital réglementaire, IFRS 17 et gestion des risques d'entreprise."
     modules:
       - {id: a8, titre: "A8 · Risque et solvabilité", en: "Risk and solvency"}
       - {id: a8-plus, titre: "A8+ · IFRS 17, capital canadien (LICAT, MCT), normes de l'ICA", en: "IFRS 17, Canadian capital (LICAT, MCT), CIA standards"}
+      - {id: erm, titre: "ERM+ · Gestion des risques d'entreprise et ORSA", en: "Enterprise risk management and ORSA"}
+
   - id: outils
-    titre: "Outils du métier"
+    titre: "Outils"
     en: "Tools of the trade"
-    periode: "en continu, une séance sur trois"
+    accroche: "Python, SQL, Excel et VBA, appris sur des cas actuariels. Une séance sur trois."
     modules:
       - {id: o1, titre: "O1 · Python : NumPy, pandas, tests", en: "Python: NumPy, pandas, testing"}
       - {id: o2, titre: "O2 · SQL sur un portefeuille fictif", en: "SQL on a fictional portfolio"}
