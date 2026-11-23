@@ -28,8 +28,8 @@ etapes:
     minutes: 6
     blocs:
       - p: >-
-          Ton simulateur travaille à âge entier : il connaît $l_x$, $p_x$ et $q_x$. Un cours complet, et les examens
-          de la SOA, regardent aussi <b>l'instant</b> du décès. L'outil pour cela est la
+          Ton simulateur travaille à âge entier : il connaît $l_x$, $p_x$ et $q_x$. Le programme FAM de la SOA étudie aussi le modèle de survie en temps continu, au-delà des probabilités
+          aux âges entiers. L'outil central est la
           <b>force de mortalité</b> <i>(force of mortality)</i> $\mu_x$, le taux instantané de décès à l'âge exact $x$.
       - formule: |
           \begin{gathered}
@@ -41,7 +41,7 @@ etapes:
           qui croît de façon exponentielle avec l'âge. Avec $A = -\ln s$ et $B = -\ln g\,\ln c$, c'est la forme
           classique $A + Bc^x$, et la loi de Gompertz quand $A = 0$.
       - formule: |
-          \mu_x = \underbrace{-\ln s}_{A} \;\underbrace{-\,\ln g\,\ln c}_{B}\; c^{x}
+          \mu_x = \underbrace{-\ln s}_{A} + \underbrace{-\,\ln g\,\ln c}_{B}\,c^{x}
       - interactif: makeham
       - p: >-
           L'<b>espérance de vie abrégée</b> <i>(curtate life expectancy)</i> $e_x$ compte les années entières encore
@@ -50,15 +50,19 @@ etapes:
       - formule: |
           \begin{gathered}
           e_x = \sum_{k\ge 1} {}_kp_x \\[6pt]
-          \mathring{e}_x = \int_0^{\infty} {}_tp_x\,\mathrm{d}t \;\approx\; e_x + \tfrac12 \quad \text{(UDD)}
+          \mathring{e}_x = \int_0^{\infty} {}_tp_x\,\mathrm{d}t = e_x + \tfrac12 \quad \text{(UDD)}
           \end{gathered}
       - note: >-
           En IAS 19, le choix de la table de mortalité modifie directement la DBO d'un plan
-          de rentes. Tu le mesureras toi-même dans l'approfondissement A4+.
+          de rentes. Tu le mesureras toi-même dans l'approfondissement A4+. Au Canada, la table applicable dépend
+          du type d'évaluation et de sa date : le rapport CPM2024 a été publié en mars 2026. Pour les valeurs
+          actualisées des régimes de retraite visées par la section 3530, CPM2024 combinée et l'échelle MI-2024
+          sont promulguées avec effet au 1er avril 2027.
       - sources:
           - {titre: "Dickson, Hardy et Waters, Actuarial Mathematics for Life Contingent Risks, chap. 2 et 3", detail: "Modèles de survie, force de mortalité, âges fractionnaires"}
           - {titre: "SOA, Fundamentals of Actuarial Mathematics (FAM) Exam", url: "https://www.soa.org/education/exam-req/edu-exam-fam/", detail: "Syllabus officiel de l'examen"}
-          - {titre: "ICA, 2024 Canadian Pensioner Mortality Research Project", url: "https://www.cia-ica.ca/publications/226032e/", detail: "La CPM2014 reste la table de référence pour les évaluations"}
+          - {titre: "ICA, 2024 Canadian Pensioner Mortality Research Project", url: "https://www.cia-ica.ca/publications/226032e/", detail: "Rapport publié le 11 mars 2026 : nouvelles tables de mortalité des retraités et de leurs conjoints"}
+          - {titre: "ICA, promulgation de la table de mortalité — section 3530 (2026)", url: "https://www.cia-ica.ca/fr/publications/226094e/", detail: "CPM2024 combinée et échelle MI-2024 applicables à compter du 1er avril 2027 pour les valeurs actualisées visées par cette section"}
 
   - type: quiz
     titre: "Vérifie"
