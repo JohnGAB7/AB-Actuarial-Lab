@@ -45,6 +45,8 @@ def charger_seance(sid: str, langue: str = "fr") -> dict:
 def nombres(texte: str, langue: str) -> list[str]:
     """Numbers in a text, written the same way whatever the language: 0,0247 and 0.0247 give 0.0247; 716 046 and 716,046 give 716046."""
     t = texte.replace("{,}", ",")
+    # In LaTeX, \, is also a thin space before units (e.g. 2{,}5\,\%).
+    t = re.sub(r"\\,\s*(?=\\?[%‰])", " ", t)
     t = re.sub(r"(?<=\d)(?:\\,|\\ |\u202f|\u00a0| )(?=\d{3}\b)", "", t)  # thousands separators: 716 046, 716\,046
     if langue == "fr":
         t = re.sub(r"(?<=\d),(?=\d)", ".", t)
