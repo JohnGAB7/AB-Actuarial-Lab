@@ -12,7 +12,6 @@
       return Object.keys(v).filter(function (k) { return v[k] === true; }).length;
     } catch (e) { return 0; }
   };
-  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
 
   function afficher() {
     var etat = plan.map(function (p) { return { p: p, f: Math.min(faites(p.s), p.n) }; });
@@ -40,9 +39,9 @@
       var base = BASE + (EN ? "en/" : "");
       if (suite) {
         cta.href = base + suite.p.s + "/index.html";
-        cta.innerHTML = (commence ? tr("Reprendre : ", "Resume: ") : tr("Commencer : ", "Start: ")) + esc(suite.p.t) + " →";
+        cta.textContent = (commence ? tr("Reprendre : ", "Resume: ") : tr("Commencer : ", "Start: ")) + suite.p.t + " →";
       } else {
-        cta.innerHTML = tr("Tout est terminé. Revoir le parcours →", "All done. Review the path →");
+        cta.textContent = tr("Tout est terminé. Revoir le parcours →", "All done. Review the path →");
       }
     }
   }
