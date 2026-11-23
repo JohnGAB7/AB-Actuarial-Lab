@@ -120,7 +120,7 @@ def test_lesson_shell_uses_full_desktop_workspace_and_step_labels():
     assert "grid-template-columns:260px minmax(0,1fr)" in stylesheet
     assert "rail-step-name" in script
     assert 'type="image/svg+xml"' in template
-    assert '(<(?:strong|b)>[A-Z]<[^>]+>)' in script
+    assert '(<(?:strong|b)>[A-Z]<\\/(?:strong|b)>)\\s*[-–—]\\s*(?=<)' in script
 
 
 def test_rich_enumeration_separator_is_removed_before_any_inline_formula_tag():
