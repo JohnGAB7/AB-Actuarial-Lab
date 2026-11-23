@@ -63,7 +63,7 @@ etapes:
           More generally, the <b>present value</b> <i>(valeur actuelle)</i> of a stream of cash flows $C_t$ is the sum
           of the discounted cash flows. Everything else in the path, from life annuities to reserves, rests on this sum.
       - formule: |
-          PV = \sum_t C_t\, v^t
+          \text{PV} = \sum_t C_t\, v^t
       - note: >-
           In A3, a life annuity will be an annuity certain in which each payment is multiplied by a
           survival probability: $\ddot{a}_x = \sum_k v^k\,{}_kp_x$.
@@ -80,7 +80,7 @@ etapes:
           rappel: >-
             Discounting means dividing by the accumulation factor $(1+i)^t$, that is multiplying by $v^t$.
           formule: |-
-            PV = C\,v^t = \frac{C}{(1+i)^t}
+            \text{PV} = C\,v^t = \frac{C}{(1+i)^t}
           exemple: >-
             $1.025^{10} = 1.28008$, so $1{,}000 / 1.28008 = 781.20$ euros.
           piege: >-

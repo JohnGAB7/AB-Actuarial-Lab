@@ -42,8 +42,28 @@ def charger_seance(sid: str, langue: str = "fr") -> dict:
     return fusion(s, yaml.safe_load((CONTENUS / langue / f"{sid}.yaml").read_text(encoding="utf-8")), sid)
 
 
+def nombres(texte: str, langue: str) -> list[str]:
+    """Numbers in a text, written the same way whatever the language: 0,0247 and 0.0247 give 0.0247; 716 046 and 716,046 give 716046."""
+    t = texte.replace("{,}", ",")
+    t = re.sub(r"(?<=\d)(?:\\,|\\ |\u202f|\u00a0| )(?=\d{3}\b)", "", t)  # thousands separators: 716 046, 716\,046
+    if langue == "fr":
+        t = re.sub(r"(?<=\d),(?=\d)", ".", t)
+    else:
+        t = re.sub(r"(?<=\d),(?=\d{3}\b)", "", t)
+    return sorted(re.findall(r"\d+(?:\.\d+)?", t))
+
+
+def sans_texte(formule: str) -> str:
+    """A formula with its \\text{...} labels blanked: only those labels may change in a translation."""
+    return re.sub(r"\\text\{[^{}]*\}", r"\\text{}", formule)
+
+
 def fusion(base, trad, chemin: str):
-    """Lay the translated texts over the French session. The translation may not add keys or change list lengths."""
+    """Lay the translated texts over the French session.
+
+    The translation may not add keys, change list lengths or types, touch the numeric fields, leave a text empty,
+    or change a number written in a text. A formula may only change its \\text{...} labels.
+    """
     if isinstance(trad, dict):
         if not isinstance(base, dict):
             raise ValueError(f"{chemin} : structure différente du français")
@@ -53,12 +73,21 @@ def fusion(base, trad, chemin: str):
                 raise ValueError(f"{chemin}.{k} : clé absente du français")
             if k in NON_TRADUISIBLES and k != "formule":
                 raise ValueError(f"{chemin}.{k} : ce champ reste dans le fichier français")
-            sortie[k] = fusion(base[k], v, f"{chemin}.{k}")
+            if k == "formule" and (not isinstance(v, str) or sans_texte(v) != sans_texte(base[k])):
+                raise ValueError(f"{chemin}.{k} : une formule ne peut changer que ses \\text{{…}}")
+            sortie[k] = v if k == "formule" else fusion(base[k], v, f"{chemin}.{k}")
         return sortie
     if isinstance(trad, list):
         if not isinstance(base, list) or len(base) != len(trad):
             raise ValueError(f"{chemin} : liste de longueur différente du français")
         return [fusion(b, t, f"{chemin}[{i}]") for i, (b, t) in enumerate(zip(base, trad))]
+    if type(trad) is not type(base):
+        raise ValueError(f"{chemin} : type différent du français")
+    if isinstance(trad, str):
+        if base.strip() and not trad.strip():
+            raise ValueError(f"{chemin} : texte vide")
+        if nombres(trad, "en") != nombres(base, "fr"):
+            raise ValueError(f"{chemin} : chiffres différents du français ({nombres(base, 'fr')} ≠ {nombres(trad, 'en')})")
     return trad
 
 
@@ -354,7 +383,7 @@ def construire() -> None:
                            module_titre=mod_titre(m, langue), domaine_titre=dom_titre(dom, langue))
             page = g_seance.substitute(
                 titre=e(s["titre"]), base=base, accueil=donnees["accueil"], lang=langue, autre=autre,
-                bascule=bascule(langue, autre), compte=t["compte"], racine=racine,
+                bascule=bascule(langue, autre), alt_fr=base + sid + "/index.html", alt_en=base + "en/" + sid + "/index.html", compte=t["compte"], racine=racine,
                 progression=t["progression"], etapes=t["etapes"],
                 donnees=json.dumps(donnees, ensure_ascii=False).replace("</", "<\\/"))
             cible = sortie / sid / "index.html"

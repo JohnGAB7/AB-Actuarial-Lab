@@ -127,6 +127,23 @@ def test_traduction_ne_touche_pas_aux_chiffres():
         fusion(base, {"nouveau": "texte"}, "test")
 
 
+def test_traduction_ne_change_ni_formule_ni_nombre_ni_type():
+    import pytest
+    from tools.construire import fusion
+    base = {"formule": r"\text{VA} = \frac{1}{1{,}025}", "solution": "$d = 0{,}0244$ et 716 046 survivants.", "minutes": 3, "intro": "Quatre questions."}
+    ok = fusion(base, {"formule": r"\text{PV} = \frac{1}{1{,}025}", "solution": "$d = 0.0244$ and 716,046 survivors."}, "t")
+    assert ok["formule"].startswith(r"\text{PV}")
+    for trad in ({"formule": r"\text{PV} = \frac{1}{1{,}25}"},            # constant changed in a formula
+                 {"formule": r"\text{PV} = \frac{2}{1{,}025}"},
+                 {"solution": "$d = 0.244$ and 716,046 survivors."},     # number changed in a text
+                 {"solution": "$d = 0.0244$ and 716,046 survivors, 3 times."},
+                 {"intro": ""}, {"intro": "   "},                          # empty translation
+                 {"intro": 4},                                          # other type
+                 {"minutes": 4}):                                       # numeric field
+        with pytest.raises(ValueError):
+            fusion(base, trad, "t")
+
+
 def test_tableaux_anglais_identiques_au_francais():
     """The English tables only change the number format (2,5 % → 2.5%, 716 046 → 716,046)."""
     def norme(v, langue):
@@ -150,5 +167,8 @@ def test_site_bilingue(tmp_path, monkeypatch):
         en = (tmp_path / "site" / "en" / sid / "index.html").read_text(encoding="utf-8")
         assert '<html lang="fr">' in fr and '<html lang="en">' in en
         assert f'href="../../en/{sid}/index.html"' in fr and f'href="../../../{sid}/index.html"' in en
+        for page, base in ((fr, "../../"), (en, "../../../")):
+            assert f'hreflang="fr" href="{base}{sid}/index.html"' in page
+            assert f'hreflang="en" href="{base}en/{sid}/index.html"' in page
     accueil = (tmp_path / "site" / "en" / "index.html").read_text(encoding="utf-8")
     assert 'hreflang="fr" href="../index.html"' in accueil and "Foundations" in accueil
