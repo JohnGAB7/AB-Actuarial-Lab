@@ -49,6 +49,10 @@ const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 
   await setCode("import js\ntry:\n    await js.fetch('https://example.com/')\nexcept Exception:\n    raise RuntimeError('NETWORK_BLOCKED')\nraise RuntimeError('NETWORK_ALLOWED')\n");
   await clickRun(); await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 30000 });
   out.network = await p.locator('.results li .tm').first().textContent(); console.log('network:', out.network);
+  // 7. remove transports such as WebRTC that are not consistently covered by connect-src.
+  await setCode("import js\\nblocked = ['WebSocket', 'WebSocketStream', 'EventSource', 'WebTransport', 'RTCPeerConnection', 'webkitRTCPeerConnection', 'XMLHttpRequest', 'BroadcastChannel', 'Worker', 'SharedWorker', 'indexedDB', 'caches']\\navailable = [name for name in blocked if hasattr(js, name) and getattr(js, name) is not None]\\nraise RuntimeError('TRANSPORTS_AVAILABLE=' + ','.join(available))\\n");
+  await clickRun(); await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 30000 });
+  out.transports = await p.locator('.results li .tm').first().textContent(); console.log('transports:', out.transports);
   // Oversized code is rejected before Pyodide is loaded.
   await setCode('x'.repeat(50001));
   await clickRun(); await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 5000 });
@@ -61,6 +65,7 @@ const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 
   if (out.responsive !== 2 || !/arrêtée/.test(out.stop)) fails.push('stop');
   if (out.sandbox !== 'RuntimeError: BOUNDARY_OK' || out.sandboxFlags !== 'allow-scripts') fails.push('opaque-origin boundary: ' + out.sandbox + ' / ' + out.sandboxFlags);
   if (out.network !== 'RuntimeError: NETWORK_BLOCKED') fails.push('network policy: ' + out.network);
+  if (out.transports !== 'RuntimeError: TRANSPORTS_AVAILABLE=') fails.push('blocked transports: ' + out.transports);
   if (!/Code trop long/.test(out.inputLimit)) fails.push('input limit');
   if (errs.length) fails.push('page errors');
   if (fails.length) { console.error('FAILED:', fails.join('; ')); process.exitCode = 1; } else console.log('OK');
