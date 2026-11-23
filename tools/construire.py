@@ -429,7 +429,7 @@ def construire() -> None:
             donnees = dict(s, accueil=racine + "index.html", module_url=racine + m["id"] + "/index.html",
                            module_titre=mod_titre(m, langue), domaine_titre=dom_titre(dom, langue))
             page = g_seance.substitute(
-                titre=e(s["titre"]), site_title=e(titre_site(langue)), marque=marque(racine, langue), favicon=favicon_url(langue), base=base, accueil=donnees["accueil"], lang=langue, autre=autre,
+                titre=e(s["titre"]), site_title=e(titre_site(langue)), marque=marque(racine, langue), favicon=racine + favicon_url(langue), base=base, accueil=donnees["accueil"], lang=langue, autre=autre,
                 bascule=bascule(langue, autre), alt_fr=base + sid + "/index.html", alt_en=base + "en/" + sid + "/index.html", compte=t["compte"], racine=racine,
                 progression=t["progression"], etapes=t["etapes"],
                 donnees=json.dumps(donnees, ensure_ascii=False).replace("</", "<\\/"))
@@ -444,7 +444,7 @@ def construire() -> None:
             cible = (sortie / chemin / "index.html") if chemin else sortie / "index.html"
             cible.parent.mkdir(parents=True, exist_ok=True)
             cible.write_text(g_page.substitute(
-                titre=e(titre), description=e(description), favicon=favicon_url(langue), base=base, classe=classe, plan=plan, lang=langue,
+                titre=e(titre), description=e(description), favicon=racine + favicon_url(langue), base=base, classe=classe, plan=plan, lang=langue,
                 alt_fr=base + (chemin + "/" if chemin else "") + "index.html",
                 alt_en=base + "en/" + (chemin + "/" if chemin else "") + "index.html",
                 entete=entete(parcours, racine, autre, langue, actif), contenu=contenu,
