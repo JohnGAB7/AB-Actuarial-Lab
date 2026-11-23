@@ -4,7 +4,7 @@ Version française : **Laboratoire d’apprentissage actuariel par ACTU-BASICS**
 
 Un espace bilingue pour explorer l’actuariat par des explications, des expériences interactives, des calculs guidés et des laboratoires de modélisation. La plateforme reprend les logos officiels ACTU-BASICS sans les redessiner ni les modifier.
 
-Parcours personnel de remise à niveau en actuariat : diagnostic, plan, notes, exercices et suivi de progression.
+Un laboratoire d’apprentissage progressif : diagnostic, parcours guidé, notes, exercices, expériences interactives et suivi de progression.
 L'ossature suit les modules A1 à A8 du « Parcours Actuariat » d'Actu-Basics (`docs/actuariat/PARCOURS-ACTUARIAT-v3.md`) ;
 chaque module maîtrisé devient ensuite une fiche et une vidéo Actu-Basics.
 Chaque séance dure environ 25 minutes et s'affiche **une étape à la fois** :
