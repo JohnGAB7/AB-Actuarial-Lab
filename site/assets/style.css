@@ -507,3 +507,31 @@ a.mod .mod-n{color:var(--progress);font-weight:600}
  .pager{padding-bottom:28px}
  .pager .btn{min-width:0;flex:1}
 }
+
+
+/* International identity refresh: restrained editorial contrast and a confident, precise brand lockup. */
+.brand-lockup{gap:12px}
+.brand-mark{width:48px;height:48px}
+.brand-copy{gap:4px}
+.brand-copy strong{font-size:.82rem;font-weight:650;letter-spacing:.035em}
+.brand-copy small{font-size:.58rem;letter-spacing:.16em;font-weight:600}
+.lesson-rail{background:linear-gradient(160deg,var(--surface) 0%,color-mix(in srgb,var(--paper) 55%,var(--surface)) 100%)}
+.lesson-rail-heading strong{font-size:1.3rem;letter-spacing:-.025em}
+.lesson-rail .segs a{min-height:58px}
+.rail-step-index{border-radius:50%;width:30px;height:30px}
+.lesson-content{gap:26px}
+.stage{position:relative;isolation:isolate;overflow:hidden}
+.stage::before{content:"";position:absolute;z-index:-1;inset:0 0 auto;height:4px;background:linear-gradient(90deg,var(--data) 0%,var(--progress) 72%,transparent 100%);opacity:.85}
+.step-head{max-width:980px}
+.stage h1{letter-spacing:-.035em}
+.flow{max-width:1120px}
+.formula{background:linear-gradient(145deg,var(--surface),color-mix(in srgb,var(--data-soft) 32%,var(--surface)));border:1px solid color-mix(in srgb,var(--data) 18%,var(--line))}
+.opt{gap:16px;min-height:60px;border-radius:14px}
+.opt .k{width:32px;height:32px;border-radius:50%;font-size:.82rem}
+.opt .k + span{min-width:0}
+@media(min-width:1200px){
+ .lesson-shell{grid-template-columns:280px minmax(0,1fr);gap:clamp(30px,3.5vw,64px)}
+ .lesson-rail{padding:28px 20px 20px}
+ .stage{padding:clamp(44px,4.4vw,76px)}
+ .flow{gap:clamp(30px,3vw,46px)}
+}
