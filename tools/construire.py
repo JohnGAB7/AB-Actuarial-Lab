@@ -20,7 +20,9 @@ from string import Template
 
 import yaml
 
-from tools.validation_contenus import (
+# Run as a script (python tools/construire.py), the repository root is not on sys.path: add it for the tools package.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from tools.validation_contenus import (  # noqa: E402
     fusionner_overlay,
     verifier_depot,
     verifier_overlay_traduction,
