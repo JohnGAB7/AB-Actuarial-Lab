@@ -337,12 +337,19 @@ def construire() -> None:
     print(f"Site construit dans {SORTIE}")
 
 
-if __name__ == "__main__":
-    if "--verifier" in sys.argv:
-        errs = verifier_depot()
-        if errs:
-            print("\n".join(errs), file=sys.stderr)
-            sys.exit(1)
+def main(argv: list[str] | None = None) -> int:
+    """Run canonical validation only, or build the bilingual static site."""
+    args = sys.argv[1:] if argv is None else argv
+    if "--verifier" in args:
+        errors = verifier_depot()
+        if errors:
+            print("\n".join(errors), file=sys.stderr)
+            return 1
         print("Course plan and referenced sessions are structurally valid.")
-        sys.exit(0)
+        return 0
     construire()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
