@@ -38,21 +38,13 @@ const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 
   const responsive = await p.evaluate(() => 1 + 1);
   await p.locator('.row .btn', { hasText: 'Arrêter' }).click(); await p.waitForTimeout(300);
   out.responsive = responsive; out.stop = await summary(); console.log('stop:', responsive, out.stop);
-  // 5. the sandbox has an opaque origin: it cannot read the parent DOM or either origin's storage.
-  await setCode("import js, time\nblocked = []\nfor label, obj, attr in [('parent-document', js.parent, 'document'), ('parent-storage', js.parent, 'localStorage'), ('sandbox-storage', js, 'localStorage')]:\n    try:\n        getattr(obj, attr)\n    except Exception:\n        blocked.append(label)\ndeadline = time.monotonic() + 1\nwhile time.monotonic() < deadline:\n    pass\nif len(blocked) != 3:\n    raise RuntimeError('BOUNDARY_FAILED=' + ','.join(blocked))\nraise RuntimeError('BOUNDARY_OK')\n");
+  // 5. one adversarial pass checks opaque origin, storage, network, alternate transports and the sandbox flags.
+  await setCode("import js, time\\nblocked = []\\nfor label, obj, attr in [('parent-document', js.parent, 'document'), ('parent-storage', js.parent, 'localStorage'), ('sandbox-storage', js, 'localStorage')]:\\n    try:\\n        getattr(obj, attr)\\n    except Exception:\\n        blocked.append(label)\\nnetwork_blocked = False\\ntry:\\n    await js.fetch('https://example.com/')\\nexcept Exception:\\n    network_blocked = True\\ntransports = ['WebSocket', 'WebSocketStream', 'EventSource', 'WebTransport', 'RTCPeerConnection', 'webkitRTCPeerConnection', 'XMLHttpRequest', 'BroadcastChannel', 'Worker', 'SharedWorker', 'indexedDB', 'caches']\\navailable = []\\nfor name in transports:\\n    try:\\n        if getattr(js, name) is not None:\\n            available.append(name)\\n    except Exception:\\n        pass\\ndeadline = time.monotonic() + 1\\nwhile time.monotonic() < deadline:\\n    pass\\nif len(blocked) != 3 or not network_blocked or available:\\n    raise RuntimeError('SECURITY_CHECKS_FAILED; parent=' + ','.join(blocked) + '; network=' + str(network_blocked) + '; transports=' + ','.join(available))\\nraise RuntimeError('SECURITY_CHECKS_OK')\\n");
   await clickRun();
   await p.waitForFunction(() => document.querySelector('.res-sum').textContent.includes('Exécution'), null, { timeout: 30000 });
   out.sandboxFlags = await p.locator('iframe[data-parcours-python-sandbox]').getAttribute('sandbox');
   await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 30000 });
-  out.sandbox = await p.locator('.results li .tm').first().textContent(); console.log('sandbox:', out.sandbox, out.sandboxFlags);
-  // 6. after Pyodide bootstrap, the additive CSP denies all network connections.
-  await setCode("import js\ntry:\n    await js.fetch('https://example.com/')\nexcept Exception:\n    raise RuntimeError('NETWORK_BLOCKED')\nraise RuntimeError('NETWORK_ALLOWED')\n");
-  await clickRun(); await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 30000 });
-  out.network = await p.locator('.results li .tm').first().textContent(); console.log('network:', out.network);
-  // 7. remove transports such as WebRTC that are not consistently covered by connect-src.
-  await setCode("import js\\nblocked = ['WebSocket', 'WebSocketStream', 'EventSource', 'WebTransport', 'RTCPeerConnection', 'webkitRTCPeerConnection', 'XMLHttpRequest', 'BroadcastChannel', 'Worker', 'SharedWorker', 'indexedDB', 'caches']\\navailable = []\\nfor name in blocked:\\n    try:\\n        if getattr(js, name) is not None:\\n            available.append(name)\\n    except Exception:\\n        pass\\nraise RuntimeError('TRANSPORTS_AVAILABLE=' + ','.join(available))\\n");
-  await clickRun(); await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 30000 });
-  out.transports = await p.locator('.results li .tm').first().textContent(); console.log('transports:', out.transports);
+  out.security = await p.locator('.results li .tm').first().textContent(); console.log('security:', out.security, out.sandboxFlags);
   // Oversized code is rejected before Pyodide is loaded.
   await setCode('x'.repeat(50001));
   await clickRun(); await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 5000 });
@@ -63,9 +55,7 @@ const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 
   if (!/6 tests passent/.test(out.solution)) fails.push('solution');
   if (!/Arrêt après 10 secondes/.test(out.loop)) fails.push('loop timeout');
   if (out.responsive !== 2 || !/arrêtée/.test(out.stop)) fails.push('stop');
-  if (out.sandbox !== 'RuntimeError: BOUNDARY_OK' || out.sandboxFlags !== 'allow-scripts') fails.push('opaque-origin boundary: ' + out.sandbox + ' / ' + out.sandboxFlags);
-  if (out.network !== 'RuntimeError: NETWORK_BLOCKED') fails.push('network policy: ' + out.network);
-  if (out.transports !== 'RuntimeError: TRANSPORTS_AVAILABLE=') fails.push('blocked transports: ' + out.transports);
+  if (out.security !== 'RuntimeError: SECURITY_CHECKS_OK' || out.sandboxFlags !== 'allow-scripts') fails.push('sandbox security checks: ' + out.security + ' / ' + out.sandboxFlags);
   if (!/Code trop long/.test(out.inputLimit)) fails.push('input limit');
   if (errs.length) fails.push('page errors');
   if (fails.length) { console.error('FAILED:', fails.join('; ')); process.exitCode = 1; } else console.log('OK');
