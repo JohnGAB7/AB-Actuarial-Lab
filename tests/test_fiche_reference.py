@@ -147,3 +147,17 @@ def test_reference_sheet_formula_structure_is_protected_in_english_overlay():
         pass
     else:
         raise AssertionError("An English overlay changed the mathematical formula.")
+
+
+def test_reference_sheet_rejects_malformed_types_without_raising():
+    invalid_status = {"statut": []}
+    assert any("statut" in error for error in verifier_fiche(invalid_status, session_id="a1/s01"))
+
+    invalid = _valid_fiche()
+    invalid["vue_ensemble"]["duree_minutes"] = float("nan")
+    invalid["exercices_corriges"]["exercices"][0]["niveau"] = {}
+    invalid["applications_labs"]["applications"][0]["outils"] = [{}]
+    errors = verifier_fiche(invalid, session_id="a1/s01")
+    assert any("duree_minutes" in error for error in errors)
+    assert any("niveau" in error for error in errors)
+    assert any("outils" in error for error in errors)
