@@ -83,11 +83,12 @@ Le modèle ne considère pas la clé publishable comme un secret. En revanche, u
 ### Observations particulières
 
 - Pyodide expose un pont JavaScript ; le fait de passer un dictionnaire Python via `globals: ns` ne constitue pas une sandbox.
-- Un Web Worker n'a pas accès directement à `document`, `window` ni `localStorage`, mais son environnement expose d'autres API (par exemple `fetch`, `WebSocket`, `IndexedDB`, `importScripts` selon le contexte et les politiques). Il ne faut donc pas conclure qu'un Worker interdit le réseau ou tout accès aux données de même origine.
-- Le Worker courant charge Pyodide via `importScripts` depuis jsDelivr, puis neutralise les propriétés globales `fetch`, `XMLHttpRequest`, `WebSocket`, `WebSocketStream`, `EventSource`, `WebTransport`, `RTCPeerConnection`, `webkitRTCPeerConnection`, `BroadcastChannel`, `indexedDB`, `caches`, `importScripts`, `Worker`, `SharedWorker` et `postMessage`. Le canal de réponse reste utilisable parce que la fonction liée `sendToPage` est capturée avant cette neutralisation. Le test navigateur vérifie la disponibilité de ces noms via le pont `js` de Pyodide. Cela prouve uniquement le résultat de ces vérifications dans le navigateur testé, pas l'impossibilité de contourner les restrictions par toutes les primitives JavaScript ou toutes les versions de navigateur.
-- Une politique CORS n'est pas une politique anti-exfiltration. La nouvelle CSP ferme les connexions ordinaires depuis le runtime après l'initialisation ; elle ne constitue pas un contrôle réseau au niveau du système d'exploitation.
+- Une iframe `sandbox="allow-scripts"` sans `allow-same-origin` reçoit une origine opaque. Les accès à `parent.document`, au `localStorage` parent et au `localStorage` propre à l'origine opaque sont refusés par le navigateur ; le test Playwright exerce ces accès via le pont Pyodide.
+- La CSP initiale autorise le chargement de Pyodide 0.27.7 uniquement depuis son répertoire CDN épinglé. Après initialisation, une seconde politique CSP additive est ajoutée au document de l'iframe avec `connect-src 'none'`, `script-src 'none'` et les autres directives restrictives. Le test navigateur tente un `fetch` vers un domaine externe et attend son rejet.
+- Le canal applicatif est un `MessagePort` transféré, conservé dans une fermeture JavaScript et non exposé comme variable globale. La page n'utilise pas de gestionnaire `message` global pour recevoir des résultats ; elle n'accepte que les messages structurés du port associé à l'instance active.
+- La sandbox interdit les popups, formulaires et navigations de premier niveau. La directive CSP `navigate-to` n'est pas uniformément prise en charge ; les navigations propres à l'iframe et les vulnérabilités du moteur restent des limites du modèle navigateur.
+- Le code apprenant et les expressions de test restent dans le même runtime et le même espace de noms. Un apprenant motivé peut manipuler l'environnement d'exécution ; les résultats restent un feedback d'exercice, pas une attestation inviolable.
 - Les navigateurs ne fournissent pas de quota mémoire strict, portable et fiable pour une iframe sandboxée. Le timeout supprime le contexte après 10 secondes, mais une allocation extrême peut provoquer une pression mémoire ou un crash du processus avant l'arrêt.
-- Les tests actuels sont évalués après le code apprenant dans le même runtime. Un apprenant motivé peut manipuler l'environnement d'exécution ; les résultats doivent rester un feedback d'exercice, pas une certification inviolable.
 
 ### CSP et contraintes propres à GitHub Pages
 
@@ -141,7 +142,7 @@ Toute solution future doit satisfaire les objectifs suivants :
 - l'origine `null` ne doit jamais être considérée comme une authentification suffisante ; vérifier également `event.source` et un canal/nonce propre à l'instance ;
 - une iframe sur la même origine avec des permissions trop larges peut annuler le bénéfice attendu.
 
-**Conclusion :** option à prototyper si le Worker seul ne satisfait pas les critères de menace, avec une revue spécifique du modèle d'origine et du protocole de messages.
+**Conclusion :** prototype implémenté dans la PR #25. L'origine opaque, la CSP post-bootstrap et le canal privé sont vérifiés par des tests navigateur ciblés ; la solution reste une isolation côté navigateur, sans quota mémoire dur ni garantie de processus séparé.
 
 ### Option C — origine séparée dédiée au runtime
 
