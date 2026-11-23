@@ -152,6 +152,15 @@ def test_plan_requires_english_home_and_domain_copy_for_bilingual_build():
     assert any("accroche_en" in error for error in errors)
 
 
+def test_session_identifiers_match_progress_storage_format():
+    session = valid_session()
+    session["id"] = "a1/session_1"
+
+    errors = verifier_seance(session, session_id="fixture")
+
+    assert any("format domaine/seance" in error for error in errors)
+
+
 def test_plan_rejects_duplicate_session_references():
     plan = {
         "titre": "Course",
