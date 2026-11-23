@@ -149,21 +149,35 @@ def mod_sous(m: dict, langue: str) -> str:
 
 
 def titre_site(langue: str) -> str:
-    """Official product title under the ACTU-BASICS parent brand."""
-    return "ACTU-BASICS — Actuarial Learning Path" if langue == "en" else "ACTU-BASICS — Parcours Actuariel"
+    """Public name of the bilingual actuarial learning lab."""
+    return "Actuarial Learning Lab by ACTU-BASICS" if langue == "en" else "Laboratoire d’apprentissage actuariel par ACTU-BASICS"
+
+
+def dom_court(d: dict, langue: str) -> str:
+    """Short labels for navigation and homepage cards; full names remain on domain pages."""
+    courts = {
+        "fondamentaux": ("Fondamentaux", "Foundations"),
+        "vie": ("Vie", "Life"),
+        "retraite": ("Retraite", "Pensions"),
+        "non-vie": ("Non-vie", "P&C"),
+        "alm": ("ALM", "ALM"),
+        "risque": ("Risque", "Risk"),
+        "outils": ("Outils", "Tools"),
+    }
+    return courts.get(d["id"], (d["titre"], d["en"]))[0 if langue == "fr" else 1]
 
 
 def marque(racine: str, langue: str) -> str:
     """Use the official, unmodified ACTU-BASICS logo in the matching language and theme."""
     suffixe = "-en" if langue == "en" else ""
-    libelle = "ACTUARIAL LEARNING PATH" if langue == "en" else "PARCOURS ACTUARIEL"
+    libelle = "ACTUARIAL LEARNING LAB" if langue == "en" else "LABORATOIRE ACTUARIEL"
     source = "https://raw.githubusercontent.com/JohnGAB7/Actu-Basics/080890b8acd452c790f3e10664a63d0b3e43aa21/assets/brand/actu-basics/"
     return (
         f'<a class="brand brand-lockup" href="{racine}index.html" aria-label="ACTU-BASICS — {libelle}">'
         f'<picture class="brand-mark">'
         f'<img class="brand-logo brand-logo-light" src="{source}logo-light{suffixe}.png" alt="" width="44" height="44">'
         f'<img class="brand-logo brand-logo-dark" src="{source}logo-dark{suffixe}.png" alt="" width="44" height="44" loading="lazy">'
-        f'</picture><span class="brand-copy"><strong>ACTU-BASICS</strong><small>{libelle}</small></span></a>'
+        f'</picture><span class="brand-copy"><strong>{libelle}</strong><small>{("BY ACTU-BASICS" if langue == "en" else "PAR ACTU-BASICS")}</small></span></a>'
     )
 
 
@@ -188,7 +202,7 @@ def entete(parcours: dict, racine: str, autre: str, langue: str, actif: str = ""
     """Global header: brand, domain menu (inline on wide screens, a sheet on phones), language switch, account."""
     t = TXT[langue]
     liens = "".join(
-        f'<a href="{racine}{d["id"]}/index.html"{" aria-current=\"page\"" if d["id"] == actif else ""}>{e(dom_titre(d, langue))}</a>'
+        f'<a href="{racine}{d["id"]}/index.html"{" aria-current=\"page\"" if d["id"] == actif else ""}>{e(dom_court(d, langue))}</a>'
         for d in parcours["domaines"])
     return (
         f'<header class="nav gutter"><div class="nav-in">'
@@ -203,7 +217,7 @@ def entete(parcours: dict, racine: str, autre: str, langue: str, actif: str = ""
 
 def pied(parcours: dict, racine: str, autre: str, langue: str) -> str:
     t = TXT[langue]
-    liens = "".join(f'<a href="{racine}{d["id"]}/index.html">{e(dom_titre(d, langue))}</a>' for d in parcours["domaines"])
+    liens = "".join(f'<a href="{racine}{d["id"]}/index.html">{e(dom_court(d, langue))}</a>' for d in parcours["domaines"])
     return (
         f'<footer class="pied gutter"><div class="pied-in">'
         f'<div class="pied-col">{marque(racine, langue)}<p>{t["pied"]}</p></div>'
@@ -232,7 +246,7 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
         cartes.append(
             f'<a class="dom{"" if n else " futur"}" href="{d["id"]}/index.html" data-domaine="{d["id"]}">'
             f'<span class="dom-n mono">{k:02d}</span>'
-            f'<span class="dom-t">{e(dom_titre(d, langue))}</span><span class="dom-en">{e(dom_sous(d, langue))}</span>'
+            f'<span class="dom-t">{e(dom_court(d, langue))}</span><span class="dom-en">{e(dom_sous(d, langue))}</span>'
             f'<span class="dom-a">{e(dom_accroche(d, langue))}</span>'
             f'<span class="dom-f"><span class="dom-s">{etat}</span><span class="barre" aria-hidden="true"><i></i></span></span></a>')
     premiere = next(seances(parcours))[2]
@@ -242,7 +256,7 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
     sous_titre = parcours["sous_titre"] if not en else parcours["sous_titre_en"]
     titre_premiere = titres[premiere][1]
     if en:
-        intro_kicker = "THE ACTUARIAL LEARNING STUDIO"
+        intro_kicker = "ACTUARIAL LEARNING LAB · BY ACTU-BASICS"
         intro_title = "Understand the idea. See the mathematics. Make it work."
         intro_text = "A structured path from foundations to actuarial practice — built around clear explanations, meaningful experiments and hands-on modelling."
         stat_sessions, stat_domains, stat_languages = "SESSIONS", "LEARNING AREAS", "LANGUAGES"
@@ -263,7 +277,7 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
         hero_cta = "Start learning"
         domains_count = "domains"
     else:
-        intro_kicker = "LE STUDIO D'APPRENTISSAGE ACTUARIEL"
+        intro_kicker = "LABORATOIRE D'APPRENTISSAGE ACTUARIEL · PAR ACTU-BASICS"
         intro_title = "Comprendre l'idée. Voir les mathématiques. Les mettre au travail."
         intro_text = "Un parcours structuré des fondamentaux à la pratique actuarielle, construit autour d'explications claires, d'expériences pertinentes et de modélisation concrète."
         stat_sessions, stat_domains, stat_languages = "SÉANCES", "DOMAINES", "LANGUES"
@@ -339,8 +353,8 @@ def page_domaine(parcours: dict, d: dict, k: int, langue: str) -> str:
                     f'<span>{e(dom_titre(suivant, langue))} →</span></a>') if suivant else ""
     return (
         f'<main class="page gutter">'
-        f'<nav class="fil" aria-label="{e(t["fil"])}"><a href="../index.html">{t["accueil"]}</a><span>/</span><span>{e(dom_titre(d, langue))}</span></nav>'
-        f'<div class="page-head"><span class="eyebrow mono">{t["domaine"]} {k:02d}</span><h1>{e(dom_titre(d, langue))}</h1>'
+        f'<nav class="fil" aria-label="{e(t["fil"])}"><a href="../index.html">{t["accueil"]}</a><span>/</span><span>{e(dom_court(d, langue))}</span></nav>'
+        f'<div class="page-head"><span class="eyebrow mono">{t["domaine"]} {k:02d}</span><h1>{e(dom_court(d, langue))}</h1>'
         f'<p class="en">{e(dom_sous(d, langue))}</p><p class="lead">{e(dom_accroche(d, langue))}</p></div>'
         f'<ol class="mods-l">{"".join(lignes)}</ol>{lien_suivant}</main>')
 
@@ -361,7 +375,7 @@ def page_module(d: dict, m: dict, infos: dict, langue: str) -> str:
     return (
         f'<main class="page gutter">'
         f'<nav class="fil" aria-label="{e(t["fil"])}"><a href="../index.html">{t["accueil"]}</a><span>/</span>'
-        f'<a href="../{d["id"]}/index.html">{e(dom_titre(d, langue))}</a><span>/</span><span>{e(code)}</span></nav>'
+        f'<a href="../{d["id"]}/index.html">{e(dom_court(d, langue))}</a><span>/</span><span>{e(code)}</span></nav>'
         f'<div class="page-head"><span class="eyebrow">{t["module"]}</span><h1>{e(nom)}</h1>'
         f'<p class="en">{e(mod_sous(m, langue))}</p></div>'
         f'<ol class="seas">{"".join(lignes)}</ol></main>')
