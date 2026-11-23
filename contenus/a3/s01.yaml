@@ -235,7 +235,7 @@ etapes:
       - ["Force de mortalité", "force of mortality", "The force of mortality increases exponentially with age under Makeham's law."]
       - ["Espérance de vie abrégée", "curtate life expectancy", "The curtate expectation only counts complete years lived."]
       - ["Probabilité de survie", "survival probability", "I computed the ten-year survival probability from the life table."]
-      - ["Table de mortalité", "mortality table, life table", "In Canada, pension valuations still use the CPM2014 table as the standard."]
+      - ["Table de mortalité", "mortality table, life table", "In Canada, the applicable pension mortality table depends on the valuation date and governing standard."]
       - ["Répartition uniforme des décès", "uniform distribution of deaths (UDD)", "Under UDD, the complete expectation is about half a year higher."]
       - ["Risque de longévité", "longevity risk", "Lower mortality rates increase the DBO of an annuity plan."]
 , '$\mathring{e}_x = e_x - \tfrac12
