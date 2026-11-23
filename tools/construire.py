@@ -162,7 +162,7 @@ def marque(racine: str, langue: str) -> str:
         f'<a class="brand brand-lockup" href="{racine}index.html" aria-label="ACTU-BASICS — {libelle}">'
         f'<picture class="brand-mark">'
         f'<img class="brand-logo brand-logo-light" src="{source}logo-light{suffixe}.png" alt="" width="44" height="44">'
-        f'<img class="brand-logo brand-logo-dark" src="{source}logo-dark{suffixe}.png" alt="" width="44" height="44">'
+        f'<img class="brand-logo brand-logo-dark" src="{source}logo-dark{suffixe}.png" alt="" width="44" height="44" loading="lazy">'
         f'</picture><span class="brand-copy"><strong>ACTU-BASICS</strong><small>{libelle}</small></span></a>'
     )
 
