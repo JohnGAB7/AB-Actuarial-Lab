@@ -392,50 +392,145 @@ const R = {
 };
 const lastLine = (err) => String(err.message || err).trim().split("\n").pop();
 
-/* ---------- Python dans un Web Worker ---------- */
-// Le code de l'apprenant tourne hors de la page : pas d'accès au DOM ni à la session du compte.
-// Limite de temps après le chargement ; « Arrêter » ou le dépassement termine le worker.
+/* ---------- Python dans une iframe sandboxée à origine opaque ---------- */
+// Le runtime n'est plus un Worker de même origine : il vit dans un contexte sandboxé
+// sans allow-same-origin. Seuls code, tests et résultats bornés traversent un MessagePort privé.
 const PY_LIMITE_MS = 10000;
 const PY_CHARGEMENT_LIMITE_MS = 60000;
+const PY_MAX_CODE = 50000;
+const PY_MAX_TESTS = 30;
+const PY_MAX_TEST_CHARS = 2000;
+const PY_MAX_TOTAL_TEST_CHARS = 20000;
+const PY_MAX_ERROR_CHARS = 500;
 const PY_RESULTATS = new Set(["pass", "fail", "todo"]);
-let worker = null, pending = null, seq = 0;
+const PYODIDE_INDEX = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/";
+let pythonFrame = null, pythonPort = null, pending = null, seq = 0;
+
+function closePythonSandbox() {
+  if (pythonPort) {
+    pythonPort.onmessage = null;
+    pythonPort.onmessageerror = null;
+    pythonPort.close();
+    pythonPort = null;
+  }
+  if (pythonFrame) {
+    pythonFrame.remove();
+    pythonFrame = null;
+  }
+}
+
 function stopPython(raison) {
-  if (worker) { worker.terminate(); worker = null; }
+  closePythonSandbox();
   if (pending) {
     const p = pending; pending = null; clearTimeout(p.timer);
     p.reject(new Error(raison || UI.stopped));
   }
 }
+
+function pythonSandboxDocument() {
+  const nonce = Array.from(crypto.getRandomValues(new Uint8Array(18)),
+    (b) => b.toString(16).padStart(2, "0")).join("");
+  // Pendant le bootstrap uniquement, les requêtes sont limitées au répertoire Pyodide épinglé.
+  // Une seconde CSP, additive et irréversible pour ce document, ferme ensuite tout accès réseau/script.
+  const bootstrapPolicy = "default-src 'none'; script-src 'nonce-" + nonce +
+    "' https://cdn.jsdelivr.net/pyodide/v0.27.7/full/ 'wasm-unsafe-eval'; " +
+    "connect-src https://cdn.jsdelivr.net/pyodide/v0.27.7/full/; " +
+    "style-src 'unsafe-inline'; img-src 'none'; font-src 'none'; media-src 'none'; " +
+    "object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; worker-src 'none'";
+  const bootstrap = "\n(() => {\n  let py = null;\n  let port = null;\n  let ready = false;\n  let bootError = null;\n  const maxCode = 50000, maxTests = 30, maxTestChars = 2000, maxTotalTestChars = 20000, maxError = 500;\n  const errorText = (error) => String((error && error.message) || error).trim().split(\"\\n\").pop().slice(0, maxError);\n  const announce = () => {\n    if (!port) return;\n    if (bootError) port.postMessage({ phase: \"error\", msg: bootError });\n    else if (ready) port.postMessage({ phase: \"ready\" });\n  };\n  function initialize(event) {\n    if (port || event.source !== parent || !event.data || event.data.type !== \"parcours-python-init\" || event.ports.length !== 1) return;\n    window.removeEventListener(\"message\", initialize);\n    port = event.ports[0];\n    port.onmessage = async (messageEvent) => {\n      const request = messageEvent.data;\n      if (!request || !Number.isSafeInteger(request.id) || request.id < 1 ||\n          typeof request.code !== \"string\" || request.code.length > maxCode ||\n          !Array.isArray(request.tests) || request.tests.length < 1 || request.tests.length > maxTests) {\n        port.postMessage({ id: request && request.id, phase: \"error\", msg: \"Requête Python invalide.\" });\n        return;\n      }\n      let total = 0;\n      for (const expression of request.tests) {\n        if (typeof expression !== \"string\" || expression.length > maxTestChars) {\n          port.postMessage({ id: request.id, phase: \"error\", msg: \"Expression de test invalide ou trop longue.\" });\n          return;\n        }\n        total += expression.length;\n      }\n      if (total > maxTotalTestChars) {\n        port.postMessage({ id: request.id, phase: \"error\", msg: \"Ensemble des tests trop volumineux.\" });\n        return;\n      }\n      port.postMessage({ id: request.id, phase: \"running\" });\n      const namespace = py.globals.get(\"dict\")();\n      let setupError = null;\n      try {\n        await py.runPythonAsync(request.code, { globals: namespace });\n      } catch (error) {\n        setupError = errorText(error);\n      }\n      const results = [];\n      for (const expression of request.tests) {\n        if (setupError) {\n          results.push({ status: \"fail\", msg: setupError });\n          continue;\n        }\n        try {\n          const value = await py.runPythonAsync(expression, { globals: namespace });\n          const ok = value === true || (typeof value === \"number\" && value !== 0);\n          if (value && typeof value.destroy === \"function\") value.destroy();\n          results.push({ status: ok ? \"pass\" : \"fail\", msg: ok ? \"\" : \"unexpected\" });\n        } catch (error) {\n          const msg = errorText(error);\n          results.push(/NotImplementedError/.test(msg)\n            ? { status: \"todo\", msg: \"\" }\n            : { status: \"fail\", msg });\n        }\n      }\n      try { if (namespace.destroy) namespace.destroy(); } catch {}\n      port.postMessage({ id: request.id, phase: \"done\", results });\n    };\n    port.onmessageerror = () => { try { port.close(); } catch {} };\n    port.start();\n    announce();\n  }\n  window.addEventListener(\"message\", initialize);\n  (async () => {\n    try {\n      if (typeof loadPyodide !== \"function\") throw new Error(\"Le moteur Python n'a pas été chargé.\");\n      py = await loadPyodide({\n        indexURL: \"https://cdn.jsdelivr.net/pyodide/v0.27.7/full/\",\n        stdout: () => {},\n        stderr: () => {}\n      });\n      const lockdown = document.createElement(\"meta\");\n      lockdown.httpEquiv = \"Content-Security-Policy\";\n      lockdown.content = \"default-src 'none'; script-src 'none'; connect-src 'none'; \" +\n        \"img-src 'none'; font-src 'none'; media-src 'none'; style-src 'none'; \" +\n        \"object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; \" +\n        \"worker-src 'none'; navigate-to 'none'\";\n      document.head.append(lockdown);\n      ready = true;\n      announce();\n    } catch (error) {\n      bootError = errorText(error);\n      announce();\n    }\n  })();\n})();\n";
+  return "<!doctype html><html><head><meta charset=\"utf-8\">" +
+    "<meta http-equiv=\"Content-Security-Policy\" content=\"" + bootstrapPolicy + "\"></head><body>" +
+    "<script src=\"" + PYODIDE_INDEX + "pyodide.js\"></script>" +
+    "<script nonce=\"" + nonce + "\">" + bootstrap + "</script></body></html>";
+}
+
 function runPython(code, tests, onRunning) {
   stopPython();
-  worker = new Worker(new URL("python-worker.js", SCRIPT_URL));
-  worker.onmessage = (ev) => {
-    const m = ev.data;
-    if (!pending || !m || m.id !== pending.id) return;
-    if (m.phase === "running") {
-      if (onRunning) onRunning();
-      clearTimeout(pending.timer);
-      pending.timer = setTimeout(() => stopPython(UI.timeout(PY_LIMITE_MS / 1000)), PY_LIMITE_MS);
+  if (typeof code !== "string" || code.length > PY_MAX_CODE) {
+    return Promise.reject(new Error("Code trop long (maximum " + PY_MAX_CODE + " caractères)."));
+  }
+  if (!Array.isArray(tests) || tests.length < 1 || tests.length > PY_MAX_TESTS) {
+    return Promise.reject(new Error("Nombre de tests invalide (maximum " + PY_MAX_TESTS + ")."));
+  }
+  let total = 0;
+  for (const expression of tests) {
+    if (typeof expression !== "string" || expression.length > PY_MAX_TEST_CHARS) {
+      return Promise.reject(new Error("Expression de test invalide ou trop longue."));
+    }
+    total += expression.length;
+  }
+  if (total > PY_MAX_TOTAL_TEST_CHARS) {
+    return Promise.reject(new Error("Ensemble des tests trop volumineux."));
+  }
+
+  return new Promise((resolve, reject) => {
+    const id = ++seq;
+    const frame = document.createElement("iframe");
+    frame.setAttribute("sandbox", "allow-scripts");
+    frame.setAttribute("data-parcours-python-sandbox", "true");
+    frame.setAttribute("aria-hidden", "true");
+    frame.tabIndex = -1;
+    frame.referrerPolicy = "no-referrer";
+    frame.title = "Isolated Python execution";
+    frame.style.cssText = "position:fixed;width:1px;height:1px;left:-10000px;top:0;border:0;visibility:hidden";
+    pythonFrame = frame;
+    pending = { id, resolve, reject, timer: null, phase: "loading" };
+
+    let channel;
+    try {
+      channel = new MessageChannel();
+      pythonPort = channel.port1;
+    } catch {
+      stopPython(UI.loadFail);
       return;
     }
-    const p = pending; pending = null; clearTimeout(p.timer);
-    if (m.phase === "done" && Array.isArray(m.results) &&
-        m.results.length === tests.length &&
-        m.results.every((r) => r && PY_RESULTATS.has(r.status) && typeof r.msg === "string" && r.msg.length <= 500)) {
-      p.resolve(m.results);
-    } else if (m.phase === "error" && typeof m.msg === "string") {
-      p.reject(new Error(m.msg.slice(0, 500)));
-    } else {
-      p.reject(new Error(UI.badReply));
-    }
-  };
-  worker.onerror = () => stopPython(UI.loadFail);
-  worker.onmessageerror = () => stopPython(UI.unreadable);
-  return new Promise((resolve, reject) => {
-    pending = { id: ++seq, resolve, reject, timer: null };
+
+    pythonPort.onmessage = (event) => {
+      const message = event.data;
+      if (!pending || !message) return;
+      if (message.phase === "ready" && pending.phase === "loading") {
+        pending.phase = "ready";
+        try { pythonPort.postMessage({ id, code, tests }); }
+        catch { stopPython(UI.cantSend); }
+        return;
+      }
+      if (message.phase === "error") {
+        stopPython(typeof message.msg === "string" ? message.msg.slice(0, PY_MAX_ERROR_CHARS) : UI.loadFail);
+        return;
+      }
+      if (message.id !== pending.id) return;
+      if (message.phase === "running" && pending.phase === "ready") {
+        pending.phase = "running";
+        if (onRunning) onRunning();
+        clearTimeout(pending.timer);
+        pending.timer = setTimeout(() => stopPython(UI.timeout(PY_LIMITE_MS / 1000)), PY_LIMITE_MS);
+        return;
+      }
+      if (message.phase === "done") {
+        const valid = Array.isArray(message.results) &&
+          message.results.length === tests.length &&
+          message.results.every((result) => result && PY_RESULTATS.has(result.status) &&
+            typeof result.msg === "string" && result.msg.length <= PY_MAX_ERROR_CHARS);
+        if (!valid) {
+          stopPython(UI.badReply);
+          return;
+        }
+        const p = pending; pending = null; clearTimeout(p.timer);
+        closePythonSandbox();
+        p.resolve(message.results);
+      }
+    };
+    pythonPort.onmessageerror = () => stopPython(UI.unreadable);
+    pythonPort.start();
+    frame.addEventListener("load", () => {
+      if (!pending || pending.id !== id) return;
+      try { frame.contentWindow.postMessage({ type: "parcours-python-init" }, "*", [channel.port2]); }
+      catch { stopPython(UI.cantSend); }
+    }, { once: true });
+    frame.onerror = () => stopPython(UI.loadFail);
+    frame.srcdoc = pythonSandboxDocument();
+    document.body.append(frame);
     pending.timer = setTimeout(() => stopPython(UI.loadTimeout(PY_CHARGEMENT_LIMITE_MS / 1000)), PY_CHARGEMENT_LIMITE_MS);
-    try { worker.postMessage({ id: pending.id, code, tests }); }
-    catch { stopPython(UI.cantSend); }
   });
 }
 
