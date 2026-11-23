@@ -121,3 +121,14 @@ def test_lesson_shell_uses_full_desktop_workspace_and_step_labels():
     assert "rail-step-name" in script
     assert 'type="image/svg+xml"' in template
     assert '(<(?:strong|b)>[A-Z]<[^>]+>)' in script
+
+
+def test_rich_enumeration_separator_is_removed_before_any_inline_formula_tag():
+    import re
+
+    source = (builder.SITE / "assets" / "seance.js").read_text(encoding="utf-8")
+    assert "template.innerHTML = String(value ?? \"\").replace" in source
+    pattern = re.compile(r'(<(?:strong|b)>[A-Z]</(?:strong|b)>)\\s*[-–—]\\s*(?=<)')
+    assert pattern.sub(r"\\1 ", '<strong>A</strong>-<span class="katex">δ=i</span>') == (
+        '<strong>A</strong> <span class="katex">δ=i</span>'
+    )
