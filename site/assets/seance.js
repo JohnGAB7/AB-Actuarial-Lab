@@ -276,31 +276,46 @@ const lastLine = (err) => String(err.message || err).trim().split("\n").pop();
 // Le code de l'apprenant tourne hors de la page : pas d'accès au DOM ni à la session du compte.
 // Limite de temps après le chargement ; « Arrêter » ou le dépassement termine le worker.
 const PY_LIMITE_MS = 10000;
+const PY_CHARGEMENT_LIMITE_MS = 60000;
+const PY_RESULTATS = new Set(["pass", "fail", "todo"]);
 let worker = null, pending = null, seq = 0;
 function stopPython(raison) {
   if (worker) { worker.terminate(); worker = null; }
-  if (pending) { const p = pending; pending = null; clearTimeout(p.timer); p.reject(new Error(raison || "Exécution arrêtée. Python se rechargera au prochain lancement.")); }
+  if (pending) {
+    const p = pending; pending = null; clearTimeout(p.timer);
+    p.reject(new Error(raison || "Exécution arrêtée. Python se rechargera au prochain lancement."));
+  }
 }
 function runPython(code, tests, onRunning) {
   stopPython();
-  if (!worker) {
-    worker = new Worker(new URL("python-worker.js", SCRIPT_URL));
-    worker.onmessage = (ev) => {
-      const m = ev.data; if (!pending || m.id !== pending.id) return;
-      if (m.phase === "running") {
-        onRunning && onRunning();
-        pending.timer = setTimeout(() => stopPython(`Arrêt après ${PY_LIMITE_MS / 1000} secondes : boucle infinie ou calcul trop long ?`), PY_LIMITE_MS);
-        return;
-      }
-      const p = pending; pending = null; clearTimeout(p.timer);
-      if (m.phase === "done") p.resolve(m.results);
-      else p.reject(new Error(m.msg));
-    };
-    worker.onerror = () => stopPython("Python n'a pas pu se charger. Vérifie ta connexion, ou lance les tests du dépôt avec pytest.");
-  }
+  worker = new Worker(new URL("python-worker.js", SCRIPT_URL));
+  worker.onmessage = (ev) => {
+    const m = ev.data;
+    if (!pending || !m || m.id !== pending.id) return;
+    if (m.phase === "running") {
+      if (onRunning) onRunning();
+      clearTimeout(pending.timer);
+      pending.timer = setTimeout(() => stopPython("Arrêt après 10 secondes : boucle infinie ou calcul trop long ?"), PY_LIMITE_MS);
+      return;
+    }
+    const p = pending; pending = null; clearTimeout(p.timer);
+    if (m.phase === "done" && Array.isArray(m.results) &&
+        m.results.length === tests.length &&
+        m.results.every((r) => r && PY_RESULTATS.has(r.status) && typeof r.msg === "string" && r.msg.length <= 500)) {
+      p.resolve(m.results);
+    } else if (m.phase === "error" && typeof m.msg === "string") {
+      p.reject(new Error(m.msg.slice(0, 500)));
+    } else {
+      p.reject(new Error("Réponse invalide du moteur Python."));
+    }
+  };
+  worker.onerror = () => stopPython("Python n'a pas pu se charger. Vérifie ta connexion, ou lance les tests du dépôt avec pytest.");
+  worker.onmessageerror = () => stopPython("Réponse illisible du moteur Python.");
   return new Promise((resolve, reject) => {
     pending = { id: ++seq, resolve, reject, timer: null };
-    worker.postMessage({ id: seq, code, tests });
+    pending.timer = setTimeout(() => stopPython("Le chargement de Python a dépassé 60 secondes."), PY_CHARGEMENT_LIMITE_MS);
+    try { worker.postMessage({ id: pending.id, code, tests }); }
+    catch { stopPython("Impossible d'envoyer le code au moteur Python."); }
   });
 }
 
