@@ -57,7 +57,11 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
     const desktop = await page.evaluate(() => ({
       width: window.innerWidth,
       scrollWidth: document.documentElement.scrollWidth,
-      heroColumns: getComputedStyle(document.querySelector(".hero-in")).gridTemplateColumns
+      heroColumns: getComputedStyle(document.querySelector(".hero-in")).gridTemplateColumns,
+      offenders: Array.from(document.querySelectorAll("body *")).map((el) => {
+        const r = el.getBoundingClientRect();
+        return { tag: el.tagName, className: typeof el.className === "string" ? el.className : "", text: (el.textContent || "").trim().slice(0, 35), left: Math.round(r.left), right: Math.round(r.right), width: Math.round(r.width), display: getComputedStyle(el).display };
+      }).filter((x) => x.display !== "none" && (x.right > window.innerWidth + 1 || x.left < -1)).sort((a, b) => b.right - a.right).slice(0, 12)
     }));
     console.log("desktop EN:", desktop);
     if (desktop.scrollWidth > desktop.width + 1) failures.push("desktop horizontal overflow");
