@@ -323,6 +323,7 @@ def test_overlay_preserves_numeric_values_sign_exponent_and_units():
         "The rate is 2.5% and the margin is 1.2e-3‰.",
         "The rate is -2.5 and the margin is 1.2e-3‰.",
         "The rate is -2.5% and the margin is 1.2e+3‰.",
+        "The rate is -2.5% and the margin is 1.2e-3‰, but n+1 replaces n-1.",
     ):
         try:
             fusionner_overlay(base, {"texte": translated})
