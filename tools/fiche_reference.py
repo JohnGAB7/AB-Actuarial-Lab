@@ -1,6 +1,7 @@
 """Structural validation for self-contained actuarial lesson reference sheets."""
 from __future__ import annotations
 
+import math
 import re
 from typing import Any
 
@@ -18,7 +19,7 @@ def _text(value: Any) -> bool:
 
 
 def _number(value: Any) -> bool:
-    return isinstance(value, (int, float)) and not isinstance(value, bool)
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
 
 
 def _unknown(mapping: dict, allowed: set[str], label: str) -> list[str]:
@@ -49,7 +50,7 @@ def verifier_fiche(fiche: Any, *, session_id: str = "<inconnue>") -> list[str]:
     if root is None:
         return errors
     status = root.get("statut")
-    if status not in {"brouillon", "prete"}:
+    if not isinstance(status, str) or status not in {"brouillon", "prete"}:
         errors.append(f"{label}: « statut » doit valoir « brouillon » ou « prete ».")
         return errors
     if status == "prete":
@@ -152,7 +153,7 @@ def verifier_fiche(fiche: Any, *, session_id: str = "<inconnue>") -> list[str]:
                         for key in ("titre", "enonce", "feedback"):
                             if not _text(item.get(key)):
                                 errors.append(f"{where}: « {key} » doit être un texte non vide.")
-                        if item.get("niveau") not in NIVEAUX_FICHE:
+                        if not isinstance(item.get("niveau"), str) or item.get("niveau") not in NIVEAUX_FICHE:
                             errors.append(f"{where}: « niveau » doit être fondamental, intermediaire ou avance.")
                         _textes(item.get("corrige"), f"{where}.corrige", errors)
 
@@ -174,7 +175,7 @@ def verifier_fiche(fiche: Any, *, session_id: str = "<inconnue>") -> list[str]:
                             if not _text(item.get(key)):
                                 errors.append(f"{where}: « {key} » doit être un texte non vide.")
                         tools = item.get("outils")
-                        if not isinstance(tools, list) or any(tool not in OUTILS_FICHE for tool in tools):
+                        if not isinstance(tools, list) or any(not isinstance(tool, str) or tool not in OUTILS_FICHE for tool in tools):
                             errors.append(f"{where}: « outils » doit être une liste d'outils reconnus.")
                         for key in fields:
                             _textes(item.get(key), f"{where}.{key}", errors)
