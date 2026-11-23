@@ -27,8 +27,9 @@ SORTIE = RACINE / "_site"
 TYPES = {"video", "rappel", "quiz", "calcul", "code", "vocabulaire"}
 LANGUES = ("fr", "en")
 # Keys that hold numbers, answers, tests or structure: they only live in the French file.
-NON_TRADUISIBLES = {"id", "module", "type", "minutes", "duree", "table", "taux", "reponse", "valeur", "tolerance",
-                    "cle", "expr", "fichier", "depart", "interactif", "url", "cartes", "statut", "formule"}
+NON_TRADUISIBLES = {"id", "module", "en", "actu_basics", "type", "minutes", "duree", "table", "taux",
+                    "reponse", "valeur", "tolerance", "cle", "expr", "fichier", "depart", "interactif",
+                    "url", "cartes", "statut", "formule"}
 
 
 def charger_parcours() -> dict:
