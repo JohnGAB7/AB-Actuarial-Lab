@@ -161,6 +161,17 @@ def test_traduction_preserve_signe_unite_et_exposant():
         with pytest.raises(ValueError):
             fusion(base, invalide, "test")
 
+    # Numbers embedded in identifiers must remain protected too (A3 must not become A4).
+    base_codes = {"solution": "Use A3, x2 and ch1; then calculate n-1."}
+    valide_codes = {"solution": "Use A3, x2 and ch1; then calculate n-1."}
+    assert fusion(base_codes, valide_codes, "test") == base_codes
+    with pytest.raises(ValueError):
+        fusion(base_codes, {"solution": "Use A4, x2 and ch1; then calculate n-1."}, "test")
+    with pytest.raises(ValueError):
+        fusion(base_codes, {"solution": "Use A3, x3 and ch1; then calculate n-1."}, "test")
+    with pytest.raises(ValueError):
+        fusion(base_codes, {"solution": "Use A3, x2 and ch2; then calculate n-1."}, "test")
+
 
 def test_tableaux_anglais_identiques_au_francais():
     """The English tables only change the number format (2,5 % → 2.5%, 716 046 → 716,046)."""
