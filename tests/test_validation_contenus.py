@@ -124,6 +124,34 @@ def test_plan_rejects_duplicate_session_references():
     assert any("dupliquée" in error for error in errors)
 
 
+def test_plan_rejects_unsafe_domain_and_module_path_identifiers():
+    plan = {
+        "titre": "Course",
+        "sous_titre": "Subtitle",
+        "domaines": [
+            {
+                "id": 'foundations" onclick="alert(1)',
+                "titre": "Foundations",
+                "en": "Foundations",
+                "accroche": "Introduction",
+                "modules": [
+                    {
+                        "id": "../outside",
+                        "titre": "Module",
+                        "en": "Module",
+                        "seances": [],
+                    }
+                ],
+            }
+        ],
+    }
+
+    errors = verifier_parcours(plan)
+
+    assert any("identifiant de domaine invalide" in error for error in errors)
+    assert any("identifiant de module invalide" in error for error in errors)
+
+
 def test_session_rejects_unknown_top_level_key():
     session = valid_session()
     session["tauxx"] = 0.025
