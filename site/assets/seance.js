@@ -491,6 +491,7 @@ function runPython(code, tests, onRunning) {
           return;
         }
         pending.phase = "ready";
+        if (pythonFrame) pythonFrame.dataset.networkBlocked = "true";
         try { pythonPort.postMessage({ id, code, tests }); }
         catch { stopPython(UI.cantSend); }
         return;
