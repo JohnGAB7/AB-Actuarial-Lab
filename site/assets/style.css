@@ -44,10 +44,12 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .acct{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;color:var(--muted);border:1px solid var(--line);flex:none;margin-left:auto}
 .acct:hover{color:var(--ink);border-color:var(--data)}
 .segs + .acct{margin-left:0}
-.lang{display:grid;place-items:center;min-width:36px;height:36px;padding:0 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);font:600 .74rem/1 var(--f-body);letter-spacing:.08em;text-decoration:none;flex:none}
-.lang:hover{color:var(--ink);border-color:var(--data)}
-.lang + .acct{margin-left:0}
-@media (max-width:560px){.where{display:none}.bar-in{gap:10px}.segs{flex:1;min-width:0;justify-content:flex-end}.bar .lang{min-width:32px;height:32px;padding:0 8px}.bar .acct{width:32px;height:32px}}
+.langs{display:inline-flex;align-items:center;gap:2px;padding:3px;border-radius:999px;border:1px solid var(--line);background:var(--surface);flex:none}
+.langs a,.langs span{display:grid;place-items:center;min-width:32px;height:28px;padding:0 9px;border-radius:999px;font:600 .72rem/1 var(--f-body);letter-spacing:.08em;text-decoration:none;color:var(--muted);transition:background .2s,color .2s}
+.langs a:hover{color:var(--ink);background:var(--paper)}
+.langs [aria-current]{background:var(--ink);color:var(--paper)}
+.langs + .acct{margin-left:0}
+@media (max-width:560px){.where{display:none}.bar-in{gap:10px}.segs{flex:1;min-width:0;justify-content:flex-end}.bar .langs a,.bar .langs span{min-width:28px;padding:0 7px}.bar .acct{width:32px;height:32px}}
 
 /* Accueil */
 .hero{background:var(--night);color:var(--on-night);margin-top:calc(-1*env(safe-area-inset-top,0px));padding-top:calc(env(safe-area-inset-top,0px) + 88px);padding-bottom:96px;position:relative;overflow:hidden}
@@ -258,7 +260,7 @@ code{font:500 .88em var(--f-mono);background:var(--data-soft);color:var(--ink);p
 .nav-sheet a{padding:12px 14px;border-radius:12px;font-size:1rem}
 .nav-sheet a[aria-current="page"],.nav-sheet a:hover{background:var(--paper)}
 .nav .acct{margin-left:0}
-@media (max-width:900px){.nav-menu + .lang{margin-left:0}}
+@media (max-width:900px){.nav-in{gap:10px}.nav-menu + .langs{margin-left:0}}
 @media (max-width:900px){.nav-links{display:none}.nav-menu{display:block}}
 .accueil .hero{margin-top:0;padding-top:72px}
 

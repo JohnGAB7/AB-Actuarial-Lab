@@ -181,6 +181,16 @@ def mod_sous(m: dict, langue: str) -> str:
     return m["en"] if langue == "fr" else m["titre"].split(" · ", 1)[-1]
 
 
+def bascule(langue: str, autre: str) -> str:
+    """FR | EN switch: the current language is marked, the other one links to the same page in that language."""
+    def cote(code):
+        if code == langue:
+            return f'<span aria-current="true">{code.upper()}</span>'
+        aria = TXT[langue]["autre_aria"]
+        return f'<a href="{autre}" hreflang="{code}" lang="{code}" aria-label="{aria}" data-langue="{code}">{code.upper()}</a>'
+    return f'<span class="langs" role="group" aria-label="Langue · Language">{cote("fr")}{cote("en")}</span>'
+
+
 def entete(parcours: dict, racine: str, autre: str, langue: str, actif: str = "") -> str:
     """Global header: brand, domain menu (inline on wide screens, a sheet on phones), language switch, account."""
     t = TXT[langue]
@@ -193,8 +203,7 @@ def entete(parcours: dict, racine: str, autre: str, langue: str, actif: str = ""
         f'<nav class="nav-links" aria-label="{t["domaines"]}">{liens}</nav>'
         f'<details class="nav-menu"><summary aria-label="{t["menu"]}"><span></span><span></span></summary>'
         f'<nav class="nav-sheet" aria-label="{t["domaines"]}">{liens}</nav></details>'
-        f'<a class="lang" href="{autre}" hreflang="{"en" if langue == "fr" else "fr"}" lang="{"en" if langue == "fr" else "fr"}" '
-        f'aria-label="{t["autre_aria"]}">{t["autre_court"]}</a>'
+        f'{bascule(langue, autre)}'
         f'<a class="acct" href="{racine}compte/index.html" aria-label="{t["compte"]}">{ICONE_COMPTE}</a>'
         f'</div></header>')
 
@@ -345,7 +354,7 @@ def construire() -> None:
                            module_titre=mod_titre(m, langue), domaine_titre=dom_titre(dom, langue))
             page = g_seance.substitute(
                 titre=e(s["titre"]), base=base, accueil=donnees["accueil"], lang=langue, autre=autre,
-                autre_court=t["autre_court"], autre_lang="en" if langue == "fr" else "fr", autre_aria=t["autre_aria"], compte=t["compte"], racine=racine,
+                bascule=bascule(langue, autre), compte=t["compte"], racine=racine,
                 progression=t["progression"], etapes=t["etapes"],
                 donnees=json.dumps(donnees, ensure_ascii=False).replace("</", "<\\/"))
             cible = sortie / sid / "index.html"
