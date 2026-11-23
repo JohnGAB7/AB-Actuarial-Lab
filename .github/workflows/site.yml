@@ -18,6 +18,10 @@ jobs:
           python-version: "3.12"
       - run: python -m pip install -r requirements.txt
       - run: python tools/construire.py
+        env:
+          # Public values only (project URL and publishable key), set in Settings > Secrets and variables > Actions > Variables.
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

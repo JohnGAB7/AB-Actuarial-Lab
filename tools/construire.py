@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import html
 import json
+import os
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -72,12 +74,32 @@ def blocs_html(parcours: dict) -> str:
     return "".join(out)
 
 
+def config_supabase(env=None) -> dict:
+    """Public Supabase settings, from the SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY variables (GitHub Actions).
+
+    Only the project URL and the publishable key may reach the browser. A secret or service_role key stops the build.
+    """
+    env = os.environ if env is None else env
+    url, cle = env.get("SUPABASE_URL", "").strip(), env.get("SUPABASE_PUBLISHABLE_KEY", "").strip()
+    if not url and not cle:
+        return {}
+    if not re.fullmatch(r"https://[a-z0-9]{20}\.supabase\.co", url):
+        sys.exit("SUPABASE_URL doit être de la forme https://<ref>.supabase.co")
+    if cle.startswith("sb_secret_") or "service_role" in cle or not cle.startswith("sb_publishable_"):
+        sys.exit("SUPABASE_PUBLISHABLE_KEY doit être la clé publique sb_publishable_…, jamais une clé secrète.")
+    return {"url": url, "key": cle}
+
+
 def construire() -> None:
     parcours = charger_parcours()
     if SORTIE.exists():
         shutil.rmtree(SORTIE)
     shutil.copytree(SITE / "assets", SORTIE / "assets")
     shutil.copytree(SITE / "vendor", SORTIE / "assets" / "vendor")
+    (SORTIE / "assets" / "config.js").write_text(
+        "window.PA_CONFIG = " + json.dumps(config_supabase()) + ";\n", encoding="utf-8")
+    (SORTIE / "compte").mkdir()
+    shutil.copy(SITE / "gabarits" / "compte.html", SORTIE / "compte" / "index.html")
     g_seance = Template((SITE / "gabarits" / "seance.html").read_text(encoding="utf-8"))
     g_accueil = Template((SITE / "gabarits" / "accueil.html").read_text(encoding="utf-8"))
     erreurs, premiere = [], None
