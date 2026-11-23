@@ -85,7 +85,7 @@ etapes:
           rappel: >-
             $A_x$ est une somme de facteurs $v^{k+1}$ pondérés par des probabilités qui ne dépendent pas du taux. Quand $i$ baisse, chaque $v^{k+1}$ augmente.
           formule: |-
-            \begin{gathered} A_x = \sum_{k \ge 0} v^{k+1}\,{}_{k|}q_x \\[4pt] \sum_{k \ge 0} {}_{k|}q_x = 1 \;\Rightarrow\; A_x < 1 \end{gathered}
+            \begin{gathered} A_x = \sum_{k \ge 0} v^{k+1}\,{}_{k|}q_x \\[4pt] \sum_{k \ge 0} {}_{k|}q_x = 1 \;\Rightarrow\; A_x < 1 \quad (i > 0) \end{gathered}
           exemple: >-
             Table MK : $A_{65}$ vaut 0,7310 à 2,5 % et 0,8781 à 1 %.
           piege: >-
