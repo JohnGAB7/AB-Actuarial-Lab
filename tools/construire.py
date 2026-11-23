@@ -225,7 +225,7 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
         start_action = "Explore the first session"
         domains_kicker, domains_heading = "EXPLORE THE CURRICULUM", "Choose a field. Follow the connections."
         domains_text = "Follow the suggested order or explore a discipline that speaks to your goals. Your progress stays on this device without an account."
-        method_kicker, method_title = "A DIFFERENT WAY TO LEARN", method_heading = "From intuition to professional practice."
+        method_kicker, method_heading = "A DIFFERENT WAY TO LEARN", "From intuition to professional practice."
         method = [
             ("01", "Understand", "Start with a question, an intuition or a real actuarial situation."),
             ("02", "Make it visible", "Connect the idea to a formula, a diagram or an interactive experiment."),
@@ -247,7 +247,7 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
         start_action = "Découvrir la première séance"
         domains_kicker, domains_heading = "EXPLORER LE PARCOURS", "Choisis un domaine. Découvre les liens."
         domains_text = "Suis l'ordre conseillé ou explore une discipline qui correspond à tes objectifs. Ta progression reste sur cet appareil, sans création de compte."
-        method_kicker, method_title = "UNE AUTRE FAÇON D'APPRENDRE", method_heading = "De l'intuition à la pratique professionnelle."
+        method_kicker, method_heading = "UNE AUTRE FAÇON D'APPRENDRE", "De l'intuition à la pratique professionnelle."
         method = [
             ("01", "Comprendre", "Partir d'une question, d'une intuition ou d'une situation actuarielle réelle."),
             ("02", "Rendre visible", "Relier l'idée à une formule, un schéma ou une expérience interactive."),
