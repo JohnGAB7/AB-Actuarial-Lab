@@ -72,8 +72,8 @@ def test_actu_basics_parent_brand_is_consistent_in_both_languages():
     french = builder.marque("", "fr")
     english = builder.marque("", "en")
 
-    assert "ACTU-BASICS" in french and "PARCOURS ACTUARIEL" in french
-    assert "ACTU-BASICS" in english and "ACTUARIAL LEARNING PATH" in english
+    assert "LABORATOIRE ACTUARIEL" in french and "PAR ACTU-BASICS" in french
+    assert "ACTUARIAL LEARNING LAB" in english and "BY ACTU-BASICS" in english
     assert "assets/brand/actu-basics/logo-light.png" in french
     assert "assets/brand/actu-basics/logo-dark.png" in french
     assert "assets/brand/actu-basics/logo-light-en.png" in english
