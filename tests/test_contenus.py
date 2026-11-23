@@ -250,8 +250,8 @@ def test_formules_makeham_et_udd():
     s = charger_seance("a3/s01")
     recap = next(e for e in s["etapes"] if e["type"] == "rappel")
     formules = [bloc.get("formule", "") for bloc in recap["blocs"]]
-    assert any(r"\\underbrace{-\\ln s}_{A} + \\underbrace{-\\,\\ln g\\,\\ln c}_{B}\\,c^{x}" in f for f in formules)
-    assert any(r"\\mathring{e}_x = \\int_0^{\\infty} {}_tp_x\\,\\mathrm{d}t = e_x + \\tfrac12" in f for f in formules)
+    assert any(r"\underbrace{-\ln s}_{A} + \underbrace{-\,\ln g\,\ln c}_{B}\,c^{x}" in f for f in formules)
+    assert any(r"\mathring{e}_x = \int_0^{\infty} {}_tp_x\,\mathrm{d}t = e_x + \tfrac12" in f for f in formules)
 
     table = s["table"]
     k, a, g, c = table["k"], table["s"], table["g"], table["c"]
