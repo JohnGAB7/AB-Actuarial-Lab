@@ -19,7 +19,12 @@ def _text(value: Any) -> bool:
 
 
 def _number(value: Any) -> bool:
-    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return False
+    try:
+        return math.isfinite(value)
+    except OverflowError:
+        return False
 
 
 def _unknown(mapping: dict, allowed: set[str], label: str) -> list[str]:
