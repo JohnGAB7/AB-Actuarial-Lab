@@ -419,7 +419,7 @@ def verifier_parcours(plan: Any) -> list[str]:
     if not isinstance(plan, dict):
         return ["parcours.yaml: la racine doit être un objet YAML."]
     errors.extend(_unknown_keys(plan, {"titre", "sous_titre", "sous_titre_en", "domaines"}, "parcours.yaml"))
-    for key in ("titre", "sous_titre", "domaines"):
+    for key in ("titre", "sous_titre", "sous_titre_en", "domaines"):
         if key not in plan:
             errors.append(f"parcours.yaml: champ requis manquant « {key} ».")
     for key in ("titre", "sous_titre"):
@@ -448,7 +448,7 @@ def verifier_parcours(plan: Any) -> list[str]:
             domain_ids.add(domain_id)
         if _text(domain_id) and PLAN_ID.fullmatch(domain_id) is None:
             errors.append(f"{label}: identifiant de domaine invalide pour un segment de chemin sûr.")
-        for key in ("titre", "en", "accroche"):
+        for key in ("titre", "en", "accroche", "accroche_en"):
             if not _text(domain.get(key)):
                 errors.append(f"{label}: « {key} » doit être un texte non vide.")
         modules = domain.get("modules")
