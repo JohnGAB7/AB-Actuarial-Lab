@@ -100,11 +100,10 @@ def test_migration_active_rls_sur_chaque_table():
 
 
 def test_aucune_cle_secrete_dans_le_depot():
-    motifs = ("sb_secret_", "service_role\"", "SUPABASE_SERVICE")
+    """Une vraie clé secrète Supabase (ou un JWT) ne doit jamais être committée."""
+    import re
+    motif = re.compile(r"sb_secret_[A-Za-z0-9_-]{10,}|eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}")
     for p in RACINE.rglob("*"):
         if ".git" in p.parts or "_site" in p.parts or "vendor" in p.parts or not p.is_file() or p.suffix in {".pyc", ".png"}:
             continue
-        if p.name == "test_contenus.py" or p.name == "construire.py":
-            continue
-        texte = p.read_text(encoding="utf-8", errors="ignore")
-        assert not any(m in texte for m in motifs), p
+        assert not motif.search(p.read_text(encoding="utf-8", errors="ignore")), p
