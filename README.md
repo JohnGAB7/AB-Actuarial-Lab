@@ -2,7 +2,7 @@
 
 Version française : **Laboratoire d’apprentissage actuariel par ACTU-BASICS**.
 
-Un espace bilingue pour explorer l’actuariat par des explications, des expériences interactives, des calculs guidés et des laboratoires de modélisation. La plateforme reprend les logos officiels ACTU-BASICS sans les redessiner ni les modifier.
+Un espace bilingue pour explorer l’actuariat par des explications, des expériences interactives, des calculs guidés et des laboratoires de modélisation. La plateforme possède une identité visuelle propre, construite autour de la palette ACTU-BASICS et du symbole du laboratoire actuariel.
 
 Un laboratoire d’apprentissage progressif : diagnostic, parcours guidé, notes, exercices, expériences interactives et suivi de progression.
 L'ossature suit les modules A1 à A8 du « Parcours Actuariat » d'Actu-Basics (`docs/actuariat/PARCOURS-ACTUARIAT-v3.md`) ;

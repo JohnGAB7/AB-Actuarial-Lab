@@ -10,11 +10,11 @@ Le compte est facultatif. Sans compte, la progression reste dans le navigateur. 
 
 ## Mise en place (une seule fois, par JG)
 
-1. **Créer le projet.** Sur supabase.com, nouveau projet `parcours-actuariel`, plan gratuit, région **Europe (Frankfurt, eu-central-1)**.
+1. **Créer le projet.** Sur supabase.com, nouveau projet `AB-Actuarial-Lab`, plan gratuit, région **Europe (Frankfurt, eu-central-1)**.
 2. **Créer la table.** Dans *SQL Editor*, coller le contenu de `supabase/migrations/001_progression.sql` et cliquer sur *Run*.
 3. **Autoriser le site.** Dans *Authentication > URL Configuration* :
-   - *Site URL* : `https://johngab7.github.io/parcours-actuariel/`
-   - *Redirect URLs* : ajouter `https://johngab7.github.io/parcours-actuariel/**`
+   - *Site URL* : `https://johngab7.github.io/AB-Actuarial-Lab/`
+   - *Redirect URLs* : ajouter `https://johngab7.github.io/AB-Actuarial-Lab/**`
 4. **Donner les deux valeurs publiques au site.** Dans *Project Settings > API Keys*, copier l'URL du projet et la clé *publishable*. Puis, sur GitHub : *Settings > Secrets and variables > Actions > onglet Variables > New repository variable* :
    - `SUPABASE_URL` = `https://<ref>.supabase.co`
    - `SUPABASE_PUBLISHABLE_KEY` = `sb_publishable_…`

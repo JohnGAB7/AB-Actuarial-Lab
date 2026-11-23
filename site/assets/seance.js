@@ -61,7 +61,7 @@ const DROP_TAGS = new Set([
 ]);
 function rich(value) {
   const template = document.createElement("template");
-  template.innerHTML = String(value ?? "");
+  template.innerHTML = String(value ?? "").replace(/(<(?:strong|b)>[A-Z]<[^>]+>)\s*[-–—]\s*(?=<code>)/g, "$1 ");
   const fragment = document.createDocumentFragment();
   const copy = (node, parent) => {
     if (node.nodeType === Node.TEXT_NODE) {
@@ -136,7 +136,9 @@ function current() {
 }
 function segs(i) {
   $("#segs").replaceChildren(...S.etapes.map((e, j) => {
-    const a = el("a", { href: "#etape-" + (j + 1), class: (progress[j] ? "ok " : "") + (j === i ? "on" : ""), "aria-label": UI.step(j + 1, e.titre) });
+    const a = el("a", { href: "#etape-" + (j + 1), class: (progress[j] ? "ok " : "") + (j === i ? "on" : ""), "aria-label": UI.step(j + 1, e.titre) },
+      el("span", { class: "rail-step-index" }, String(j + 1).padStart(2, "0")),
+      el("span", { class: "rail-step-name" }, e.titre));
     if (j === i) a.setAttribute("aria-current", "step");
     return a;
   }));
@@ -287,7 +289,7 @@ const R = {
     const qs = e.questions.map((it, qi) => {
       const why = el("div", { class: "why", html: "" }); why.hidden = true;
       const opts = el("div", { class: "opts", role: "group" }, ...it.options.map((t, j) => {
-        const b = el("button", { class: "opt", type: "button" }, el("span", { class: "k" }, String.fromCharCode(65 + j)), " - ", el("span", {}, rich(t)));
+        const b = el("button", { class: "opt", type: "button" }, el("span", { class: "k" }, String.fromCharCode(65 + j)), " ", el("span", {}, rich(t)));
         b.addEventListener("click", () => {
           opts.querySelectorAll(".opt").forEach((x) => x.classList.remove("right", "wrong"));
           const good = j === it.reponse;

@@ -74,11 +74,12 @@ def test_actu_basics_parent_brand_is_consistent_in_both_languages():
 
     assert "LABORATOIRE ACTUARIEL" in french and "PAR ACTU-BASICS" in french
     assert "ACTUARIAL LEARNING LAB" in english and "BY ACTU-BASICS" in english
-    assert "assets/brand/actu-basics/logo-light.png" in french
-    assert "assets/brand/actu-basics/logo-dark.png" in french
-    assert "assets/brand/actu-basics/logo-light-en.png" in english
-    assert "assets/brand/actu-basics/logo-dark-en.png" in english
-    assert "raw.githubusercontent.com/JohnGAB7/Actu-Basics/080890b8acd452c790f3e10664a63d0b3e43aa21" in french
+    assert 'assets/actuarial-lab-mark.svg' in french
+    assert 'assets/actuarial-lab-mark-dark.svg' in french
+    assert 'assets/actuarial-lab-mark.svg' in english
+    assert 'assets/actuarial-lab-mark-dark.svg' in english
+    assert builder.favicon_url("fr") == "assets/actuarial-lab-mark.svg"
+    assert builder.favicon_url("en") == "assets/actuarial-lab-mark.svg"
     assert builder.titre_site("fr") == "Laboratoire d’apprentissage actuariel par ACTU-BASICS"
     assert builder.titre_site("en") == "Actuarial Learning Lab by ACTU-BASICS"
 
@@ -104,3 +105,19 @@ def test_lab_brand_names_are_bilingual_and_parent_brand_is_explicit():
     assert "PAR ACTU-BASICS" in builder.marque("", "fr")
     assert "ACTUARIAL LEARNING LAB" in builder.marque("", "en")
     assert "BY ACTU-BASICS" in builder.marque("", "en")
+
+
+def test_lesson_shell_uses_full_desktop_workspace_and_step_labels():
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    template = (root / "site" / "gabarits" / "seance.html").read_text(encoding="utf-8")
+    stylesheet = (root / "site" / "assets" / "style.css").read_text(encoding="utf-8")
+    script = (root / "site" / "assets" / "seance.js").read_text(encoding="utf-8")
+
+    assert 'class="lesson-shell gutter"' in template
+    assert 'class="lesson-rail"' in template
+    assert "grid-template-columns:260px minmax(0,1fr)" in stylesheet
+    assert "rail-step-name" in script
+    assert 'type="image/svg+xml"' in template
+    assert '(<(?:strong|b)>[A-Z]<[^>]+>)' in script

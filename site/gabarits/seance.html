@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>$titre · $site_title</title>
-<link rel="icon" type="image/png" href="$favicon">
+<link rel="icon" type="image/svg+xml" href="$favicon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://raw.githubusercontent.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -19,15 +19,24 @@
 <header class="bar gutter"><div class="bar-in">
   $marque
   <span class="where" id="where"></span>
-  <div class="segs" id="segs" aria-label="$progression"></div>
+  
   $bascule
   <a class="acct" href="${racine}compte/index.html" aria-label="$compte"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></a>
 </div></header>
-<main class="stage gutter" id="stage"></main>
-<nav class="pager gutter" aria-label="$etapes">
-  <button class="btn ghost" id="prev" type="button"></button>
-  <button class="btn" id="next" type="button"></button>
-</nav>
+<div class="lesson-shell gutter">
+  <aside class="lesson-rail" aria-label="$etapes">
+    <div class="lesson-rail-heading"><span class="eyebrow">$progression</span><strong>$etapes</strong></div>
+    <nav class="segs" id="segs" aria-label="$progression"></nav>
+    <div class="lesson-rail-foot"><span class="rail-foot-mark">AB</span><span>LEARN · MODEL · PRACTICE</span></div>
+  </aside>
+  <div class="lesson-content">
+    <main class="stage" id="stage"></main>
+    <nav class="pager" aria-label="$etapes">
+      <button class="btn ghost" id="prev" type="button"></button>
+      <button class="btn" id="next" type="button"></button>
+    </nav>
+  </div>
+</div>
 <script type="application/json" id="seance">$donnees</script>
 <script src="${base}assets/vendor/katex/katex.min.js"></script>
 <script src="${base}assets/vendor/katex/auto-render.min.js"></script>

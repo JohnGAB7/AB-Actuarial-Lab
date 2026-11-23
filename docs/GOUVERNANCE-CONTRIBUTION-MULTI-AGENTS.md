@@ -2,7 +2,7 @@
 
 - **Date :** 23 novembre 2026
 - **Projet :** Parcours Actuariel — Actuarial Learning Lab
-- **Dépôt :** `JohnGAB7/parcours-actuariel`
+- **Dépôt :** `JohnGAB7/AB-Actuarial-Lab`
 - **Statut :** proposition opérationnelle soumise à revue croisée ; ne modifie pas les règles de fusion ou de publication sans décision du propriétaire du projet.
 
 ## 1. Principes de collaboration

@@ -168,24 +168,21 @@ def dom_court(d: dict, langue: str) -> str:
 
 
 def marque(racine: str, langue: str) -> str:
-    """Use the official, unmodified ACTU-BASICS logo in the matching language and theme."""
-    suffixe = "-en" if langue == "en" else ""
+    """Use the purpose-built Actuarial Learning Lab mark in the current theme."""
     libelle = "ACTUARIAL LEARNING LAB" if langue == "en" else "LABORATOIRE ACTUARIEL"
-    source = "https://raw.githubusercontent.com/JohnGAB7/Actu-Basics/080890b8acd452c790f3e10664a63d0b3e43aa21/assets/brand/actu-basics/"
+    signature = "BY ACTU-BASICS" if langue == "en" else "PAR ACTU-BASICS"
     return (
-        f'<a class="brand brand-lockup" href="{racine}index.html" aria-label="{libelle} — {("by ACTU-BASICS" if langue == "en" else "par ACTU-BASICS")}">'
+        f'<a class="brand brand-lockup" href="{racine}index.html" aria-label="{libelle} — {signature}">'
         f'<picture class="brand-mark">'
-        f'<img class="brand-logo brand-logo-light" src="{source}logo-light{suffixe}.png" alt="" width="44" height="44">'
-        f'<img class="brand-logo brand-logo-dark" src="{source}logo-dark{suffixe}.png" alt="" width="44" height="44" loading="lazy">'
-        f'</picture><span class="brand-copy"><strong>{libelle}</strong><small>{("BY ACTU-BASICS" if langue == "en" else "PAR ACTU-BASICS")}</small></span></a>'
+        f'<img class="brand-logo brand-logo-light" src="{racine}assets/actuarial-lab-mark.svg" alt="" width="44" height="44">'
+        f'<img class="brand-logo brand-logo-dark" src="{racine}assets/actuarial-lab-mark-dark.svg" alt="" width="44" height="44" loading="lazy">'
+        f'</picture><span class="brand-copy"><strong>{libelle}</strong><small>{signature}</small></span></a>'
     )
 
 
 def favicon_url(langue: str) -> str:
-    suffixe = "-en" if langue == "en" else ""
-    return ("https://raw.githubusercontent.com/JohnGAB7/Actu-Basics/"
-            "080890b8acd452c790f3e10664a63d0b3e43aa21/assets/brand/actu-basics/"
-            f"logo-light{suffixe}.png")
+    """Local, cacheable vector mark for both language editions."""
+    return "assets/actuarial-lab-mark.svg"
 
 
 def bascule(langue: str, autre: str) -> str:
@@ -225,7 +222,7 @@ def pied(parcours: dict, racine: str, autre: str, langue: str) -> str:
         f'<nav class="pied-col" aria-label="{t["compte_t"]}"><span class="eyebrow">{t["compte_t"]}</span>'
         f'<a href="{racine}compte/index.html">{t["compte"]}</a><a href="{racine}compte/index.html#confidentialite">{t["confid"]}</a>'
         f'<a href="{autre}" lang="{"en" if langue == "fr" else "fr"}">{t["autre"]}</a>'
-        f'<a href="https://github.com/JohnGAB7/parcours-actuariel">{t["source"]}</a></nav>'
+        f'<a href="https://github.com/JohnGAB7/AB-Actuarial-Lab">{t["source"]}</a></nav>'
         f'</div></footer>')
 
 
@@ -432,7 +429,7 @@ def construire() -> None:
             donnees = dict(s, accueil=racine + "index.html", module_url=racine + m["id"] + "/index.html",
                            module_titre=mod_titre(m, langue), domaine_titre=dom_titre(dom, langue))
             page = g_seance.substitute(
-                titre=e(s["titre"]), site_title=e(titre_site(langue)), marque=marque(racine, langue), favicon=favicon_url(langue), base=base, accueil=donnees["accueil"], lang=langue, autre=autre,
+                titre=e(s["titre"]), site_title=e(titre_site(langue)), marque=marque(racine, langue), favicon=racine + favicon_url(langue), base=base, accueil=donnees["accueil"], lang=langue, autre=autre,
                 bascule=bascule(langue, autre), alt_fr=base + sid + "/index.html", alt_en=base + "en/" + sid + "/index.html", compte=t["compte"], racine=racine,
                 progression=t["progression"], etapes=t["etapes"],
                 donnees=json.dumps(donnees, ensure_ascii=False).replace("</", "<\\/"))
@@ -447,7 +444,7 @@ def construire() -> None:
             cible = (sortie / chemin / "index.html") if chemin else sortie / "index.html"
             cible.parent.mkdir(parents=True, exist_ok=True)
             cible.write_text(g_page.substitute(
-                titre=e(titre), description=e(description), favicon=favicon_url(langue), base=base, classe=classe, plan=plan, lang=langue,
+                titre=e(titre), description=e(description), favicon=racine + favicon_url(langue), base=base, classe=classe, plan=plan, lang=langue,
                 alt_fr=base + (chemin + "/" if chemin else "") + "index.html",
                 alt_en=base + "en/" + (chemin + "/" if chemin else "") + "index.html",
                 entete=entete(parcours, racine, autre, langue, actif), contenu=contenu,
