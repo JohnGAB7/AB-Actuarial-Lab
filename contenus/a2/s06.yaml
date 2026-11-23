@@ -1,0 +1,216 @@
+# Séance 6 du module A2 (Probabilités pour l'assurance) : prime pure, franchise, prime commerciale et résultat technique.
+# Chiffres : assureur et portefeuilles fictifs. Les valeurs sont recalculées par tests/test_contenus.py et tests/a2/test_s06_prime.py.
+id: a2/s06
+module: a2
+titre: "Prime pure, franchise et prime commerciale"
+en: "Pure premium, deductible and gross premium"
+duree: 30
+
+actu_basics:
+  episode: "A2 · Probability for insurance"
+  statut: "à proposer"
+  accroche_fr: "Une franchise de 100 € : de combien baisse la prime ?"
+  accroche_en: "A €100 deductible: how much does the premium drop?"
+
+etapes:
+  - type: quiz
+    titre: "Test de positionnement"
+    minutes: 3
+    intro: "Quatre questions avant le cours. Si tu as tout juste, survole le rappel et va directement au calcul."
+    questions:
+      - q: '1 000 téléphones assurés, 2 % de vol par an, 500 € par téléphone volé. Prime pure par contrat ?'
+        options: ['10 €', '500 €', '20 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            La prime pure (pure premium) est l'espérance du coût des sinistres d'un contrat : fréquence attendue fois coût moyen.
+          formule: |-
+            \pi = E[N]\,E[X] = 0{,}02 \times 500
+          exemple: >-
+            10 € par contrat, soit 10 000 € pour le portefeuille : la charge attendue de 20 vols.
+          piege: >-
+            20 € compte 20 vols par contrat au lieu de 20 pour 1 000 contrats.
+      - q: 'Même portefeuille, avec une franchise de 100 € par vol. Nouvelle prime pure ?'
+        options: ['8 €', '9,80 €', '10 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Une franchise (deductible) $d$ laisse à l'assuré les $d$ premiers euros de chaque sinistre. L'assureur paie $(X - d)_+$.
+          formule: |-
+            \pi_d = E[N]\,E\big[(X - d)_+\big] = 0{,}02 \times (500 - 100)
+          exemple: >-
+            $0{,}02 \times 400 = 8$ € : la prime pure baisse de 20 %.
+          piege: >-
+            9,80 € retire 100 € de la prime du portefeuille au lieu de les retirer de chaque sinistre.
+      - q: 'La prime commerciale (gross premium) est…'
+        options: ['la prime pure plus des chargements pour la sécurité, les frais et la marge', 'la prime pure divisée par le nombre de contrats', 'la prime pure avant franchise']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            La prime pure ne couvre que les sinistres attendus. Il faut ajouter un chargement de sécurité, les frais de gestion et les commissions.
+          formule: |-
+            P = \frac{\pi\,(1 + \eta)}{1 - c}
+          exemple: >-
+            Avec $\eta = 20\,\%$ de chargement de sécurité et $c = 25\,\%$ de frais sur prime : $P = 10 \times 1{,}2 / 0{,}75 = 16$ €.
+          piege: >-
+            Ajouter 25 % à la prime pure au lieu de diviser par $1 - c$ sous-estime la prime : les frais portent sur la prime, pas sur la prime pure.
+      - q: 'Le ratio combiné (combined ratio) d''un assureur vaut 87,5 %. Cela veut dire…'
+        options: ['sinistres et frais absorbent 87,5 % des primes', 'il perd 12,5 % de ses primes', '87,5 % des assurés ont un sinistre']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Ratio sinistres sur primes (loss ratio) plus ratio de frais (expense ratio). Sous 100 %, l'activité d'assurance dégage un résultat technique positif.
+          formule: |-
+            \text{ratio combiné} = \frac{\text{sinistres} + \text{frais}}{\text{primes}}
+          exemple: >-
+            Primes 16 000 €, sinistres attendus 10 000 €, frais 4 000 € : $14\,000 / 16\,000 = 87{,}5\,\%$.
+          piege: >-
+            Un ratio sous 100 % ne garantit rien chaque année : les sinistres réels fluctuent autour de leur espérance.
+
+  - type: video
+    titre: "L'intuition en vidéo"
+    minutes: 3
+    texte: >-
+      Ce thème n'a pas encore sa leçon Actu-Basics longue. Elle reprendra le portefeuille de téléphones pour passer
+      de la prime pure à la prime payée par le client.
+
+  - type: rappel
+    titre: "Le rappel"
+    minutes: 8
+    blocs:
+      - p: >-
+          La <b>prime pure</b> <i>(pure premium, risk premium)</i> est la charge attendue d'un contrat. Une
+          <b>franchise</b> <i>(deductible)</i> $d$ réduit chaque paiement ; un <b>plafond</b> <i>(policy limit)</i> $u$
+          le borne.
+      - formule: |
+          \begin{gathered}
+          \pi = E[N]\,E[X] \qquad \pi_d = E[N]\,E\big[(X - d)_+\big] \\[6pt]
+          \text{exponentielle : } E\big[(X - d)_+\big] = \theta\,e^{-d/\theta}
+          \end{gathered}
+      - p: >-
+          Le <b>taux d'élimination des sinistres</b> <i>(loss elimination ratio)</i> mesure la part de la charge que la
+          franchise retire : $\text{LER} = E[\min(X, d)] / E[X]$. Pour une exponentielle, $\text{LER} = 1 - e^{-d/\theta}$.
+      - p: >-
+          La <b>prime commerciale</b> <i>(gross premium)</i> ajoute un <b>chargement de sécurité</b> <i>(risk loading)</i>
+          $\eta$ et couvre des <b>frais</b> <i>(expenses)</i> exprimés en pourcentage $c$ de la prime.
+      - formule: |
+          P = \frac{\pi\,(1 + \eta)}{1 - c} \qquad \text{résultat technique} = P - \text{sinistres} - \text{frais}
+      - p: >-
+          Le <b>ratio sinistres sur primes</b> <i>(loss ratio)</i> plus le <b>ratio de frais</b> <i>(expense ratio)</i>
+          donne le <b>ratio combiné</b> <i>(combined ratio)</i>. Les revenus financiers sur les primes placées s'ajoutent
+          ensuite au résultat.
+      - note: >-
+          La rentabilité ne vient pas de la seule mutualisation : elle dépend du tarif, des frais, des commissions, de la
+          réassurance et des revenus financiers. Un tarif juste en moyenne peut perdre de l'argent une mauvaise année.
+      - sources:
+          - {titre: "Klugman, Panjer et Willmot, Loss Models, chap. 8", detail: "Franchises, plafonds, taux d'élimination des sinistres"}
+          - {titre: "Werner et Modlin, Basic Ratemaking (CAS), chap. 1 et 7", detail: "Prime pure, chargements, prime commerciale, ratios"}
+
+  - type: quiz
+    titre: "Vérifie"
+    minutes: 4
+    intro: "Quatre questions. Réponds sans relire le rappel."
+    questions:
+      - q: 'Fréquence de 5 %, sinistres exponentiels de moyenne 2 000 €, franchise de 500 €. Prime pure ?'
+        options: ['77,88 €', '75 €', '100 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Pour l'exponentielle, la partie au-delà de $d$ a la même loi que $X$ (absence de mémoire), mais n'arrive que si $X > d$.
+          formule: |-
+            \pi_d = 0{,}05 \times 2\,000\,e^{-500/2\,000}
+          exemple: >-
+            $100 \times e^{-0{,}25} = 100 \times 0{,}7788 = 77{,}88$ €.
+          piege: >-
+            75 € retire 500 € de la moyenne, comme si chaque sinistre dépassait la franchise. Les petits sinistres ne coûtent plus rien, ils ne coûtent pas « moins 500 € ».
+      - q: 'Même cas : quel est le taux d''élimination des sinistres de cette franchise ?'
+        options: ['22,1 %', '25 %', '77,9 %']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Part de la charge retirée par la franchise.
+          formule: |-
+            \text{LER} = 1 - e^{-d/\theta} = 1 - e^{-0{,}25}
+          exemple: >-
+            $1 - 0{,}7788 = 0{,}2212$ : la franchise retire 22,1 % de la charge.
+          piege: >-
+            77,9 % est la part qui reste à l'assureur.
+      - q: 'Prime pure 77,88 €, chargement de sécurité 20 %, frais 25 % de la prime. Prime commerciale ?'
+        options: ['124,61 €', '116,82 €', '97,35 €']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On charge la prime pure, puis on divise par $1 - c$ pour que les frais soient payés par la prime elle-même.
+          formule: |-
+            P = \frac{77{,}88 \times 1{,}2}{0{,}75}
+          exemple: >-
+            $93{,}456 / 0{,}75 = 124{,}61$ €. Frais : 31,15 € ; sinistres attendus : 77,88 € ; marge attendue : 15,58 €.
+          piege: >-
+            116,82 € ajoute 25 % à la prime chargée : les frais réels ($0{,}25 \times 116{,}82 = 29{,}21$ €) ne seraient pas couverts.
+      - q: 'Pour ce tarif, le ratio sinistres sur primes attendu vaut…'
+        options: ['62,5 %', '75 %', '80 %']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Sinistres attendus divisés par la prime commerciale.
+          formule: |-
+            \frac{\pi}{P} = \frac{1 - c}{1 + \eta} = \frac{0{,}75}{1{,}2}
+          exemple: >-
+            $0{,}625$, et le ratio combiné attendu vaut $62{,}5\,\% + 25\,\% = 87{,}5\,\%$.
+          piege: >-
+            Ce ratio ne dépend ni de la franchise ni du montant : seulement de $\eta$ et de $c$.
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: "Fréquence de 5 %, sinistres exponentiels de moyenne 2 000 €, franchise de 500 €, chargement de 20 %, frais de 25 % de la prime. Montants au centime, ratios à 4 décimales."
+    donnees:
+      entetes: ['$E[N]$', '$\theta$', '$d$', '$\eta$', '$c$']
+      lignes: [['0,05', '2 000', '500', '20 %', '25 %']]
+    champs:
+      - {cle: pd, libelle: '$\pi_d$', valeur: 77.8801, tolerance: 0.015}
+      - {cle: ler, libelle: '$\text{LER}$', valeur: 0.221199, tolerance: 0.00015}
+      - {cle: p, libelle: '$P$', valeur: 124.6081, tolerance: 0.015}
+      - {cle: lr, libelle: '$\pi_d / P$', valeur: 0.625, tolerance: 0.00015}
+    solution: |
+      $\pi_d = 0{,}05 \times 2\,000 \times e^{-0{,}25} = 77{,}88$ € ; $\text{LER} = 1 - e^{-0{,}25} = 0{,}2212$.
+      $P = 77{,}88 \times 1{,}2 / 0{,}75 = 124{,}61$ € ; ratio sinistres sur primes $= 0{,}75 / 1{,}2 = 0{,}625$.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 8
+    intro: "Écris le corps des trois fonctions, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a2/s06_prime.py
+    depart: |
+      import math
+
+      def pure_premium_deductible(freq, sev, d):
+          """Pure premium with a deductible d; sev is a dict {amount: probability}."""
+          raise NotImplementedError
+
+      def exp_excess_mean(theta, d):
+          """E[(X - d)+] for an exponential claim with mean theta."""
+          raise NotImplementedError
+
+      def gross_premium(pure, risk_loading, expense_ratio):
+          """Gross premium: pure * (1 + risk_loading) / (1 - expense_ratio)."""
+          raise NotImplementedError
+    tests:
+      - {nom: 'Téléphones sans franchise : 10 €', expr: "abs(pure_premium_deductible(0.02, {500: 1.0}, 0) - 10) < 1e-12"}
+      - {nom: 'Avec une franchise de 100 € : 8 €', expr: "abs(pure_premium_deductible(0.02, {500: 1.0}, 100) - 8) < 1e-12"}
+      - {nom: 'Un sinistre sous la franchise ne coûte rien', expr: "abs(pure_premium_deductible(0.1, {50: 0.5, 300: 0.5}, 100) - 0.1 * 0.5 * 200) < 1e-12"}
+      - {nom: 'Exponentielle : $E[(X - 500)_+] = 1\,557{,}60$', expr: "abs(exp_excess_mean(2000, 500) - 1557.60) < 0.005"}
+      - {nom: 'Prime commerciale : 16 € pour les téléphones', expr: "abs(gross_premium(10, 0.2, 0.25) - 16) < 1e-12"}
+      - {nom: 'Les frais représentent bien 25 % de la prime', expr: "abs(0.25 * gross_premium(77.88, 0.2, 0.25) - (gross_premium(77.88, 0.2, 0.25) - 77.88 * 1.2)) < 1e-9"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Prime pure", "pure premium, risk premium", "The pure premium covers expected claims only."]
+      - ["Franchise", "deductible", "A 500-euro deductible removes 22% of the expected losses."]
+      - ["Taux d'élimination des sinistres", "loss elimination ratio", "The loss elimination ratio of this deductible is 22%."]
+      - ["Prime commerciale", "gross premium, office premium", "The gross premium includes loadings for risk, expenses and profit."]
+      - ["Ratio sinistres sur primes", "loss ratio", "Our expected loss ratio is 62.5%."]
+      - ["Ratio combiné", "combined ratio", "A combined ratio below 100% means an underwriting profit."]

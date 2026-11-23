@@ -200,6 +200,18 @@ def test_calcul_a2_s05():
     assert var_nb == 6e8 and round(math.sqrt(var_nb), 2) == 24494.90 and round(math.sqrt(var_nb / var) - 1, 2) == 0.22
     assert round(math.sqrt(2 * var)) == 28284 and round(0.1 * 2 * 0.5 * 0.5, 10) == 0.05
 
+
+def test_calcul_a2_s06():
+    _, champs = _calcul("a2/s06")
+    pd = 0.05 * 2000 * math.exp(-500 / 2000)
+    p = pd * 1.2 / 0.75
+    _proche(champs, {"pd": pd, "ler": 1 - math.exp(-0.25), "p": p, "lr": pd / p}, tol=1e-4)
+    assert 0.02 * 500 == 10 and 0.02 * 400 == 8 and round(10 * 1.2 / 0.75, 10) == 16
+    assert (10000 + 4000) / 16000 == 0.875 and round(math.exp(-0.25), 4) == 0.7788
+    assert [round(x, 2) for x in (pd * 1.2 / 0.75 * 0.25, pd * 1.2, p - pd - 0.25 * p, pd * 1.2 * 1.25, 0.25 * pd * 1.2 * 1.25, pd * 1.25)] == \
+        [31.15, 93.46, 15.58, 116.82, 29.21, 97.35]
+    assert round(pd * 1.2, 3) == 93.456 and round(2000 * math.exp(-0.25), 2) == 1557.60
+
 def test_aucun_support_de_cours_ni_cv_dans_le_depot():
     """Supports de cours et CV restent dans la bibliothèque du projet, jamais sur un dépôt."""
     interdits = {".pdf", ".pptx", ".ppt", ".docx", ".doc", ".tex", ".xlsx"}

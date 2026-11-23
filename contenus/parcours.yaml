@@ -14,7 +14,7 @@ domaines:
     accroche_en: "The common language of every actuary: interest, probability, statistics."
     modules:
       - {id: a1, titre: "A1 · Mathématiques financières", en: "Financial mathematics", seances: [a1/s01, a1/s02, a1/s03, a1/s04, a1/s05]}
-      - {id: a2, titre: "A2 · Probabilités pour l'assurance", en: "Probability for insurance", seances: [a2/s01, a2/s02, a2/s03, a2/s04, a2/s05]}
+      - {id: a2, titre: "A2 · Probabilités pour l'assurance", en: "Probability for insurance", seances: [a2/s01, a2/s02, a2/s03, a2/s04, a2/s05, a2/s06]}
       - {id: a2b, titre: "A2b · Statistique pour l'assurance", en: "Statistics for insurance"}
 
   - id: vie

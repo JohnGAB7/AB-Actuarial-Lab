@@ -88,3 +88,16 @@ def aggregate_pmf(freq, sev):
                 nxt[s + x] = nxt.get(s + x, 0) + q * r
         conv = nxt
     return result
+
+
+# Session a2/s06
+def pure_premium_deductible(freq, sev, d):
+    return freq * sum(max(x - d, 0) * q for x, q in sev.items())
+
+
+def exp_excess_mean(theta, d):
+    return theta * math.exp(-d / theta)
+
+
+def gross_premium(pure, risk_loading, expense_ratio):
+    return pure * (1 + risk_loading) / (1 - expense_ratio)
