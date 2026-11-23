@@ -142,11 +142,17 @@ const R = {
     });
   },
   quiz(e, i) {
+    const explication = (p) => {
+      if (typeof p === "string") return `<p>${p}</p>`;
+      const ligne = (k, lib) => p[k] ? `<p class="why-l"><span class="why-k">${lib}</span>${p[k]}</p>` : "";
+      return ligne("rappel", "Rappel") + (p.formule ? `<div class="why-f">$$${p.formule}$$</div>` : "")
+        + ligne("exemple", "Exemple") + ligne("piege", "Piège");
+    };
     const ok = new Set();
     const score = el("p", { class: "score" });
     const upd = () => { score.textContent = `${ok.size} sur ${e.questions.length}`; };
     const qs = e.questions.map((it, qi) => {
-      const why = el("p", { class: "why", html: "" }); why.hidden = true;
+      const why = el("div", { class: "why", html: "" }); why.hidden = true;
       const opts = el("div", { class: "opts", role: "group" }, ...it.options.map((t, j) => {
         const b = el("button", { class: "opt", type: "button", html: `<span class="k">${String.fromCharCode(65 + j)}</span><span>${t}</span>` });
         b.addEventListener("click", () => {
@@ -154,7 +160,7 @@ const R = {
           const good = j === it.reponse;
           b.classList.add(good ? "right" : "wrong");
           why.hidden = false;
-          why.innerHTML = `<b>${good ? "Juste." : "Pas tout à fait."}</b> ${it.pourquoi}`;
+          why.innerHTML = `<p class="why-v ${good ? "ok" : "ko"}">${good ? "Juste." : "Pas tout à fait."}</p>` + explication(it.pourquoi);
           math(why);
           if (good) ok.add(qi); else ok.delete(qi);
           upd(); if (ok.size === e.questions.length) markDone(i);
