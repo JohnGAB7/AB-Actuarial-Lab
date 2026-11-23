@@ -54,7 +54,18 @@
   // Menu mobile : se ferme avec Échap ou un clic à l'extérieur.
   var menu = document.querySelector(".nav-menu");
   if (menu) {
-    document.addEventListener("click", function (ev) { if (menu.open && !menu.contains(ev.target)) menu.open = false; });
-    document.addEventListener("keydown", function (ev) { if (ev.key === "Escape" && menu.open) { menu.open = false; menu.querySelector("summary").focus(); } });
+    var summary = menu.querySelector("summary");
+    var synchroniserEtat = function () { summary.setAttribute("aria-expanded", menu.open ? "true" : "false"); };
+    synchroniserEtat();
+    menu.addEventListener("toggle", synchroniserEtat);
+    document.addEventListener("click", function (ev) {
+      if (menu.open && !menu.contains(ev.target)) menu.open = false;
+    });
+    document.addEventListener("keydown", function (ev) {
+      if (ev.key === "Escape" && menu.open) {
+        menu.open = false;
+        summary.focus();
+      }
+    });
   }
 })();
