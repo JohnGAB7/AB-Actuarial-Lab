@@ -1,5 +1,14 @@
 """Regression tests for strict course-content validation."""
-from tools.validation_contenus import verifier_depot, verifier_parcours, verifier_seance
+import yaml
+
+import tools.validation_contenus as validation
+from tools.validation_contenus import (
+    fusionner_overlay,
+    verifier_depot,
+    verifier_overlay_traduction,
+    verifier_parcours,
+    verifier_seance,
+)
 
 
 def valid_session():
@@ -219,3 +228,196 @@ def test_plan_rejects_unknown_keys_at_each_level():
     assert any("clé inconnue 'extra'" in error for error in errors)
     assert any("clé inconnue 'extra_domain'" in error for error in errors)
     assert any("clé inconnue 'extra_module'" in error for error in errors)
+
+
+
+def valid_overlay_session():
+    return {
+        "id": "a1/s01",
+        "module": "a1",
+        "titre": "Intérêts composés",
+        "en": "Compound interest",
+        "duree": 25,
+        "etapes": [
+            {
+                "type": "rappel",
+                "titre": "Rappel",
+                "minutes": 5,
+                "blocs": [
+                    {
+                        "p": "La valeur actuelle de 1 euro.",
+                        "formule": r"\text{Valeur actuelle} = C(1+i)^{-n}",
+                    }
+                ],
+            }
+        ],
+    }
+
+
+def valid_overlay():
+    return {
+        "titre": "Compound interest",
+        "etapes": [
+            {
+                "titre": "Recap",
+                "blocs": [
+                    {
+                        "p": "The present value of one euro.",
+                        "formule": r"\text{Present value} = C(1+i)^{-n}",
+                    }
+                ],
+            }
+        ],
+    }
+
+
+def test_overlay_accepts_text_translation_and_formula_label_translation():
+    base = valid_overlay_session()
+    merged = fusionner_overlay(base, valid_overlay(), "a1/s01")
+
+    assert merged["titre"] == "Compound interest"
+    assert merged["etapes"][0]["blocs"][0]["formule"] == (
+        r"\text{Present value} = C(1+i)^{-n}"
+    )
+    assert merged["etapes"][0]["minutes"] == 5
+
+
+def test_overlay_rejects_unknown_keys_and_protected_metadata():
+    base = valid_overlay_session()
+
+    assert any(
+        "clé absente du français" in error
+        for error in verifier_overlay_traduction(
+            base, {"etapes": [{"titre": "Recap", "unexpected": "value"}]}, session_id="a1/s01"
+        )
+    )
+    assert any(
+        "reste dans le fichier français" in error
+        for error in verifier_overlay_traduction(
+            base, {"id": "a1/s01"}, session_id="a1/s01"
+        )
+    )
+
+
+def test_overlay_rejects_empty_text_type_changes_and_list_length_changes():
+    base = valid_overlay_session()
+
+    assert any("texte vide" in error for error in verifier_overlay_traduction(
+        base, {"titre": "   "}, session_id="a1/s01"
+    ))
+    assert any("type différent" in error for error in verifier_overlay_traduction(
+        base, {"titre": ["not", "text"]}, session_id="a1/s01"
+    ))
+    assert any("longueur différente" in error for error in verifier_overlay_traduction(
+        base, {"etapes": []}, session_id="a1/s01"
+    ))
+
+
+def test_overlay_preserves_numeric_values_sign_exponent_and_units():
+    base = {"texte": "Le taux est de -2,5 % et la marge vaut 1,2e-3 ‰."}
+    assert fusionner_overlay(
+        base, {"texte": "The rate is -2.5% and the margin is 1.2e-3‰."}
+    )["texte"]
+
+    for translated in (
+        "The rate is 2.5% and the margin is 1.2e-3‰.",
+        "The rate is -2.5 and the margin is 1.2e-3‰.",
+        "The rate is -2.5% and the margin is 1.2e+3‰.",
+    ):
+        try:
+            fusionner_overlay(base, {"texte": translated})
+        except ValueError as exc:
+            assert "chiffres différents" in str(exc)
+        else:
+            raise AssertionError(f"Numeric alteration was accepted: {translated}")
+
+
+def test_overlay_formula_may_only_translate_text_labels():
+    base = {"formule": r"\text{Valeur} = C(1+i)^{-n}"}
+    valid = {"formule": r"\text{Value} = C(1+i)^{-n}"}
+    invalid = {"formule": r"\text{Value} = C(1+i)^{n}"}
+
+    assert fusionner_overlay(base, valid)["formule"] == valid["formule"]
+    try:
+        fusionner_overlay(base, invalid)
+    except ValueError as exc:
+        assert "formule ne peut changer" in str(exc)
+    else:
+        raise AssertionError("Formula structure change was accepted")
+
+
+def _write_overlay_fixture(tmp_path, monkeypatch, *, overlay=None, include_overlay=True):
+    content_dir = tmp_path / "contenus"
+    (content_dir / "en" / "a1").mkdir(parents=True)
+    (tmp_path / "exercices").mkdir()
+    plan = {
+        "titre": "Parcours",
+        "sous_titre": "Sous-titre",
+        "domaines": [{
+            "id": "a1",
+            "titre": "Fondamentaux",
+            "en": "Foundations",
+            "accroche": "Introduction",
+            "modules": [{
+                "id": "a1",
+                "titre": "Module",
+                "en": "Module",
+                "seances": ["a1/s01"],
+            }],
+        }],
+    }
+    session = valid_session()
+    session["etapes"][0]["texte"] = "Le taux est de 2,5 %."
+    (content_dir / "parcours.yaml").write_text(
+        yaml.safe_dump(plan, allow_unicode=True), encoding="utf-8"
+    )
+    (content_dir / "a1" / "s01.yaml").parent.mkdir(parents=True)
+    (content_dir / "a1" / "s01.yaml").write_text(
+        yaml.safe_dump(session, allow_unicode=True), encoding="utf-8"
+    )
+    if include_overlay:
+        translated = overlay if overlay is not None else {
+            "titre": "Session title",
+            "etapes": [{
+                "titre": "Introduction",
+                "texte": "The rate is 2.5%.",
+            }],
+        }
+        (content_dir / "en" / "a1" / "s01.yaml").write_text(
+            yaml.safe_dump(translated, allow_unicode=True), encoding="utf-8"
+        )
+    monkeypatch.setattr(validation, "CONTENT_DIR", content_dir)
+    monkeypatch.setattr(validation, "ROOT", tmp_path)
+    return content_dir
+
+
+def test_repository_validation_checks_english_overlays_when_enabled(tmp_path, monkeypatch):
+    _write_overlay_fixture(tmp_path, monkeypatch)
+    assert validation.verifier_depot() == []
+
+
+def test_repository_validation_requires_overlay_for_each_referenced_session(tmp_path, monkeypatch):
+    _write_overlay_fixture(tmp_path, monkeypatch, include_overlay=False)
+    assert any("traduction anglaise manquante" in error for error in validation.verifier_depot())
+
+
+def test_repository_validation_rejects_numeric_changes_in_english_overlay(tmp_path, monkeypatch):
+    _write_overlay_fixture(
+        tmp_path,
+        monkeypatch,
+        overlay={
+            "titre": "Session title",
+            "etapes": [{
+                "titre": "Introduction",
+                "texte": "The rate is 2.6%.",
+            }],
+        },
+    )
+    assert any("chiffres différents" in error for error in validation.verifier_depot())
+
+
+def test_overlay_reports_missing_translatable_text():
+    errors = verifier_overlay_traduction(
+        valid_overlay_session(), {"titre": "Compound interest"}, session_id="a1/s01"
+    )
+    assert any("texte non traduit" in error for error in errors)
