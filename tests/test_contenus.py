@@ -271,7 +271,10 @@ def test_calcul_a2b_s03():
     assert round(2.5 - 1.96 * math.sqrt(2.5), 2) == -0.60 and round(2.5 + 1.96 * math.sqrt(2.5), 2) == 5.60
 
 def test_calcul_a2b_s04():
-    _, champs = _calcul("a2b/s04")
+    s, champs = _calcul("a2b/s04")
+    # The displayed grouped tail is N >= 3, but the fictional raw sample has 20 exact threes.
+    intro = next(e["intro"] for e in s["etapes"] if e.get("questions") and "contrats fictifs" in e.get("intro", ""))
+    assert "20 avec exactement 3 (aucun au-delà)" in intro
     obs = [610, 300, 70, 20]
     probs = [math.exp(-0.5) * 0.5**k / math.factorial(k) for k in range(3)]
     att = [1000 * q for q in probs] + [1000 * (1 - sum(probs))]
