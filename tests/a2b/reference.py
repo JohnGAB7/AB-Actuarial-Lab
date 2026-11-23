@@ -19,3 +19,16 @@ def gamma_moments(xs):
     m, s2 = sample_mean_var(xs)
     var_n = s2 * (n - 1) / n
     return m * m / var_n, var_n / m
+
+
+# Session a2b/s02
+def poisson_mle(counts):
+    return sum(counts) / len(counts)
+
+
+def exponential_loglik(xs, theta):
+    return -len(xs) * math.log(theta) - sum(xs) / theta
+
+
+def pareto_alpha_mle(xs, theta):
+    return len(xs) / sum(math.log(1 + x / theta) for x in xs)

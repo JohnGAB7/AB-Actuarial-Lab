@@ -4,7 +4,7 @@ from pathlib import Path
 
 import yaml
 
-from tools.construire import charger_parcours, charger_seance, seances, verifier_seance
+from tools.construire import charger_parcours, charger_seance, nombres_tex_en, seances, verifier_seance
 
 RACINE = Path(__file__).resolve().parents[1]
 
@@ -226,6 +226,23 @@ def test_calcul_a2b_s01():
     assert round(s) == 1321 and round(s / math.sqrt(8)) == 467 and round(s / math.sqrt(32)) == 234
     assert round(v / (m * m), 3) == 0.432 and round(m * m / v, 3) == 2.317 and round(v / m, 2) == 811.94
 
+def test_calcul_a2b_s02():
+    _, champs = _calcul("a2b/s02")
+    xs = [1200, 800, 3500, 600, 2100, 950, 1700, 4200]
+    counts = [3, 1, 4, 2, 0, 5, 2, 3, 1, 4]
+    somme = sum(math.log(1 + x / 2000) for x in xs)
+    alpha = 8 / somme
+    m = sum(xs) / 8
+    loglik = -8 * math.log(m) - sum(xs) / m
+    _proche(champs, {"somme": somme, "alpha": alpha, "queue": (2000 / 7000) ** alpha, "loglik": loglik}, tol=1e-4)
+    lam = sum(counts) / len(counts)
+    assert sum(counts) == 25 and lam == 2.5 and math.sqrt(lam / 10) == 0.5 and round(math.sqrt(lam), 2) == 1.58
+    assert round(math.exp(-lam), 4) == 0.0821 and counts.count(0) == 1
+    assert round(somme, 4) == 4.9335 and round(alpha, 4) == 1.6216 and round(alpha - 1, 2) == 0.62
+    assert round(2000 / (alpha - 1)) == 3218 and round((2000 / 7000) ** alpha, 3) == 0.131
+    assert round(math.exp(-5000 / m), 3) == 0.070 and round(2000 / 7000, 3) == 0.286
+    assert round(-8 * math.log(m) - 8, 4) == round(loglik, 4) == -68.3175
+
 def test_aucun_support_de_cours_ni_cv_dans_le_depot():
     """Supports de cours et CV restent dans la bibliothèque du projet, jamais sur un dépôt."""
     interdits = {".pdf", ".pptx", ".ppt", ".docx", ".doc", ".tex", ".xlsx"}
@@ -357,7 +374,7 @@ def test_tableaux_anglais_identiques_au_francais():
             if a["type"] == "calcul":
                 assert [[norme(x, "fr") for x in l] for l in a["donnees"]["lignes"]] == \
                        [[norme(x, "en") for x in l] for l in b["donnees"]["lignes"]], sid
-                assert a["champs"] == b["champs"]
+                assert [{**c, "libelle": nombres_tex_en(c["libelle"])} for c in a["champs"]] == b["champs"], sid
 
 
 def test_site_bilingue(tmp_path, monkeypatch):
