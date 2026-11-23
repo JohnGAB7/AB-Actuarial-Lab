@@ -128,7 +128,7 @@ def test_rich_enumeration_separator_is_removed_before_any_inline_formula_tag():
 
     source = (builder.SITE / "assets" / "seance.js").read_text(encoding="utf-8")
     assert "template.innerHTML = String(value ?? \"\").replace" in source
-    pattern = re.compile(r'(<(?:strong|b)>[A-Z]</(?:strong|b)>)\\s*[-–—]\\s*(?=<)')
-    assert pattern.sub(r"\\1 ", '<strong>A</strong>-<span class="katex">δ=i</span>') == (
+    pattern = re.compile(r'(<(?:strong|b)>[A-Z]</(?:strong|b)>)\s*[-–—]\s*(?=<)')
+    assert pattern.sub(r"\1 ", '<strong>A</strong>-<span class="katex">δ=i</span>') == (
         '<strong>A</strong> <span class="katex">δ=i</span>'
     )
