@@ -117,7 +117,9 @@ def fusionner_overlay(base: Any, overlay: Any, chemin: str = "séance") -> Any:
                 merged[key] = fusionner_overlay(base[key], value, f"{chemin}.{key}")
         return merged
     if isinstance(overlay, list):
-        if not isinstance(base, list) or len(base) != len(overlay):
+        if not isinstance(base, list):
+            raise ValueError(f"{chemin} : type différent du français")
+        if len(base) != len(overlay):
             raise ValueError(f"{chemin} : liste de longueur différente du français")
         return [
             fusionner_overlay(original, translated, f"{chemin}[{index}]")
