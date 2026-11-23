@@ -124,6 +124,20 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
     console.log("lesson mobile:", lessonMobile);
     if (lessonMobile.overflow) failures.push("lesson mobile horizontal overflow");
 
+    // A formula is presented as a deliberate dark mathematical studio board, not a generic white card.
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(new URL("a1/s01/index.html#etape-3", BASE).toString(), { waitUntil: "domcontentloaded" });
+    await page.locator(".formula").first().waitFor();
+    const board = await page.locator(".formula").first().evaluate((el) => ({
+      background: getComputedStyle(el).backgroundImage,
+      color: getComputedStyle(el).color,
+      accent: getComputedStyle(el, "::before").backgroundImage
+    }));
+    console.log("mathematical board:", board);
+    if (!board.background.includes("radial-gradient") || !board.background.includes("linear-gradient")) failures.push("formula should use the mathematical studio board treatment");
+    if (board.color !== "rgb(237, 244, 251)") failures.push("formula foreground contrast color missing");
+    if (!board.accent.includes("linear-gradient")) failures.push("formula accent line missing");
+
     if (errors.length) failures.push("page errors: " + errors.join("; "));
     if (failures.length) {
       console.error("FAILED:", failures.join("; "));
