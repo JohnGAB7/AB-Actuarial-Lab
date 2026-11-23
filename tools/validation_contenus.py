@@ -78,22 +78,22 @@ def _nombres_texte(texte: str, langue: str) -> list[str]:
     Signs, exponents, percentages and per-mille units remain part of each token.
     """
     value = texte.replace("{,}", ",")
-    value = re.sub(r"\\\\,\\s*(?=\\\\?[%‰])", " ", value)
-    value = re.sub(r"(?<=\\d)(?:\\\\,|\\\\ |\\u202f|\\u00a0| )(?=\\d{3}\\b)", "", value)
+    value = re.sub(r"\\,\s*(?=\\?[%‰])", " ", value)
+    value = re.sub(r"(?<=\d)(?:\\,|\\ |\u202f|\u00a0| )(?=\d{3}\b)", "", value)
     if langue == "fr":
-        value = re.sub(r"(?<=\\d),(?=\\d)", ".", value)
+        value = re.sub(r"(?<=\d),(?=\d)", ".", value)
     else:
-        value = re.sub(r"(?<=\\d),(?=\\d{3}\\b)", "", value)
-    pattern = r"(?:(?<![\\w.])[+\\-−])?(?<![\\d.])\\d+(?:\\.\\d+)?(?:[eE][+\\-−]?\\d+)?(?:\\s*\\\\?[%‰])?"
+        value = re.sub(r"(?<=\d),(?=\d{3}\b)", "", value)
+    pattern = r"(?:(?<![\w.])[+\-−])?(?<![\d.])\d+(?:\.\d+)?(?:[eE][+\-−]?\d+)?(?:\s*\\?[%‰])?"
     return sorted(
-        token.replace("−", "-").replace(" ", "").replace(r"\\%", "%")
+        token.replace("−", "-").replace(" ", "").replace(r"\%", "%")
         for token in re.findall(pattern, value)
     )
 
 
 def _formule_sans_libelles(formule: str) -> str:
     """Blank translatable LaTeX text labels while preserving mathematical structure."""
-    return re.sub(r"\\\\text\\{[^{}]*\\}", r"\\\\text{}", formule)
+    return re.sub(r"\\text\{[^{}]*\}", r"\\text{}", formule)
 
 
 def fusionner_overlay(base: Any, overlay: Any, chemin: str = "séance") -> Any:
@@ -111,7 +111,7 @@ def fusionner_overlay(base: Any, overlay: Any, chemin: str = "séance") -> Any:
                 if not isinstance(base[key], str) or not isinstance(value, str):
                     raise ValueError(f"{chemin}.{key} : la formule doit rester un texte")
                 if _formule_sans_libelles(value) != _formule_sans_libelles(base[key]):
-                    raise ValueError(f"{chemin}.{key} : une formule ne peut changer que ses \\\\text{{…}}")
+                    raise ValueError(f"{chemin}.{key} : une formule ne peut changer que ses \\text{{…}}")
                 merged[key] = value
             else:
                 merged[key] = fusionner_overlay(base[key], value, f"{chemin}.{key}")
@@ -146,7 +146,7 @@ def _contient_texte_a_traduire(value: Any) -> bool:
     if isinstance(value, list):
         return any(_contient_texte_a_traduire(child) for child in value)
     if isinstance(value, str):
-        without_markup = re.sub(r"\\$[^$]*\\$|<[^>]+>", "", value)
+        without_markup = re.sub(r"\$[^$]*\$|<[^>]+>", "", value)
         return bool(re.search(r"[a-zà-ÿ]{4,}", without_markup))
     return False
 
