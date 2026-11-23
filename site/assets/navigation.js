@@ -39,7 +39,7 @@
       var base = BASE + (EN ? "en/" : "");
       if (suite) {
         cta.href = base + suite.p.s + "/index.html";
-        cta.textContent = (commence ? tr("Reprendre : ", "Resume: ") : tr("Commencer : ", "Start: ")) + suite.p.t + " →";
+        cta.textContent = (commence ? tr("Reprendre la séance", "Resume session") : tr("Commencer la première séance", "Start first session")) + " →";
       } else {
         cta.textContent = tr("Tout est terminé. Revoir le parcours →", "All done. Review the path →");
       }
