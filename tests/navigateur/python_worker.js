@@ -7,7 +7,9 @@ const PKG = process.env.PYODIDE_LOCAL ? process.env.PYODIDE_LOCAL.replace(/\/?$/
 const BASE = process.env.SITE_URL || 'http://localhost:8765/';
 const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 'application/json', '.zip': 'application/zip' };
 (async () => {
-  const b = await chromium.launch();
+  let b;
+  try {
+  b = await chromium.launch();
   const ctx = await b.newContext({ viewport: { width: 1000, height: 900 } });
   if (PKG) await ctx.route('https://cdn.jsdelivr.net/pyodide/v0.27.7/full/**', (r) => {
     const f = PKG + path.basename(new URL(r.request().url()).pathname);
@@ -59,5 +61,10 @@ const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 
   if (!/Code trop long/.test(out.inputLimit)) fails.push('input limit');
   if (errs.length) fails.push('page errors');
   if (fails.length) { console.error('FAILED:', fails.join('; ')); process.exitCode = 1; } else console.log('OK');
-  await b.close();
+  } catch (error) {
+    console.error('TEST HARNESS ERROR:', error && error.stack || error);
+    process.exitCode = 1;
+  } finally {
+    if (b) await b.close();
+  }
 })();
