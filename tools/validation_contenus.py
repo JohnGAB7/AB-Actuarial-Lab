@@ -84,7 +84,7 @@ def _nombres_texte(texte: str, langue: str) -> list[str]:
         value = re.sub(r"(?<=\d),(?=\d)", ".", value)
     else:
         value = re.sub(r"(?<=\d),(?=\d{3}\b)", "", value)
-    pattern = r"(?:(?<![\w.])[+\-−])?(?<![\d.])\d+(?:\.\d+)?(?:[eE][+\-−]?\d+)?(?:\s*\\?[%‰])?"
+    pattern = r"(?:(?<![\d.])[+\-−])?(?<![\d.])\d+(?:\.\d+)?(?:[eE][+\-−]?\d+)?(?:\s*\\?[%‰])?"
     return sorted(
         token.replace("−", "-").replace(" ", "").replace(r"\%", "%")
         for token in re.findall(pattern, value)
