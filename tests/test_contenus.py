@@ -270,6 +270,30 @@ def test_calcul_a2b_s03():
     assert round(2.576 / 1.96, 2) == 1.31 and round(2.5 - 1.96 * 0.5, 2) == 1.52 and round(2.5 + 1.96 * 0.5, 2) == 3.48
     assert round(2.5 - 1.96 * math.sqrt(2.5), 2) == -0.60 and round(2.5 + 1.96 * math.sqrt(2.5), 2) == 5.60
 
+def test_calcul_a2b_s04():
+    _, champs = _calcul("a2b/s04")
+    obs = [610, 300, 70, 20]
+    probs = [math.exp(-0.5) * 0.5**k / math.factorial(k) for k in range(3)]
+    att = [1000 * q for q in probs] + [1000 * (1 - sum(probs))]
+    termes = [(o - e) ** 2 / e for o, e in zip(obs, att)]
+    chi = sum(termes)
+    xs = sorted([1200, 800, 3500, 600, 2100, 950, 1700, 4200])
+    m = sum(xs) / 8
+    F = [1 - math.exp(-x / m) for x in xs]
+    d = max(max((i + 1) / 8 - f, f - i / 8) for i, f in enumerate(F))
+    _proche(champs, {"e3": att[3], "chi": chi, "pval": math.exp(-chi / 2), "d": d}, tol=1e-4)
+    assert sum(obs) == 1000 and (300 + 2 * 70 + 3 * 20) / 1000 == 0.5
+    assert [round(e, 2) for e in att] == [606.53, 303.27, 75.82, 14.39] and round(sum(att[:3]), 2) == 985.61
+    assert [round(x, 4) for x in termes] == [0.0198, 0.0352, 0.4462, 2.1892] and round(chi, 2) == 2.69
+    assert round(-2 * math.log(0.05), 2) == 5.99 and round(math.exp(-2.69 / 2), 2) == 0.26 and round(chi / 2, 4) == 1.3452
+    assert d == F[0] and round(d, 3) == 0.273 and round(1 - F[-1], 3) == 0.107
+    assert round(1.36 / math.sqrt(8), 3) == 0.481
+    lexp = -8 * math.log(m) - 8
+    th = 2000
+    a = 8 / sum(math.log(1 + x / th) for x in xs)
+    lpar = 8 * math.log(a) + 8 * a * math.log(th) - (a + 1) * sum(math.log(th + x) for x in xs)
+    assert round(2 - 2 * lexp, 2) == 138.64 and round(2 - 2 * lpar, 2) == 141.75 and round(lexp, 2) == -68.32
+
 def test_aucun_support_de_cours_ni_cv_dans_le_depot():
     """Supports de cours et CV restent dans la bibliothèque du projet, jamais sur un dépôt."""
     interdits = {".pdf", ".pptx", ".ppt", ".docx", ".doc", ".tex", ".xlsx"}

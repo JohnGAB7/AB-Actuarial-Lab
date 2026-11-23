@@ -1,0 +1,210 @@
+# Séance 4 du module A2b (Statistique pour l'assurance) : tests d'adéquation, khi-deux, Kolmogorov-Smirnov, QQ-plot, AIC.
+# Chiffres : portefeuille et sinistres fictifs. Les valeurs sont recalculées par tests/test_contenus.py et tests/a2b/test_s04_adequation.py.
+id: a2b/s04
+module: a2b
+titre: "La loi colle-t-elle aux données ? Tests d'adéquation"
+en: "Does the distribution fit the data? Goodness-of-fit tests"
+duree: 30
+
+actu_basics:
+  episode: "A2b · Statistics for insurance"
+  statut: "à proposer"
+  accroche_fr: "Une loi ajustée n'est pas une loi juste : comment le vérifier ?"
+  accroche_en: "A fitted distribution is not a right one: how do we check?"
+
+etapes:
+  - type: quiz
+    titre: "Test de positionnement"
+    minutes: 3
+    intro: "Quatre questions avant le cours. Si tu as tout juste, survole le rappel et va directement au calcul."
+    questions:
+      - q: 'Dans un test d''adéquation (goodness-of-fit test), l''hypothèse nulle $H_0$ est que…'
+        options: ['les données suivent la loi proposée', 'les données ne suivent pas la loi proposée', 'les paramètres sont nuls']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On part du modèle et on cherche si les données s'en écartent trop pour que ce soit du hasard. Une grande statistique de test fait rejeter $H_0$.
+          formule: |-
+            H_0 : X \sim F_{\hat{\theta}}
+          exemple: >-
+            $H_0$ : le nombre de sinistres par contrat suit une loi de Poisson.
+          piege: >-
+            Ne pas rejeter $H_0$ ne prouve pas que la loi est la bonne : seulement que les données ne permettent pas de l'écarter.
+      - q: 'Test du khi-deux (chi-square) avec 4 classes et $\lambda$ estimé sur les données. Combien de degrés de liberté ?'
+        options: ['2', '3', '4']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On part du nombre de classes, on retire 1 parce que les effectifs somment à $n$, et 1 par paramètre estimé.
+          formule: |-
+            \text{ddl} = k - 1 - p
+          exemple: >-
+            $4 - 1 - 1 = 2$ degrés de liberté.
+          piege: >-
+            3 oublie que $\lambda$ a été estimé sur les mêmes données : le test serait trop indulgent.
+      - q: 'Le test donne une p-valeur (p-value) de 0,26. Au seuil de 5 %…'
+        options: ['on ne rejette pas la loi', 'on rejette la loi', 'la loi est vraie à 74 %']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            La p-valeur est la probabilité, sous $H_0$, d'observer un écart au moins aussi grand. On rejette quand elle est sous le seuil.
+          formule: |-
+            p = P\big(\chi^2 \ge \chi^2_{\text{obs}} \mid H_0\big)
+          exemple: >-
+            0,26 est bien au-dessus de 0,05 : un écart de cette taille arrive souvent par hasard.
+          piege: >-
+            La p-valeur n'est pas la probabilité que $H_0$ soit vraie.
+      - q: 'Sur un QQ-plot (QQ plot), les plus gros sinistres sont nettement au-dessus de la droite. Cela signifie que…'
+        options: ['la queue réelle est plus épaisse que celle du modèle', 'le modèle surestime les gros sinistres', 'les données sont mal triées']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Le QQ-plot place les quantiles observés face aux quantiles du modèle. Sur la droite, le modèle colle ; au-dessus, les observations sont plus grandes que prévu.
+          formule: |-
+            \big(F^{-1}_{\hat{\theta}}\big(\tfrac{i - 0{,}5}{n}\big),\; x_{(i)}\big)
+          exemple: >-
+            Des points qui décollent en haut à droite : le modèle sous-estime les gros sinistres, il faut une loi à queue plus épaisse.
+          piege: >-
+            C'est l'inverse : le modèle sous-estime les gros sinistres, il ne les surestime pas.
+
+  - type: video
+    titre: "L'intuition en vidéo"
+    minutes: 3
+    texte: >-
+      Ce thème n'a pas encore sa leçon Actu-Basics longue. Le rappel et les exercices qui suivent couvrent toute la
+      matière de la séance.
+
+  - type: rappel
+    titre: "Le rappel"
+    minutes: 8
+    blocs:
+      - p: >-
+          Une loi ajustée reste une hypothèse. Un <b>test d'adéquation</b> <i>(goodness-of-fit test)</i> mesure l'écart
+          entre les données et le modèle. Le <b>khi-deux</b> <i>(chi-square test)</i> compare des effectifs par classe ; le
+          test de <b>Kolmogorov-Smirnov</b> <i>(Kolmogorov-Smirnov test)</i> compare des fonctions de répartition.
+      - formule: |
+          \begin{gathered}
+          \chi^2 = \sum_{j=1}^{k} \frac{(O_j - E_j)^2}{E_j} \qquad \text{ddl} = k - 1 - p \\[6pt]
+          D = \max_x \big|F_n(x) - F_{\hat{\theta}}(x)\big| \qquad \text{AIC} = 2p - 2\,\ell(\hat{\theta})
+          \end{gathered}
+      - p: >-
+          Pour le khi-deux, on regroupe les classes pour que chaque effectif attendu dépasse 5. Avec 2 degrés de liberté,
+          le seuil à 5 % vaut 5,99 et la p-valeur se calcule à la main : $p = e^{-\chi^2/2}$.
+      - p: >-
+          Pour choisir entre plusieurs lois, on compare leur <b>critère d'information d'Akaike</b> <i>(Akaike information
+          criterion, AIC)</i> : la plus faible valeur gagne. Il récompense la vraisemblance et pénalise le nombre de
+          paramètres. Le <b>QQ-plot</b> <i>(QQ plot)</i> montre où la loi décroche, souvent dans la queue.
+      - note: >-
+          Quand les paramètres sont estimés sur les mêmes données, les seuils usuels du test de Kolmogorov-Smirnov sont
+          trop indulgents. Et sur quelques sinistres, aucun test ne voit la queue : le jugement de l'actuaire et les
+          données de marché comptent autant que la p-valeur.
+      - sources:
+          - {titre: "Klugman, Panjer et Willmot, Loss Models, chap. 16", detail: "Sélection de modèle, khi-deux, Kolmogorov-Smirnov, AIC"}
+          - {titre: "CAS, MAS-I (Modern Actuarial Statistics I)", detail: "Tests d'hypothèses et adéquation"}
+
+  - type: quiz
+    titre: "Vérifie"
+    minutes: 4
+    intro: "1 000 contrats fictifs : 610 sans sinistre, 300 avec 1, 70 avec 2, 20 avec 3 ou plus. Moyenne observée : $\\hat{\\lambda} = 0{,}5$."
+    questions:
+      - q: 'Sous la loi de Poisson de paramètre 0,5, combien de contrats sans sinistre attend-on ?'
+        options: ['606,53', '610', '500']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Effectif attendu = nombre de contrats × probabilité de la classe.
+          formule: |-
+            E_0 = 1\,000 \times e^{-0{,}5} = 606{,}53
+          exemple: >-
+            Puis $E_1 = 303{,}27$, $E_2 = 75{,}82$ et $E_{\ge 3} = 14{,}39$.
+          piege: >-
+            610 est l'effectif observé. 500 confond $\lambda$ avec une probabilité.
+      - q: 'On trouve $\chi^2 = 2{,}69$ avec 2 degrés de liberté (seuil 5,99). Conclusion ?'
+        options: ['On ne rejette pas la loi de Poisson', 'On rejette la loi de Poisson', 'On ne peut pas conclure sans les montants']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            La statistique est sous le seuil ; la p-valeur vaut $e^{-2{,}69/2} = 0{,}26$.
+          formule: |-
+            2{,}69 < 5{,}99
+          exemple: >-
+            La classe « 3 ou plus » apporte 2,19 des 2,69 : c'est là qu'un début de surdispersion se cacherait.
+          piege: >-
+            Le test porte sur les nombres de sinistres : les montants n'y jouent aucun rôle.
+      - q: 'Kolmogorov-Smirnov sur les 8 sinistres de la séance 1, face à l''exponentielle de moyenne 1 881,25 €. Le plus grand écart $D$ vaut…'
+        options: ['0,273', '0,107', '0,481']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            On trie les sinistres et on compare, de part et d'autre de chaque point, la répartition empirique $F_n$ à $F(x) = 1 - e^{-x/\theta}$.
+          formule: |-
+            F(600) = 1 - e^{-600/1\,881{,}25} = 0{,}273, \qquad F_n(600^-) = 0
+          exemple: >-
+            L'écart maximal est juste avant le plus petit sinistre : l'exponentielle prévoit 27 % de sinistres sous 600 €, on n'en observe aucun.
+          piege: >-
+            0,107 est l'écart au dernier point, et 0,481 l'ordre de grandeur du seuil, $1{,}36 / \sqrt{8}$.
+      - q: 'Sur les mêmes 8 sinistres : AIC de 138,64 pour l''exponentielle, 141,75 pour la Pareto ($\theta = 2\,000$ € connu). Que retenir ?'
+        options: ['L''exponentielle ajuste mieux ces 8 points, mais ils ne disent rien de la queue', 'La Pareto, car son AIC est plus élevé', 'Les deux lois sont fausses']
+        reponse: 0
+        pourquoi:
+          rappel: >-
+            Le plus petit AIC gagne. Les deux lois ont ici un seul paramètre estimé.
+          formule: |-
+            \text{AIC} = 2 \times 1 - 2 \times (-68{,}32) = 138{,}64
+          exemple: >-
+            Avec 8 sinistres, l'écart d'AIC est faible et ne voit pas la queue. Pour la réassurance, la Pareto reste la prudence.
+          piege: >-
+            Un AIC plus élevé est moins bon, pas meilleur.
+
+  - type: calcul
+    titre: "À la main"
+    minutes: 5
+    intro: 'Les 1 000 contrats de la vérification, loi de Poisson de paramètre 0,5, classes regroupées à partir de 3. Puis le $D$ de Kolmogorov-Smirnov sur les 8 sinistres face à l''exponentielle. Saisis tes résultats à 4 décimales.'
+    donnees:
+      entetes: ['$N = 0$', '$N = 1$', '$N = 2$', '$N \ge 3$']
+      lignes: [['610', '300', '70', '20']]
+    champs:
+      - {cle: e3, libelle: '$E_{\ge 3}$', valeur: 14.3877, tolerance: 0.00015}
+      - {cle: chi, libelle: '$\chi^2$', valeur: 2.690455, tolerance: 0.00015}
+      - {cle: pval, libelle: '$e^{-\chi^2/2}$', valeur: 0.260480, tolerance: 0.00015}
+      - {cle: d, libelle: '$D$', valeur: 0.273079, tolerance: 0.00015}
+    solution: |
+      Effectifs attendus : $606{,}53$, $303{,}27$, $75{,}82$ et $1\,000 - 985{,}61 = 14{,}39$. Contributions : $0{,}0198 + 0{,}0352 + 0{,}4462 + 2{,}1892 = 2{,}6905$, p-valeur $e^{-1{,}3452} = 0{,}2605$.
+      $D = F(600) - 0 = 1 - e^{-600/1\,881{,}25} = 0{,}2731$.
+
+  - type: code
+    titre: "À toi de coder"
+    minutes: 8
+    intro: "Écris le corps des trois fonctions, sans IA. Les tests doivent tous passer."
+    fichier: exercices/a2b/s04_adequation.py
+    depart: |
+      def poisson_expected(n, lam, kmax):
+          """Expected counts for 0, 1, ..., kmax - 1 claims, then one last group for kmax claims or more."""
+          raise NotImplementedError
+
+      def chi_square(observed, expected):
+          """Chi-square statistic: sum of (O - E)**2 / E."""
+          raise NotImplementedError
+
+      def ks_statistic(xs, cdf):
+          """Kolmogorov-Smirnov distance between the empirical distribution of xs and the function cdf."""
+          raise NotImplementedError
+    tests:
+      - {nom: '606,53 contrats attendus sans sinistre', expr: "abs(poisson_expected(1000, 0.5, 3)[0] - 606.5307) < 1e-4"}
+      - {nom: 'Les effectifs attendus somment à 1 000', expr: "len(poisson_expected(1000, 0.5, 3)) == 4 and abs(sum(poisson_expected(1000, 0.5, 3)) - 1000) < 1e-9"}
+      - {nom: '$\chi^2 = 2{,}6905$', expr: "abs(chi_square([610, 300, 70, 20], poisson_expected(1000, 0.5, 3)) - 2.690455) < 1e-6"}
+      - {nom: '$\chi^2 = 0$ si observé = attendu', expr: "chi_square([5, 10, 15], [5, 10, 15]) == 0"}
+      - {nom: 'Kolmogorov-Smirnov : $D = 0{,}2731$', expr: "abs(ks_statistic([1200, 800, 3500, 600, 2100, 950, 1700, 4200], lambda x: 1 - 2.718281828459045 ** (-x / 1881.25)) - 0.273079) < 1e-6"}
+      - {nom: 'Un seul point au milieu d''une loi uniforme : $D = 0{,}5$', expr: "abs(ks_statistic([0.5], lambda x: x) - 0.5) < 1e-12"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Test d'adéquation", "goodness-of-fit test", "The goodness-of-fit test did not reject the Poisson model."]
+      - ["Hypothèse nulle", "null hypothesis", "Not rejecting the null hypothesis does not prove it."]
+      - ["Degrés de liberté", "degrees of freedom", "We lose one degree of freedom for each estimated parameter."]
+      - ["p-valeur", "p-value", "A p-value of 0.26 means such a gap is common by chance."]
+      - ["Diagramme quantile-quantile", "QQ plot", "The QQ plot showed the large claims above the line: a heavier tail."]
+      - ["Critère d'information d'Akaike", "Akaike information criterion (AIC)", "We kept the model with the lowest AIC, then checked the tail."]

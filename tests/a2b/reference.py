@@ -49,3 +49,19 @@ def proportion_ci(k, n, z=1.96):
 
 def sample_size(p, margin, z=1.96):
     return math.ceil(z * z * p * (1 - p) / margin**2)
+
+
+# Session a2b/s04
+def poisson_expected(n, lam, kmax):
+    probs = [math.exp(-lam) * lam**k / math.factorial(k) for k in range(kmax)]
+    return [n * p for p in probs] + [n * (1 - sum(probs))]
+
+
+def chi_square(observed, expected):
+    return sum((o - e) ** 2 / e for o, e in zip(observed, expected))
+
+
+def ks_statistic(xs, cdf):
+    xs = sorted(xs)
+    n = len(xs)
+    return max(max((i + 1) / n - cdf(x), cdf(x) - i / n) for i, x in enumerate(xs))
