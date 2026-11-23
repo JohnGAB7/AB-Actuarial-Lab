@@ -45,6 +45,7 @@ const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 
   await clickRun();
   await p.waitForFunction(() => document.querySelector('.res-sum').textContent.includes('Exécution'), null, { timeout: 30000 });
   out.sandboxFlags = await p.locator('iframe[data-parcours-python-sandbox]').getAttribute('sandbox');
+  out.networkBlocked = await p.locator('iframe[data-parcours-python-sandbox]').getAttribute('data-network-blocked');
   await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 30000 });
   out.security = await p.locator('.results li .tm').first().textContent(); console.log('security:', out.security, out.sandboxFlags);
   // Oversized code is rejected before Pyodide is loaded.
@@ -57,7 +58,7 @@ const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 
   if (!/6 tests passent/.test(out.solution)) fails.push('solution');
   if (!/Arrêt après 10 secondes/.test(out.loop)) fails.push('loop timeout');
   if (out.responsive !== 2 || !/arrêtée/.test(out.stop)) fails.push('stop');
-  if (out.security !== 'RuntimeError: SECURITY_CHECKS_OK' || out.sandboxFlags !== 'allow-scripts') fails.push('sandbox security checks: ' + out.security + ' / ' + out.sandboxFlags);
+  if (out.security !== 'RuntimeError: SECURITY_CHECKS_OK' || out.sandboxFlags !== 'allow-scripts' || out.networkBlocked !== 'true') fails.push('sandbox security checks: ' + out.security + ' / ' + out.sandboxFlags + ' / CSP=' + out.networkBlocked);
   if (!/Code trop long/.test(out.inputLimit)) fails.push('input limit');
   if (errs.length) fails.push('page errors');
   if (fails.length) { console.error('FAILED:', fails.join('; ')); process.exitCode = 1; } else console.log('OK');
