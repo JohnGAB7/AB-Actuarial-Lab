@@ -79,6 +79,21 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
     }));
     console.log("desktop EN:", desktop);
     if (desktop.scrollWidth > desktop.width + 1) failures.push("desktop horizontal overflow");
+    // The shared quiz renderer must separate each option letter from its text in both locales.
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(new URL("a1/s01/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
+    await page.locator(".opt").first().waitFor();
+    const frenchOptions = await page.locator(".opt").allInnerTexts();
+    console.log("quiz options FR:", frenchOptions);
+    if (!frenchOptions.length || !frenchOptions.every((value) => /^[A-Z]\\s-\\s/.test(value.trim()))) failures.push("French quiz option separator");
+    if (await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)) failures.push("session mobile horizontal overflow");
+
+    await page.goto(new URL("en/a1/s01/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
+    await page.locator(".opt").first().waitFor();
+    const englishOptions = await page.locator(".opt").allInnerTexts();
+    console.log("quiz options EN:", englishOptions);
+    if (!englishOptions.length || !englishOptions.every((value) => /^[A-Z]\\s-\\s/.test(value.trim()))) failures.push("English quiz option separator");
+
     if (errors.length) failures.push("page errors: " + errors.join("; "));
     if (failures.length) {
       console.error("FAILED:", failures.join("; "));
