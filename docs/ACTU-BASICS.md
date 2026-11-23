@@ -30,8 +30,8 @@ Le niveau diffère : la vidéo vise un débutant, la séance va jusqu'au niveau 
 
 ## Le circuit, sans rien changer aux règles d'Actu-Basics
 
-1. La séance est écrite et fusionnée ici, après ton accord.
-2. Une proposition de fiche de conception est ouverte dans Actu-Basics, en PR, avec le lien vers la séance.
+1. Les séances du module sont écrites ici, et JG les travaille jusqu'à maîtriser le module.
+2. Un fichier `a-produire/<module>.md` est alors déposé (voir `a-produire/README.md`) : notions, exercices corrigés, pièges, vocabulaire anglais, notes pour la vidéo. C'est l'entrée du projet Actu-Basics.
 3. Circuit habituel d'Actu-Basics : Claude structure, ChatGPT relit, JG valide, puis le moteur rend la vidéo.
 4. Une fois publiée, la vidéo apparaît dans l'étape 1 de la séance.
 

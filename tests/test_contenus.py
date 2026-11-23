@@ -41,3 +41,16 @@ def test_aucun_support_de_cours_ni_cv_dans_le_depot():
         and (p.suffix.lower() in interdits or "cv" in p.stem.lower().replace("-", "_").split("_"))
     ]
     assert trouves == [], f"Fichiers interdits sur le dépôt : {trouves}"
+
+
+SECTIONS_A_PRODUIRE = ["## 1. Notions", "## 2. Exercices corrigés", "## 3. Pièges", "## 4. Vocabulaire anglais", "## 5. Pour la vidéo"]
+
+
+def test_fichiers_a_produire_suivent_le_modele():
+    for f in sorted((RACINE / "a-produire").glob("*.md")):
+        if f.name == "README.md":
+            continue
+        texte = f.read_text(encoding="utf-8")
+        positions = [texte.find(s) for s in SECTIONS_A_PRODUIRE]
+        assert -1 not in positions, f"{f.name} : section manquante"
+        assert positions == sorted(positions), f"{f.name} : sections dans le désordre"
