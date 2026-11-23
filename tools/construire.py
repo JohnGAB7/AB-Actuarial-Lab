@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import html
 import json
+import shutil
 import sys
 from pathlib import Path
 from string import Template
@@ -70,8 +71,10 @@ def blocs_html(parcours: dict) -> str:
 
 def construire() -> None:
     parcours = charger_parcours()
-    css = (SITE / "assets" / "style.css").read_text(encoding="utf-8")
-    js = (SITE / "assets" / "seance.js").read_text(encoding="utf-8")
+    if SORTIE.exists():
+        shutil.rmtree(SORTIE)
+    shutil.copytree(SITE / "assets", SORTIE / "assets")
+    shutil.copytree(SITE / "vendor", SORTIE / "assets" / "vendor")
     g_seance = Template((SITE / "gabarits" / "seance.html").read_text(encoding="utf-8"))
     g_accueil = Template((SITE / "gabarits" / "accueil.html").read_text(encoding="utf-8"))
     erreurs, premiere = [], None
@@ -83,7 +86,7 @@ def construire() -> None:
         s["accueil"] = profondeur + "index.html"
         s["module_titre"] = m["titre"]
         donnees = json.dumps(s, ensure_ascii=False).replace("</", "<\\/")
-        page = g_seance.substitute(titre=html.escape(s["titre"]), css=css, js=js, donnees=donnees, accueil=s["accueil"])
+        page = g_seance.substitute(titre=html.escape(s["titre"]), base=profondeur, donnees=donnees, accueil=s["accueil"])
         cible = SORTIE / sid / "index.html"
         cible.parent.mkdir(parents=True, exist_ok=True)
         cible.write_text(page, encoding="utf-8")
@@ -92,7 +95,7 @@ def construire() -> None:
     SORTIE.mkdir(exist_ok=True)
     (SORTIE / "index.html").write_text(
         g_accueil.substitute(
-            css=css, sous_titre=html.escape(parcours["sous_titre"]), blocs=blocs_html(parcours),
+            sous_titre=html.escape(parcours["sous_titre"]), blocs=blocs_html(parcours),
             reprendre=f"{premiere[0]}/index.html", reprendre_titre=html.escape(premiere[1]),
         ),
         encoding="utf-8",
