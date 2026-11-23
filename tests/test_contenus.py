@@ -265,3 +265,14 @@ def test_formules_makeham_et_udd():
         h = 1e-5
         derivative = -(log_l(age + h) - log_l(age - h)) / (2 * h)
         assert math.isclose(derivative, A + B * c**age, rel_tol=1e-8, abs_tol=1e-10)
+
+
+def test_aucun_texte_court_ne_contient_de_saut_de_ligne():
+    """Options, titles and labels are one line: a newline there means a broken edit (e.g. a pasted copy of the file)."""
+    for _, _, sid in seances(charger_parcours()):
+        for langue in ("fr", "en"):
+            s = charger_seance(sid, langue)
+            for e in s["etapes"]:
+                assert "\n" not in e["titre"], (sid, langue)
+                for q in e.get("questions", []):
+                    assert all("\n" not in o for o in q["options"]), (sid, langue, q["q"])
