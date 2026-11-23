@@ -1,30 +1,27 @@
 # Modèle de menace — exécution Python des apprenants
 
-- **Statut :** modèle de menace documentaire, mis à jour après revue croisée ; l'implémentation Worker décrite ci-dessous est proposée dans la PR #11, encore ouverte et non fusionnée au moment de cette révision.
+- **Statut :** modèle de menace actualisé à partir du Worker intégré à `main` (PR #11). Le Worker améliore la disponibilité et réduit certaines capacités, mais n'est pas une frontière de sécurité complète.
 - **Date :** 2026-11-23.
 - **Périmètre :** exécution du code Python saisi dans les séances du site Parcours Actuariel.
-- **Bases comparées :** `main` (exécution historique dans la page) et la branche `claude/python-worker` de la PR #11 (prototype Worker, non fusionné). Les constats ne doivent pas être présentés comme déjà déployés.
+- **Base examinée :** `main` après intégration de la PR #11 ; code courant de `site/assets/python-worker.js` et test `tests/navigateur/python_worker.js`.
 
 ## 1. Résumé exécutif
 
-Sur `main` au commit audité, `site/assets/seance.js` charge Pyodide dans le document de la séance et exécute le code avec `py.runPython(value(), { globals: ns })`. Le DOM, les scripts applicatifs et le stockage de la page se trouvent dans le même contexte : le pont JavaScript de Pyodide rend donc possible l'accès aux capacités du document.
+Le code courant de `main` charge Pyodide dans `site/assets/python-worker.js`. La page transmet le code et les tests au Worker par messages et peut le terminer après le délai configuré (10 secondes) ou via le bouton « Arrêter ». Le test Playwright couvre le squelette, une solution, une boucle infinie, la réactivité/l'arrêt, l'absence d'accès à `document` et `localStorage`, plusieurs API globales neutralisées et le rejet d'un code trop long.
 
-La PR #11 (`claude/python-worker`, commit audité `8514102c2210a61a5527debf1bdda88482dfcd9a`) propose une évolution distincte : Pyodide est chargé dans `site/assets/python-worker.js`, les échanges passent par messages, et la page peut terminer le Worker après un délai de 10 secondes ou via le bouton « Arrêter ». Le test navigateur Playwright ajouté dans cette PR vérifie notamment l'exécution d'un squelette et d'une solution, une boucle infinie, la réactivité/l'arrêt et l'absence d'accès direct à `document` et `localStorage` depuis le runtime.
-
-**État à ne pas confondre :** la PR #11 est encore ouverte et non fusionnée ; ces contrôles sont donc démontrés sur sa branche et dans sa CI, pas sur `main` ni nécessairement sur le site publié.
-
-Le Worker retire l'accès direct au DOM et au `localStorage` du document principal et protège le fil principal contre une boucle bloquante. Il reste de même origine et expose encore certaines API du navigateur. Il ne faut donc pas le présenter comme une sandbox complète ni comme une protection contre du code délibérément hostile.
+Le Worker retire l'accès direct au DOM et au stockage du document principal et protège le fil principal contre une boucle bloquante. Il reste de même origine. La neutralisation des API est une défense en profondeur côté JavaScript : elle ne constitue pas une sandbox inviolable contre du code hostile, une dépendance compromise ou une vulnérabilité du moteur navigateur.
 
 ## 2. Périmètre et éléments observés
 
 ### 2.1 Flux d'exécution actuel
 
 1. Le navigateur charge `site/assets/seance.js`.
-2. Au premier clic sur « Lancer les tests », le script ajoute Pyodide 0.27.7 depuis jsDelivr et appelle `window.loadPyodide()`.
-3. Le code saisi est exécuté dans le runtime Pyodide avec `py.runPython(value(), { globals: ns })`.
-4. Les expressions de test provenant du contenu de séance sont ensuite exécutées dans le même runtime et le même dictionnaire `ns`.
-5. Les résultats sont affichés dans le document.
-6. Le code Python de l'apprenant est sauvegardé dans `localStorage`, puis peut être synchronisé avec Supabase si l'apprenant est connecté.
+2. Au clic sur « Lancer les tests », la page crée un Worker depuis `site/assets/python-worker.js`.
+3. Le Worker charge Pyodide 0.27.7 depuis jsDelivr via `importScripts`, puis initialise le runtime.
+4. La page envoie un identifiant de requête, le code et les expressions de test ; le Worker contrôle les types et les tailles.
+5. Le Worker exécute le code apprenant puis les tests dans le même runtime Pyodide et le même dictionnaire `ns`.
+6. Le Worker renvoie des résultats structurés par `postMessage`; la page vérifie leur forme, le nombre et la taille des messages avant affichage.
+7. Le code est conservé dans le stockage de la page principale et peut être synchronisé avec Supabase si l'apprenant est connecté ; le Worker ne reçoit pas volontairement la session.
 
 ### 2.2 Actifs à protéger
 
@@ -86,7 +83,7 @@ Le modèle ne considère pas la clé publishable comme un secret. En revanche, u
 
 - Pyodide expose un pont JavaScript ; le fait de passer un dictionnaire Python via `globals: ns` ne constitue pas une sandbox.
 - Un Web Worker n'a pas accès directement à `document`, `window` ni `localStorage`, mais son environnement expose d'autres API (par exemple `fetch`, `WebSocket`, `IndexedDB`, `importScripts` selon le contexte et les politiques). Il ne faut donc pas conclure qu'un Worker interdit le réseau ou tout accès aux données de même origine.
-- Dans le prototype de la PR #11, le Worker charge Pyodide via `importScripts` depuis jsDelivr. Les tests navigateur vérifient l'absence de `document` et de `localStorage`, mais ne démontrent pas le blocage de `fetch`, `WebSocket`, IndexedDB ou de tous les imports. Ces capacités restent des points à examiner.
+- Le Worker courant charge Pyodide via `importScripts` depuis jsDelivr, puis neutralise les propriétés globales `fetch`, `XMLHttpRequest`, `WebSocket`, `WebSocketStream`, `EventSource`, `WebTransport`, `RTCPeerConnection`, `webkitRTCPeerConnection`, `BroadcastChannel`, `indexedDB`, `caches`, `importScripts`, `Worker`, `SharedWorker` et `postMessage`. Le canal de réponse reste utilisable parce que la fonction liée `sendToPage` est capturée avant cette neutralisation. Le test navigateur vérifie la disponibilité de ces noms via le pont `js` de Pyodide. Cela prouve uniquement le résultat de ces vérifications dans le navigateur testé, pas l'impossibilité de contourner les restrictions par toutes les primitives JavaScript ou toutes les versions de navigateur.
 - Une politique CORS n'est pas une politique anti-exfiltration : certaines requêtes peuvent transmettre des données même si la réponse n'est pas lisible par le script.
 - Les navigateurs ne fournissent pas de quota mémoire strict, portable et fiable pour un Worker Web standard. Le délai et la terminaison limitent le risque sans garantir une borne mémoire dure.
 - Les tests actuels sont évalués après le code apprenant dans le même runtime. Un apprenant motivé peut manipuler l'environnement d'exécution ; les résultats doivent rester un feedback d'exercice, pas une certification inviolable.
@@ -177,9 +174,9 @@ Toute solution future doit satisfaire les objectifs suivants :
 
 **Conclusion :** ne pas retenir à ce stade sans besoin produit, budget et modèle opérationnel explicites.
 
-## 7. Évaluation après revue de la PR #11
+## 7. Évaluation de l'implémentation intégrée à `main`
 
-La PR #11 fournit déjà un prototype Worker avec délai de 10 secondes, terminaison par `worker.terminate()`, bouton d'arrêt et tests Playwright ciblés. Claude a vérifié que ces tests couvrent le squelette, une solution, la boucle infinie, la réactivité/l'arrêt et l'absence d'accès à `document` et `localStorage`. Cette PR reste toutefois ouverte : le prototype n'est pas encore intégré à `main`.
+La PR #11 est intégrée à `main`. Le Worker applique des plafonds d'entrée (50 000 caractères de code, 30 tests, 2 000 caractères par expression, 20 000 caractères cumulés) et limite les messages d'erreur à 500 caractères. Le timeout et la terminaison sont pilotés par la page principale. Les tests navigateur vérifient le comportement observé dans Chromium ; ils ne constituent pas une revue de sécurité indépendante.
 
 Le modèle de menace doit distinguer deux scénarios :
 
