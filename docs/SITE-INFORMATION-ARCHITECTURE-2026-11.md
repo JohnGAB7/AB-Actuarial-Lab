@@ -309,3 +309,138 @@ Repository files reviewed on 23 November 2026:
 - `CLAUDE.md`
 
 The assessment is based on source inspection, not on a moderated usability study. The proposed architecture must be validated with learners before it is treated as final.
+
+
+## 11. Product ambition: make learning captivating and worth returning to
+
+The target is not merely a clean course catalogue. The site should create a durable desire to return through curiosity, meaningful progress, intellectual challenge, visual clarity and the satisfaction of understanding something difficult.
+
+**Design principle:** delight must come from the mathematics becoming visible and usable, not from decorative effects or reward mechanics detached from learning.
+
+### 11.1 The emotional learning loop
+
+Each visit should make it easy to enter a purposeful loop:
+
+1. **Intrigue** — a surprising question, real actuarial situation, visual puzzle or short prediction.
+2. **Explore** — a simulation, diagram, animation, data view or worked example.
+3. **Understand** — a concise explanation that connects the visual experience to the mathematical model.
+4. **Apply** — a small decision, calculation, coding task or case.
+5. **Reflect** — explain why the result makes sense and what assumptions matter.
+6. **Progress** — see the capability gained and the next meaningful question.
+7. **Return** — a saved investigation, an open challenge or a connected next concept gives a natural reason to continue.
+
+Avoid forced daily streaks, arbitrary points, leaderboards and notifications designed only to increase time on site. They may create short-term activity without durable understanding. Returning should feel rewarding, never obligatory.
+
+### 11.2 A distinctive visual and editorial identity
+
+The visual language should feel like a premium scientific learning studio: precise, modern, editorial, confident and alive.
+
+- Strong typographic hierarchy and generous breathing room.
+- A restrained dark/light palette with a recognizable accent system for concepts, examples, warnings and results.
+- High-quality mathematical typesetting and carefully art-directed diagrams.
+- Motion only when it explains change, causality, sequence or comparison.
+- Consistent visual grammar across the home page, curriculum, modules, lessons and labs.
+- Responsive layouts designed intentionally for mobile, tablet and desktop.
+- No generic dashboard template, cluttered cards, decorative gradients everywhere or animation for its own sake.
+
+The site should be visually memorable without sacrificing legibility, accessibility, performance or academic seriousness.
+
+### 11.3 Every abstract concept should have a visual or experimental counterpart
+
+Examples of experiences that could make actuarial mathematics tangible:
+
+- **Financial mathematics:** change the rate, frequency or payment timing and watch the present value and cash-flow timeline respond.
+- **Life contingencies:** explore a survival curve, mortality table and annuity value; compare assumptions and see how the reserve changes.
+- **Probability:** run repeated experiments, compare empirical frequencies with theoretical probabilities and inspect convergence.
+- **Statistics:** alter a sample, fit a model, inspect residuals and understand how data quality affects conclusions.
+- **Non-life insurance:** vary frequency and severity separately, then observe their effect on pure premium and portfolio loss.
+- **Pricing:** change rating variables and compare predicted risk, segmentation and the consequences of a tariff adjustment.
+- **Reserving:** develop a claims triangle step by step and see how assumptions affect ultimate losses and uncertainty.
+- **ALM:** move yield curves and liability cash flows to observe duration gaps, convexity and immunisation.
+- **Risk and solvency:** explore a loss distribution, VaR/TVaR and the impact of stress scenarios.
+
+These are illustrative product ideas, not claims that the relevant modules are already authored or validated. Each experience must be tied to a specific learning objective and include assumptions, units, interpretation and limitations.
+
+### 11.4 A consistent lesson rhythm, with varied teaching forms
+
+A lesson should not be a long sequence of text blocks. Choose the format that best serves the concept, while retaining a recognizable rhythm:
+
+- **Question / hook:** start with a real problem or prediction.
+- **Intuition:** a visual, example, analogy or short video.
+- **Formalisation:** definitions, assumptions, notation and derivation.
+- **Experiment:** learner changes a parameter or makes a prediction.
+- **Practice:** a worked example followed by a new problem.
+- **Transfer:** a small actuarial case, code lab or decision.
+- **Recall:** one or two questions that require retrieval or explanation.
+- **Takeaway:** a concise synthesis and a meaningful next step.
+
+Not every lesson needs all eight parts. Do not force a video, quiz or animation into every topic. Vary the rhythm deliberately to prevent monotony while keeping the cognitive load under control.
+
+### 11.5 Meaningful reasons to return
+
+Build return value around learning, not habit mechanics:
+
+- a personal learning map showing concepts understood, in progress and to revisit;
+- a "continue where you left off" action that restores context;
+- spaced review of important concepts, with transparent and adjustable reminders inside the learning environment;
+- optional weekly or thematic challenges tied to the curriculum;
+- a library of interactive experiments that learners can revisit with new assumptions;
+- a visible trail of completed case studies and practical outputs;
+- "what changed when you changed this assumption?" investigations;
+- connections between a current lesson and a previously learned concept;
+- a capstone case that gradually becomes solvable as the learner acquires the necessary tools.
+
+Do not imply mastery solely from clicks or completion. Use short explanations, retrieval questions and applied tasks to help learners calibrate what they really understand.
+
+### 11.6 A practical editorial standard for engagement
+
+For each new module, ask:
+
+1. What is the most interesting real question this module can answer?
+2. What misconception or surprising result can open the subject?
+3. Which representation makes the invisible structure visible?
+4. What can the learner manipulate, predict, calculate or decide?
+5. What feedback explains the reasoning, not only whether the answer is right?
+6. What practical actuarial task makes the knowledge relevant?
+7. What question naturally leads to the next module?
+
+If a module is only a collection of definitions and formulas, it is not yet ready to be considered an engaging learning experience.
+
+### 11.7 Experience quality and evaluation
+
+Do not use page views or time-on-site as the primary definition of success. Evaluate whether learners:
+
+- can state what they are trying to learn and why;
+- complete meaningful experiments and practice tasks;
+- explain concepts in their own words;
+- transfer a method to a new problem;
+- return voluntarily to continue a project or revisit a concept;
+- can navigate without confusion or unnecessary friction;
+- report that the experience is clear, stimulating and appropriately challenging.
+
+Test prototypes with learners before a full redesign. Track only proportionate, privacy-conscious measures; no invasive behavioural profiling is required.
+
+## 12. Research basis and design cautions
+
+The engagement direction is informed by, but should not be confused with, proof that any single interface feature will work for this audience:
+
+- The OECD's *Digital Education Outlook 2021* distinguishes shallow engagement from deeper cognitive engagement and discusses the ICAP framework (interactive, constructive, active, passive). It cautions that superficial gamification may not sustain deep engagement and recommends experiences that promote constructive and interactive learning: https://www.oecd.org/en/publications/oecd-digital-education-outlook-2021_589b283f-en/full-report/component-7.html
+- OECD's *Unlocking High-Quality Teaching* recommends first-hand experiences tied clearly to learning goals and prior knowledge, with reflection that connects the experience back to the intended learning: https://www.oecd.org/en/publications/2025/04/unlocking-high-quality-teaching_808bd876/full-report/ensuring-cognitive-engagement_998c3147.html
+- Asher and Carvalho (2026), *Conditions for Effective Learning Without Upfront Instruction*, report benefits of practice with feedback and emphasize that explanatory feedback and sufficient prior knowledge matter for generalisation: https://doi.org/10.1007/s10648-025-10103-6
+
+The design must balance curiosity with cognitive load. A beautiful interaction that distracts from the mathematical idea is a failed learning feature.
+
+## 13. Additional acceptance criteria: captivating without becoming distracting
+
+A future implementation should also satisfy:
+
+1. The first screen communicates the identity, purpose and immediate next action without requiring the learner to decode a dense menu.
+2. Each module has at least one compelling real-world question and one meaningful application, where the subject permits it.
+3. Interactive elements let learners make a prediction or change an assumption and receive explanatory feedback.
+4. Animations and visualisations have a clear instructional purpose, can be paused or controlled, and respect reduced-motion preferences.
+5. The visual system is consistent and polished across FR and EN, and across mobile and desktop.
+6. A returning learner can resume immediately and see a meaningful next step.
+7. Optional review and challenge features support durable learning without punitive streaks, manipulative notifications or public ranking.
+8. Learners can explain more after the experience, not merely report that it looked attractive.
+9. Performance, keyboard access, contrast, captions and readable mathematical notation are treated as core requirements.
+10. The product is tested with actual learners before claiming that it is engaging or successful.
