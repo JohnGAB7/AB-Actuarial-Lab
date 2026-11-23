@@ -68,19 +68,51 @@ etapes:
       - q: 'Pour la loi de Makeham, comment évolue $\mu_x$ avec l''âge ?'
         options: ["Linéairement", "Exponentiellement, à une constante près", "Elle est constante"]
         reponse: 1
-        pourquoi: '$\mu_x = A + Bc^x$ avec $c > 1$ : la partie $Bc^x$ croît de façon exponentielle. $A$ est la part de mortalité indépendante de l''âge.'
+        pourquoi:
+          rappel: >-
+            La loi de Makeham ajoute une mortalité constante $A$, indépendante de l'âge (accidents), à une mortalité de vieillissement qui croît de façon exponentielle (la loi de Gompertz).
+          formule: |-
+            \begin{gathered} \mu_x = A + B\,c^x \quad (c > 1) \\[4pt] \frac{\mu_{x+1} - A}{\mu_x - A} = c \end{gathered}
+          exemple: >-
+            Table MK : $c = 1{,}1038$. La partie liée à l'âge augmente d'environ 10 % par an et double tous les $\ln 2 / \ln c \approx 7$ ans.
+          piege: >-
+            « Constante » correspond à la loi exponentielle, sans vieillissement. « Linéaire » rappelle la loi de De Moivre, où c'est $l_x$ qui est linéaire, avec $\mu_x = 1/(\omega - x)$.
       - q: 'Avec ${}_1p_{65} = 0{,}97$, ${}_2p_{65} = 0{,}94$ et une table qui s''arrête là, que vaut $e_{65}$ ?'
         options: ['$0{,}97$', '$1{,}91$', '$2{,}91$']
         reponse: 1
-        pourquoi: '$e_x = \sum_{k\ge1} {}_kp_x$, donc $0{,}97 + 0{,}94 = 1{,}91$. Le terme $k = 0$ n''entre pas dans l''espérance abrégée.'
+        pourquoi:
+          rappel: >-
+            L'espérance de vie abrégée est l'espérance du nombre d'années entières encore vécues, $K_x$. L'assuré vit la $k$-ième année entière s'il est en vie à l'âge $x + k$.
+          formule: |-
+            \begin{gathered} e_x = \mathbb{E}[K_x] = \sum_{k \ge 1} \Pr(K_x \ge k) \\[4pt] e_x = \sum_{k \ge 1} {}_kp_x \end{gathered}
+          exemple: >-
+            $e_{65} = 0{,}97 + 0{,}94 = 1{,}91$ an.
+          piege: >-
+            0,97 ne garde que la première année. 2,91 ajoute à tort le terme $k = 0$, qui vaut toujours ${}_0p_x = 1$.
       - q: 'Sous l''hypothèse UDD, quel lien entre $\mathring{e}_x$ et $e_x$ ?'
         options: ['$\mathring{e}_x = e_x$', '$\mathring{e}_x \approx e_x + \tfrac12$', '$\mathring{e}_x \approx e_x - \tfrac12$']
         reponse: 1
-        pourquoi: "Les décès sont répartis uniformément dans l'année : l'année du décès compte en moyenne pour une demi-année vécue."
+        pourquoi:
+          rappel: >-
+            Sous UDD (uniform distribution of deaths), les décès d'une année sont répartis uniformément : ${}_tq_x = t\,q_x$ pour $0 \le t \le 1$. La fraction d'année vécue l'année du décès vaut donc $\tfrac12$ en moyenne.
+          formule: |-
+            \begin{gathered} T_x = K_x + U, \quad U \sim \mathcal{U}(0,1) \\[4pt] \Rightarrow\; \mathring{e}_x = e_x + \tfrac12 \end{gathered}
+          exemple: >-
+            Table MK : $e_{65} = 12{,}316$ ans, donc $\mathring{e}_{65} \approx 12{,}816$ ans.
+          piege: >-
+            $\mathring{e}_x$ ajoute la fraction de l'année du décès : elle ne peut pas être plus petite que $e_x$.
       - q: "Une table plus prudente pour un plan de rentes doit…"
         options: ['augmenter les $q_x$', 'diminuer les $q_x$', 'ne rien changer']
         reponse: 1
-        pourquoi: 'Pour une rente, le risque est la longévité : des $q_x$ plus faibles allongent les paiements et augmentent la réserve ou la DBO. Pour un capital décès, c''est l''inverse.'
+        pourquoi:
+          rappel: >-
+            Une rente paie tant que l'assuré vit. Moins de décès, c'est plus de paiements, donc un engagement plus élevé : c'est le risque de longévité (longevity risk).
+          formule: |-
+            \begin{gathered} \ddot{a}_x = \sum_{k \ge 0} v^k\,{}_kp_x \\[4pt] q_x \downarrow \;\Rightarrow\; {}_kp_x \uparrow \;\Rightarrow\; \ddot{a}_x \uparrow \end{gathered}
+          exemple: >-
+            C'est pourquoi on applique aux tables de rentes des améliorations de mortalité (mortality improvement) qui abaissent les $q_x$ futurs.
+          piege: >-
+            Pour un capital décès, c'est l'inverse : la prudence demande des $q_x$ plus élevés. La prudence dépend toujours du risque couvert.
 
   - type: calcul
     titre: "À la main"

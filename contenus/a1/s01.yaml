@@ -22,19 +22,51 @@ etapes:
       - q: 'À un taux annuel $i$, que vaut le taux d''escompte $d$ ?'
         options: ['$d = i\,(1+i)$', '$d = \dfrac{i}{1+i}$', '$d = 1 + i$']
         reponse: 1
-        pourquoi: '$d$ est l''intérêt payé en début de période : $d = i\,v = i/(1+i)$.'
+        pourquoi:
+          rappel: >-
+            Le taux d'escompte $d$ est l'intérêt d'une année exprimé sur la valeur en début d'année. Payer $i$ à la fin de l'année équivaut à payer $i\,v$ au début.
+          formule: |-
+            d = \frac{i}{1+i} = i\,v = 1 - v
+          exemple: >-
+            À $i = 2{,}5\,\%$ : $d = 0{,}025 / 1{,}025 = 0{,}02439$, un peu moins que $i$.
+          piege: >-
+            $i\,(1+i)$ capitalise l'intérêt au lieu de l'actualiser. $1+i$ est un facteur d'accumulation (accumulation factor), pas un taux.
       - q: 'Quelle relation lie l''annuité due $\ddot{a}_{\overline{n}|}$ et l''annuité immédiate $a_{\overline{n}|}$ ?'
         options: ['$\ddot{a}_{\overline{n}|} = (1+i)\,a_{\overline{n}|}$', '$\ddot{a}_{\overline{n}|} = v\,a_{\overline{n}|}$', '$\ddot{a}_{\overline{n}|} = a_{\overline{n}|} - 1$']
         reponse: 0
-        pourquoi: 'Chaque paiement arrive un an plus tôt, donc il est moins actualisé d''un facteur $1+i$.'
+        pourquoi:
+          rappel: >-
+            L'annuité due paie les mêmes montants que l'immédiate, mais chacun un an plus tôt. Chaque terme est donc moins actualisé, d'un facteur $1+i$.
+          formule: |-
+            \begin{gathered} \ddot{a}_{\overline{n}|} = \sum_{k=0}^{n-1} v^k = (1+i)\sum_{k=1}^{n} v^k \\[4pt] \ddot{a}_{\overline{n}|} = (1+i)\,a_{\overline{n}|} \end{gathered}
+          exemple: >-
+            À 2,5 % sur 3 ans : $a_{\overline{3}|} = 2{,}8560$ et $\ddot{a}_{\overline{3}|} = 1{,}025 \times 2{,}8560 = 2{,}9274$.
+          piege: >-
+            Multiplier par $v$ reculerait les paiements d'un an au lieu de les avancer. Et la bonne relation additive est $\ddot{a}_{\overline{n}|} = 1 + a_{\overline{n-1}|}$, pas $a_{\overline{n}|} - 1$.
       - q: 'Que vaut la force d''intérêt $\delta$ pour un taux annuel $i$ ?'
         options: ['$\delta = i$', '$\delta = \ln(1+i)$', '$\delta = e^{i}$']
         reponse: 1
-        pourquoi: 'On capitalise en continu : $e^{\delta} = 1 + i$.'
+        pourquoi:
+          rappel: >-
+            La force d'intérêt est le taux de croissance instantané d'un capital. Capitaliser en continu à $\delta$ pendant un an doit donner le même résultat que le taux annuel $i$.
+          formule: |-
+            \begin{gathered} e^{\delta} = 1 + i \\[4pt] \delta = \ln(1+i) \approx i - \tfrac{i^2}{2} \end{gathered}
+          exemple: >-
+            $\delta = \ln 1{,}025 = 0{,}024693$, entre $d = 0{,}024390$ et $i = 0{,}025$. On a toujours $d < \delta < i$.
+          piege: >-
+            $\delta = i$ oublie la capitalisation en cours d'année. $e^{i}$ est un facteur d'accumulation, pas un taux.
       - q: 'Que vaut $a_{\overline{n}|}$ quand $i = 0$ ?'
         options: ['$0$', '$n$', '$n - 1$']
         reponse: 1
-        pourquoi: 'Sans actualisation, $n$ paiements de 1 valent $n$.'
+        pourquoi:
+          rappel: >-
+            Sans intérêt, $v = 1$ : chaque paiement vaut sa valeur nominale, quelle que soit sa date.
+          formule: |-
+            a_{\overline{n}|} = \sum_{k=1}^{n} 1 = n \qquad \lim_{i \to 0} \frac{1 - v^n}{i} = n
+          exemple: >-
+            Avec $i = 0$, 7 paiements de 1 valent 7. C'est un des tests de l'exercice de code.
+          piege: >-
+            La formule fermée $(1 - v^n)/i$ donne $0/0$ quand $i = 0$. En code, traite ce cas à part ou somme les termes un par un.
 
   - type: video
     titre: "L'intuition en vidéo"
@@ -89,19 +121,51 @@ etapes:
       - q: 'À 2,5 %, combien vaut aujourd''hui 1 000 € payés dans 10 ans, environ ?'
         options: ['781 €', '975 €', '1 280 €']
         reponse: 0
-        pourquoi: '$1\,000\,v^{10} = 1\,000 / 1{,}025^{10} = 781{,}20$. $1\,280$ est la valeur capitalisée, pas actualisée.'
+        pourquoi:
+          rappel: >-
+            Actualiser, c'est diviser par le facteur d'accumulation $(1+i)^t$, donc multiplier par $v^t$.
+          formule: |-
+            VA = C\,v^t = \frac{C}{(1+i)^t}
+          exemple: >-
+            $1{,}025^{10} = 1{,}28008$, donc $1\,000 / 1{,}28008 = 781{,}20$ €.
+          piege: >-
+            1 280 € est la valeur accumulée (accumulated value) de 1 000 € placés 10 ans, c'est le sens inverse. 975 € n'actualise que sur un an.
       - q: 'Si le taux monte, $a_{\overline{n}|}$…'
         options: ['augmente', 'diminue', 'ne change pas']
         reponse: 1
-        pourquoi: 'Chaque $v^k$ diminue quand $i$ monte, donc la somme diminue.'
+        pourquoi:
+          rappel: >-
+            Chaque terme $v^k = (1+i)^{-k}$ décroît quand $i$ augmente, et les termes lointains baissent le plus.
+          formule: |-
+            \frac{\partial a_{\overline{n}|}}{\partial i} = -\sum_{k=1}^{n} k\,v^{k+1} < 0
+          exemple: >-
+            $a_{\overline{10}|}$ vaut 8,7521 à 2,5 % et 8,1109 à 4 %.
+          piege: >-
+            La dérivée pondère chaque flux par sa date $k$ : c'est l'idée de la duration, la sensibilité au taux. Tu la retrouveras en gestion actif-passif (asset-liability management, ALM).
       - q: 'Pourquoi $d < i$ ?'
         options: ['Parce que $d$ est payé en début d''année, sur un capital actualisé', 'Parce que $d$ est un taux continu', 'Ce n''est pas le cas']
         reponse: 0
-        pourquoi: '$d = i\,v$ : c''est le même intérêt, mais payé un an plus tôt, donc actualisé.'
+        pourquoi:
+          rappel: >-
+            $d$ et $i$ décrivent le même intérêt, à deux dates. $i$ est payé en fin d'année ; $d$ est payé en début d'année, donc actualisé d'un an.
+          formule: |-
+            d = i\,v = \frac{i}{1+i} < i \quad (i > 0)
+          exemple: >-
+            100 € prêtés à 2,5 % rapportent 2,50 € en fin d'année, soit $2{,}50 \times v = 2{,}44$ € payés d'avance. Donc $d = 2{,}44\,\%$.
+          piege: >-
+            Le taux continu est $\delta$, pas $d$. L'ordre est toujours $d < \delta < i$.
       - q: 'Quelle formule donne $a_{\overline{n}|}$ ?'
         options: ['$\dfrac{1 - v^n}{i}$', '$\dfrac{1 - v^n}{d}$', '$\dfrac{(1+i)^n - 1}{i}$']
         reponse: 0
-        pourquoi: 'La deuxième est $\ddot{a}_{\overline{n}|}$. La troisième est la valeur accumulée $s_{\overline{n}|}$ (accumulated value).'
+        pourquoi:
+          rappel: >-
+            On somme une suite géométrique de raison $v$ : $\sum_{k=1}^{n} v^k = v\,\frac{1 - v^n}{1 - v}$, et $\frac{v}{1-v} = \frac{1}{i}$.
+          formule: |-
+            \begin{gathered} a_{\overline{n}|} = \frac{1 - v^n}{i} \qquad \ddot{a}_{\overline{n}|} = \frac{1 - v^n}{d} \\[4pt] s_{\overline{n}|} = (1+i)^n\,a_{\overline{n}|} = \frac{(1+i)^n - 1}{i} \end{gathered}
+          exemple: >-
+            À 2,5 % sur 3 ans : $v^3 = 0{,}928599$, donc $a_{\overline{3}|} = 0{,}071401 / 0{,}025 = 2{,}8560$.
+          piege: >-
+            Diviser par $d$ donne l'annuité due. $s_{\overline{n}|}$ est la valeur accumulée au temps $n$, pas la valeur actuelle.
 
   - type: calcul
     titre: "À la main"

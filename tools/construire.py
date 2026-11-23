@@ -40,6 +40,9 @@ def verifier_seance(s: dict) -> list[str]:
             for q in e["questions"]:
                 if not 0 <= q["reponse"] < len(q["options"]):
                     erreurs.append(f"{s['id']} : réponse hors des options pour « {q['q']} »")
+                p = q.get("pourquoi")
+                if not isinstance(p, dict) or not all(p.get(k) for k in ("rappel", "formule", "exemple")):
+                    erreurs.append(f"{s['id']} : explication sans rappel, formule et exemple pour « {q['q']} »")
     return erreurs
 
 

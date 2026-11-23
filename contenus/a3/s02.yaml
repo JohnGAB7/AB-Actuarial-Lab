@@ -69,19 +69,51 @@ etapes:
       - q: 'Que vaut ${}_nE_x$ quand le taux $i$ vaut 0 ?'
         options: ['$1$', '${}_np_x$', '$v^n$']
         reponse: 1
-        pourquoi: 'Avec $i = 0$, $v = 1$ : il ne reste que la probabilité de survivre, ${}_np_x$.'
+        pourquoi:
+          rappel: >-
+            Le capital différé combine deux effets : la survie, ${}_np_x$, et l'actualisation, $v^n$. Quand $i = 0$, seule l'actualisation disparaît.
+          formule: |-
+            {}_nE_x = v^n\,{}_np_x \;\xrightarrow{\;i\,=\,0\;}\; {}_np_x
+          exemple: >-
+            Table MK : ${}_{10}p_{65} = 0{,}6222$. À 2,5 %, ${}_{10}E_{65} = v^{10} \times 0{,}6222 = 0{,}7812 \times 0{,}6222 = 0{,}4860$.
+          piege: >-
+            1 oublierait le risque de décès, et $v^n$ oublierait la survie.
       - q: 'Si le taux technique baisse, $A_x$…'
         options: ['augmente', 'diminue', 'ne change pas']
         reponse: 0
-        pourquoi: 'Chaque terme $v^{k+1}$ augmente quand $i$ baisse, donc la somme augmente.'
+        pourquoi:
+          rappel: >-
+            $A_x$ est une somme de facteurs $v^{k+1}$ pondérés par des probabilités qui ne dépendent pas du taux. Quand $i$ baisse, chaque $v^{k+1}$ augmente.
+          formule: |-
+            \begin{gathered} A_x = \sum_{k \ge 0} v^{k+1}\,{}_{k|}q_x \\[4pt] \sum_{k \ge 0} {}_{k|}q_x = 1 \;\Rightarrow\; A_x < 1 \end{gathered}
+          exemple: >-
+            Table MK : $A_{65}$ vaut 0,7310 à 2,5 % et 0,8781 à 1 %.
+          piege: >-
+            Quand $i \to 0$, $A_x \to 1$ : la vie entière finit toujours par payer 1, seule la date compte.
       - q: 'Quelle égalité est juste ?'
         options: ['$A_{x:\overline{n}|} = A^{1}_{x:\overline{n}|} - {}_nE_x$', '$A_{x:\overline{n}|} = A^{1}_{x:\overline{n}|} + {}_nE_x$', '$A_{x:\overline{n}|} = A_x\,{}_nE_x$']
         reponse: 1
-        pourquoi: "La mixte paie au décès avant le terme (temporaire) ou au terme en cas de vie (capital différé). Les deux cas s'excluent, donc on additionne."
+        pourquoi:
+          rappel: >-
+            La mixte paie 1 dans deux cas qui s'excluent : décès avant le terme (la temporaire, payée en fin d'année du décès) ou survie au terme (le capital différé). On additionne donc les deux valeurs.
+          formule: |-
+            A_{x:\overline{n}|} = \underbrace{\sum_{k=0}^{n-1} v^{k+1}\,{}_{k|}q_x}_{A^{1}_{x:\overline{n}|}} + \underbrace{v^n\,{}_np_x}_{{}_nE_x}
+          exemple: >-
+            Calcul à la main : $A_{65:\overline{3}|} = 0{,}0888 + 0{,}8419 = 0{,}9307$.
+          piege: >-
+            La soustraction n'a pas de sens. Le produit $A_x\,{}_nE_x$ ne correspond à aucun contrat : la vie entière différée (deferred whole life) est ${}_{n|}A_x = {}_nE_x\,A_{x+n}$, avec l'âge $x + n$.
       - q: 'Pourquoi $A_{65}$ est-il plus grand que $A_{40}$ ?'
         options: ['Parce que le décès est plus proche, donc moins actualisé', 'Parce que le capital est plus élevé', 'Ce n''est pas le cas']
         reponse: 0
-        pourquoi: 'Le paiement est certain dans les deux cas pour une vie entière. Seule sa date change : à 65 ans, il arrive plus tôt et il est moins actualisé.'
+        pourquoi:
+          rappel: >-
+            Pour une vie entière, le paiement de 1 est certain ; seule sa date est aléatoire. Plus l'assuré est âgé, plus le décès est proche et moins il est actualisé.
+          formule: |-
+            \begin{gathered} A_x = \mathbb{E}\!\left[v^{K_x + 1}\right] \;\ge\; v^{\,e_x + 1} \\[4pt] \text{(inégalité de Jensen)} \end{gathered}
+          exemple: >-
+            Table MK à 2,5 % : $A_{40} = 0{,}4605$ et $A_{65} = 0{,}7310$.
+          piege: >-
+            Le capital vaut 1 dans les deux cas. Ce n'est pas le montant qui change, c'est la date du paiement.
 
   - type: calcul
     titre: "À la main"
