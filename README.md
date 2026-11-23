@@ -1,4 +1,6 @@
-# Parcours actuariel
+# ACTU-BASICS — Parcours Actuariel
+
+Cette plateforme est une déclinaison spécialisée d'ACTU-BASICS : elle approfondit l'actuariat à travers un parcours bilingue, des séances interactives, des laboratoires et des applications pratiques. Elle reprend les logos officiels ACTU-BASICS sans les redessiner ni les modifier.
 
 Parcours personnel de remise à niveau en actuariat : diagnostic, plan, notes, exercices et suivi de progression.
 L'ossature suit les modules A1 à A8 du « Parcours Actuariat » d'Actu-Basics (`docs/actuariat/PARCOURS-ACTUARIAT-v3.md`) ;
