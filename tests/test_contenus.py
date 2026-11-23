@@ -107,3 +107,48 @@ def test_aucune_cle_secrete_dans_le_depot():
         if ".git" in p.parts or "_site" in p.parts or "vendor" in p.parts or not p.is_file() or p.suffix in {".pyc", ".png"}:
             continue
         assert not motif.search(p.read_text(encoding="utf-8", errors="ignore")), p
+
+
+def test_chaque_seance_a_sa_traduction_anglaise():
+    from tools.construire import verifier_traduction
+    for _, _, sid in seances(charger_parcours()):
+        assert verifier_traduction(sid) == [], sid
+
+
+def test_traduction_ne_touche_pas_aux_chiffres():
+    import pytest
+    from tools.construire import fusion
+    base = {"etapes": [{"type": "quiz", "questions": [{"q": "Question ?", "reponse": 1}]}]}
+    with pytest.raises(ValueError):
+        fusion(base, {"etapes": [{"questions": [{"reponse": 0}]}]}, "test")
+    with pytest.raises(ValueError):
+        fusion(base, {"etapes": [{}, {}]}, "test")
+    with pytest.raises(ValueError):
+        fusion(base, {"nouveau": "texte"}, "test")
+
+
+def test_tableaux_anglais_identiques_au_francais():
+    """The English tables only change the number format (2,5 % → 2.5%, 716 046 → 716,046)."""
+    def norme(v, langue):
+        v = str(v).replace(" ", "").replace("%", "")
+        return v.replace(",", "") if langue == "en" else v.replace(",", ".")
+    for _, _, sid in seances(charger_parcours()):
+        fr, en = charger_seance(sid), charger_seance(sid, "en")
+        for a, b in zip(fr["etapes"], en["etapes"]):
+            if a["type"] == "calcul":
+                assert [[norme(x, "fr") for x in l] for l in a["donnees"]["lignes"]] == \
+                       [[norme(x, "en") for x in l] for l in b["donnees"]["lignes"]], sid
+                assert a["champs"] == b["champs"]
+
+
+def test_site_bilingue(tmp_path, monkeypatch):
+    import tools.construire as c
+    monkeypatch.setattr(c, "SORTIE", tmp_path / "site")
+    c.construire()
+    for sid in [s for _, _, s in seances(charger_parcours())]:
+        fr = (tmp_path / "site" / sid / "index.html").read_text(encoding="utf-8")
+        en = (tmp_path / "site" / "en" / sid / "index.html").read_text(encoding="utf-8")
+        assert '<html lang="fr">' in fr and '<html lang="en">' in en
+        assert f'href="../../en/{sid}/index.html"' in fr and f'href="../../../{sid}/index.html"' in en
+    accueil = (tmp_path / "site" / "en" / "index.html").read_text(encoding="utf-8")
+    assert 'hreflang="fr" href="../index.html"' in accueil and "Foundations" in accueil

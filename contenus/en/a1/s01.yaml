@@ -1,0 +1,134 @@
+# English texts for session A1.01. Numbers, answers and tests live in contenus/a1/s01.yaml.
+titre: "Compound interest and annuities certain"
+
+etapes:
+  - titre: "Placement check"
+    intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
+    questions:
+      - q: 'At an annual rate $i$, what is the rate of discount $d$?'
+        pourquoi:
+          rappel: >-
+            The rate of discount $d$ is one year's interest expressed on the value at the start of the year. Paying $i$ at the end of the year is the same as paying $i\,v$ at the start.
+          exemple: >-
+            At $i = 2.5\%$: $d = 0.025 / 1.025 = 0.02439$, a little less than $i$.
+          piege: >-
+            $i\,(1+i)$ accumulates the interest instead of discounting it. $1+i$ is an accumulation factor, not a rate.
+      - q: 'How is the annuity due $\ddot{a}_{\overline{n}|}$ related to the annuity immediate $a_{\overline{n}|}$?'
+        pourquoi:
+          rappel: >-
+            The annuity due pays the same amounts as the annuity immediate, but each one a year earlier. Each term is therefore discounted less, by a factor $1+i$.
+          exemple: >-
+            At 2.5% over 3 years: $a_{\overline{3}|} = 2.8560$ and $\ddot{a}_{\overline{3}|} = 1.025 \times 2.8560 = 2.9274$.
+          piege: >-
+            Multiplying by $v$ would push the payments a year later instead of bringing them forward. And the correct additive relation is $\ddot{a}_{\overline{n}|} = 1 + a_{\overline{n-1}|}$, not $a_{\overline{n}|} - 1$.
+      - q: 'What is the force of interest $\delta$ for an annual rate $i$?'
+        pourquoi:
+          rappel: >-
+            The force of interest is the instantaneous growth rate of a capital. Compounding continuously at $\delta$ for one year must give the same result as the annual rate $i$.
+          exemple: >-
+            $\delta = \ln 1.025 = 0.024693$, between $d = 0.024390$ and $i = 0.025$. We always have $d < \delta < i$.
+          piege: >-
+            $\delta = i$ ignores compounding during the year. $e^{i}$ is an accumulation factor, not a rate.
+      - q: 'What is $a_{\overline{n}|}$ when $i = 0$?'
+        pourquoi:
+          rappel: >-
+            With no interest, $v = 1$: each payment is worth its face value, whatever its date.
+          exemple: >-
+            With $i = 0$, 7 payments of 1 are worth 7. It is one of the tests in the coding exercise.
+          piege: >-
+            The closed form $(1 - v^n)/i$ gives $0/0$ when $i = 0$. In code, handle that case separately or sum the terms one by one.
+
+  - titre: "The intuition on video"
+    texte: >-
+      The Actu-Basics video on this topic will show the time value of money: a euro invested today earns interest,
+      so a euro promised later is worth less. It does not exist yet.
+
+  - titre: "The recap"
+    blocs:
+      - p: >-
+          Invested at the <b>annual effective interest rate</b> <i>(taux d'intérêt effectif annuel)</i> $i$, a capital of 1
+          grows to $(1+i)^t$ after $t$ years: this is <b>compound interest</b> <i>(intérêt composé)</i>. Conversely,
+          the <b>discount factor</b> <i>(facteur d'actualisation)</i> $v$ brings a future amount back to today.
+      - {}
+      - p: >-
+          $d$ is the <b>rate of discount</b> <i>(taux d'escompte)</i>, interest paid at the start of the year. $\delta$ is the
+          <b>force of interest</b> <i>(force d'intérêt)</i>, the continuous equivalent of the rate. It is the financial
+          counterpart of the force of mortality you will meet in A3.
+      - p: >-
+          An <b>annuity certain</b> <i>(annuité certaine)</i> pays 1 each year for $n$ years, with no survival
+          condition. If the payment falls at the end of the year, it is an <b>annuity immediate</b> <i>(annuité immédiate)</i>.
+          If it falls at the start of the year, it is an <b>annuity due</b> <i>(annuité due)</i>.
+      - {}
+      - p: >-
+          More generally, the <b>present value</b> <i>(valeur actuelle)</i> of a stream of cash flows $C_t$ is the sum
+          of the discounted cash flows. Everything else in the path, from life annuities to reserves, rests on this sum.
+      - formule: |
+          PV = \sum_t C_t\, v^t
+      - note: >-
+          In A3, a life annuity will be an annuity certain in which each payment is multiplied by a
+          survival probability: $\ddot{a}_x = \sum_k v^k\,{}_kp_x$.
+      - sources:
+          - {titre: "Kellison, The Theory of Interest, ch. 1 to 3", detail: "Compound interest, equivalent rates, annuities certain"}
+          - {titre: "SOA, Financial Mathematics (FM) Exam", detail: "Official exam syllabus"}
+
+  - titre: "Check"
+    intro: "Four questions. Answer without rereading the recap."
+    questions:
+      - q: 'At 2.5%, roughly what is €1,000 payable in 10 years worth today?'
+        options: ['€781', '€975', '€1,280']
+        pourquoi:
+          rappel: >-
+            Discounting means dividing by the accumulation factor $(1+i)^t$, that is multiplying by $v^t$.
+          formule: |-
+            PV = C\,v^t = \frac{C}{(1+i)^t}
+          exemple: >-
+            $1.025^{10} = 1.28008$, so $1{,}000 / 1.28008 = 781.20$ euros.
+          piege: >-
+            €1,280 is the accumulated value of €1,000 invested for 10 years, the opposite direction. €975 discounts over one year only.
+      - q: 'If the rate rises, $a_{\overline{n}|}$…'
+        options: ['increases', 'decreases', 'does not change']
+        pourquoi:
+          rappel: >-
+            Each term $v^k = (1+i)^{-k}$ falls when $i$ rises, and the distant terms fall the most.
+          exemple: >-
+            $a_{\overline{10}|}$ is 8.7521 at 2.5% and 8.1109 at 4%.
+          piege: >-
+            The derivative weights each cash flow by its date $k$: this is the idea behind duration, the sensitivity to the rate. You will meet it again in asset-liability management (ALM).
+      - q: 'Why is $d < i$?'
+        options: ['Because $d$ is paid at the start of the year, on a discounted capital', 'Because $d$ is a continuous rate', 'It is not']
+        pourquoi:
+          rappel: >-
+            $d$ and $i$ describe the same interest at two dates. $i$ is paid at the end of the year; $d$ is paid at the start of the year, so it is discounted by one year.
+          exemple: >-
+            €100 lent at 2.5% earns €2.50 at the end of the year, that is $2.50 \times v = 2.44$ euros paid in advance. So $d = 2.44\%$.
+          piege: >-
+            The continuous rate is $\delta$, not $d$. The order is always $d < \delta < i$.
+      - q: 'Which formula gives $a_{\overline{n}|}$?'
+        pourquoi:
+          rappel: >-
+            We sum a geometric series with ratio $v$: $\sum_{k=1}^{n} v^k = v\,\frac{1 - v^n}{1 - v}$, and $\frac{v}{1-v} = \frac{1}{i}$.
+          exemple: >-
+            At 2.5% over 3 years: $v^3 = 0.928599$, so $a_{\overline{3}|} = 0.071401 / 0.025 = 2.8560$.
+          piege: >-
+            Dividing by $d$ gives the annuity due. $s_{\overline{n}|}$ is the accumulated value at time $n$, not the present value.
+
+  - titre: "By hand"
+    intro: "Rate of 2.5%. Use a calculator, then enter your results to 4 decimal places."
+    donnees:
+      lignes: [['2.5%', '3']]
+    solution: |
+      $v = 1/1.025 = 0.975610$, $\quad d = 0.025 \times v = 0.0244$, $\quad \delta = \ln 1.025 = 0.0247$.
+      $a_{\overline{3}|} = v + v^2 + v^3 = 2.8560$, $\quad \ddot{a}_{\overline{3}|} = 1 + v + v^2 = 2.9274 = 1.025 \times 2.8560$.
+
+  - titre: "Your turn to code"
+    intro: "Write the body of the four functions, without AI. All the tests must pass."
+    tests:
+      - {nom: '$v^{10}$ is 0.78120 at 2.5%'}
+      - {nom: '$a_{\overline{10}|}$ is 8.75206 at 2.5%'}
+      - {nom: '$\ddot{a}_{\overline{10}|}$ is 8.97087 at 2.5%'}
+      - {nom: '$\ddot{a}_{\overline{n}|} = (1+i)\,a_{\overline{n}|}$'}
+      - {nom: 'With $i = 0$, $a_{\overline{n}|} = n$'}
+      - {nom: '€1,000 at 5 years and €500 at 10 years are worth €1,274.45'}
+
+  - titre: "Vocabulary"
+    intro: "Tap a card: the French term and a job-interview sentence."

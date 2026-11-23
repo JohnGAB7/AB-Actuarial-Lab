@@ -2,6 +2,8 @@
 // Le plan (ordre conseillé, nombre d'étapes par séance) est intégré à la page par tools/construire.py.
 (function () {
   "use strict";
+  var EN = document.documentElement.lang === "en";
+  var tr = function (fr, en) { return EN ? en : fr; };
   var plan = [];
   try { plan = JSON.parse(document.getElementById("plan").textContent); } catch (e) { return; }
   var faites = function (sid) {
@@ -29,18 +31,18 @@
       var r = somme(function (p) { return p.s === el.dataset.seance; });
       barre(el, r);
       var t = el.querySelector("[data-etat]");
-      if (t) t.textContent = r >= 1 ? "Terminée ✓" : r > 0 ? "Continuer →" : "Commencer →";
+      if (t) t.textContent = r >= 1 ? tr("Terminée ✓", "Finished ✓") : r > 0 ? tr("Continuer →", "Continue →") : tr("Commencer →", "Start →");
     });
     var cta = document.querySelector("[data-reprendre]");
     if (cta && etat.length) {
       var commence = etat.some(function (x) { return x.f > 0; });
       var suite = etat.filter(function (x) { return x.f < x.p.n; })[0];
-      var base = BASE;
+      var base = BASE + (EN ? "en/" : "");
       if (suite) {
         cta.href = base + suite.p.s + "/index.html";
-        cta.innerHTML = (commence ? "Reprendre : " : "Commencer : ") + esc(suite.p.t) + " →";
+        cta.innerHTML = (commence ? tr("Reprendre : ", "Resume: ") : tr("Commencer : ", "Start: ")) + esc(suite.p.t) + " →";
       } else {
-        cta.innerHTML = "Tout est terminé. Revoir le parcours →";
+        cta.innerHTML = tr("Tout est terminé. Revoir le parcours →", "All done. Review the path →");
       }
     }
   }
