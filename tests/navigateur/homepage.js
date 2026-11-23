@@ -140,7 +140,7 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
 
 
     // Mobile header, dropdown placement and account-page width at common phone sizes.
-    for (const width of [320, 360, 375, 390, 414, 430]) {
+    for (const width of [320, 360, 375, 390, 414, 430, 768, 1024]) {
       await page.setViewportSize({ width, height: 844 });
       await page.goto(new URL("compte/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
       await page.locator(".nav-in").waitFor();
