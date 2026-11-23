@@ -55,10 +55,13 @@ Contrat observé et à conserver :
 - les réponses de quiz, valeurs/tolérances, identifiants, tests exécutables, chemins d'exercice et paramètres actuariels restent dans le fichier français ;
 - les cellules de `donnees.lignes` peuvent adapter le séparateur décimal ou de milliers, sans changer les valeurs.
 
-Points à verrouiller dans l'implémentation de la PR bilingue avant son intégration :
-- protéger explicitement les champs de métadonnées `en` et `actu_basics` contre une surcharge par l'overlay (le code actuel les exclut du contrôle des textes manquants, mais ils ne figurent pas tous dans la liste `NON_TRADUISIBLES`) ;
-- faire converger la validation des overlays avec le validateur canonique, plutôt que maintenir deux chemins de validation indépendants ;
-- conserver les tests de préservation numérique, de signes/unités/exposants, de formules et de structure déjà présents dans la PR #13.
+Implémentation canonique :
+- les champs de métadonnées `en` et `actu_basics` sont explicitement protégés contre toute surcharge ;
+- `fusionner_overlay()` est l'unique fonction de fusion et de contrôle structurel des overlays ;
+- `verifier_overlay_traduction()` contrôle aussi la complétude des textes traduisibles ;
+- `verifier_depot()` active le contrôle bilingue lorsque le dossier `contenus/en/` existe et exige alors un overlay pour chaque séance référencée ;
+- le générateur et son mode `--verifier` utilisent tous deux `verifier_depot()`. Le générateur bilingue réutilise `fusionner_overlay()` pour construire les séances anglaises ;
+- les tests couvrent les clés ajoutées, les métadonnées protégées, les types, longueurs de listes, textes vides ou manquants, nombres, signes, exposants, unités et structure des formules.
 
 ## État et limites de l'inventaire
 
