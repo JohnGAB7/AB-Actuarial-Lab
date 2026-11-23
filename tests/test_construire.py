@@ -78,5 +78,6 @@ def test_actu_basics_parent_brand_is_consistent_in_both_languages():
     assert "assets/brand/actu-basics/logo-dark.png" in french
     assert "assets/brand/actu-basics/logo-light-en.png" in english
     assert "assets/brand/actu-basics/logo-dark-en.png" in english
+    assert "raw.githubusercontent.com/JohnGAB7/Actu-Basics/080890b8acd452c790f3e10664a63d0b3e43aa21" in french
     assert builder.titre_site("fr") == "ACTU-BASICS — Parcours Actuariel"
     assert builder.titre_site("en") == "ACTU-BASICS — Actuarial Learning Path"
