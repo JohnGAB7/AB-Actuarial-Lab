@@ -324,7 +324,7 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
         f'<h2>{start_title}</h2><p>{start_text}</p>'
         f'<a class="start-link" href="{premiere}/index.html">{start_action} <span aria-hidden="true">↗</span></a></div>'
         f'<div class="start-feature-meta"><span class="start-index mono">01 / {nb_modules:02d}</span>'
-        f'<span class="start-domain">{e(dom_titre(premier_dom, langue))}</span>'
+        f'<span class="start-domain">{e(dom_court(premier_dom, langue))}</span>'
         f'<strong>{e(mod_titre(premier_module, langue))}</strong>'
         f'<span class="start-duration">{( "One session at a time" if en else "Une séance à la fois")}</span></div></section>'
         f'<section class="home-domains"><div class="home-head"><span class="eyebrow">{domains_kicker}</span>'
