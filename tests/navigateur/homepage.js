@@ -24,7 +24,7 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
     console.log("brand FR:", brand);
     if (!brand.title.startsWith("Laboratoire d’apprentissage actuariel par ACTU-BASICS")) failures.push("French site title");
     if (!brand.label.includes("LABORATOIRE ACTUARIEL") || !brand.label.includes("PAR ACTU-BASICS")) failures.push("French sub-brand lockup");
-    if (!brand.logoLoaded) failures.push("official ACTU-BASICS logo did not load");
+    if (!brand.logoLoaded) failures.push("custom Actuarial Learning Lab mark did not load");
     const mobile = await page.evaluate(() => ({
       lang: document.documentElement.lang,
       width: window.innerWidth,
