@@ -402,3 +402,10 @@ a.mod .mod-n{color:var(--progress);font-weight:600}
 @media (prefers-reduced-motion:reduce){
  .start-link span{transition:none}
 }
+
+
+/* Keep the seven-domain desktop navigation inside the shared content width. */
+@media (min-width:901px){
+ .nav-in{gap:16px}
+ .nav-links a{padding-inline:8px}
+}
