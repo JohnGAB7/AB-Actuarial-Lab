@@ -74,18 +74,38 @@ do $$ begin
     raise exception 'anon can call supprimer_mon_compte';
   exception when insufficient_privilege then null;
   end;
+  begin
+    insert into public.progression (user_id, seance_id) values ('11111111-1111-1111-1111-111111111111', 'a1/s01');
+    raise exception 'anon can insert into progression';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    update public.progression set etapes = '{}';
+    raise exception 'anon can update progression';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    delete from public.progression;
+    raise exception 'anon can delete from progression';
+  exception when insufficient_privilege then null;
+  end;
 end $$;
 
--- B deletes their own account: A and A's progress are untouched.
+-- B deletes their own account: B's progress goes with it, A and A's progress are untouched.
 reset role;
 set role authenticated;
 select set_config('request.jwt.claim.sub', :'B', false);
+insert into public.progression (seance_id, etapes) values ('a3/s01', '{"1": true}');
+do $$ begin
+  if (select count(*) from public.progression) <> 1 then raise exception 'B must see their own row'; end if;
+end $$;
 select public.supprimer_mon_compte();
 reset role;
 do $$ begin
   if exists (select 1 from auth.users where id = '22222222-2222-2222-2222-222222222222') then raise exception 'B still exists'; end if;
   if not exists (select 1 from auth.users where id = '11111111-1111-1111-1111-111111111111') then raise exception 'A was deleted'; end if;
-  if (select count(*) from public.progression) <> 1 then raise exception 'A''s progress was touched'; end if;
+  if exists (select 1 from public.progression where user_id = '22222222-2222-2222-2222-222222222222') then raise exception 'B''s progress survived account deletion'; end if;
+  if (select count(*) from public.progression where user_id = '11111111-1111-1111-1111-111111111111') <> 1 then raise exception 'A''s progress was touched'; end if;
 end $$;
 
 -- A deletes their account: their progress goes with it.
