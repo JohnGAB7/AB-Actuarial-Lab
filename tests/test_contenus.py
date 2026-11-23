@@ -241,3 +241,27 @@ def test_traduction_ne_peut_pas_modifier_les_metadonnees_de_session():
         fusion(base, {"en": "Different metadata title"}, "a1/s01")
     with pytest.raises(ValueError, match=r"\.actu_basics"):
         fusion(base, {"actu_basics": {"statut": "published"}}, "a1/s01")
+
+
+def test_formules_makeham_et_udd():
+    """Garde les signes et l'égalité exacte de l'espérance complète sous UDD."""
+    import math
+
+    s = charger_seance("a3/s01")
+    recap = next(e for e in s["etapes"] if e["type"] == "rappel")
+    formules = [bloc.get("formule", "") for bloc in recap["blocs"]]
+    assert any(r"\\underbrace{-\\ln s}_{A} + \\underbrace{-\\,\\ln g\\,\\ln c}_{B}\\,c^{x}" in f for f in formules)
+    assert any(r"\\mathring{e}_x = \\int_0^{\\infty} {}_tp_x\\,\\mathrm{d}t = e_x + \\tfrac12" in f for f in formules)
+
+    table = s["table"]
+    k, a, g, c = table["k"], table["s"], table["g"], table["c"]
+
+    def log_l(x):
+        return math.log(k) + x * math.log(a) + c**x * math.log(g)
+
+    A = -math.log(a)
+    B = -math.log(g) * math.log(c)
+    for age in (0, 40, 65, 100):
+        h = 1e-5
+        derivative = -(log_l(age + h) - log_l(age - h)) / (2 * h)
+        assert math.isclose(derivative, A + B * c**age, rel_tol=1e-8, abs_tol=1e-10)
