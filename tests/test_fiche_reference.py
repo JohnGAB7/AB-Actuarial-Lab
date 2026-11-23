@@ -136,6 +136,8 @@ def test_reference_sheet_formula_structure_is_protected_in_english_overlay():
                       "explication": "The cash flow is discounted."}],
     }]}}}
     merged = fusionner_overlay(base, translated, "a1/s01")
+    from tools.validation_contenus import verifier_overlay_traduction
+    assert verifier_overlay_traduction(base, translated, session_id="a1/s01") == []
     assert merged["fiche"]["statut"] == "prete"
     assert merged["fiche"]["cours_complet"]["sections"][0]["formules"][0]["formule"] == r"\text{PV} = C v^t"
 
