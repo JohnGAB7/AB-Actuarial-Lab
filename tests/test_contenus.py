@@ -44,6 +44,17 @@ def test_calcul_a3_s02_coherent_avec_le_tableau():
         assert abs(c["valeur"] - attendu[c["cle"]]) < 1e-6, c["cle"]
 
 
+def test_calcul_a1_s01():
+    import math
+    s = charger_seance("a1/s01")
+    calc = next(e for e in s["etapes"] if e["type"] == "calcul")
+    i = s["taux"]
+    v = 1 / (1 + i)
+    attendu = {"d": i * v, "delta": math.log(1 + i), "a": v + v**2 + v**3, "ad": 1 + v + v**2}
+    for c in calc["champs"]:
+        assert abs(c["valeur"] - attendu[c["cle"]]) < 1e-6, c["cle"]
+
+
 def test_aucun_support_de_cours_ni_cv_dans_le_depot():
     """Supports de cours et CV restent dans la bibliothèque du projet, jamais sur un dépôt."""
     interdits = {".pdf", ".pptx", ".ppt", ".docx", ".doc", ".tex", ".xlsx"}
