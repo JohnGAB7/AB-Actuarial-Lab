@@ -18,10 +18,9 @@ from string import Template
 
 import yaml
 
-try:
-    # Package import in tests and other Python modules.
+if __package__:
     from .validation_contenus import verifier_depot, verifier_seance
-except ImportError:
+else:
     # Direct script execution: python tools/construire.py
     from validation_contenus import verifier_depot, verifier_seance
 
