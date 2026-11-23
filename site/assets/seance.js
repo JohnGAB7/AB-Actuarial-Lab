@@ -485,6 +485,7 @@ function runPython(code, tests, onRunning) {
       const message = event.data;
       if (!pending || !message) return;
       if (message.phase === "ready" && pending.phase === "loading") {
+        frame.setAttribute("data-network-blocked", String(message.networkBlocked === true));
         if (message.networkBlocked !== true) {
           stopPython("La politique réseau du moteur Python n'a pas bloqué les destinations externes.");
           return;
