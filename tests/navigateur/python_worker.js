@@ -50,7 +50,7 @@ const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 
   await clickRun(); await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 30000 });
   out.network = await p.locator('.results li .tm').first().textContent(); console.log('network:', out.network);
   // 7. remove transports such as WebRTC that are not consistently covered by connect-src.
-  await setCode("import js\\nblocked = ['WebSocket', 'WebSocketStream', 'EventSource', 'WebTransport', 'RTCPeerConnection', 'webkitRTCPeerConnection', 'XMLHttpRequest', 'BroadcastChannel', 'Worker', 'SharedWorker', 'indexedDB', 'caches']\\navailable = [name for name in blocked if hasattr(js, name) and getattr(js, name) is not None]\\nraise RuntimeError('TRANSPORTS_AVAILABLE=' + ','.join(available))\\n");
+  await setCode("import js\\nblocked = ['WebSocket', 'WebSocketStream', 'EventSource', 'WebTransport', 'RTCPeerConnection', 'webkitRTCPeerConnection', 'XMLHttpRequest', 'BroadcastChannel', 'Worker', 'SharedWorker', 'indexedDB', 'caches']\\navailable = []\\nfor name in blocked:\\n    try:\\n        if getattr(js, name) is not None:\\n            available.append(name)\\n    except Exception:\\n        pass\\nraise RuntimeError('TRANSPORTS_AVAILABLE=' + ','.join(available))\\n");
   await clickRun(); await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 30000 });
   out.transports = await p.locator('.results li .tm').first().textContent(); console.log('transports:', out.transports);
   // Oversized code is rejected before Pyodide is loaded.
