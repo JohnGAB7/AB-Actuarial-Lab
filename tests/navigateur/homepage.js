@@ -13,6 +13,8 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
 
     await page.goto(new URL("index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
     await page.locator(".hero-visual").waitFor();
+    const shortLabels = await page.locator(".dom-t").allInnerTexts();
+    if (!shortLabels.length || shortLabels.some((label) => label.trim().length > 18)) failures.push("homepage domain labels should stay concise");
     await page.waitForFunction(() => Array.from(document.querySelectorAll(".brand-logo")).some((img) => img.complete && img.naturalWidth > 0), null, { timeout: 15000 });
     const brand = await page.evaluate(() => ({
       title: document.title,
