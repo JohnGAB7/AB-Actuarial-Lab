@@ -43,7 +43,7 @@ fiche:
           - {formule: "a_{\\overline{n}|}=\\sum_{k=1}^{n}v^k=\\frac{1-v^n}{i},\\quad i\\ne0", explication: "a_{n|} denotes the present value of an annuity immediate with n unit payments."}
           - {formule: "a_{\\overline{n}|}=n,\\quad i=0", explication: "The preceding closed form is indeterminate at i=0; summing n factors equal to 1 gives n directly."}
       - titre: "5. Annuity due"
-        contenu: "An annuity due makes the same n unit payments at times 0,1,…,n-1: each payment is brought forward by one period compared with an annuity immediate. Its present value is 1+v+…+v^{n-1}. It equals (1-v^n)/d when d is non-zero, or (1+i)a_{n|}. This multiplicative identity is a useful check: if it fails, payment dates or the summation index may have been set incorrectly."
+        contenu: "An annuity due makes the same n unit payments at times 0 ; 1 ; … ; n−1: each payment is brought forward by one period compared with an annuity immediate. Its present value is 1+v+…+v^{n-1}. It equals (1-v^n)/d when d is non-zero, or (1+i)a_{n|}. This multiplicative identity is a useful check: if it fails, payment dates or the summation index may have been set incorrectly."
         formules:
           - {formule: "\\ddot{a}_{\\overline{n}|}=\\sum_{k=0}^{n-1}v^k=\\frac{1-v^n}{d}=(1+i)a_{\\overline{n}|}", explication: "The double dot indicates payments at the beginning of each period. For i>0, the value exceeds that of an annuity immediate."}
           - {formule: "\\ddot{a}_{\\overline{n}|}=1+a_{\\overline{n-1}|}", explication: "Separate the payment at time 0; the remaining n−1 payments form an annuity immediate."}
@@ -128,7 +128,7 @@ fiche:
         niveau: intermediaire
         enonce: "A rent of 900 monetary units is paid at the beginning of each year for 5 years. At an annual effective rate of 3%, calculate its present value."
         corrige:
-          - "Payment dates are 0,1 ; 2 ; 3,4: this is an annuity due."
+          - "Payment dates are 0 ; 1 ; 2 ; 3 ; 4: this is an annuity due."
           - "ä_{5|}=(1+i)a_{5|}=(1.03)×(1−1.03⁻⁵)/0.03."
           - "Present value is 900×ä_{5|}≈4,245.4 monetary units (rounded to one decimal)."
         feedback: "The first payment at the beginning of the first year is not discounted. Using a_{5|} incorrectly moves the first rent one year later."
