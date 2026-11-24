@@ -54,7 +54,7 @@
   };
   const paragraph = (text) => make("p","",text);
   const formula = (text) => {
-    const node = make("div","reference-formula",text);
+    const node = make("div","reference-formula","$"+text+"$");
     node.setAttribute("aria-label", text);
     return node;
   };
