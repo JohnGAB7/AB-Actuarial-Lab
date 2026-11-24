@@ -47,7 +47,7 @@
       const source = typeof item === "string" ? item.trim() : "";
       const lines = source.split(/\r?\n/);
       const fenced = lines.length >= 3 && lines[0].startsWith("```") && lines[lines.length - 1] === "```";
-      if (match) {
+      if (fenced) {
         const entry = make("li","reference-code-item");
         const pre = make("pre","reference-code");
         pre.append(make("code","",lines.slice(1,-1).join("\n")));
