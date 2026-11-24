@@ -175,7 +175,7 @@
         if(ref.url){
           try{
             const url=new URL(ref.url);
-            if(url.protocol==="https:"){
+            if(url.protocol==="https:" && !url.username && !url.password){
               const a=make("a","",ref.url);a.href=url.href;a.target="_blank";a.rel="noopener noreferrer";
               content.append(a);
             }
