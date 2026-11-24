@@ -758,3 +758,7 @@ a.mod .mod-n{color:var(--progress);font-weight:600}
   .lesson-shell{grid-template-columns:minmax(0,1fr)}
   .lesson-rail,.lesson-content,.lesson-rail .segs{min-width:0}
 }
+
+.reference-code{max-width:100%;overflow-x:auto;margin:8px 0 4px;padding:18px 20px;border-radius:12px;background:var(--night);color:var(--on-night);font: .84rem/1.7 var(--f-mono);white-space:pre}
+.reference-code code{font:inherit;color:inherit}
+.reference-code-item{list-style:none;margin-left:-1.1rem}
