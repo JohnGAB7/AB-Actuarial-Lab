@@ -43,7 +43,18 @@
   };
   const list = (items, ordered=false) => {
     const node = document.createElement(ordered ? "ol" : "ul");
-    (items || []).forEach(item => node.append(make("li","",item)));
+    (items || []).forEach(item => {
+      const match = typeof item === "string" ? item.match(/^\`\`\`(?:python)?\\s*\\n([\\s\\S]*?)\\n\`\`\`$/) : null;
+      if (match) {
+        const entry = make("li","reference-code-item");
+        const pre = make("pre","reference-code");
+        pre.append(make("code","",match[1]));
+        entry.append(pre);
+        node.append(entry);
+      } else {
+        node.append(make("li","",item));
+      }
+    });
     return node;
   };
   const block = (title, content) => {
