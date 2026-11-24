@@ -138,6 +138,54 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
     if (board.color !== "rgb(237, 244, 251)") failures.push("formula foreground contrast color missing");
     if (!board.accent.includes("linear-gradient")) failures.push("formula accent line missing");
 
+
+    // Mobile header, dropdown placement and account-page width at common phone sizes.
+    for (const width of [320, 360, 375, 390, 414, 430, 768, 1024]) {
+      await page.setViewportSize({ width, height: 844 });
+      await page.goto(new URL("compte/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
+      await page.locator(".nav-in").waitFor();
+      const header = await page.evaluate(() => {
+        const box = (selector) => {
+          const el = document.querySelector(selector);
+          if (!el) return null;
+          const r = el.getBoundingClientRect();
+          return { left: r.left, right: r.right, width: r.width };
+        };
+        return {
+          width: window.innerWidth,
+          scrollWidth: document.documentElement.scrollWidth,
+          header: box(".nav-in"),
+          brand: box(".brand"),
+          menu: box(".nav-menu"),
+          language: box(".langs"),
+          account: box(".nav .acct"),
+          content: box(".compte")
+        };
+      });
+      console.log("account header viewport:", header);
+      if (header.scrollWidth > width + 1) failures.push("account page horizontal overflow at " + width + "px");
+      for (const key of ["header", "brand", "menu", "language", "account", "content"]) {
+        const item = header[key];
+        if (item && (item.left < -1 || item.right > width + 1)) failures.push(key + " escapes viewport at " + width + "px");
+      }
+      await page.locator(".nav-menu summary").click();
+      await page.waitForFunction(() => document.querySelector(".nav-menu summary")?.getAttribute("aria-expanded") === "true");
+      const dropdown = await page.locator(".nav-sheet").evaluate((el) => {
+        const r = el.getBoundingClientRect();
+        return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: r.width, height: r.height, expanded: el.closest("details").open, ariaExpanded: el.closest("details").querySelector("summary").getAttribute("aria-expanded") };
+      });
+      console.log("mobile menu viewport:", width, dropdown);
+      if (dropdown.left < -1 || dropdown.right > width + 1) failures.push("mobile menu is clipped at " + width + "px");
+      if (!dropdown.expanded || dropdown.ariaExpanded !== "true") failures.push("mobile menu expanded state is not announced at " + width + "px");
+      await page.keyboard.press("Escape");
+      await page.waitForFunction(() => document.querySelector(".nav-menu summary")?.getAttribute("aria-expanded") === "false");
+      if (await page.locator(".nav-menu").evaluate((el) => el.open)) failures.push("Escape does not close mobile menu at " + width + "px");
+      if (await page.locator(".nav-menu summary").evaluate((el) => document.activeElement !== el)) failures.push("Escape does not restore menu focus at " + width + "px");
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(new URL("compte/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
+    if (await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)) failures.push("account page mobile horizontal overflow");
+
     if (errors.length) failures.push("page errors: " + errors.join("; "));
     if (failures.length) {
       console.error("FAILED:", failures.join("; "));
