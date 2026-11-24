@@ -171,6 +171,15 @@ fiche:
       - "Annuity immediate: payments at 1,…,n; annuity due: payments at 0,…,n−1."
       - "ä_{n|}=(1+i)a_{n|}; at i=0, both annuity values equal n."
       - "Always state the valuation date, frequency, rate and sign convention."
+    glossaire:
+      - {definition: "Interest calculated on capital increased by previously accumulated interest."}
+      - {definition: "The rate that transforms initial capital into final capital over one annual period."}
+      - {definition: "A factor that converts a future amount into value at an earlier date."}
+      - {definition: "A rate expressing interest relative to the value at the beginning of a period."}
+      - {definition: "The instantaneous growth rate of capital in a continuous compounding model."}
+      - {definition: "A series of regular payments made at the end of each period."}
+      - {definition: "A series of regular payments made at the beginning of each period."}
+      - {definition: "The value of a cash flow or stream of cash flows brought back to a valuation date."}
     maitrise:
       - "I can distinguish accumulation from discounting on a timeline."
       - "I can convert i into v, d and δ without confusing the conventions."
