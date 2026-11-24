@@ -210,6 +210,9 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       await page.keyboard.press("ArrowRight");
       await page.waitForFunction(() => document.querySelector("#reference-tab-2")?.getAttribute("aria-selected") === "true");
       if (!(await page.locator("#reference-panel-2").isVisible())) failures.push(language + " tab keyboard navigation did not activate methods");
+      await tabs.nth(5).click();
+      const labCode = await page.locator("#reference-panel-5 pre.reference-code code").textContent();
+      if (!labCode || !labCode.includes("1274.45")) failures.push(language + " lab should expose the complete Python calculation");
       for (const width of [320, 375, 430, 768]) {
         await page.setViewportSize({ width, height: 844 });
         const metrics = await page.evaluate(() => ({
