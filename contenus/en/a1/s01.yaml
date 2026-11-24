@@ -130,7 +130,7 @@ fiche:
         corrige:
           - "Payment dates are 0,1,2,3,4: this is an annuity due."
           - "ä_{5|}=(1+i)a_{5|}=(1.03)×(1−1.03⁻⁵)/0.03."
-          - "Present value is 900×ä_{5|}≈4,122.7 monetary units (rounded to one decimal)."
+          - "Present value is 900×ä_{5|}≈4,245.4 monetary units (rounded to one decimal)."
         feedback: "The first payment at the beginning of the first year is not discounted. Using a_{5|} incorrectly moves the first rent one year later."
       - titre: "Advanced — irregular cash flows"
         niveau: avance
@@ -138,7 +138,7 @@ fiche:
         corrige:
           - "Set a convention: treat benefits as positive and the receipt as a negative cost, or reverse all signs consistently."
           - "With benefits positive and the receipt negative: NPV=2,000/1.05+1,500/(1.05)⁴−300/(1.05)²."
-          - "Discount each term at its own date and sum; NPV is approximately 2,844.1 units."
+          - "Discount each term at its own date and sum; NPV is approximately 2,866.7 units."
         feedback: "The key points are the sign of the receipt and the exact dates. The nominal sum 2,000+1,500−300 does not answer the question because the flows do not occur at the same time."
   applications_labs:
     applications:
