@@ -63,6 +63,8 @@ fiche:
             explication: "a_{n|} désigne la valeur actuelle d'une annuité immédiate de n paiements unitaires."
           - formule: "a_{\\overline{n}|}=n,\\quad i=0"
             explication: "La formule fermée précédente est indéterminée en i=0 ; la somme des n facteurs égaux à 1 donne directement n."
+          - formule: "a_{\\overline{n}|}(1-v)=v(1-v^n),\\qquad 1-v=\\frac{i}{1+i}=iv"
+            explication: "En multipliant la somme v+v²+…+vⁿ par (1-v), les termes intermédiaires s'annulent : il reste v-v^{n+1}. Comme 1-v=iv, on obtient a_{n|}=(1-vⁿ)/i."
       - titre: "5. Annuité certaine due"
         contenu: "L'annuité due verse les mêmes n paiements unitaires aux dates 0 ; 1 ; … ; n−1 : chaque paiement est avancé d'une période par rapport à l'annuité immédiate. Sa valeur actuelle est 1+v+…+v^{n-1}. Elle vaut (1-vⁿ)/d pour d non nul, ou (1+i)a_{n|}. La relation multiplicative est un contrôle puissant : si elle échoue, les dates de paiement ou l'indexation de la somme ont probablement été mal posées."
         formules:
