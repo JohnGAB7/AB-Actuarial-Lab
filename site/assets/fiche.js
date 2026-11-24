@@ -44,7 +44,8 @@
   const list = (items, ordered=false) => {
     const node = document.createElement(ordered ? "ol" : "ul");
     (items || []).forEach(item => {
-      const match = typeof item === "string" ? item.match(/^```(?:python)?\s*\n([\s\S]*?)\n```$/) : null;
+      const source = typeof item === "string" ? item.trim() : "";
+      const match = source.match(/^```(?:python)?\s*\n([\s\S]*?)\n```$/);
       if (match) {
         const entry = make("li","reference-code-item");
         const pre = make("pre","reference-code");
