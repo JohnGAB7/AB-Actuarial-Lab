@@ -45,11 +45,12 @@
     const node = document.createElement(ordered ? "ol" : "ul");
     (items || []).forEach(item => {
       const source = typeof item === "string" ? item.trim() : "";
-      const match = source.match(/^```(?:python)?\s*\n([\s\S]*?)\n```$/);
+      const lines = source.split(/\r?\n/);
+      const fenced = lines.length >= 3 && lines[0].startsWith("```") && lines[lines.length - 1] === "```";
       if (match) {
         const entry = make("li","reference-code-item");
         const pre = make("pre","reference-code");
-        pre.append(make("code","",match[1]));
+        pre.append(make("code","",lines.slice(1,-1).join("\n")));
         entry.append(pre);
         node.append(entry);
       } else {
