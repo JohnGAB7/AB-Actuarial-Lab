@@ -745,3 +745,11 @@ a.mod .mod-n{color:var(--progress);font-weight:600}
   .lesson-content,.reference-sheet{width:100%;max-width:100%;min-width:0}
   .reference-sheet{overflow-x:clip}
 }
+
+.lesson-content{grid-template-columns:minmax(0,1fr)}
+.reference-table{table-layout:fixed;overflow-wrap:anywhere}
+.reference-table th,.reference-table td{overflow-wrap:anywhere;word-break:normal}
+@media(max-width:600px){
+  .lesson-content{grid-template-columns:minmax(0,1fr);overflow-x:clip}
+  .reference-sheet{min-width:0;max-width:100%;overflow-x:clip}
+}
