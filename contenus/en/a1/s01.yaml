@@ -150,9 +150,16 @@ fiche:
           - "Deterministic flows, flat constant rate and integer annual periods."
           - "No risk, inflation, expenses, tax or survival probability is modelled."
         procedure:
-          - "In Excel, enter dates 5 and 10 in one column and cash flows 1,000 and 500 in another."
-          - "Calculate each present value with =CashFlow/(1+2.5%)^Date, then sum."
-          - "In Python, use sum(amount/(1+rate)**date for date, amount in flows.items())."
+          - "In Excel, enter dates 5 and 10 in A2:A3, cash flows 1,000 and 500 in B2:B3, and the 2.5% rate in E1."
+          - "In C2, enter =B2/(1+$E$1)^A2, fill down to C3, then calculate =SUM(C2:C3)."
+          - |
+            ```python
+            flows = {5: 1000.0, 10: 500.0}
+            rate = 0.025
+            present_value = sum(amount / (1 + rate) ** date for date, amount in flows.items())
+            print(f"{present_value:.2f}")  # 1274.45
+            assert abs(present_value - 1274.45) < 0.01
+            ```
           - "Compare unrounded results before rounding the display."
         sorties:
           - "Expected present value: approximately 1,274.45 units."
