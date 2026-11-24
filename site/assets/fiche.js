@@ -185,7 +185,11 @@
       });
       (data.liens||[]).forEach(link=>{
         const a=make("a","reference-link",link.titre);
-        a.href="../"+link.cible+"/index.html";
+        const [target,anchor] = link.cible.split("#");
+        const [targetDomain,targetSession] = target.split("/");
+        const currentDomain = data.id.split("/")[0];
+        const relative = targetDomain === currentDomain ? "../"+targetSession+"/index.html" : "../../"+targetDomain+"/"+targetSession+"/index.html";
+        a.href=relative+(anchor?"#"+anchor:"");
         root.append(a);
       });
       return root;
