@@ -218,8 +218,6 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
           shell: document.querySelector(".lesson-shell").getBoundingClientRect().width,
           lessonContent: document.querySelector(".lesson-content").getBoundingClientRect().width,
           sheet: document.querySelector("#reference-sheet").getBoundingClientRect().width,
-          table: document.querySelector("#reference-panel-6 .reference-table").getBoundingClientRect().width,
-          overflowing: [...document.querySelectorAll("body *")].filter(el => { const r=el.getBoundingClientRect(); return r.width>0 && (r.left < -1 || r.right > window.innerWidth+1); }).slice(0,8).map(el=>({tag:el.tagName,cls:String(el.className||""),left:Math.round(el.getBoundingClientRect().left),right:Math.round(el.getBoundingClientRect().right),width:Math.round(el.getBoundingClientRect().width)})),
           tabs: document.querySelector("#reference-tabs").scrollWidth,
           tabsClient: document.querySelector("#reference-tabs").clientWidth
         }));
