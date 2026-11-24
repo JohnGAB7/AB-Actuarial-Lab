@@ -179,7 +179,7 @@ fiche:
       - "I can explain the assumptions and limitations of a flat deterministic rate."
     references:
       - {titre: "Kellison, The Theory of Interest, chapters 1–3", detail: "Reference for compound interest, equivalent rates and annuities certain. Edition details and page numbers are not specified in the source content."}
-      - {titre: "Society of Actuaries — Financial Mathematics (FM) Exam", detail: "The official syllabus places these topics in the core financial mathematics material.", url: "https://www.soa.org/education/exam-req/edu-exam-fm-detail/"}
+      - {titre: "Society of Actuaries — Financial Mathematics (FM) Exam", detail: "The official syllabus places these topics in the core financial mathematics material."}
 
 etapes:
   - titre: "Placement check"
