@@ -734,3 +734,14 @@ a.mod .mod-n{color:var(--progress);font-weight:600}
  .reference-table th,.reference-table td{padding:8px}
 }
 @media(prefers-reduced-motion:reduce){.reference-panel{animation:none}}
+
+@media(max-width:600px){
+  .lesson-shell.gutter{
+    width:100%;
+    max-width:100%;
+    padding-left:max(12px,env(safe-area-inset-left,0px));
+    padding-right:max(12px,env(safe-area-inset-right,0px));
+  }
+  .lesson-content,.reference-sheet{width:100%;max-width:100%;min-width:0}
+  .reference-sheet{overflow-x:clip}
+}
