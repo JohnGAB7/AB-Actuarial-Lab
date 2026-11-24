@@ -179,9 +179,16 @@ fiche:
           - "Flux déterministes, taux plat et constant, périodes annuelles entières."
           - "Aucun risque, inflation, frais, impôt ou probabilité de survie n'est modélisé."
         procedure:
-          - "Dans Excel, saisir les dates 5 et 10 dans une colonne et les flux 1 000 et 500 dans une autre."
-          - "Calculer chaque valeur actuelle avec =Flux/(1+2,5%)^Date, puis sommer."
-          - "En Python, appliquer sum(montant/(1+taux)**date for date, montant in flux.items())."
+          - "Dans Excel, saisir les dates 5 et 10 en A2:A3, les flux 1 000 et 500 en B2:B3 et le taux 2,5 % en E1."
+          - "En C2, entrer =B2/(1+$E$1)^A2, recopier en C3, puis calculer =SOMME(C2:C3)."
+          - |
+            ```python
+            flux = {5: 1000.0, 10: 500.0}
+            taux = 0.025
+            valeur_actuelle = sum(montant / (1 + taux) ** date for date, montant in flux.items())
+            print(f"{valeur_actuelle:.2f}")  # 1274.45
+            assert abs(valeur_actuelle - 1274.45) < 0.01
+            ```
           - "Comparer les résultats non arrondis avant d'arrondir l'affichage."
         sorties:
           - "Valeur actuelle attendue : environ 1 274,45 unités."
