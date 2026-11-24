@@ -23,10 +23,7 @@ const BASE = process.env.SITE_URL || 'http://localhost:8765/';
       "Le taux d'escompte $d$ est",
       "<img src=x onerror='window.__xss=3'>Le taux d'escompte $d$ est",
     );
-    body = body.replace(
-      'https://www.soa.org/education/exam-req/edu-exam-fm-detail/',
-      'javascript:window.__xss=4',
-    );
+    body = body.split('https://www.soa.org/education/exam-req/edu-exam-fm-detail/').join('javascript:window.__xss=4');
     await route.fulfill({ response, body });
   });
 
@@ -59,6 +56,13 @@ const BASE = process.env.SITE_URL || 'http://localhost:8765/';
     plainSourceLabels: document.querySelectorAll('#stage .sources .src-t').length,
     bold: document.querySelectorAll('#stage .flow b').length,
     italic: document.querySelectorAll('#stage .flow i').length,
+    xss: window.__xss,
+  }));
+  await page.locator('#mode-reference').click();
+  const referenceSources = await page.evaluate(() => ({
+    javascriptLinks: document.querySelectorAll('#reference-sheet a[href^="javascript:"]').length,
+    links: document.querySelectorAll('#reference-sheet .reference-reference a').length,
+    labels: document.querySelectorAll('#reference-sheet .reference-reference p').length,
     xss: window.__xss,
   }));
 
@@ -101,6 +105,9 @@ const BASE = process.env.SITE_URL || 'http://localhost:8765/';
   if (sources.plainSourceLabels !== 2) failures.push('unsafe source labels not retained as plain text');
   if (sources.bold === 0 || sources.italic === 0) failures.push('allowed bold/italic formatting was lost');
   if (sources.xss !== undefined) failures.push('source URL payload executed');
+  if (referenceSources.javascriptLinks !== 0 || referenceSources.links !== 0) failures.push('unsafe reference-sheet URL became a link');
+  if (referenceSources.labels === 0) failures.push('reference-sheet source label was lost');
+  if (referenceSources.xss !== undefined) failures.push('reference-sheet source URL payload executed');
   if (!englishPayloadInjected) failures.push('English XSS payload was not injected into the fixture');
   if (english.lang !== 'en') failures.push('English page did not retain its language');
   if (!english.text.includes('The rate of discount')) failures.push('English explanation text lost');
