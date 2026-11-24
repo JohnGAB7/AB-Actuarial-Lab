@@ -186,6 +186,49 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
     await page.goto(new URL("compte/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
     if (await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)) failures.push("account page mobile horizontal overflow");
 
+
+    // Self-contained reference sheet: seven tabs, bilingual parity and phone/tablet layout.
+    for (const language of ["fr", "en"]) {
+      const lessonPath = language === "en" ? "en/a1/s01/index.html" : "a1/s01/index.html";
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto(new URL(lessonPath, BASE).toString(), { waitUntil: "domcontentloaded" });
+      await page.locator("#lesson-mode").waitFor({ state: "visible" });
+      const tabs = page.locator("#reference-tabs [role=tab]");
+      if (await tabs.count() !== 7) failures.push(language + " reference sheet should expose seven tabs");
+      if (await page.locator("#reference-panel-0").isVisible() !== false) failures.push("reference sheet should not replace the guided pathway by default");
+      await page.locator("#mode-reference").click();
+      if (!(await page.locator("#reference-panel-0").isVisible())) failures.push(language + " overview tab should be visible");
+      const titles = await tabs.allTextContents();
+      console.log("reference sheet tabs:", language, titles);
+      if (language === "fr" && !titles[0].includes("Vue")) failures.push("French tab labels missing");
+      if (language === "en" && !titles[1].includes("Complete")) failures.push("English tab labels missing");
+      await tabs.nth(1).click();
+      await page.locator("#reference-panel-1").waitFor({ state: "visible" });
+      await page.waitForFunction(() => document.querySelectorAll("#reference-panel-1 .katex").length > 0);
+      if (!(await page.locator("#reference-panel-1 .reference-block").count())) failures.push(language + " complete course has no sections");
+      await tabs.nth(1).focus();
+      await page.keyboard.press("ArrowRight");
+      await page.waitForFunction(() => document.querySelector("#reference-tab-2")?.getAttribute("aria-selected") === "true");
+      if (!(await page.locator("#reference-panel-2").isVisible())) failures.push(language + " tab keyboard navigation did not activate methods");
+      for (const width of [320, 375, 430, 768]) {
+        await page.setViewportSize({ width, height: 844 });
+        const metrics = await page.evaluate(() => ({
+          viewport: window.innerWidth,
+          document: document.documentElement.scrollWidth,
+          sheet: document.querySelector("#reference-sheet").getBoundingClientRect().width,
+          tabs: document.querySelector("#reference-tabs").scrollWidth,
+          tabsClient: document.querySelector("#reference-tabs").clientWidth
+        }));
+        console.log("reference sheet viewport:", language, metrics);
+        if (metrics.document > width + 1) failures.push(language + " reference sheet horizontal overflow at " + width + "px");
+      }
+      await page.locator("#mode-steps").click();
+      if (!(await page.locator("#stage").isVisible())) failures.push(language + " guided pathway should be restored");
+    }
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(new URL("a1/s02/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
+    if (await page.locator("#lesson-mode").isVisible()) failures.push("sessions without a ready reference sheet should not expose the sheet switch");
+
     if (errors.length) failures.push("page errors: " + errors.join("; "));
     if (failures.length) {
       console.error("FAILED:", failures.join("; "));
