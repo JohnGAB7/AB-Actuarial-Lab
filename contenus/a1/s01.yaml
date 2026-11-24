@@ -155,7 +155,7 @@ fiche:
         corrige:
           - "Les dates de paiement sont 0,1,2,3,4 : il s'agit d'une annuité due."
           - "ä_{5|}=(1+i)a_{5|}=(1,03)×(1−1,03⁻⁵)/0,03."
-          - "La valeur actuelle est 900×ä_{5|}≈4 122,7 unités (arrondi au dixième)."
+          - "La valeur actuelle est 900×ä_{5|}≈4 245,4 unités (arrondi au dixième)."
         feedback: "Un paiement au début de la première année n'est pas actualisé. Si tu utilises a_{5|}, tu décales à tort le premier loyer d'un an."
       - titre: "Niveau avancé — flux irréguliers"
         niveau: avance
@@ -163,7 +163,7 @@ fiche:
         corrige:
           - "Fixer la convention : sorties positives comme prestations et entrée négative dans le coût net, ou l'inverse, mais rester cohérent."
           - "Avec prestations positives et encaissement reçu négatif : VAN=2 000/1,05+1 500/(1,05)⁴−300/(1,05)²."
-          - "Évaluer chaque terme à sa date puis sommer ; la VAN est d'environ 2 844,1 unités."
+          - "Évaluer chaque terme à sa date puis sommer ; la VAN est d'environ 2 866,7 unités."
         feedback: "Le point déterminant est le signe du flux reçu et les dates exactes. Une somme nominale de 2 000+1 500−300 ne répond pas à la question car les flux ne sont pas simultanés."
   applications_labs:
     applications:
