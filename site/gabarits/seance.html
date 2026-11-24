@@ -30,11 +30,26 @@
     <div class="lesson-rail-foot"><span class="rail-foot-mark">AB</span><span>LEARN · MODEL · PRACTICE</span></div>
   </aside>
   <div class="lesson-content">
-    <main class="stage" id="stage"></main>
-    <nav class="pager" aria-label="$etapes">
+    <div class="lesson-mode" id="lesson-mode" hidden>
+      <button class="btn" id="mode-steps" type="button" aria-pressed="true">Parcours guidé</button>
+      <button class="btn ghost" id="mode-reference" type="button" aria-pressed="false">Fiche autonome</button>
+    </div>
+    <section class="reference-sheet" id="reference-sheet" aria-label="Fiche de référence" hidden>
+      <div class="reference-intro">
+        <span class="eyebrow" id="reference-kicker">REFERENCE SHEET</span>
+        <h1 id="reference-title"></h1>
+        <p id="reference-notice"></p>
+      </div>
+      <nav class="reference-tabs" id="reference-tabs" role="tablist" aria-label="Sections de la fiche"></nav>
+      <div class="reference-panels" id="reference-panels"></div>
+    </section>
+    <div class="lesson-pathway" id="lesson-pathway">
+      <main class="stage" id="stage"></main>
+      <nav class="pager" aria-label="$etapes">
       <button class="btn ghost" id="prev" type="button"></button>
       <button class="btn" id="next" type="button"></button>
-    </nav>
+      </nav>
+    </div>
   </div>
 </div>
 <script type="application/json" id="seance">$donnees</script>
