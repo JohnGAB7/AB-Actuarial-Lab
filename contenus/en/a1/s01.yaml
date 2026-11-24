@@ -117,7 +117,6 @@ fiche:
   exercices_corriges:
     exercices:
       - titre: "Fundamental — single payment"
-        niveau: fondamental
         enonce: "Find the present value of 500 monetary units payable in 2 years at an annual effective rate of 4%."
         corrige:
           - "v=1/1.04≈0.9615385."
@@ -125,7 +124,6 @@ fiche:
           - "Rounded to two decimals: 462.28 monetary units."
         feedback: "If your result is above 500, you probably accumulated instead of discounted. Also check that the exponent is 2."
       - titre: "Intermediate — annuity due"
-        niveau: intermediaire
         enonce: "A rent of 900 monetary units is paid at the beginning of each year for 5 years. At an annual effective rate of 3%, calculate its present value."
         corrige:
           - "Payment dates are 0 ; 1 ; 2 ; 3 ; 4: this is an annuity due."
@@ -133,7 +131,6 @@ fiche:
           - "Present value is 900×ä_{5|}≈4,245.4 monetary units (rounded to one decimal)."
         feedback: "The first payment at the beginning of the first year is not discounted. Using a_{5|} incorrectly moves the first rent one year later."
       - titre: "Advanced — irregular cash flows"
-        niveau: avance
         enonce: "A scheme pays 2,000 units at t=1 and 1,500 at t=4, and receives 300 at t=2. Calculate net present value at a 5% annual effective rate."
         corrige:
           - "Set a convention: treat benefits as positive and the receipt as a negative cost, or reverse all signs consistently."
