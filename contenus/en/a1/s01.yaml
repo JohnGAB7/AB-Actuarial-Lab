@@ -110,7 +110,7 @@ fiche:
           - "Compute the two terms separately: approximately 883.85 and 390.60."
           - "Add the discounted amounts without moving the cash-flow dates."
         resultat: "PV≈1,274.45 monetary units at time 0."
-        interpretation: "At the same nominal amount, the year-10 benefit weighs less today than the year-5 benefit because it is discounted for longer."
+        interpretation: "At the same nominal amount, the year 10 benefit weighs less today than the year 5 benefit because it is discounted for longer."
         controles:
           - "The total present value is positive and below 1,500 at a positive rate."
           - "Use exponents 5 and 10, not 1 and 2."
