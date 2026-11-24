@@ -70,7 +70,7 @@ fiche:
           - "At a zero rate, present value equals the nominal sum of the flows."
           - "Reproduce each cash flow by accumulating its present value to its payment date."
         erreurs:
-          - "Discounting a time-0 flow: its factor is 1."
+          - "Discounting a flow at time 0: its factor is 1."
           - "Mixing an annual effective rate with a monthly period count without conversion."
           - "Using the same exponent for every cash flow."
       - titre: "Choose and value an annuity"
