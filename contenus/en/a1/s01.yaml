@@ -38,7 +38,7 @@ fiche:
           - {formule: "d=\\frac{i}{1+i}=iv=1-v", explication: "The rate of discount is the relative reduction applied to the amount due at the end of the period when interest is paid in advance."}
           - {formule: "\\delta=\\ln(1+i),\\qquad (1+i)^t=e^{\\delta t}", explication: "The force δ is a constant instantaneous rate. It reproduces the annual effective accumulation factor after one year."}
       - titre: "4. Annuity immediate"
-        contenu: "An annuity certain of n unit payments has known payments and no survival contingency. For an annuity immediate, payments occur at times 1,2,…,n, at the end of each period. Its present value is v+v²+…+vⁿ. The geometric sum is (1-vⁿ)/i when i is non-zero. If i=0, each payment is worth 1 at time 0 and the value is n; handle this case separately in numerical implementations."
+        contenu: "An annuity certain of n unit payments has known payments and no survival contingency. For an annuity immediate, payments occur at times 1 ; 2 ; … ; n, at the end of each period. Its present value is v+v²+…+vⁿ. The geometric sum is (1-vⁿ)/i when i is non-zero. If i=0, each payment is worth 1 at time 0 and the value is n; handle this case separately in numerical implementations."
         formules:
           - {formule: "a_{\\overline{n}|}=\\sum_{k=1}^{n}v^k=\\frac{1-v^n}{i},\\quad i\\ne0", explication: "a_{n|} denotes the present value of an annuity immediate with n unit payments."}
           - {formule: "a_{\\overline{n}|}=n,\\quad i=0", explication: "The preceding closed form is indeterminate at i=0; summing n factors equal to 1 gives n directly."}
@@ -102,7 +102,7 @@ fiche:
         interpretation: "The annuity-due payments occur one period earlier and are therefore discounted less. The difference comes from timing, not from the amount or number of payments."
         controles:
           - "The annuity-due value is 2.5% higher than the annuity-immediate value."
-          - "All three payments are represented: dates 1,2,3 or 0,1,2."
+          - "All three payments are represented: dates 1 ; 2 ; 3 or 0 ; 1 ; 2."
       - titre: "Discount two future benefits"
         enonce: "A fund must pay 1,000 monetary units at the end of year 5 and 500 at the end of year 10. At a constant annual effective rate of 2.5%, determine the present value at time 0."
         raisonnement:
@@ -128,7 +128,7 @@ fiche:
         niveau: intermediaire
         enonce: "A rent of 900 monetary units is paid at the beginning of each year for 5 years. At an annual effective rate of 3%, calculate its present value."
         corrige:
-          - "Payment dates are 0,1,2,3,4: this is an annuity due."
+          - "Payment dates are 0,1 ; 2 ; 3,4: this is an annuity due."
           - "ä_{5|}=(1+i)a_{5|}=(1.03)×(1−1.03⁻⁵)/0.03."
           - "Present value is 900×ä_{5|}≈4,245.4 monetary units (rounded to one decimal)."
         feedback: "The first payment at the beginning of the first year is not discounted. Using a_{5|} incorrectly moves the first rent one year later."
