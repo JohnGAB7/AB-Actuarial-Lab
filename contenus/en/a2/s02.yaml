@@ -82,7 +82,7 @@ fiche:
         etapes:
           - "Check that $p_k\\ge0$ and $\\sum_k p_k=1$."
           - "Calculate $E[X]=\\sum_x x p(x)$."
-          - "Calculate $E[X^2]=\\sum_x x^2p(x$."
+          - "Calculate $E[X^2]=\\sum_x x^2p(x)$."
           - "Derive $\\operatorname{Var}(X)=E[X^2]-(E[X])^2$ and the standard deviation."
         controles:
           - "The expected value lies between the support's minimum and maximum."
