@@ -117,7 +117,7 @@ fiche:
           - "Utiliser C/i."
           - "Calculer 10 000/0,05."
         resultat: "$PV=200\\,000$ unités monétaires."
-        interpretation: "La valeur est à $t=0$. Le capital de $200\,000$ génère $10\,000$ d'intérêts annuels à $5\%$."
+        interpretation: "La valeur est à $t=0$. Le capital de $200\\,000$ génère $10\\,000$ d'intérêts annuels à $5\\%$."
         controles:
           - "La perpétuité due serait supérieure d'un paiement, soit 210 000."
       - titre: "Annuités arithmétiques sur dix ans"
@@ -133,9 +133,9 @@ fiche:
           - "Les valeurs nominales des deux séries sont 55."
           - "La somme des valeurs actuelles égale 11$a_{10}$."
       - titre: "Annuité géométrique"
-        enonce: "Un revenu de $1\,000$ est payé dans un an, puis croît de $2\%$ par an pendant dix paiements. Le taux est 5 %."
+        enonce: "Un revenu de $1\\,000$ est payé dans un an, puis croît de $2\\%$ par an pendant dix paiements. Le taux est 5 %."
         raisonnement:
-          - "$C_1=1\,000$, $g=2\%$, $i=5\%$, $n=10$."
+          - "$C_1=1\\,000$, $g=2\\%$, $i=5\\%$, $n=10$."
           - "La croissance et l'actualisation ont la même périodicité annuelle."
           - "Utiliser la formule finie, $i\\ne g$."
         resultat: "$PV\\approx8\\,388{,}11$. La rente constante de 1 000 vaut environ 7 721,73."
@@ -163,7 +163,7 @@ fiche:
         feedback: "Le montant croît d'une unité chaque année, ce n'est pas une indexation en pourcentage."
       - titre: "Avancé — convergence"
         niveau: avance
-        enonce: "Une perpétuité verse $1$ dans un an puis croît de $3\%$. Compare $i=5\%$ et $i=2{,}5\%$."
+        enonce: "Une perpétuité verse $1$ dans un an puis croît de $3\\%$. Compare $i=5\\%$ et $i=2{,}5\\%$."
         corrige:
           - "À 5 %, $g<i$ : $PV=\\frac{1}{0{,}05-0{,}03}=50$."
           - "À 2,5 %, $g\\ge i$ : la série diverge et n'a pas de valeur finie."
@@ -176,13 +176,13 @@ fiche:
         objectif: "Comparer formule fermée et somme directe, puis mesurer l'effet de l'indexation."
         outils: [excel, python]
         entrees:
-          - "Premier paiement : $1\,000$ à $t=1$."
-          - "Croissance $g=2\%$, taux $i=5\%$, durée $n=10$."
+          - "Premier paiement : $1\\,000$ à $t=1$."
+          - "Croissance $g=2\\%$, taux $i=5\\%$, durée $n=10$."
         hypotheses:
           - "Flux certains, taux et croissance constants, échéances annuelles."
           - "Pas de mortalité, frais, fiscalité, risque ou changement de devise."
         procedure:
-          - "Créer $k=1,\\ldots,10$ et le flux $1\,000\\times1{,}02^{k-1}$."
+          - "Créer $k=1,\\ldots,10$ et le flux $1\\,000\\times1{,}02^{k-1}$."
           - "Actualiser par $(1{,}05)^k$ et sommer."
           - |
             ```python
@@ -426,9 +426,9 @@ etapes:
       - {nom: '$s_{\\overline{10}|}$ vaut 12,57789 à 5 %', expr: "abs(accumulated_value(10, 0.05) - 12.57789) < 0.00001"}
       - {nom: '$(Ia)_{\\overline{10}|}$ vaut 39,37378 à 5 %', expr: "abs(increasing_annuity(10, 0.05) - 39.37378) < 0.00001"}
       - {nom: '$(Da)_{\\overline{10}|}$ vaut 45,56530 à 5 %', expr: "abs(decreasing_annuity(10, 0.05) - 45.56530) < 0.00001"}
-      - {nom: '$(Ia) + (Da) = (n+1)\,a_{\\overline{n}|}$', expr: "abs(increasing_annuity(25, 0.03) + decreasing_annuity(25, 0.03) - 26 * (1 - 1.03 ** -25) / 0.03) < 1e-9"}
+      - {nom: '$(Ia) + (Da) = (n+1)\\,a_{\\overline{n}|}$', expr: "abs(increasing_annuity(25, 0.03) + decreasing_annuity(25, 0.03) - 26 * (1 - 1.03 ** -25) / 0.03) < 1e-9"}
       - {nom: 'Géométrique à 2 % : 8,38811', expr: "abs(geometric_annuity(10, 0.05, 0.02) - 8.38811) < 0.00001"}
-      - {nom: 'Cas $g = i$ : $n\,v$', expr: "abs(geometric_annuity(10, 0.05, 0.05) - 10 / 1.05) < 1e-9"}
+      - {nom: 'Cas $g = i$ : $n\\,v$', expr: "abs(geometric_annuity(10, 0.05, 0.05) - 10 / 1.05) < 1e-9"}
 
   - type: vocabulaire
     titre: "Vocabulary"
