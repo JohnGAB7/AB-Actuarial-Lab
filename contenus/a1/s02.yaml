@@ -129,11 +129,11 @@ fiche:
       - titre: "Comparer 6 % nominal mensuel et trimestriel"
         enonce: "Un dépôt est rémunéré au taux nominal de 6 %, convertible mensuellement ou trimestriellement. Quel taux annuel effectif est obtenu ?"
         raisonnement:
-          - "Mensuel : taux de période $0{,}06/12=0{,}005$, soit $0{,}5\%$."
+          - "Mensuel : taux de période $0{,}06/12=0{,}005$, soit $0{,}5\\%$."
           - "Facteur annuel : $(1{,}005)^{12}$."
-          - "Effectif annuel : $(1{,}005)^{12}-1\\approx0{,}061678$, soit $6{,}1678\%$."
+          - "Effectif annuel : $(1{,}005)^{12}-1\\approx0{,}061678$, soit $6{,}1678\\%$."
           - "Trimestriel : taux de période $0{,}06/4=0{,}015$."
-          - "Effectif annuel : $(1{,}015)^4-1\\approx0{,}061364$, soit $6{,}1364\%$."
+          - "Effectif annuel : $(1{,}015)^4-1\\approx0{,}061364$, soit $6{,}1364\\%$."
         resultat: "La fréquence mensuelle produit un effectif légèrement supérieur : environ 6,1678 % contre 6,1364 %."
         interpretation: "À nominal identique et positif, capitaliser plus souvent augmente le rendement effectif car les intérêts s'ajoutent plus tôt au capital."
         controles:
@@ -143,10 +143,10 @@ fiche:
         enonce: "Trouver le nominal d'intérêt et le nominal d'escompte convertible 12 fois par an, équivalents à 4 % effectif."
         raisonnement:
           - "Taux mensuel effectif équivalent : $(1{,}04)^{1/12}-1\\approx0{,}00327374$."
-          - "Nominal d'intérêt : $12$ fois ce taux, soit environ $3{,}92849\%$."
+          - "Nominal d'intérêt : $12$ fois ce taux, soit environ $3{,}92849\\%$."
           - "Facteur mensuel d'escompte : $(1{,}04)^{-1/12$."
-          - "Nominal d'escompte : $12[1-(1{,}04)^{-1/12}]\\approx3{,}91567\%$."
-          - "Force d'intérêt : $\\ln(1{,}04)\\approx3{,}92207\%$."
+          - "Nominal d'escompte : $12[1-(1{,}04)^{-1/12}]\\approx3{,}91567\\%$."
+          - "Force d'intérêt : $\\ln(1{,}04)\\approx3{,}92207\\%$."
         resultat: "i^(12)≈3,92849 %, d^(12)≈3,91567 %, δ≈3,92207 %."
         interpretation: "À effectif annuel fixé, le nominal d'intérêt et le nominal d'escompte se situent de part et d'autre de la force d'intérêt."
         controles:
@@ -155,16 +155,16 @@ fiche:
       - titre: "Valeur actuelle d'une pension payée mensuellement"
         enonce: "Une pension de 1 200 unités par an est versée en 12 paiements de 100 en fin de mois pendant 10 ans. Le taux annuel effectif est 4 %. Quelle est sa valeur actuelle ?"
         raisonnement:
-          - "Le montant annuel total reste $1\,200$ ; le paiement mensuel est $1\,200/12=100$."
+          - "Le montant annuel total reste $1\\,200$ ; le paiement mensuel est $1\\,200/12=100$."
           - "Nominal mensuel équivalent : $i^{(12)}\\approx0{,}0392849$."
           - "Annuité fractionnée unitaire : $a^{(12)}_{\\overline{10}|}=(1-v^{10})/i^{(12)}\\approx8{,}25854$."
-          - "Multiplier par $1\,200$ pour l'échelle de la pension."
-        resultat: "$VA\\approx1\,200\\times8{,}25854\\approx9\,910{,}25$ unités."
+          - "Multiplier par $1\\,200$ pour l'échelle de la pension."
+        resultat: "$VA\\approx1\\,200\\times8{,}25854\\approx9\\,910{,}25$ unités."
         interpretation: "Les versements arrivent plus tôt que 1 200 en fin d'année ; la valeur est supérieure à celle d'une annuité annuelle immédiate de 1 200."
         controles:
           - "Les 120 paiements de 100 représentent bien 12 000 unités non actualisées."
           - "La valeur actuelle est positive et inférieure au total nominal pour i>0."
-          - "Comparer avec $1\,200\\times a_{\\overline{10}|}\\approx9\,733{,}07$ ; la fraction mensuelle vaut davantage."
+          - "Comparer avec $1\\,200\\times a_{\\overline{10}|}\\approx9\\,733{,}07$ ; la fraction mensuelle vaut davantage."
   exercices_corriges:
     exercices:
       - titre: "Fondamental — conversion vers l'effectif"
@@ -173,15 +173,15 @@ fiche:
         corrige:
           - "Taux par trimestre : $0{,}05/4=0{,}0125$."
           - "Facteur annuel : $(1{,}0125)^4\\approx1{,}050945$."
-          - "Taux effectif : environ $5{,}0945\%$."
+          - "Taux effectif : environ $5{,}0945\\%$."
         feedback: "Ne pas confondre 5 % nominal et 5 % effectif ; le trimestre capitalise quatre fois dans l'année."
       - titre: "Intermédiaire — retrouver un nominal"
         niveau: intermediaire
         enonce: "Un taux effectif de 3 % est converti mensuellement. Calculer i^(12) et d^(12), à quatre décimales en pourcentage."
         corrige:
-          - "$i^{(12)}=12[(1{,}03)^{1/12}-1]\\approx2{,}9595\%$."
-          - "$d^{(12)}=12[1-(1{,}03)^{-1/12}]\\approx2{,}9522\%$."
-          - "$\\delta=\\ln(1{,}03)\\approx2{,}9559\%$, ce qui confirme l'encadrement."
+          - "$i^{(12)}=12[(1{,}03)^{1/12}-1]\\approx2{,}9595\\%$."
+          - "$d^{(12)}=12[1-(1{,}03)^{-1/12}]\\approx2{,}9522\\%$."
+          - "$\\delta=\\ln(1{,}03)\\approx2{,}9559\\%$, ce qui confirme l'encadrement."
         feedback: "La formule d'escompte utilise le facteur v^(1/12) ; ne pas remplacer le taux effectif par i/12."
       - titre: "Avancé — pension fractionnée"
         niveau: avance
@@ -189,8 +189,8 @@ fiche:
         corrige:
           - "Calculer $i^{(12)}=12[(1{,}03)^{1/12}-1]\\approx0{,}029590$."
           - "Calculer $v=(1{,}03)^{-1}$ et $v^{15}$."
-          - "VA fractionnée : $2\,400(1-v^{15})/i^{(12)}$."
-          - "VA annuelle : $2\,400(1-v^{15})/0{,}03$."
+          - "VA fractionnée : $2\\,400(1-v^{15})/i^{(12)}$."
+          - "VA annuelle : $2\\,400(1-v^{15})/0{,}03$."
           - "Le ratio est $i/i^{(12)}>1$ ; la valeur fractionnée est donc plus élevée."
         feedback: "Le total annuel est identique. L'écart vient uniquement du calendrier des versements, pas du montant nominal annuel."
   applications_labs:
