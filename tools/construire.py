@@ -167,16 +167,17 @@ def dom_court(d: dict, langue: str) -> str:
     return courts.get(d["id"], (d["titre"], d["en"]))[0 if langue == "fr" else 1]
 
 
-def marque(racine: str, langue: str) -> str:
-    """Use the purpose-built Actuarial Learning Lab mark in the current theme."""
+def marque(racine: str, langue: str, base: str | None = None) -> str:
+    """Use one cacheable mark; asset paths must not include the language prefix."""
+    base = racine if base is None else base
     libelle = "ACTUARIAL LEARNING LAB" if langue == "en" else "LABORATOIRE ACTUARIEL"
     signature = "BY ACTU-BASICS" if langue == "en" else "PAR ACTU-BASICS"
     return (
         f'<a class="brand brand-lockup" href="{racine}index.html" aria-label="{libelle} — {signature}">'
-        f'<picture class="brand-mark">'
-        f'<img class="brand-logo brand-logo-light" src="{racine}assets/actuarial-lab-mark.svg" alt="" width="44" height="44">'
-        f'<img class="brand-logo brand-logo-dark" src="{racine}assets/actuarial-lab-mark-dark.svg" alt="" width="44" height="44" loading="lazy">'
-        f'</picture><span class="brand-copy"><strong>{libelle}</strong><small>{signature}</small></span></a>'
+        f'<span class="brand-mark">'
+        f'<img class="brand-logo" src="{base}assets/actuarial-lab-mark.svg" alt="" width="44" height="44" loading="eager" decoding="async">'
+        
+        f'</span><span class="brand-copy"><strong>{libelle}</strong><small>{signature}</small></span></a>'
     )
 
 
@@ -429,7 +430,7 @@ def construire() -> None:
             donnees = dict(s, accueil=racine + "index.html", module_url=racine + m["id"] + "/index.html",
                            module_titre=mod_titre(m, langue), domaine_titre=dom_titre(dom, langue))
             page = g_seance.substitute(
-                titre=e(s["titre"]), site_title=e(titre_site(langue)), marque=marque(racine, langue), favicon=racine + favicon_url(langue), base=base, accueil=donnees["accueil"], lang=langue, autre=autre,
+                titre=e(s["titre"]), site_title=e(titre_site(langue)), marque=marque(racine, langue, base), favicon=base + favicon_url(langue), base=base, accueil=donnees["accueil"], lang=langue, autre=autre,
                 bascule=bascule(langue, autre), alt_fr=base + sid + "/index.html", alt_en=base + "en/" + sid + "/index.html", compte=t["compte"], racine=racine,
                 progression=t["progression"], etapes=t["etapes"],
                 donnees=json.dumps(donnees, ensure_ascii=False).replace("</", "<\\/"))
@@ -444,7 +445,7 @@ def construire() -> None:
             cible = (sortie / chemin / "index.html") if chemin else sortie / "index.html"
             cible.parent.mkdir(parents=True, exist_ok=True)
             cible.write_text(g_page.substitute(
-                titre=e(titre), description=e(description), favicon=racine + favicon_url(langue), base=base, classe=classe, plan=plan, lang=langue,
+                titre=e(titre), description=e(description), favicon=base + favicon_url(langue), base=base, classe=classe, plan=plan, lang=langue,
                 alt_fr=base + (chemin + "/" if chemin else "") + "index.html",
                 alt_en=base + "en/" + (chemin + "/" if chemin else "") + "index.html",
                 entete=entete(parcours, racine, autre, langue, actif), contenu=contenu,
