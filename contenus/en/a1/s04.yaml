@@ -135,7 +135,7 @@ fiche:
       - titre: "3. NPV and IRR of a simple project"
         enonce: "Invest €1,000 today and receive €600 at the end of year 1 and €600 at the end of year 2."
         raisonnement:
-          - "NPV(j)=−1,000+600/(1+j)+600/(1+j)^2."
+          - "NPV(j)=−1,000+600/(1+j)+600/(1+j)²."
           - "IRR is the root of NPV(j)=0."
           - "Numerical IRR is approximately 13.0662%."
           - "At a 10% decision rate, NPV is positive: approximately €41.32."
@@ -157,13 +157,13 @@ fiche:
         corrige:
           - "P≈€2,373.96."
           - "B_2=P a_{3|}≈€6,345.63."
-          - "Check with B_2=10,000(1.06)^2−P s_{2|}."
+          - "Check with B_2=10,000(1.06)²−P s_{2|}."
         feedback: "The prospective balance discounts remaining payments. The retrospective method should agree."
       - titre: "NPV and IRR — intermediate"
         enonce: "A project costs €2,000 and pays €1,200 at the end of years 1 and 2. Calculate NPV at 8% and determine IRR."
         corrige:
           - "NPV(8%)=−2,000+1,200/1.08+1,200/1.08²≈€139.92."
-          - "IRR solves −2,000+1,200/(1+j)+1,200/(1+j)^2=0."
+          - "IRR solves −2,000+1,200/(1+j)+1,200/(1+j)²=0."
           - "For two equal receipts, solve 2,000=P a_{2|}: j≈13.0662%."
         feedback: "Positive NPV at the decision rate indicates value creation in this model. IRR is a root of the NPV equation; do not assume uniqueness for every cash-flow pattern."
   applications_labs:
@@ -278,7 +278,7 @@ etapes:
           rappel: >-
             Interest is charged on the balance, which falls. With a fixed payment, the interest share falls, so the capital share rises.
           exemple: >-
-            Year 1: €1,773.96 of capital. Year 3: €1,993.23, that is $1{,}773.96 \times 1.06^2$.
+            Year 1: €1,773.96 of capital. Year 3: €1,993.23, that is $1{,}773.96 \times 1.06²$.
           piege: >-
             The same capital repaid each year is another kind of loan: constant amortization, with falling payments.
       - q: 'The internal rate of return (IRR) of a project is the rate that…'
