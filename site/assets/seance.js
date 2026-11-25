@@ -59,22 +59,13 @@ const DROP_TAGS = new Set([
   "SCRIPT", "STYLE", "SVG", "MATH", "IFRAME", "OBJECT", "EMBED", "TEMPLATE",
   "NOSCRIPT", "IMG", "VIDEO", "AUDIO", "FORM", "INPUT", "LINK", "META", "BASE",
 ]);
-// Convert common bare formula notation in prose to inline KaTeX delimiters.
-// Explicitly delimited math and existing rich-text sub/sup markup are preserved.
-function inlineNotation(value) {
-  const pattern = /\\frac\{[^{}]+\}\{[^{}]+\}|\b[A-Za-z]\([^()]{1,24}\)\^\{?[A-Za-z0-9]+\}?|\b[A-Za-z]_\{?[A-Za-z0-9]+\}?|\b[A-Za-z]_[A-Za-z0-9]+|\b[A-Za-z0-9)\]}]\^\{?[A-Za-z0-9]+\}?|\b[A-Za-z]\([^()]{1,24}\)/g;
-  return String(value ?? "").split(/(\$[^$]*\$|\\\([^)]*\\\))/g).map((part,index) => {
-    if (index % 2 === 1) return part;
-    return part.replace(pattern, (match) => "$" + match + "$");
-  }).join("");
-}
 function rich(value) {
   const template = document.createElement("template");
   template.innerHTML = String(value ?? "").replace(/(<(?:strong|b)>[A-Z]<\/(?:strong|b)>)\s*[-–—]\s*(?=<)/g, "$1 ");
   const fragment = document.createDocumentFragment();
   const copy = (node, parent) => {
     if (node.nodeType === Node.TEXT_NODE) {
-      parent.append(document.createTextNode(inlineNotation(node.nodeValue || "")));
+      parent.append(document.createTextNode(node.nodeValue || ""));
       return;
     }
     if (node.nodeType !== Node.ELEMENT_NODE || DROP_TAGS.has(node.tagName)) return;
@@ -103,7 +94,7 @@ const el = (tag, attrs = {}, ...kids) => {
   for (const [k, v] of Object.entries(attrs)) {
     if (k === "html") e.append(rich(v)); else if (k === "class") e.className = v; else e.setAttribute(k, v);
   }
-  e.append(...kids.filter((k) => k !== null && k !== undefined && k !== "").map((k) => typeof k === "string" ? inlineNotation(k) : k));
+  e.append(...kids.filter((k) => k !== null && k !== undefined && k !== "").map((k) => k));
   return e;
 };
 const KEY = "parcours:" + S.id;
