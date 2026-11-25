@@ -164,7 +164,7 @@ fiche:
         controles:
           - "Les 120 paiements de 100 représentent bien 12 000 unités non actualisées."
           - "La valeur actuelle est positive et inférieure au total nominal pour i>0."
-          - "Comparer avec 1 200×a_{10|}≈9 733,09 ; la fraction mensuelle vaut davantage."
+          - "Comparer avec 1 200×a_{10|}≈9 733,07 ; la fraction mensuelle vaut davantage."
   exercices_corriges:
     exercices:
       - titre: "Fondamental — conversion vers l'effectif"
