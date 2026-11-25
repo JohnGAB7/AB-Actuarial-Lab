@@ -110,7 +110,7 @@ fiche:
   exemples_guides:
     exemples:
       - titre: "1. Level payment and first instalment"
-        enonce: "Borrow €10,000 at an effective annual rate of 6%, repaid by five end-of-year level payments."
+        enonce: "Borrow €10,000 at an effective annual rate of 6%, repaid by 5 end-of-year level payments."
         raisonnement:
           - "Calculate a_{5|}=(1−1.06^{-5})/0.06≈4.212364."
           - "P=10,000/4.212364≈€2,373.96."
