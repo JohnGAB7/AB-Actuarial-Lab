@@ -96,9 +96,9 @@ fiche:
         enonce: "A contract pays 1 monetary unit per year for 3 years. The annual effective rate is $i=2.5\\%$. Find the value at time 0 if payments are made at year-end, then at the beginning of each year."
         raisonnement:
           - "Compute v=1/1.025≈0.9756098."
-          - "Year-end: a_{3|}=v+v²+v³≈0.9756098+0.9518144+0.9285994=2.8560236."
-          - "Beginning of year: ä_{3|}=1+v+v²≈2.9274242."
-          - "Check: 1.025×2.8560236≈2.9274242."
+          - "Year-end: $a_{\\overline{3}|}=v+v^2+v^3\\approx0.9756098+0.9518144+0.9285994=2.8560236$."
+          - "Beginning of year: $\\ddot{a}_{\\overline{3}|}=1+v+v^2\\approx2.9274242$."
+          - "Check: $1.025\\times2.8560236\\approx2.9274242$."
         resultat: "Annuity immediate: 2.8560. Annuity due: 2.9274 monetary units at time 0."
         interpretation: "The annuity-due payments occur one period earlier and are therefore discounted less. The difference comes from timing, not from the amount or number of payments."
         controles:
@@ -128,14 +128,14 @@ fiche:
         enonce: "A rent of 900 monetary units is paid at the beginning of each year for 5 years. At an annual effective rate of 3%, calculate its present value."
         corrige:
           - "Payment dates are 0 ; 1 ; 2 ; 3 ; 4: this is an annuity due."
-          - "ä_{5|}=(1+i)a_{5|}=(1.03)×(1−1.03⁻⁵)/0.03."
-          - "Present value is 900×ä_{5|}≈4,245.4 monetary units (rounded to one decimal)."
+          - "$\\ddot{a}_{\\overline{5}|}=(1+i)a_{\\overline{5}|}=(1.03)\\times(1-1.03^{-5})/0.03$."
+          - "Present value is $900\\times\\ddot{a}_{\\overline{5}|}\\approx4,245.4$ monetary units (rounded to one decimal)."
         feedback: "The first payment at the beginning of the first year is not discounted. Using a_{5|} incorrectly moves the first rent one year later."
       - titre: "Advanced — irregular cash flows"
         enonce: "A scheme pays 2,000 units at $t=1$ and $1,500$ at $t=4$, and receives $300$ at $t=2$. Calculate net present value at a 5% annual effective rate."
         corrige:
           - "Set a convention: treat benefits as positive and the receipt as a negative cost, or reverse all signs consistently."
-          - "With benefits positive and the receipt negative: NPV=2,000/1.05+1,500/(1.05)⁴−300/(1.05)²."
+          - "With benefits positive and the receipt negative: $NPV=2,000/1.05+1,500/(1.05)^4-300/(1.05)^2$."
           - "Discount each term at its own date and sum; NPV is approximately 2,866.7 units."
         feedback: "The key points are the sign of the receipt and the exact dates. The nominal sum 2,000+1,500−300 does not answer the question because the flows do not occur at the same time."
   applications_labs:
