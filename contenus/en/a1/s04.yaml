@@ -27,22 +27,22 @@ fiche:
         contenu: "A loan $L$ received at time $0$ and repaid by $n$ level payments $P$ at the end of each period at effective rate $i$ is valued at time $0$. The present value of payments must equal the amount lent. For $i>0$, the payment is positive and constant. If $i=0$, the principal is simply divided into n payments."
         formules:
           - explication: "Equation of value for payments at times 1,…,n."
-          - explication: "Constant periodic payment. Special case i=0: P=L/n."
+          - explication: "Constant periodic payment. Special case $i=0$: $P=L/n$."
       - titre: "2. Payment decomposition and balance recurrence"
         contenu: "At period $k$, interest $I_k$ is calculated on the opening balance $B_{k-1}$. Payment $P$ covers interest first; the remainder repays principal. The closing balance is the previous balance less principal repayment. For $i>0$, a level-payment amortized loan has declining interest and increasing principal repayments. For $i=0$, both are constant."
         formules:
           - explication: "Period interest and principal repayment (PR)."
-          - explication: "Balance recurrence after payment k, with B_0=L."
+          - explication: "Balance recurrence after payment $k$, with $B_0=L$."
           - explication: "For level payments, principal repayment grows geometrically by factor 1+i."
       - titre: "3. Outstanding balance — prospective method"
         contenu: "The prospective method values the payments still due at the balance date. After $k$ payments, $n-k$ payments remain at times $k+1,\\ldots,n$. Their value at time k is the balance. At $k=n$, no payments remain and the balance is zero."
         formules:
-          - explication: "Value at time k of future payments; define a_0=0."
+          - explication: "Value at time $k$ of future payments; define $a_0=0$."
       - titre: "4. Outstanding balance — retrospective method"
         contenu: "The retrospective method accumulates the original loan to time k, then subtracts the accumulated value of payments already made. It gives the same balance as the prospective method when contractual cash flows use the same rate."
         formules:
-          - explication: "Retrospective balance after k payments, with s_0=0."
-          - explication: "Accumulated value of a unit immediate annuity; if i=0, s_k=k."
+          - explication: "Retrospective balance after $k$ payments, with $s_0=0$."
+          - explication: "Accumulated value of a unit immediate annuity; if $i=0$, $s_k=k$."
       - titre: "5. Constant principal repayment"
         contenu: "In a constant-principal plan, principal repayment $A$ is identical each period: $A=L/n$. The balance declines linearly. Interest declines with the balance: total payments decline when i>0 and remain constant when i=0. This differs from a level-payment loan, where total payment P is fixed."
         formules:
@@ -77,20 +77,20 @@ fiche:
       - titre: "Build an amortization schedule"
         quand_utiliser: "Payment, interest, principal and balance must be detailed period by period."
         etapes:
-          - "Set opening balance B_0=L."
-          - "Calculate I_k=iB_{k−1}."
-          - "Calculate PR_k=P−I_k."
-          - "Calculate B_k=B_{k−1}−PR_k."
+          - "Set opening balance $B_0=L$."
+          - "Calculate $I_k=iB_{k-1$."
+          - "Calculate $PR_k=P-I_k$."
+          - "Calculate $B_k=B_{k-1}-PR_k$."
           - "Check total principal repayments and final balance."
         controles:
           - "Interest + principal repayment = payment."
-          - "B_k=B_{k−1}−PR_k."
+          - "$B_k=B_{k-1}-PR_k$."
           - "Total principal repayments equal L."
           - "The balance decreases for an amortized loan with non-negative rate."
         erreurs:
           - "Calculating interest on the closing balance."
           - "Subtracting the entire payment from the balance."
-          - "Confusing B_k and B_{k−1}."
+          - "Confusing $B_k$ and $B_{k-1}$."
       - titre: "Calculate and interpret IRR"
         quand_utiliser: "Project cash flows are dated and an internal rate is requested."
         etapes:
@@ -113,7 +113,7 @@ fiche:
         enonce: "Borrow €10,000 at an effective annual rate of 6%, repaid by 5 end-of-year level payments."
         raisonnement:
           - "Calculate a_{5|}=(1−1.06^{-5})/0.06≈4.212364."
-          - "P=10,000/4.212364≈€2,373.96."
+          - "$P=10,000/4.212364\\approx€2,373.96$."
           - "At the first instalment, $I_1=0.06\\times10,000=€600$."
           - "$PR_1=2,373.96-600\\approx€1,773.96$; $B_1\\approx€8,226.04$."
         resultat: "Level payment ≈ €2,373.96; balance after the first instalment ≈ €8,226.04."
@@ -157,7 +157,7 @@ fiche:
         corrige:
           - "P≈€2,373.96."
           - "B_2=P a_{3|}≈€6,345.63."
-          - "Check with B_2=10,000(1.06)^2−P s_{2|}."
+          - "Check with $B_2=10,000(1.06)^2-Ps_{\\overline{2}|$."
         feedback: "The prospective balance discounts remaining payments. The retrospective method should agree."
       - titre: "NPV and IRR — intermediate"
         enonce: "A project costs €2,000 and pays €1,200 at the end of years 1 and 2. Calculate NPV at 8% and determine IRR."
@@ -207,7 +207,7 @@ fiche:
             assert abs(P - 2_373.9640043) < 1e-6
             assert abs(rows[1][3] - 6_345.6341511) < 1e-6
             ```
-          - "Test i=0 and check that principal is repaid in equal amounts."
+          - "Test $i=0$ and check that principal is repaid in equal amounts."
           - "Compare payment profiles for constant principal and level-payment amortization."
         sorties:
           - "Periodic payment and total interest."
@@ -225,9 +225,9 @@ fiche:
   synthese_references:
     memo:
       - "L=P a_{n|} and P=L/a_{n|}; at zero rate, P=L/n."
-      - "Payment = interest iB_{k−1} + principal repayment PR_k."
-      - "B_k=P a_{n−k|} (prospective) = L(1+i)^k−P s_{k|} (retrospective)."
-      - "Constant principal: A=L/n; total payments decline when i>0 and remain constant when i=0."
+      - "Payment = interest $iB_{k-1}$ + principal repayment $PR_k$."
+      - "$B_k=P a_{\\overline{n-k}|}$ (prospective) $=L(1+i)^k-Ps_{\\overline{k}|}$ (retrospective)."
+      - "Constant principal: $A=L/n$; total payments decline when $i>0$ and remain constant when $i=0$."
       - "NPV(j)=discounted cash-flow sum; IRR is a root, not necessarily unique."
     glossaire:
       - definition: "Loan whose principal is repaid progressively according to a schedule."
