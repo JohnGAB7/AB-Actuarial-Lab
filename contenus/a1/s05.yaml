@@ -217,3 +217,275 @@ etapes:
       - ["Taux spot", "spot rate, zero-coupon rate", "We discount each cash flow at its own spot rate."]
       - ["Taux à terme", "forward rate", "The one-year forward rate in two years is about 5%."]
       - ["Courbe des taux", "yield curve, term structure of interest rates", "The liabilities are discounted with the risk-free yield curve."]
+
+fiche:
+  statut: brouillon
+  vue_ensemble:
+    question: "Comment passer du prix d'une obligation à une lecture cohérente de la courbe des taux et de sa sensibilité ?"
+    pourquoi: "Les obligations sont des instruments centraux pour investir, valoriser des engagements et mesurer le risque de taux. Un rendement unique résume les flux, tandis qu'une courbe spot permet de les actualiser par échéance."
+    objectifs:
+      - "Calculer le prix d'une obligation à coupons à partir de son rendement à l'échéance."
+      - "Interpréter prime, décote et prix au pair."
+      - "Distinguer rendement à l'échéance et taux spot."
+      - "Dériver des taux à terme à partir d'une courbe spot sous une convention de capitalisation."
+      - "Calculer duration de Macaulay, duration modifiée et convexité et interpréter leur approximation."
+      - "Identifier les principales limites et sources de risque obligataire."
+    prerequis:
+      - "Valeur actuelle d'une annuité et d'un flux unique."
+      - "Capitalisation composée et taux effectif."
+      - "Dérivée et somme de flux actualisés."
+    carte:
+      - "Prix : valeur actuelle des coupons et du remboursement."
+      - "YTM : taux unique qui reproduit le prix, sous les hypothèses de flux contractuels."
+      - "Spot : taux propre à chaque échéance pour actualiser un flux."
+      - "Forward : taux implicite entre deux dates futures."
+      - "Duration et convexité : mesures de sensibilité au rendement."
+    duree_minutes: 60
+  cours_complet:
+    sections:
+      - titre: "1. Prix d'une obligation à coupons"
+        contenu: "Une obligation standard verse un coupon c à chaque date prévue puis rembourse le nominal F à l'échéance n. Le prix est la valeur actuelle des flux contractuels. Pour des coupons annuels constants et un rendement effectif annuel y, la formule est une annuité de coupons plus le remboursement actualisé. Le rendement à l'échéance (YTM) est le taux qui résout cette équation à partir du prix observé; il suppose notamment que les flux sont honorés et que la convention de taux et les dates sont cohérentes."
+        formules:
+          - formule: 'P=\sum_{t=1}^{n}\frac{c}{(1+y)^t}+\frac{F}{(1+y)^n}=c\,a_{\overline{n}|y}+Fv_y^n'
+            explication: "Prix d'une obligation à coupon annuel constant, avec remboursement du nominal à l'échéance."
+          - formule: 'c=Fq,\qquad v_y=\frac{1}{1+y}'
+            explication: "Le coupon monétaire c correspond au nominal F multiplié par le taux de coupon q."
+          - formule: 'P-F=(c-Fy)\,a_{\overline{n}|y}'
+            explication: "Identité qui relie le prix au pair à l'écart entre coupon monétaire et intérêt au rendement."
+      - titre: "2. Prime, décote et prix au pair"
+        contenu: "Le prix est au pair lorsque le coupon monétaire égale le rendement exigé. Si le coupon est supérieur au rendement, l'obligation vaut plus que son nominal : elle cote avec une prime. Si le coupon est inférieur au rendement, elle cote avec une décote. À flux fixes, le prix est décroissant avec le rendement; à mesure que l'échéance approche, le prix tend vers le remboursement final, sous réserve que les flux soient payés et qu'il n'y ait pas de défaut ni option."
+        formules:
+          - formule: 'q>y\Rightarrow P>F;\qquad q=y\Rightarrow P=F;\qquad q<y\Rightarrow P<F'
+            explication: "Comparaison du taux de coupon q et du rendement y pour une obligation standard."
+          - formule: '\frac{\partial P}{\partial y}=-\sum_{t=1}^{n}\frac{tC_t}{(1+y)^{t+1}}<0'
+            explication: "Pour des flux positifs fixes, une hausse du rendement réduit le prix."
+      - titre: "3. YTM, taux spot et prix clean/dirty"
+        contenu: "Le YTM est un taux unique qui reproduit le prix d'un instrument avec ses flux. Les taux spot s'appliquent plutôt à un flux zéro-coupon de chaque échéance : ils permettent de construire une valorisation cohérente avec la courbe. Le prix calculé par flux spot est le prix théorique sur la courbe. En marché, le prix coté clean exclut généralement le coupon couru, tandis que le prix dirty payé inclut ce coupon. Le coupon couru dépend de la convention de jours, des dates de coupon et du marché; aucune convention universelle n'est supposée ici."
+        formules:
+          - formule: 'P=\sum_{t=1}^{n}\frac{C_t}{(1+s_t)^t}'
+            explication: "Actualisation par taux spot correspondant à la date de chaque flux, avec capitalisation annuelle effective."
+          - formule: 'P_{dirty}=P_{clean}+CC'
+            explication: "Relation usuelle entre prix dirty et clean; CC désigne le coupon couru calculé selon la convention de marché."
+      - titre: "4. Courbe spot et taux à terme"
+        contenu: "Une courbe spot est un ensemble de taux zéro-coupon par échéance. Sous capitalisation annuelle effective et absence d'arbitrage, investir jusqu'à deux ans doit avoir la même valeur qu'investir un an puis réinvestir un an au taux à terme implicite. Le forward est un taux mathématiquement implicite dans la courbe, pas nécessairement une prévision du taux futur. Les taux peuvent être interpolés pour des échéances absentes, mais la méthode d'interpolation doit être annoncée."
+        formules:
+          - formule: '(1+s_2)^2=(1+s_1)(1+f_{1,2})'
+            explication: "Équivalence de placements sur deux ans et d'un placement suivi d'un taux à terme."
+          - formule: '1+f_{t-1,t}=\frac{(1+s_t)^t}{(1+s_{t-1})^{t-1}}'
+            explication: "Taux à terme annuel entre les dates t−1 et t, avec s_0=0."
+          - formule: 'P=\sum_{t=1}^{n}\frac{C_t}{(1+s_t)^t}'
+            explication: "Valorisation d'une obligation par la courbe spot, différente du calcul à un YTM unique."
+      - titre: "5. Duration de Macaulay et duration modifiée"
+        contenu: "La duration de Macaulay est la moyenne pondérée des dates de paiement, où les poids sont les valeurs actuelles des flux divisées par le prix. Elle s'exprime en années pour des flux annuels. La duration modifiée mesure approximativement la variation relative du prix pour une petite variation du YTM, sous capitalisation annuelle et flux fixes. Pour des taux composés m fois par an, la formule doit être adaptée à la convention."
+        formules:
+          - formule: 'D_{Mac}=\frac{\sum_{t=1}^{n}t\,PV(C_t)}{P}'
+            explication: "Moyenne pondérée des dates de flux par leur valeur actuelle."
+          - formule: 'D_{mod}=\frac{D_{Mac}}{1+y}'
+            explication: "Duration modifiée pour un rendement annuel effectif et capitalisation annuelle."
+          - formule: '\frac{\Delta P}{P}\approx-D_{mod}\,\Delta y'
+            explication: "Approximation de premier ordre : duration modifiée seule, pour une petite variation du rendement."
+      - titre: "6. Convexité et approximation prix-rendement"
+        contenu: "La convexité mesure la courbure du prix par rapport au rendement. Pour des flux positifs d'une obligation standard, le prix est convexe : l'approximation par duration seule sous-estime généralement le gain quand le rendement baisse et surestime la perte quand il monte, pour des variations assez petites et comparables. Duration et convexité ne remplacent pas le recalcul exact du prix; elles sont des approximations locales."
+        formules:
+          - formule: 'Conv=\frac{1}{P}\sum_{t=1}^{n}\frac{t(t+1)C_t}{(1+y)^{t+2}}'
+            explication: "Convexité conventionnelle pour capitalisation annuelle effective et flux fixes."
+          - formule: '\frac{\Delta P}{P}\approx-D_{mod}\Delta y+\frac12 Conv(\Delta y)^2'
+            explication: "Approximation de second ordre, avec variation de rendement exprimée en valeur décimale."
+      - titre: "7. Risques, conventions et limites"
+        contenu: "Une obligation peut subir un risque de taux, de crédit/défaut, de liquidité, de réinvestissement, d'inflation, de change et de modèle. Les obligations remboursables par anticipation ou convertibles ont des flux optionnels : duration et convexité peuvent être différentes, voire la convexité négative dans certaines zones. Une courbe spot doit être construite à partir d'instruments et de conventions cohérents; les taux ne sont pas toujours observables à toutes les maturités. Le YTM ne représente pas un rendement réalisé garanti : celui-ci dépend du prix de revente, du défaut et du réinvestissement des coupons. Les calculs de cette fiche supposent des coupons annuels, taux effectifs, flux déterministes et aucune option, taxe ou frais."
+        formules:
+          - formule: '\text{Rendement réalisé}\ne\text{YTM garanti}'
+            explication: "Le YTM est une mesure de valorisation sous hypothèses, pas une promesse de rendement ex post."
+  methodes:
+    methodes:
+      - titre: "Valoriser au YTM"
+        quand_utiliser: "Un prix ou un rendement à l'échéance est demandé pour une obligation à flux contractuels connus."
+        etapes:
+          - "Tracer les coupons et le remboursement du nominal sur la chronologie."
+          - "Identifier le coupon monétaire, la fréquence, la maturité et le YTM."
+          - "Vérifier que taux et fréquence sont compatibles."
+          - "Actualiser chaque flux ou utiliser l'annuité."
+          - "Comparer le prix au nominal et interpréter prime/décote."
+        controles:
+          - "À coupon égal au YTM, le prix doit être au pair."
+          - "Le prix doit baisser quand le YTM augmente, pour les flux positifs fixes."
+          - "La somme actualisée des flux doit égaler le prix."
+        erreurs:
+          - "Confondre taux de coupon et YTM."
+          - "Actualiser le coupon au mauvais nombre de périodes."
+          - "Oublier le remboursement du nominal."
+      - titre: "Construire un prix par taux spot"
+        quand_utiliser: "La courbe spot est donnée et les flux ont des échéances différentes."
+        etapes:
+          - "Lister les flux C_t et leurs échéances."
+          - "Associer à chaque flux son taux spot s_t."
+          - "Actualiser chaque flux avec son taux et son échéance."
+          - "Sommer les valeurs actuelles."
+          - "Comparer éventuellement au prix calculé par YTM et expliquer l'écart."
+        controles:
+          - "Chaque taux spot doit correspondre à l'échéance du flux."
+          - "La courbe et les conventions de capitalisation doivent être cohérentes."
+          - "La somme des PV doit égaler le prix théorique."
+        erreurs:
+          - "Utiliser le taux spot final pour tous les flux."
+          - "Confondre le taux spot et le YTM."
+          - "Moyenner les taux sans pondération ni modèle."
+      - titre: "Mesurer la sensibilité"
+        quand_utiliser: "Comparer la sensibilité de deux obligations ou approximer un effet de choc de rendement."
+        etapes:
+          - "Calculer le prix au rendement de base."
+          - "Calculer les PV des flux et les poids."
+          - "Calculer duration Macaulay, puis duration modifiée."
+          - "Calculer la convexité selon la convention annoncée."
+          - "Approximer le prix après choc et comparer à une repricing exacte."
+        controles:
+          - "Duration Macaulay se situe entre la première et la dernière date de paiement pour des flux positifs."
+          - "La duration modifiée est inférieure à Macaulay si y>0."
+          - "La convexité est positive pour une obligation standard à flux fixes."
+        erreurs:
+          - "Confondre années et variation de prix en pourcentage."
+          - "Entrer 1 au lieu de 0,01 pour un choc de 1 %."
+          - "Oublier le terme de convexité ou l'appliquer à de grands chocs sans contrôle."
+  exemples_guides:
+    exemples:
+      - titre: "Prix, prime et décote"
+        enonce: "Obligation fictive : nominal 1 000 €, coupon annuel 5 %, échéance 5 ans. Calculer le prix pour un YTM de 4 %, 5 % et 6 %."
+        raisonnement:
+          - "Coupons de 50 € aux années 1 à 5 et remboursement de 1 000 € à l'année 5."
+          - "À 4 %, P≈1 044,52 € : prime."
+          - "À 5 %, P=1 000 € : au pair."
+          - "À 6 %, P≈957,88 € : décote."
+        resultat: "P(4 %)≈1 044,52 €; P(5 %)=1 000 €; P(6 %)≈957,88 €."
+        interpretation: "Le prix évolue en sens inverse du rendement exigé, car les flux contractuels restent fixes."
+        controles:
+          - "Recalculer par somme de coupons actualisés et remboursement."
+          - "Le prix à 5 % doit être exactement le nominal à la précision numérique."
+      - titre: "Prix par courbe spot et taux à terme"
+        enonce: "Courbe fictive s_1=3 %, s_2=3,5 %, s_3=4 %. Prix d'une obligation 3 ans, nominal 1 000 €, coupon 5 %; calculer aussi les taux à terme entre les années 1 et 2, puis 2 et 3."
+        raisonnement:
+          - "P=50/1,03+50/1,035²+1 050/1,04³."
+          - "Les taux à terme découlent de l'équivalence des facteurs de capitalisation."
+          - "f_{1→2}=(1,035²/1,03)−1≈4,0024 %."
+          - "f_{2→3}=(1,04³/1,035²)−1≈5,0073 %."
+        resultat: "Prix≈1 028,67 €; f_{1→2}≈4,0024 %; f_{2→3}≈5,0073 %."
+        interpretation: "Le prix spot actualise chaque coupon à son taux propre; les forwards sont implicites et ne constituent pas des prévisions garanties."
+        controles:
+          - "Vérifier chaque PV individuellement."
+          - "Comparer le prix à celui d'un YTM proche de 3,9677 %."
+      - titre: "Duration et convexité"
+        enonce: "Pour l'obligation 5 ans nominal 1 000 €, coupon 5 %, YTM 4 %, calculer les sensibilités."
+        raisonnement:
+          - "Prix≈1 044,5182 €."
+          - "Duration Macaulay≈4,5571 ans; duration modifiée≈4,3818."
+          - "Convexité conventionnelle≈24,4766."
+          - "Pour un choc de +1 point de rendement, l'approximation de second ordre donne une variation relative d'environ −4,2599 %."
+        resultat: "D_Mac≈4,5571; D_mod≈4,3818; Conv≈24,4766."
+        interpretation: "La duration mesure la sensibilité locale; la convexité corrige la courbure. Une repricing exacte est préférable pour un choc significatif."
+        controles:
+          - "Comparer l'approximation à P(5 %)−P(4 %)."
+          - "Les poids des PV doivent sommer à 1."
+  exercices_corriges:
+    exercices:
+      - titre: "Fondamental — prime ou décote"
+        niveau: fondamental
+        enonce: "Nominal 1 000 €, coupon 4 %, 4 ans, YTM 5 %. Le prix est-il au pair, en prime ou en décote ?"
+        corrige:
+          - "Le coupon monétaire vaut 40 € et le rendement exigé est 5 %."
+          - "Le coupon est inférieur au rendement : l'obligation cote en décote."
+          - "P=40 a_4|5%+1 000 v_5%^4≈964,54 €."
+        feedback: "Compare le coupon monétaire au rendement exigé avant de calculer le prix."
+      - titre: "Intermédiaire — spot versus YTM"
+        niveau: intermediaire
+        enonce: "Une obligation 3 ans, nominal 1 000 €, coupon 5 %, est valorisée avec s_1=3 %, s_2=3,5 %, s_3=4 %. Calcule son prix et explique pourquoi le YTM n'est pas nécessairement 4 %."
+        corrige:
+          - "Actualiser 50 à 1 an avec 3 %, 50 à 2 ans avec 3,5 %, et 1 050 à 3 ans avec 4 %."
+          - "P≈1 028,67 €."
+          - "Le YTM unique qui reproduit ce prix est environ 3,9677 %; les coupons influencent ce taux."
+        feedback: "Le taux spot est propre à chaque échéance; le YTM est le taux unique qui résume l'ensemble des flux."
+      - titre: "Avancé — duration et choc"
+        niveau: avance
+        enonce: "À YTM 4 %, estime la variation de prix d'une obligation standard lorsque le rendement monte de 0,5 point. Utilise duration modifiée 4,3818 et convexité 24,4766."
+        corrige:
+          - "Δy=0,005."
+          - "Approximation: −4,3818×0,005+0,5×24,4766×0,005²≈−2,1600 %."
+          - "La duration seule donne environ −2,1909 %; le terme de convexité atténue la baisse."
+        feedback: "Le choc est exprimé en décimal. La convexité est multipliée par le carré du choc et la moitié."
+  applications_labs:
+    applications:
+      - titre: "Laboratoire de courbe spot, prix et sensibilité"
+        contexte: "Courbe et obligation synthétiques pour illustrer la valorisation, sans données de marché."
+        objectif: "Comparer un prix YTM, un prix spot, les forwards et l'approximation de sensibilité."
+        outils: [excel, python]
+        entrees:
+          - "Nominal 1 000, coupon annuel 5 %, maturité 5 ans."
+          - "YTM de base 4 %, puis chocs −1, +0,5 et +1 point."
+          - "Courbe spot illustrative : 3 %, 3,5 %, 4 %, 4,25 %, 4,5 %."
+        hypotheses:
+          - "Coupons annuels, capitalisation annuelle effective, flux fixes."
+          - "Courbe fictive, pas de défaut, options, taxes ou frais."
+        procedure:
+          - "Créer les flux annuels 50, 50, 50, 50, 1 050."
+          - "Calculer le prix YTM par somme de PV."
+          - "Actualiser les flux à leurs taux spot pour obtenir le prix spot."
+          - "Dériver les forwards annuels à partir des facteurs spot."
+          - "Calculer duration, convexité et approximation du prix après choc."
+          - |
+            ```python
+            face, coupon, n, y = 1000.0, 0.05, 5, 0.04
+            cash = [face * coupon] * (n - 1) + [face * (1 + coupon)]
+            pv = [cf / (1 + y) ** t for t, cf in enumerate(cash, 1)]
+            price = sum(pv)
+            macaulay = sum(t * x for t, x in enumerate(pv, 1)) / price
+            modified = macaulay / (1 + y)
+            convexity = sum(t * (t + 1) * x for t, x in enumerate(pv, 1)) / price / (1 + y) ** 2
+            spot = [0.03, 0.035, 0.04, 0.0425, 0.045]
+            spot_price = sum(cf / (1 + s) ** t for t, (cf, s) in enumerate(zip(cash, spot), 1))
+            forwards = [spot[0]] + [(1 + spot[t]) ** (t + 1) / (1 + spot[t - 1]) ** t - 1 for t in range(1, len(spot))]
+            shock = 0.005
+            approx_change = -modified * shock + 0.5 * convexity * shock ** 2
+            exact_change = sum(cf / (1 + y + shock) ** t for t, cf in enumerate(cash, 1)) / price - 1
+            print(price, spot_price, macaulay, modified, convexity, approx_change, exact_change)
+            ```
+        sorties:
+          - "Prix au YTM et prix spot."
+          - "Taux à terme implicites."
+          - "Duration, convexité, variation approximée et exacte."
+        validation:
+          - "Le prix YTM reproduit la somme des flux actualisés."
+          - "Le prix spot utilise le taux correspondant à chaque échéance."
+          - "Les forwards respectent l'équivalence de capitalisation."
+          - "L'approximation se rapproche de la variation exacte pour un petit choc."
+        limites:
+          - "La courbe et les flux sont fictifs et déterministes."
+          - "La convention est annuelle; ne pas extrapoler à des conventions de marché différentes."
+  synthese_references:
+    memo:
+      - "Prix d'une obligation : PV des coupons et du nominal; YTM est le taux unique qui reproduit ce prix."
+      - "Coupon > YTM : prime; coupon < YTM : décote; coupon = YTM : pair."
+      - "Le spot actualise chaque flux à son échéance; YTM ne remplace pas la courbe."
+      - "Forward : taux implicite d'absence d'arbitrage sous une convention définie, pas une prévision."
+      - "Duration modifiée approxime le changement relatif du prix; convexité ajoute un terme de courbure."
+      - "Repricing exacte, risque de crédit, liquidité, options et conventions restent essentiels."
+    glossaire:
+      - {terme_fr: "Obligation", terme_en: "Bond", definition: "Titre de dette avec flux contractuels et remboursement selon ses conditions."}
+      - {terme_fr: "Coupon", terme_en: "Coupon", definition: "Paiement périodique d'intérêt défini par le contrat."}
+      - {terme_fr: "Nominal", terme_en: "Face value / par value", definition: "Montant de référence généralement remboursé à l'échéance."}
+      - {terme_fr: "Rendement à l'échéance", terme_en: "Yield to maturity (YTM)", definition: "Taux unique qui reproduit le prix en actualisant les flux contractuels."}
+      - {terme_fr: "Taux spot", terme_en: "Spot rate", definition: "Taux zéro-coupon associé à une échéance et utilisé pour actualiser un flux unique."}
+      - {terme_fr: "Taux à terme", terme_en: "Forward rate", definition: "Taux implicite entre des dates futures dérivé de la courbe spot."}
+      - {terme_fr: "Duration de Macaulay", terme_en: "Macaulay duration", definition: "Moyenne pondérée des échéances de paiement par leurs valeurs actuelles."}
+      - {terme_fr: "Duration modifiée", terme_en: "Modified duration", definition: "Sensibilité relative approximative du prix au rendement pour un petit choc."}
+      - {terme_fr: "Convexité", terme_en: "Convexity", definition: "Mesure de la courbure du prix par rapport au rendement."}
+      - {terme_fr: "Prix clean / dirty", terme_en: "Clean / dirty price", definition: "Prix coté hors coupon couru et prix payé qui inclut généralement ce coupon couru."}
+    maitrise:
+      - "Je peux calculer le prix d'une obligation et expliquer prime, décote ou pair."
+      - "Je peux distinguer YTM et taux spot et valoriser des flux par la courbe."
+      - "Je peux calculer un taux à terme sous capitalisation annuelle."
+      - "Je peux interpréter duration, convexité et leurs limites."
+      - "Je peux citer les principaux risques et conventions d'un instrument obligataire."
+    liens:
+      - {titre: "A1/S04 — Emprunts et amortissement", cible: "a1/s04"}
+    references:
+      - {titre: "Kellison — The Theory of Interest", detail: "Chapitres sur les obligations, la structure par terme et les mesures de sensibilité."}
+      - {titre: "Tuckman and Serrat — Fixed Income Securities", detail: "Valorisation des obligations, courbe des taux, forwards, duration et convexité."}
+      - {titre: "Society of Actuaries — Financial Mathematics (FM)", detail: "Programme de mathématiques financières et concepts obligataires.", url: "https://www.soa.org/education/exam-req/edu-exam-fm-detail/"}
