@@ -239,7 +239,7 @@ fiche:
       - "Somme indépendante : E[S_n]=nμ; Var(S_n)=nσ²."
       - "Moyenne : E[ X̄ ]=μ; Var(X̄)=σ²/n; σ_X̄=σ/√n."
       - "LLN : la moyenne empirique converge vers μ."
-      - "CLT : (S_n−nμ)/(σ√n)≈N(0,1)."
+      - "CLT : (S_n−nμ)/(σ√n)≈Z, où Z suit une normale standard."
       - "Binomiale(n,p) : E[N]=np; Var(N)=np(1−p)."
       - "Coût total cN : E=npc; Var=c²np(1−p)."
       - "Corrélation commune : Var(X̄)=σ²/n+(n−1)ρσ²/n; plancher ρσ²."
