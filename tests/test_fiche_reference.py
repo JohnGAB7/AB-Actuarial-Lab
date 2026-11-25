@@ -189,3 +189,38 @@ def test_fiche_a1_s01_est_complete_et_bilingue():
     )
     assert en["fiche"]["cours_complet"]["sections"][0]["titre"] == "1. Time convention and annual effective rate"
     assert len(en["fiche"]["exercices_corriges"]["exercices"]) == 3
+
+
+def test_fiche_a1_s02_est_complete_et_bilingue():
+    from pathlib import Path
+    import yaml
+    from tools.construire import charger_seance
+    from tools.validation_contenus import verifier_overlay_traduction
+
+    root = Path(__file__).resolve().parents[1]
+    fr = charger_seance("a1/s02", "fr")
+    en = charger_seance("a1/s02", "en")
+    overlay = yaml.safe_load((root / "contenus/en/a1/s02.yaml").read_text(encoding="utf-8"))
+    assert fr["fiche"]["statut"] == "prete"
+    assert len(fr["fiche"]["cours_complet"]["sections"]) >= 7
+    assert len(fr["fiche"]["methodes"]["methodes"]) == 3
+    assert len(fr["fiche"]["exemples_guides"]["exemples"]) == 3
+    assert len(fr["fiche"]["exercices_corriges"]["exercices"]) == 3
+    assert fr["fiche"]["applications_labs"]["applications"][0]["outils"] == ["excel", "python"]
+    assert not verifier_overlay_traduction(fr, overlay, session_id="a1/s02")
+    assert en["fiche"]["cours_complet"]["sections"][0]["titre"] == "1. Convention and definition of a nominal rate"
+    assert len(en["fiche"]["exercices_corriges"]["exercices"]) == 3
+
+
+def test_nominal_rate_sheet_code_lab_has_reproducible_checks():
+    from pathlib import Path
+    import yaml
+
+    root = Path(__file__).resolve().parents[1]
+    session = yaml.safe_load((root / "contenus/a1/s02.yaml").read_text(encoding="utf-8"))
+    lab = session["fiche"]["applications_labs"]["applications"][0]
+    code = next(step for step in lab["procedure"] if isinstance(step, str) and "def nominal_from_effective" in step)
+    namespace = {}
+    exec(code.split("```python", 1)[1].split("```", 1)[0], namespace)
+    assert namespace["effective_from_nominal"](0.06, 12) > namespace["effective_from_nominal"](0.06, 4) > 0.06
+    assert abs(namespace["annuity_mthly"](10, 0.04, 12, 1200) - 9910.25) < 0.1
