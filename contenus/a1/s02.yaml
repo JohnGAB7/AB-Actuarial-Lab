@@ -61,7 +61,7 @@ fiche:
           - formule: "\\lim_{m\\to\\infty}d^{(m)}=\\delta,\\qquad e^{\\delta}=1+i"
             explication: "Les déductions fractionnées convergent vers la même force, avec un facteur annuel équivalent."
       - titre: "5. Annuités fractionnées : convention de montant"
-        contenu: "Une annuité payable $m$ fois par an, notée $a^{(m)}_{n|$, verse au total 1 par année, réparti en $m$ paiements de $1/m$ à la fin de chaque sous-période. Sur n années, les paiements ont lieu aux dates $k/m$, $k=1,\ldots,mn$. Ce n'est pas une série de m paiements unitaires : le montant annuel total reste 1. En utilisant le taux nominal d'intérêt convertible à la même fréquence, la valeur actuelle est $(1-v^n)/i^{(m)}$. Pour des paiements en début de sous-période, la valeur actuelle est $(1-v^n)/d^{(m)}$."
+        contenu: "Une annuité payable $m$ fois par an, notée $a^{(m)}_{\overline{n}|}$, verse au total 1 par année, réparti en $m$ paiements de $1/m$ à la fin de chaque sous-période. Sur n années, les paiements ont lieu aux dates $k/m$, $k=1,\ldots,mn$. Ce n'est pas une série de m paiements unitaires : le montant annuel total reste 1. En utilisant le taux nominal d'intérêt convertible à la même fréquence, la valeur actuelle est $(1-v^n)/i^{(m)}$. Pour des paiements en début de sous-période, la valeur actuelle est $(1-v^n)/d^{(m)}$."
         formules:
           - formule: "a^{(m)}_{\\overline{n}|}=\\frac{1-v^n}{i^{(m)}}"
             explication: "Valeur actuelle de n unités annuelles au total, chacune répartie en m paiements égaux de 1/m en fin de sous-période."
