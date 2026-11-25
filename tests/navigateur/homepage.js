@@ -19,12 +19,16 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
     const brand = await page.evaluate(() => ({
       title: document.title,
       label: document.querySelector(".brand-copy")?.textContent || "",
-      logoLoaded: Array.from(document.querySelectorAll(".brand-logo")).some((img) => img.complete && img.naturalWidth > 0)
+      logoCount: document.querySelectorAll(".brand-logo").length,
+      logoSrc: document.querySelector(".brand-logo")?.getAttribute("src") || "",
+      logoLoaded: Boolean(document.querySelector(".brand-logo")?.complete && document.querySelector(".brand-logo")?.naturalWidth > 0)
     }));
     console.log("brand FR:", brand);
     if (!brand.title.startsWith("Laboratoire d’apprentissage actuariel par ACTU-BASICS")) failures.push("French site title");
     if (!brand.label.includes("LABORATOIRE ACTUARIEL") || !brand.label.includes("PAR ACTU-BASICS")) failures.push("French sub-brand lockup");
     if (!brand.logoLoaded) failures.push("custom Actuarial Learning Lab mark did not load");
+    if (brand.logoCount !== 1) failures.push("brand should use one non-duplicated mark image");
+    if (!brand.logoSrc.startsWith("../assets/actuarial-lab-mark.svg")) failures.push("English homepage logo should use the site-root asset path");
     const mobile = await page.evaluate(() => ({
       lang: document.documentElement.lang,
       width: window.innerWidth,
@@ -94,6 +98,8 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
 
     await page.goto(new URL("en/a1/s01/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
     await page.locator(".opt").first().waitFor();
+    const englishLessonLogo = await page.locator(".brand-logo").evaluate((img) => ({ src: img.src, loaded: img.complete && img.naturalWidth > 0 }));
+    if (!englishLessonLogo.loaded || !englishLessonLogo.src.includes("/assets/actuarial-lab-mark.svg")) failures.push("English lesson logo must load from the site-root asset path");
     const englishOptions = await page.locator(".opt").allInnerTexts();
     console.log("quiz options EN:", englishOptions);
     if (!englishOptions.length || !englishOptions.every((value) => /^[A-Z]\s+(?!-)/.test(value.trim()))) failures.push("English quiz options should use letter enumeration without a dash");
