@@ -337,11 +337,11 @@ fiche:
               modified = macaulay / (1 + y)
               convexity = sum(t * (t + 1) * x for t, x in enumerate(pv, 1)) / price / (1 + y) ** 2
               spot = [0.03, 0.035, 0.04, 0.0425, 0.045]
-              spot_price = sum(cf / (1 + s) ** t for t, (cf, s) in enumerate(zip(cash, spot), 1)
-              forwards = [(1 + spot[t]) ** (t + 1) / (1 + spot[t - 1]) ** t - 1 for t in range(1, len(spot))]
+              spot_price = sum(cf / (1 + s) ** t for t, (cf, s) in enumerate(zip(cash, spot), 1))
+              forwards = [spot[0]] + [(1 + spot[t]) ** (t + 1) / (1 + spot[t - 1]) ** t - 1 for t in range(1, len(spot))]
               shock = 0.005
               approx_change = -modified * shock + 0.5 * convexity * shock ** 2
-              exact_change = sum(cf / (1 + y + shock) ** t for t, cf in enumerate(cash, 1) / price - 1
+              exact_change = sum(cf / (1 + y + shock) ** t for t, cf in enumerate(cash, 1)) / price - 1
               print(price, spot_price, macaulay, modified, convexity, approx_change, exact_change)
               ```
           sorties:
