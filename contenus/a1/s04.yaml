@@ -177,7 +177,7 @@ fiche:
         niveau: fondamental
         enonce: "Emprunter 25 000 € à 3,5 % effectif annuel sur 12 ans, avec paiements annuels en fin d'année. Calculer le paiement."
         corrige:
-          - "a_{\\overline{12}|}=(1−1,035^{-12})/0,035≈9,663."
+          - "$a_{\\overline{12}|}=(1-1{,}035^{-12})/0{,}035\\approx9{,}663$."
           - "P=25 000/a_{12|}≈2 587,10 €."
         feedback: "Le paiement comprend principal et intérêts. Une durée plus longue réduit généralement le paiement, mais augmente le total des intérêts."
       - titre: "Solde — niveau intermédiaire"
@@ -186,13 +186,13 @@ fiche:
         corrige:
           - "P≈2 373,96 €."
           - "$B_2=P a_{\\overline{3}|}\\approx6\\,345{,}63$ €."
-          - "Vérifier avec $B_2=10\\,000(1{,}06)^2-Ps_{\\overline{2}|$."
+          - "Vérifier avec $B_2=10\\,000(1{,}06)^2-Ps_{\\overline{2}|}$."
         feedback: "Le solde prospectif actualise les paiements restant à effectuer. La méthode rétrospective doit donner le même résultat."
       - titre: "VAN et TRI — niveau intermédiaire"
         niveau: intermediaire
         enonce: "Un projet coûte 2 000 € et verse 1 200 € à la fin des années 1 et 2. Calculer la VAN à 8 % et déterminer le TRI."
         corrige:
-          - "VAN(8%)=−2 000+1 200/1,08+1 200/1,08²≈139,92 €."
+          - "$VAN(8\\%)=-2\\,000+1\\,200/1{,}08+1\\,200/(1{,}08)^2\\approx139{,}92$ €."
           - "Le TRI résout −2 000+1 200/(1+j)+1 200/(1+j)²=0."
           - "Pour deux recettes identiques, résoudre 2 000=1 200 a_{2|} : j≈13,0662 %."
         feedback: "Une VAN positive au taux de décision indique une création de valeur dans ce modèle. Le TRI est une solution de l'équation de VAN; ne pas supposer qu'il est unique pour tout calendrier de flux."
