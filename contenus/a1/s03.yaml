@@ -43,14 +43,14 @@ fiche:
           - formule: "s_{\\overline{n}|}=\\frac{(1+i)^n-1}{i}=(1+i)^n a_{\\overline{n}|}"
             explication: "La somme capitalisée des n paiements unitaires. Cas particulier $i=0$ : s_{n}=n."
       - titre: "2. Perpétuités immédiate et due"
-        contenu: "La perpétuité immédiate verse 1 aux dates 1,2,… et sa valeur actuelle est la limite de l'annuité. Pour $i>0$, $v^n$ tend vers zéro et la somme converge. La perpétuité due commence à t=0 : elle vaut une perpétuité immédiate avancée d'une période. Le taux d'escompte effectif d=i/(1+i)."
+        contenu: "La perpétuité immédiate verse 1 aux dates 1, 2, … et sa valeur actuelle est la limite de l'annuité. Pour $i>0$, $v^n$ tend vers zéro et la somme converge. La perpétuité due commence à t=0 : elle vaut une perpétuité immédiate avancée d'une période. Le taux d'escompte effectif d=i/(1+i)."
         formules:
           - formule: "a_{\\overline{\\infty}|}=\\frac{1}{i},\\quad i>0"
             explication: "Un capital 1/i produit 1 d'intérêt par période au taux i, dans le modèle déterministe."
           - formule: "\\ddot{a}_{\\overline{\\infty}|}=\\frac{1}{d}=\\frac{1+i}{i}=1+\\frac{1}{i}"
             explication: "La perpétuité due inclut le paiement immédiat à t=0."
       - titre: "3. Annuités arithmétiques"
-        contenu: "L'annuité croissante verse 1,2,…,n aux dates 1,…,n. L'annuité décroissante verse n,n−1,…,1. Elles ont le même total nominal, mais pour $i>0$ la décroissante a une valeur actuelle plus grande car ses montants élevés arrivent plus tôt."
+        contenu: "L'annuité croissante verse 1, 2, …,n aux dates 1,…,n. L'annuité décroissante verse n,n−1,…,1. Elles ont le même total nominal, mais pour $i>0$ la décroissante a une valeur actuelle plus grande car ses montants élevés arrivent plus tôt."
         formules:
           - formule: "(Ia)_{\\overline{n}|}=\\sum_{k=1}^{n}k v^k=\\frac{\\ddot{a}_{\\overline{n}|}-n v^n}{i}"
             explication: "Formule de l'annuité croissante, pour $i\\ne0$."
@@ -121,7 +121,7 @@ fiche:
         controles:
           - "La perpétuité due serait supérieure d'un paiement, soit 210 000."
       - titre: "Annuités arithmétiques sur dix ans"
-        enonce: "À 5 %, calculer les valeurs actuelles des paiements 1,2,…,10 et 10,9,…,1 aux dates 1 à 10."
+        enonce: "À 5 %, calculer les valeurs actuelles des paiements 1, 2, …,10 et 10,9,…,1 aux dates 1 à 10."
         raisonnement:
           - "$a_{10}$=7,72173493 et $\\ddot{a}_{10}$=8,10782168."
           - "$(Ia)$=($\\ddot{a}_{10}$−10v^{10})/i."
@@ -155,7 +155,7 @@ fiche:
         feedback: "Si tu obtiens 61 500, tu as probablement traité le premier paiement comme immédiat. Vérifie la date du flux."
       - titre: "Intermédiaire — annuité croissante"
         niveau: intermediaire
-        enonce: "À 3 %, évaluer les paiements 1,2,…,8 en fin d'année."
+        enonce: "À 3 %, évaluer les paiements 1, 2, …,8 en fin d'année."
         corrige:
           - "Calculer v=1/1,03 et ä_8=(1−v^8)/d."
           - "Utiliser $(Ia)$=(ä_8−8v^8)/i."
@@ -216,7 +216,7 @@ fiche:
     glossaire:
       - {terme_fr: "Valeur accumulée", terme_en: "Accumulated value", definition: "Valeur des paiements capitalisés à une date future."}
       - {terme_fr: "Perpétuité", terme_en: "Perpetuity", definition: "Suite de paiements sans échéance finale."}
-      - {terme_fr: "Annuité arithmétique croissante", terme_en: "Increasing arithmetic annuity", definition: "Montants 1,2,…,n versés à des dates successives."}
+      - {terme_fr: "Annuité arithmétique croissante", terme_en: "Increasing arithmetic annuity", definition: "Montants 1, 2, …,n versés à des dates successives."}
       - {terme_fr: "Annuité arithmétique décroissante", terme_en: "Decreasing arithmetic annuity", definition: "Montants n,n−1,…,1 versés à des dates successives."}
       - {terme_fr: "Annuité géométrique", terme_en: "Geometric annuity", definition: "Montants multipliés d'une période à l'autre par 1+g."}
       - {terme_fr: "Taux de croissance", terme_en: "Growth rate", definition: "Taux multiplicatif de variation du montant des paiements."}
