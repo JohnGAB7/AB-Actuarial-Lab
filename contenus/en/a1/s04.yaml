@@ -35,7 +35,7 @@ fiche:
           - explication: "Balance recurrence after payment k, with B_0=L."
           - explication: "For level payments, principal repayment grows geometrically by factor 1+i."
       - titre: "3. Outstanding balance — prospective method"
-        contenu: "The prospective method values the payments still due at the balance date. After $k$ payments, $n-k$ payments remain at times $k+1,\ldots,n$. Their value at time k is the balance. At $k=n$, no payments remain and the balance is zero."
+        contenu: "The prospective method values the payments still due at the balance date. After $k$ payments, $n-k$ payments remain at times $k+1,\\ldots,n$. Their value at time k is the balance. At $k=n$, no payments remain and the balance is zero."
         formules:
           - explication: "Value at time k of future payments; define a_0=0."
       - titre: "4. Outstanding balance — retrospective method"
@@ -114,8 +114,8 @@ fiche:
         raisonnement:
           - "Calculate a_{5|}=(1−1.06^{-5})/0.06≈4.212364."
           - "P=10,000/4.212364≈€2,373.96."
-          - "At the first instalment, $I_1=0.06\times10,000=€600$."
-          - "$PR_1=2,373.96-600\approx€1,773.96$; $B_1\approx€8,226.04$."
+          - "At the first instalment, $I_1=0.06\\times10,000=€600$."
+          - "$PR_1=2,373.96-600\\approx€1,773.96$; $B_1\\approx€8,226.04$."
         resultat: "Level payment ≈ €2,373.96; balance after the first instalment ≈ €8,226.04."
         interpretation: "The first payment contains €600 interest and the remainder repays principal. Interest falls as the balance declines."
         controles:
@@ -124,10 +124,10 @@ fiche:
       - titre: "2. Balance after two instalments — two methods"
         enonce: "For the same loan, calculate $B_2$ after two payments."
         raisonnement:
-          - "Prospective: three payments remain, so $B_2=P a_{3|}\approx2,373.96\times2.673012$."
+          - "Prospective: three payments remain, so $B_2=P a_{3|}\\approx2,373.96\\times2.673012$."
           - "Retrospective: accumulate €10,000 for two years and subtract the accumulated value of the two payments."
           - "Both methods give approximately €6,345.63 (small differences arise from rounded displayed payments)."
-        resultat: "$B_2\approx€6,345.63$."
+        resultat: "$B_2\\approx€6,345.63$."
         interpretation: "The balance is the contract value at time 2, not simply L−2P: interest must be accounted for."
         controles:
           - "B_2 is below B_1 and above zero."
