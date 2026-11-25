@@ -11,7 +11,7 @@ actu_basics:
   episode: "A1 · Financial mathematics"
   statut: "à proposer"
   accroche_fr: "Dans un paiement de crédit, quelle part rembourse réellement le capital ?"
-  accroche_en: "In a loan payment, how much actually repays the loan?"
+  accroche_en: "In each loan payment, how much actually repays the principal?"
 
 fiche:
   statut: brouillon
