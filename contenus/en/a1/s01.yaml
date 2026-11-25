@@ -80,11 +80,11 @@ fiche:
           - "Determine the number n of payments."
           - "Write their dates: 1 to n for an annuity immediate, 0 to n−1 for an annuity due."
           - "Choose the formula that matches those exact dates."
-          - "Handle i=0 separately if a formula divides by i or d."
+          - "Handle $i=0$ separately if a formula divides by $i$ or $d$."
           - "Check annuity due against the identity (1+i) times annuity immediate."
         controles:
           - "For i>0, annuity due is greater than annuity immediate."
-          - "For i=0, both values equal n."
+          - "For $i=0$, both values equal $n$."
           - "The explicit sum of discount factors must match the closed form."
         erreurs:
           - "Shift payments by one period by confusing beginning and end of period."
@@ -93,7 +93,7 @@ fiche:
   exemples_guides:
     exemples:
       - titre: "Compare an annuity immediate and an annuity due"
-        enonce: "A contract pays 1 monetary unit per year for 3 years. The annual effective rate is i=2.5%. Find the value at time 0 if payments are made at year-end, then at the beginning of each year."
+        enonce: "A contract pays 1 monetary unit per year for 3 years. The annual effective rate is $i=2.5\%$. Find the value at time 0 if payments are made at year-end, then at the beginning of each year."
         raisonnement:
           - "Compute v=1/1.025≈0.9756098."
           - "Year-end: a_{3|}=v+v²+v³≈0.9756098+0.9518144+0.9285994=2.8560236."
@@ -132,7 +132,7 @@ fiche:
           - "Present value is 900×ä_{5|}≈4,245.4 monetary units (rounded to one decimal)."
         feedback: "The first payment at the beginning of the first year is not discounted. Using a_{5|} incorrectly moves the first rent one year later."
       - titre: "Advanced — irregular cash flows"
-        enonce: "A scheme pays 2,000 units at t=1 and 1,500 at t=4, and receives 300 at t=2. Calculate net present value at a 5% annual effective rate."
+        enonce: "A scheme pays 2,000 units at $t=1$ and $1,500$ at $t=4$, and receives $300$ at $t=2$. Calculate net present value at a 5% annual effective rate."
         corrige:
           - "Set a convention: treat benefits as positive and the receipt as a negative cost, or reverse all signs consistently."
           - "With benefits positive and the receipt negative: NPV=2,000/1.05+1,500/(1.05)⁴−300/(1.05)²."
@@ -144,9 +144,9 @@ fiche:
         contexte: "A simplified first estimate of a pension obligation can represent certain future benefits as a list of dated cash flows. This lab is not a regulatory valuation; it isolates the financial discounting mechanism."
         objectif: "Reproduce the present value of a cash-flow stream and compare a spreadsheet result with a Python function."
         entrees:
-          - "Fictional cash flows: 1,000 at t=5 and 500 at t=10."
+          - "Fictional cash flows: $1,000$ at $t=5$ and $500$ at $t=10$."
           - "Constant annual effective rate: 2.5%."
-          - "Valuation date: t=0; amounts use one common monetary unit."
+          - "Valuation date: $t=0$; amounts use one common monetary unit."
         hypotheses:
           - "Deterministic flows, flat constant rate and integer annual periods."
           - "No risk, inflation, expenses, tax or survival probability is modelled."
@@ -177,7 +177,7 @@ fiche:
       - "Accumulation: multiply by (1+i)^t; discounting: multiply by v^t."
       - "$v=\\frac{1}{1+i}$, d=i/(1+i), δ=ln(1+i)."
       - "Annuity immediate: payments at 1,…,n; annuity due: payments at 0,…,n−1."
-      - "ä_{n|}=(1+i)a_{n|}; at i=0, both annuity values equal n."
+      - "$\\ddot{a}_{n|}=(1+i)a_{n|}$; at $i=0$, both annuity values equal $n$."
       - "Always state the valuation date, frequency, rate and sign convention."
     glossaire:
       - {definition: "Interest calculated on capital increased by previously accumulated interest."}
