@@ -108,7 +108,7 @@ fiche:
         enonce: "A deposit earns a nominal rate of 6%, convertible monthly or quarterly. What annual effective rate results?"
         raisonnement:
           - "Monthly: periodic rate $0.06/12=0.005$, or $0.5\%$."
-          - "Annual factor: $(1.005)^{12$."
+          - "Annual factor: $(1.005)^{12}$."
           - "Annual effective rate: $(1.005)^{12}-1\\approx0.061678$, or $6.1678\%$."
           - "Quarterly: periodic rate $0.06/4=0.015$."
           - "Annual effective rate: $(1.015)^4-1\\approx0.061364$, or $6.1364\%$."
@@ -122,13 +122,13 @@ fiche:
         raisonnement:
           - "Equivalent monthly effective rate: $(1.04)^{1/12}-1\\approx0.00327374$."
           - "Nominal interest: 12 times this rate, about 3.92849%."
-          - "Monthly discount factor: $(1.04)^{-1/12$."
-          - "Nominal discount: 12[1−(1.04)^(−1/12)]≈3.91567%."
+          - "Monthly discount factor: $(1.04)^{-1/12}$."
+          - "Nominal discount: $12[1-(1.04)^{-1/12}]\\approx3.91567\%$."
           - "Force of interest: $\\ln(1.04)\\approx3.92207\%$."
-        resultat: "i^(12)≈3.92849%, d^(12)≈3.91567%, δ≈3.92207%."
+        resultat: "$i^{(12)}\\approx3.92849\%$, $d^{(12)}\\approx3.91567\%$, $\\delta\\approx3.92207\%$."
         interpretation: "At a fixed annual effective rate, nominal interest and discount rates lie on either side of the force of interest."
         controles:
-          - "Recompounding the monthly nominal gives annual factor 1.04."
+          - "Recompounding the monthly nominal gives annual factor $1.04$."
           - "For $i>0$, $d^{(12)}<\\delta<i^{(12)}$."
       - titre: "Present value of a monthly pension"
         enonce: "A pension of 1,200 units per year is paid in 12 month-end payments of 100 for 10 years. The annual effective rate is 4%. What is its present value?"
