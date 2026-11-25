@@ -128,7 +128,7 @@ fiche:
         enonce: "A rent of 900 monetary units is paid at the beginning of each year for 5 years. At an annual effective rate of 3%, calculate its present value."
         corrige:
           - "Payment dates are 0 ; 1 ; 2 ; 3 ; 4: this is an annuity due."
-          - "$\\ddot{a}_{\\overline{5}|}=(1+i)a_{\\overline{5}|}=(1.03)\\times(1-1.03^{-5})/0.03$."
+          - "$\\ddot{a}_{\\overline{5}|}=(1+i)a_{\\overline{5}|}=(1.03)\\times(1-(1.03)^{-5})/0.03$."
           - "Present value is $900\\times\\ddot{a}_{\\overline{5}|}\\approx4,245.4$ monetary units (rounded to one decimal)."
         feedback: "The first payment at the beginning of the first year is not discounted. Using a_{5|} incorrectly moves the first rent one year later."
       - titre: "Advanced — irregular cash flows"
