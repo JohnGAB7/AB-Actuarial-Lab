@@ -12,6 +12,284 @@ actu_basics:
   accroche_fr: "Même coût moyen, risque très différent : la queue de la loi."
   accroche_en: "Same average cost, very different risk: the tail of the distribution."
 
+fiche:
+  statut: prete
+  vue_ensemble:
+    question: "Deux sinistres ont le même coût moyen : pourquoi leur risque extrême peut-il être très différent ?"
+    pourquoi: "La fréquence décrit le nombre de sinistres; la sévérité décrit leur montant. Les lois continues servent à quantifier les dépassements, les quantiles et les queues de distribution, essentiels pour la tarification, les provisions et la réassurance."
+    objectifs:
+      - "Distinguer densité, fonction de répartition et fonction de survie."
+      - "Calculer une probabilité d'intervalle et de dépassement."
+      - "Calculer et interpréter un quantile, dont la Value at Risk."
+      - "Utiliser les lois exponentielle, normale et lognormale."
+      - "Utiliser une loi de Pareto/Lomax pour représenter une queue lourde."
+      - "Comparer les distributions par moyenne, quantiles et probabilités de dépassement."
+    prerequis:
+      - "Variables aléatoires, espérance et variance."
+      - "Loi normale standard et logarithme."
+      - "Probabilités discrètes et fonctions de répartition."
+    carte:
+      - "Densité f : probabilité par unité; intégrale sur un intervalle = probabilité."
+      - "CDF F(x) : probabilité d'être inférieur ou égal à x."
+      - "Survie S(x)=1−F(x) : probabilité de dépasser x."
+      - "Quantile q_p : seuil dépassé avec probabilité 1−p."
+      - "Exponentielle : modèle de base à mémoire nulle."
+      - "Lognormale et Pareto : montants positifs et asymétrie/queues à droite."
+    duree_minutes: 45
+  cours_complet:
+    sections:
+      - titre: "1. Densité, répartition et probabilité"
+        contenu: "Pour une variable continue, P(X=x)=0. La densité f(x) n'est pas une probabilité ponctuelle et peut dépasser 1; son intégrale sur un intervalle donne la probabilité. La fonction de répartition F(x) cumule la masse jusqu'à x."
+        formules:
+          - formule: "F(x)=P(X\\le x)=\\int_{-\\infty}^{x}f(t)\\,dt"
+            explication: "Fonction de répartition."
+          - formule: "P(a<X\\le b)=F(b)-F(a)=\\int_a^b f(t)\\,dt"
+            explication: "Probabilité d'un intervalle."
+      - titre: "2. Survie, dépassement et quantile"
+        contenu: "En assurance, la fonction de survie décrit la probabilité d'un montant supérieur à un seuil. Le quantile d'ordre p est le seuil dont p % des observations sont en dessous; la VaR au niveau p correspond à ce quantile. La probabilité de dépasser q_p vaut 1−p, sous une distribution continue."
+        formules:
+          - formule: "S(x)=P(X>x)=1-F(x)"
+            explication: "Fonction de survie ou probabilité de dépassement."
+          - formule: "q_p=F^{-1}(p),\\quad F(q_p)=p"
+            explication: "Quantile d'ordre p."
+          - formule: "P(X>q_p)=1-p"
+            explication: "Probabilité de dépassement du quantile, pour une loi continue."
+      - titre: "3. Loi exponentielle"
+        contenu: "L'exponentielle de paramètre d'échelle θ>0 modélise un montant ou un temps positif. Sa moyenne est θ. Elle possède la propriété sans mémoire : conditionnellement à avoir dépassé un seuil, la probabilité de dépasser encore une durée supplémentaire ne dépend pas du seuil déjà atteint. Cette propriété n'est pas adaptée à tous les montants de sinistres."
+        formules:
+          - formule: "f(x)=\\frac{1}{\\theta}e^{-x/\\theta},\\quad x\\ge0"
+            explication: "Densité de l'exponentielle."
+          - formule: "F(x)=1-e^{-x/\\theta},\\quad S(x)=e^{-x/\\theta}"
+            explication: "Répartition et survie."
+          - formule: "E[X]=\\theta,\\quad \\operatorname{Var}(X)=\\theta^2"
+            explication: "Moyenne et variance."
+          - formule: "q_p=-\\theta\\ln(1-p)"
+            explication: "Quantile."
+      - titre: "4. Loi normale"
+        contenu: "La normale est symétrique autour de μ et son écart-type est σ. Elle est utile pour certaines quantités agrégées, mais un montant individuel est non négatif : une normale peut attribuer une probabilité à des valeurs négatives. Il faut vérifier si cette approximation est raisonnable."
+        formules:
+          - formule: "X\\sim\\mathcal N(\\mu,\\sigma^2),\\quad E[X]=\\mu,\\quad \\operatorname{Var}(X)=\\sigma^2"
+            explication: "Paramètres et moments."
+          - formule: "q_p=\\mu+z_p\\sigma"
+            explication: "Quantile, où z_p est le quantile de la normale standard."
+      - titre: "5. Loi lognormale"
+        contenu: "X est lognormale lorsque ln(X) suit une normale. X est strictement positive et asymétrique à droite. μ et σ sont les paramètres du logarithme, pas la moyenne et l'écart-type de X. La médiane est e^μ et la moyenne e^{μ+σ²/2}; les gros montants augmentent la moyenne."
+        formules:
+          - formule: "\\ln X\\sim\\mathcal N(\\mu,\\sigma^2)"
+            explication: "Définition."
+          - formule: "E[X]=e^{\\mu+\\sigma^2/2},\\quad \\operatorname{Med}(X)=e^\\mu"
+            explication: "Moyenne et médiane."
+          - formule: "S(x)=1-\\Phi\\left(\\frac{\\ln x-\\mu}{\\sigma}\\right),\\quad x>0"
+            explication: "Probabilité de dépasser x."
+          - formule: "q_p=e^{\\mu+\\sigma z_p}"
+            explication: "Quantile."
+      - titre: "6. Loi de Pareto/Lomax et queue lourde"
+        contenu: "La Pareto de type II (Lomax), avec θ>0 et α>0, a une survie polynomiale. Elle peut représenter des montants dont les gros sinistres restent plus probables qu'avec une exponentielle. Sa moyenne est finie si α>1 et sa variance finie si α>2. La paramétrisation doit être annoncée."
+        formules:
+          - formule: "S(x)=\\left(\\frac{\\theta}{\\theta+x}\\right)^\\alpha,\\quad x\\ge0"
+            explication: "Survie Lomax."
+          - formule: "f(x)=\\frac{\\alpha\\theta^\\alpha}{(\\theta+x)^{\\alpha+1}}"
+            explication: "Densité."
+          - formule: "E[X]=\\frac{\\theta}{\\alpha-1},\\quad \\alpha>1"
+            explication: "Moyenne."
+          - formule: "\\operatorname{Var}(X)=\\frac{\\alpha\\theta^2}{(\\alpha-1)^2(\\alpha-2)},\\quad \\alpha>2"
+            explication: "Variance."
+          - formule: "q_p=\\theta\\left((1-p)^{-1/\\alpha}-1\\right)"
+            explication: "Quantile."
+      - titre: "7. Choisir et comparer un modèle de sévérité"
+        contenu: "Ne compare pas seulement les moyennes. Examine la médiane, les quantiles élevés et la survie au-delà de seuils importants. Une loi à queue lourde peut avoir une moyenne comparable mais davantage de grands sinistres. Vérifie les hypothèses, la qualité de l'ajustement, les données censurées, l'inflation, les franchises, les limites contractuelles et l'incertitude des paramètres."
+        formules:
+          - formule: "P(X>x)=S(x)\\quad\\text{et}\\quad q_p=F^{-1}(p)"
+            explication: "Deux indicateurs de risque de queue : dépassement et quantile."
+  methodes:
+    methodes:
+      - titre: "Calculer une probabilité d'intervalle ou de dépassement"
+        quand_utiliser: "Une distribution continue est connue et l'on cherche la probabilité d'être entre deux seuils ou au-dessus d'un seuil."
+        etapes:
+          - "Identifier la fonction F ou S et ses paramètres."
+          - "Pour un intervalle, calculer $F(b)-F(a)$."
+          - "Pour un dépassement, calculer $S(x)=1-F(x)$."
+          - "Vérifier que la probabilité est comprise entre $0$ et $1$."
+        controles:
+          - "La survie $S(x)$ décroît lorsque le seuil $x$ augmente."
+          - "La probabilité d'un intervalle est non négative."
+          - "Pour $x\\ge0$, $F(x)+S(x)=1$."
+        erreurs:
+          - "Confondre densité $f(x)$ et probabilité $F(x)$."
+          - "Utiliser la CDF au lieu de la survie pour $P(X>x)$."
+      - titre: "Calculer un quantile ou une VaR"
+        quand_utiliser: "On cherche un seuil de montant associé à un niveau de confiance p."
+        etapes:
+          - "Identifier $p$ et la loi."
+          - "Utiliser la formule du quantile ou le quantile standard $z_p$."
+          - "Interpréter $q_p$ comme un seuil dépassé avec probabilité $1-p$."
+          - "Préciser la période et l'unité."
+        controles:
+          - "Le quantile augmente avec p."
+          - "Pour une loi continue, $F(q_p)=p$."
+          - "La VaR ne décrit pas la moyenne des pertes au-delà du seuil."
+        erreurs:
+          - "Confondre quantile 99 % et moyenne des 1 % les plus élevés."
+          - "Utiliser $z=1{,}96$ pour 95 % unilatéral au lieu de $1{,}645$."
+      - titre: "Comparer les queues de distribution"
+        quand_utiliser: "Deux modèles décrivent des montants de sinistres et l'on veut comparer le risque de grands montants."
+        etapes:
+          - "Comparer les paramètres et les moyennes, en vérifiant leur existence."
+          - "Calculer la survie $S(x)$ au même seuil $x$."
+          - "Comparer plusieurs seuils et quantiles élevés."
+          - "Conclure sur les hypothèses et les limites, pas seulement sur un chiffre."
+        controles:
+          - "Les seuils, unités et périodes sont identiques."
+          - "La survie est une probabilité, entre $0$ et $1$."
+          - "La queue est évaluée sur une plage pertinente de données."
+        erreurs:
+          - "Conclure sur la queue à partir de la moyenne seule."
+          - "Ignorer les seuils contractuels ou la censure."
+  exemples_guides:
+    exemples:
+      - titre: "Exponentielle : dépassement et quantile"
+        enonce: "Un montant suit une exponentielle de moyenne θ=2 000 €. Calcule P(X>5 000 €) et le quantile à 99 %."
+        raisonnement:
+          - "S(x)=e^{-x/θ}, donc P(X>5 000)=e^{-2,5}=0,0821."
+          - "q_{0,99}=−2 000 ln(0,01)=9 210,34 €."
+        resultat: "Dépassement 8,21 %; quantile 99 % : 9 210,34 €."
+        interpretation: "Environ 8,21 % des montants dépassent 5 000 €; 1 % dépassent 9 210,34 €."
+        controles:
+          - "La survie décroît avec x."
+          - "Le quantile 99 % est supérieur au quantile 50 %."
+      - titre: "Lognormale : moyenne, médiane et queue"
+        enonce: "ln(X) est normale avec μ=7 et σ=1. Calcule la médiane, la moyenne et P(X>5 000 €)."
+        raisonnement:
+          - "Médiane=e^7=1 096,63 €."
+          - "Moyenne=e^{7,5}=1 808,04 €."
+          - "z=(ln 5 000−7)/1=1,5172; survie=1−Φ(z)=0,06461."
+        resultat: "Médiane 1 096,63 €; moyenne 1 808,04 €; dépassement 6,46 %."
+        interpretation: "La moyenne dépasse la médiane à cause de l'asymétrie à droite."
+        controles:
+          - "La moyenne est supérieure à la médiane."
+          - "La probabilité de dépassement est comprise entre 0 et 1."
+      - titre: "Pareto/Lomax : queue lourde"
+        enonce: "Avec θ=4 000 € et α=3, calcule P(X>5 000 €), la moyenne et la variance."
+        raisonnement:
+          - "S(5 000)=(4 000/9 000)^3=64/729≈0,08779."
+          - "E[X]=θ/(α−1)=2 000 €."
+          - "Var(X)=αθ²/((α−1)²(α−2))=12 000 000 €²."
+        resultat: "Dépassement 8,78 %; moyenne 2 000 €; écart-type ≈3 464,10 €."
+        interpretation: "La variance existe car α>2. Les gros montants restent plus fréquents que sous une exponentielle de même moyenne."
+        controles:
+          - "α>2 garantit une variance finie."
+          - "Le dépassement est une probabilité, pas une densité."
+  exercices_corriges:
+    exercices:
+      - titre: "Fondamental — exponentielle"
+        niveau: fondamental
+        enonce: "θ=3 000 €. Calcule P(X>6 000 €)."
+        corrige:
+          - "S(6 000)=e^{-6 000/3 000}=e^{-2}≈0,135335."
+        feedback: "Utilise la survie pour un dépassement."
+      - titre: "Intermédiaire — quantile lognormal"
+        niveau: intermediaire
+        enonce: "ln(X) est normale avec μ=8 et σ=0,5. Calcule le quantile 95 % et la moyenne."
+        corrige:
+          - "q_{0,95}=e^{8+0,5×1,644854}=6 784,71 €."
+          - "E[X]=e^{8+0,5×0,25}=3 377,87 €."
+        feedback: "Les paramètres μ et σ sont ceux du logarithme."
+      - titre: "Avancé — Pareto"
+        niveau: avance
+        enonce: "θ=1 000 € et α=2,5. Calcule la moyenne et le quantile 99 %."
+        corrige:
+          - "E[X]=1 000/(2,5−1)=666,67 €."
+          - "q_{0,99}=1 000((0,01)^{-1/2,5}−1)=5 309,57 €."
+        feedback: "La moyenne est finie pour α>1; la variance est finie seulement pour α>2."
+  applications_labs:
+    applications:
+      - titre: "Comparer les dépassements de montants"
+        contexte: "Trois distributions fictives de montants sont comparées au seuil de 5 000 € : exponentielle, lognormale et Pareto/Lomax."
+        objectif: "Calculer les survies, les quantiles et comparer les modèles par la probabilité de grands montants."
+        outils: [python, excel]
+        entrees:
+          - "Exponentielle : θ=2 000 €."
+          - "Lognormale : μ=7, σ=1."
+          - "Pareto/Lomax : θ=4 000 €, α=3."
+          - "Seuil : x=5 000 €; quantile : p=99 %."
+        hypotheses:
+          - "Les paramètres sont fictifs et connus."
+          - "Chaque distribution est un modèle candidat, pas un ajustement empirique."
+          - "La Pareto/Lomax utilise la paramétrisation de survie θ/(θ+x)."
+        procedure:
+          - "Calculer la survie à 5 000 € de chaque distribution."
+          - "Calculer le quantile 99 % de l'exponentielle et de la lognormale."
+          - "Comparer les moyennes et les probabilités de dépassement."
+          - |
+            ```python
+            import math
+
+            def normal_cdf(z):
+                return 0.5 * (1 + math.erf(z / math.sqrt(2)))
+
+            theta_exp = 2000
+            exp_surv = math.exp(-5000 / theta_exp)
+            exp_q99 = -theta_exp * math.log(1 - 0.99)
+
+            mu, sigma = 7, 1
+            z = (math.log(5000) - mu) / sigma
+            ln_surv = 1 - normal_cdf(z)
+            ln_mean = math.exp(mu + sigma**2 / 2)
+            ln_q99 = math.exp(mu + sigma * 2.326347874)
+
+            theta_par, alpha = 4000, 3
+            par_surv = (theta_par / (theta_par + 5000)) ** alpha
+            par_mean = theta_par / (alpha - 1)
+            par_var = alpha * theta_par**2 / ((alpha-1)**2 * (alpha-2))
+            print(exp_surv, ln_surv, par_surv)
+            print(exp_q99, ln_q99, ln_mean, par_mean, par_var)
+            assert abs(exp_surv - 0.0820849986) < 1e-8
+            assert abs(ln_surv - 0.0646089574) < 1e-8
+            assert abs(par_surv - 64/729) < 1e-12
+            ```
+          - "Présenter les résultats dans un tableau et commenter la queue de chaque loi."
+        sorties:
+          - "Survie à 5 000 €."
+          - "Quantiles 99 %."
+          - "Moyennes et variance lorsqu'elles existent."
+        validation:
+          - "Les survies sont comprises entre 0 et 1."
+          - "La survie diminue quand le seuil augmente."
+          - "Les quantiles augmentent avec le niveau p."
+        limites:
+          - "Aucun paramètre n'est ajusté sur des données réelles; la comparaison est illustrative."
+  synthese_references:
+    memo:
+      - "Intervalle : P(a<X≤b)=F(b)−F(a)."
+      - "Survie : S(x)=1−F(x); dépassement = probabilité de queue."
+      - "Quantile : q_p=F^{-1}(p); VaR_p=q_p."
+      - "Exponentielle(θ) : S=e^{-x/θ}; E=θ; q_p=−θ ln(1−p)."
+      - "Normale(μ,σ²) : q_p=μ+z_pσ."
+      - "Lognormale : ln X~N(μ,σ²); E=e^{μ+σ²/2}; médiane=e^μ."
+      - "Pareto/Lomax : S=(θ/(θ+x))^α; moyenne finie si α>1, variance si α>2."
+      - "Toujours comparer la survie et les quantiles élevés, pas seulement la moyenne."
+    glossaire:
+      - {terme_fr: "Densité", terme_en: "Density", definition: "Fonction dont l'intégrale sur un intervalle donne sa probabilité."}
+      - {terme_fr: "Fonction de répartition", terme_en: "Cumulative distribution function", definition: "Probabilité que la variable soit inférieure ou égale à un seuil."}
+      - {terme_fr: "Fonction de survie", terme_en: "Survival function", definition: "Probabilité de dépasser un seuil."}
+      - {terme_fr: "Quantile", terme_en: "Quantile", definition: "Seuil associé à un niveau de probabilité cumulée."}
+      - {terme_fr: "Value at Risk", terme_en: "Value at Risk (VaR)", definition: "Quantile d'une perte à un niveau de confiance donné."}
+      - {terme_fr: "Queue lourde", terme_en: "Heavy tail", definition: "Queue qui décroît lentement, donnant davantage de probabilité aux grands montants."}
+      - {terme_fr: "Lognormale", terme_en: "Lognormal distribution", definition: "Distribution positive dont le logarithme suit une loi normale."}
+    maitrise:
+      - "Je distingue densité et probabilité."
+      - "Je calcule une survie et un quantile."
+      - "Je reconnais exponentielle, normale, lognormale et Pareto."
+      - "Je vérifie les conditions d'existence des moments."
+      - "Je compare les distributions par leurs queues."
+      - "Je justifie les limites du modèle de sévérité."
+    references:
+      - {titre: "Klugman, Panjer & Willmot, Loss Models, Chapters 3–4", detail: "Severity distributions and tail models."}
+      - {titre: "Ross, A First Course in Probability, continuous distributions chapter", detail: "CDF, density, normal, exponential and lognormal."}
+      - {titre: "Society of Actuaries — Exam P Probability", url: "https://www.soa.org/education/exam-req/edu-exam-p-detail/", detail: "Probability exam syllabus."}
+    liens:
+      - {titre: "A2/S02 — Discrete distributions", cible: "a2/s02"}
+
 etapes:
   - type: quiz
     titre: "Test de positionnement"
