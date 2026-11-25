@@ -44,7 +44,7 @@ fiche:
           - explication: "Retrospective balance after k payments, with s_0=0."
           - explication: "Accumulated value of a unit immediate annuity; if i=0, s_k=k."
       - titre: "5. Constant principal repayment"
-        contenu: "In a constant-principal plan, principal repayment A is identical each period: A=L/n. The balance declines linearly. Interest declines with the balance, so total payments decline. This differs from a level-payment loan, where total payment P is fixed."
+        contenu: "In a constant-principal plan, principal repayment A is identical each period: A=L/n. The balance declines linearly. Interest declines with the balance: total payments decline when i>0 and remain constant when i=0. This differs from a level-payment loan, where total payment P is fixed."
         formules:
           - explication: "Constant principal and balance after k instalments."
           - explication: "Total payment at period k: principal plus interest."
