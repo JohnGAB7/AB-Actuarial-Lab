@@ -63,13 +63,13 @@ fiche:
           - "Choose a formula, calculate, then interpret."
         controles:
           - "The immediate payment distinguishes due from immediate annuities."
-          - "A growing perpetuity requires g<i."
-          - "Handle i=0 or i=g separately."
+          - "A growing perpetuity requires $g<i$."
+          - "Handle $i=0$ or $i=g$ separately."
         erreurs:
           - "Confusing additive growth with a percentage."
           - "Shifting payments by one period."
           - "Using 1/(i−g) without checking convergence."
-          - "Using a formula with division by i when i=0."
+          - "Using a formula with division by $i$ when $i=0$."
       - titre: "Verify using a cash-flow sum"
         quand_utiliser: "Check a closed form or compare annuity scenarios."
         etapes:
