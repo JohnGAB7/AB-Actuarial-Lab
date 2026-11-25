@@ -241,8 +241,32 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       await page.locator("#mode-steps").click();
       if (!(await page.locator("#stage").isVisible())) failures.push(language + " guided pathway should be restored");
     }
+    // A1/S03 reference sheet is ready and must be rendered and usable in both languages.
+    for (const language of ["fr", "en"]) {
+      const path = language === "en" ? "en/a1/s03/index.html" : "a1/s03/index.html";
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto(new URL(path, BASE).toString(), { waitUntil: "domcontentloaded" });
+      await page.locator("#lesson-mode").waitFor({ state: "visible" });
+      await page.locator("#mode-reference").click();
+      const tabs = page.locator("#reference-tabs [role=tab]");
+      if (await tabs.count() !== 7) failures.push(language + " S03 should have seven reference tabs");
+      await tabs.nth(1).click();
+      if (!(await page.locator("#reference-panel-1 .reference-formula .katex-display").count())) failures.push(language + " S03 display equations should be typeset");
+      await tabs.nth(2).click();
+      if (!(await page.locator("#reference-panel-2 .katex").count())) failures.push(language + " S03 inline notation in methods should be typeset");
+      await tabs.nth(3).click();
+      if (!(await page.locator("#reference-panel-3 .reference-block").count())) failures.push(language + " S03 worked examples missing");
+      await tabs.nth(4).click();
+      if (!(await page.locator("#reference-panel-4 .reference-block").count())) failures.push(language + " S03 corrected exercises missing");
+      await tabs.nth(5).click();
+      if (!(await page.locator("#reference-panel-5 pre.reference-code code").count())) failures.push(language + " S03 code lab missing");
+      await tabs.nth(6).click();
+      if (!(await page.locator("#reference-panel-6 .reference-table").count())) failures.push(language + " S03 bilingual glossary missing");
+      await page.setViewportSize({ width: 320, height: 844 });
+      if (await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)) failures.push(language + " S03 sheet overflow at 320px");
+    }
     await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto(new URL("a1/s03/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
+    await page.goto(new URL("a1/s04/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
     if (await page.locator("#lesson-mode").isVisible()) failures.push("sessions without a ready reference sheet should not expose the sheet switch");
 
     if (errors.length) failures.push("page errors: " + errors.join("; "));
