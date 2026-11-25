@@ -1,6 +1,258 @@
 # English texts for session A1.04. Numbers, answers and tests live in contenus/a1/s04.yaml.
 titre: "Loans, amortization and yield rates"
 
+fiche:
+  vue_ensemble:
+    question: "How do we split a repayment, calculate the outstanding balance and compare investment yields?"
+    pourquoi: "Amortization turns a loan into periodic cash flows. Understanding payment composition, balances and valuation methods is essential in credit, insurance, pensions and investment analysis."
+    objectifs:
+      - "Calculate a level payment from the loan amount, rate and term."
+      - "Build and interpret an amortization schedule."
+      - "Calculate the outstanding balance using prospective and retrospective methods."
+      - "Distinguish constant principal repayment from level annuity payments."
+      - "Define NPV and IRR and understand their limitations."
+    prerequis:
+      - "Present value of an immediate annuity."
+      - "Accumulation and discounting at a consistent effective periodic rate."
+      - "Equation of value and cash-flow sign convention."
+    carte:
+      - "Payment: period interest plus principal repayment."
+      - "Balance: capital not yet repaid after an instalment."
+      - "Amortization: allocation of repayment over time."
+      - "NPV: sum of cash flows discounted at the decision rate."
+      - "IRR: a rate that sets NPV to zero, subject to existence and uniqueness."
+  cours_complet:
+    sections:
+      - titre: "1. Equation of value and level payment"
+        contenu: "A loan L received at time 0 and repaid by n level payments P at the end of each period at effective rate i is valued at time 0. The present value of payments must equal the amount lent. For i>0, the payment is positive and constant. If i=0, the principal is simply divided into n payments."
+        formules:
+          - explication: "Equation of value for payments at times 1,…,n."
+          - explication: "Constant periodic payment. Special case i=0: P=L/n."
+      - titre: "2. Payment decomposition and balance recurrence"
+        contenu: "At period k, interest I_k is calculated on the opening balance B_{k−1}. Payment P covers interest first; the remainder repays principal. The closing balance is the previous balance less principal repayment. For i≥0, a level-payment amortized loan has declining interest and increasing principal repayments."
+        formules:
+          - explication: "Period interest and principal repayment (PR)."
+          - explication: "Balance recurrence after payment k, with B_0=L."
+          - explication: "For level payments, principal repayment grows geometrically by factor 1+i."
+      - titre: "3. Outstanding balance — prospective method"
+        contenu: "The prospective method values the payments still due at the balance date. After k payments, n−k payments remain at times k+1,…,n. Their value at time k is the balance. At k=n, no payments remain and the balance is zero."
+        formules:
+          - explication: "Value at time k of future payments; define a_0=0."
+      - titre: "4. Outstanding balance — retrospective method"
+        contenu: "The retrospective method accumulates the original loan to time k, then subtracts the accumulated value of payments already made. It gives the same balance as the prospective method when contractual cash flows use the same rate."
+        formules:
+          - explication: "Retrospective balance after k payments, with s_0=0."
+          - explication: "Accumulated value of a unit immediate annuity; if i=0, s_k=k."
+      - titre: "5. Constant principal repayment"
+        contenu: "In a constant-principal plan, principal repayment A is identical each period: A=L/n. The balance declines linearly. Interest declines with the balance, so total payments decline. This differs from a level-payment loan, where total payment P is fixed."
+        formules:
+          - explication: "Constant principal and balance after k instalments."
+          - explication: "Total payment at period k: principal plus interest."
+      - titre: "6. NPV and internal rate of return"
+        contenu: "For a project, net present value (NPV) discounts cash flows C_t at a decision rate j. Internal rate of return (IRR) is a rate j that makes NPV zero. NPV compares value created at a rate consistent with risk; IRR summarizes a return rate but can be ambiguous when cash flows change sign more than once. There may be multiple IRRs or no real IRR in the searched domain. For mutually exclusive projects, IRR may also rank projects differently from NPV."
+        formules:
+          - explication: "NPV of cash flows dated at periods t, with j>-1 for real powers."
+          - explication: "An internal rate is a root of the NPV equation; existence and uniqueness are not guaranteed."
+      - titre: "7. Assumptions, conventions and limiting cases"
+        contenu: "The annuity formulas assume regular end-of-period payments, an effective rate consistent with the payment period and level payments. A nominal rate must be converted to an effective periodic rate. If i=0, P=L/n, B_k=L(1−k/n) and interest is zero. In practice, rounding to cents can leave a small final balance; the final instalment may be adjusted. Fees, insurance, irregular dates, variable rates, penalties and tax are not included. IRR for conventional cash flows (one initial outflow followed by inflows) is generally unique above −100%, but this does not extend to non-conventional cash flows."
+        formules:
+          - explication: "No-interest case: principal is repaid in equal instalments."
+  methodes:
+    methodes:
+      - titre: "Calculate a level payment"
+        quand_utiliser: "A loan is repaid by n equal instalments at the end of each period."
+        etapes:
+          - "Define loan amount L, effective periodic rate i and number of payments n."
+          - "Check that the rate and payment period are consistent."
+          - "Calculate a_{n|}, then P=L/a_{n|}."
+          - "Check that the present value of n payments equals L."
+        controles:
+          - "For i>0, P exceeds L/n."
+          - "The payment is constant; interest falls as the balance declines."
+          - "The closing balance after the last payment should be zero, apart from rounding."
+        erreurs:
+          - "Using an annual rate with monthly payments without conversion."
+          - "Confusing total payment with principal repayment."
+          - "Rounding intermediate calculations too early."
+      - titre: "Build an amortization schedule"
+        quand_utiliser: "Payment, interest, principal and balance must be detailed period by period."
+        etapes:
+          - "Set opening balance B_0=L."
+          - "Calculate I_k=iB_{k−1}."
+          - "Calculate PR_k=P−I_k."
+          - "Calculate B_k=B_{k−1}−PR_k."
+          - "Check total principal repayments and final balance."
+        controles:
+          - "Interest + principal repayment = payment."
+          - "B_k=B_{k−1}−PR_k."
+          - "Total principal repayments equal L."
+          - "The balance decreases for an amortized loan with non-negative rate."
+        erreurs:
+          - "Calculating interest on the closing balance."
+          - "Subtracting the entire payment from the balance."
+          - "Confusing B_k and B_{k−1}."
+      - titre: "Calculate and interpret IRR"
+        quand_utiliser: "Project cash flows are dated and an internal rate is requested."
+        etapes:
+          - "Set the sign convention: initial investment negative, receipts positive."
+          - "Write NPV as a function of j."
+          - "Find a root of NPV(j)=0 and check the residual."
+          - "Inspect cash-flow sign changes and possible multiple roots."
+          - "Compare IRR with the decision rate and supplement the analysis with NPV."
+        controles:
+          - "NPV at the IRR should be close to zero."
+          - "Compare NPV and IRR using the same cash-flow timeline."
+          - "Do not present a numerically found IRR as unique without checking."
+        erreurs:
+          - "Confusing IRR with the decision discount rate."
+          - "Using IRR as the sole criterion for projects of different size or timing."
+          - "Ignoring non-conventional cash flows and multiple roots."
+  exemples_guides:
+    exemples:
+      - titre: "1. Level payment and first instalment"
+        enonce: "Borrow €10,000 at an effective annual rate of 6%, repaid by 5 end-of-year level payments."
+        raisonnement:
+          - "Calculate a_{5|}=(1−1.06^{-5})/0.06≈4.212364."
+          - "P=10,000/4.212364≈€2,373.96."
+          - "At the first instalment, I_1=0.06×10,000=€600."
+          - "PR_1=2,373.96−600≈€1,773.96; B_1≈€8,226.04."
+        resultat: "Level payment ≈ €2,373.96; balance after the first instalment ≈ €8,226.04."
+        interpretation: "The first payment contains €600 interest and the remainder repays principal. Interest falls as the balance declines."
+        controles:
+          - "The present value of five payments is approximately €10,000."
+          - "The payment exceeds €10,000/5=€2,000 because it includes interest."
+      - titre: "2. Balance after two instalments — two methods"
+        enonce: "For the same loan, calculate B_2 after two payments."
+        raisonnement:
+          - "Prospective: three payments remain, so B_2=P a_{3|}≈2,373.96×2.673012."
+          - "Retrospective: accumulate €10,000 for two years and subtract the accumulated value of the two payments."
+          - "Both methods give approximately €6,345.63 (small differences arise from rounded displayed payments)."
+        resultat: "B_2≈€6,345.63."
+        interpretation: "The balance is the contract value at time 2, not simply L−2P: interest must be accounted for."
+        controles:
+          - "B_2 is below B_1 and above zero."
+          - "Both methods must agree using unrounded values."
+      - titre: "3. NPV and IRR of a simple project"
+        enonce: "Invest €1,000 today and receive €600 at the end of year 1 and €600 at the end of year 2."
+        raisonnement:
+          - "NPV(j)=−1,000+600/(1+j)+600/(1+j)^2."
+          - "IRR is the root of NPV(j)=0."
+          - "Numerical IRR is approximately 13.0662%."
+          - "At a 10% decision rate, NPV is positive: approximately €41.32."
+        resultat: "IRR≈13.0662%; NPV at 10%≈€41.32."
+        interpretation: "The project has positive NPV at 10% in this model. IRR exceeds that rate, but the decision must also consider risk, scale, timing and assumptions."
+        controles:
+          - "Substituting IRR into the equation gives an NPV close to zero."
+          - "NPV at 10% must be positive."
+  exercices_corriges:
+    exercices:
+      - titre: "Level payment — foundation"
+        enonce: "Borrow €25,000 at 3.5% effective annually over 12 years, with end-of-year payments. Calculate the payment."
+        corrige:
+          - "a_{12|}=(1−1.035^{-12})/0.035≈9.663."
+          - "P=25,000/a_{12|}≈€2,587.10."
+        feedback: "The payment contains principal and interest. A longer term generally lowers the payment but increases total interest."
+      - titre: "Balance — intermediate"
+        enonce: "A €10,000 loan at 6% over 5 years uses level payments. Calculate the balance after 2 payments."
+        corrige:
+          - "P≈€2,373.96."
+          - "B_2=P a_{3|}≈€6,345.63."
+          - "Check with B_2=10,000(1.06)^2−P s_{2|}."
+        feedback: "The prospective balance discounts remaining payments. The retrospective method should agree."
+      - titre: "NPV and IRR — intermediate"
+        niveau: intermediaire
+        enonce: "A project costs €2,000 and pays €1,200 at the end of years 1 and 2. Calculate NPV at 8% and determine IRR."
+        corrige:
+          - "NPV(8%)=−2,000+1,200/1.08+1,200/1.08²≈€139.92."
+          - "IRR solves −2,000+1,200/(1+j)+1,200/(1+j)^2=0."
+          - "For two equal receipts, solve 2,000=P a_{2|}: j≈13.0662%."
+        feedback: "Positive NPV at the decision rate indicates value creation in this model. IRR is a root of the NPV equation; do not assume uniqueness for every cash-flow pattern."
+  applications_labs:
+    applications:
+      - titre: "Build and audit a loan schedule"
+        contexte: "An analyst compares a level-payment loan with a constant-principal loan and checks the outstanding balance."
+        objectif: "Reproduce payment, schedule and balance independently using two methods, then check the cash flows."
+        entrees:
+          - "Loan amount L"
+          - "Effective periodic rate i"
+          - "Number of periods n"
+          - "End-of-period payment convention"
+        hypotheses:
+          - "Constant rate and regular periods."
+          - "No fees, insurance or early repayments."
+          - "Use unrounded calculations; display cents."
+        procedure:
+          - "Excel: use PMT(rate,nper,pv) with a consistent sign convention, then build the schedule with interest, principal and balance formulas."
+          - "Python: calculate the payment and a list of tuples (period, interest, principal, balance)."
+          - "Compare the balance at time k using prospective and retrospective methods."
+          - |-
+            Python (reproducible):
+            ```python
+            def level_payment(L, n, i):
+                if n <= 0 or i <= -1:
+                    raise ValueError('n must be positive and i > -1')
+                return L / n if i == 0 else L * i / (1 - (1 + i) ** (-n))
+
+            def amortization_schedule(L, n, i):
+                P = level_payment(L, n, i)
+                B, rows = L, []
+                for k in range(1, n + 1):
+                    interest = i * B
+                    principal = P - interest
+                    B -= principal
+                    rows.append((k, interest, principal, B))
+                return rows
+
+            P = level_payment(10_000, 5, 0.06)
+            rows = amortization_schedule(10_000, 5, 0.06)
+            assert abs(P - 2_373.9640043) < 1e-6
+            assert abs(rows[1][3] - 6_345.6341511) < 1e-6
+            ```
+          - "Test i=0 and check that principal is repaid in equal amounts."
+          - "Compare payment profiles for constant principal and level-payment amortization."
+        sorties:
+          - "Periodic payment and total interest."
+          - "Detailed amortization schedule."
+          - "Outstanding balance after each instalment."
+          - "Consistency checks."
+        validation:
+          - "Interest + principal repayment = payment."
+          - "Total principal repayment = original loan amount."
+          - "Closing balance = 0 within numerical tolerance."
+          - "Prospective balance = retrospective balance."
+        limites:
+          - "Actual dates, fees, variable rates and contractual rounding may change the result."
+          - "Spreadsheet PMT/RATE/IRR conventions and locales differ; check signs and separators."
+  synthese_references:
+    memo:
+      - "L=P a_{n|} and P=L/a_{n|}; at zero rate, P=L/n."
+      - "Payment = interest iB_{k−1} + principal repayment PR_k."
+      - "B_k=P a_{n−k|} (prospective) = L(1+i)^k−P s_{k|} (retrospective)."
+      - "Constant principal: A=L/n; total payments decline if i≥0."
+      - "NPV(j)=discounted cash-flow sum; IRR is a root, not necessarily unique."
+    glossaire:
+      - definition: "Loan whose principal is repaid progressively according to a schedule."
+      - definition: "Remaining capital at a given date, excluding fees or future unearned interest depending on contract conventions."
+      - definition: "Payment component that reduces the borrowed principal."
+      - definition: "Table showing payment, interest, principal and balance for each instalment."
+      - definition: "Discounted cash-flow sum at the decision rate."
+      - definition: "Rate that makes NPV zero for the given cash-flow timeline."
+    maitrise:
+      - "I can calculate a level payment and explain its equation of value."
+      - "I can build and check an amortization schedule."
+      - "I can calculate the outstanding balance using both methods."
+      - "I can explain the difference between level payments and constant principal."
+      - "I can interpret NPV and IRR and recognize their limitations."
+    liens:
+      - titre: "Varying annuities and perpetuities"
+      - titre: "Bonds and pricing"
+    references:
+      - titre: "Actuarial Mathematics for Life Contingent Risks"
+        detail: "Actuarial reference in life-contingent mathematics; this sheet does not claim to reproduce a specific section."
+      - titre: "OpenStax — Principles of Finance"
+        detail: "Open reference for NPV, IRR and investment decisions; verify the chapter in the edition used."
+
+
 etapes:
   - titre: "Placement check"
     intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
