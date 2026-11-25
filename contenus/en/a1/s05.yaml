@@ -289,7 +289,7 @@ fiche:
         corrige:
           - "Cash coupon is 40 and required yield is 5%."
           - "Coupon is below yield: the bond trades at a discount."
-          - "$P=40a_{4|5\%}+1,000v_{5\%}^4\approx964.54$."
+          - "$P=40a_{4|5\%}+1,000v_{5\%}^4\\approx964.54$."
         feedback: "Compare the cash coupon with the required yield before calculating price."
       - titre: "Intermediate — spot versus YTM"
         enonce: "A 3-year bond, face value 1,000, coupon 5%, is valued with s_1=3 %, s_2=3.5 %, s_3=4 %. Calculate its price and explain why its YTM is not necessarily 4%."
@@ -302,7 +302,7 @@ fiche:
         enonce: "At YTM 4%, estimate the price change when yield rises by 0.5 percentage points. Use modified duration 4.3818 and convexity 24.4766."
         corrige:
           - "Δy=0.005."
-          - "Approximation: −4.3818×0.005+0.5×24.4766×0.005²≈−2.1600 %."
+          - "Approximation: −4.3818×0.005+0.5×24.4766×0.005²≈−2.1603 %."
           - "Duration alone gives about $-2.1909\%$; convexity moderates the decline."
         feedback: "Express the shock as a decimal. Convexity is multiplied by the squared shock and by one half."
   applications_labs:
