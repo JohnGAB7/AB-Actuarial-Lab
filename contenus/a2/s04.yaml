@@ -14,6 +14,258 @@ actu_basics:
   videos:
     - {id: zVX2Oy68W5Y, langue: en, titre: "Why is the average claim cost more predictable with 10,000 policies?", duree: "6:39"}
 
+fiche:
+  statut: brouillon
+  vue_ensemble:
+    question: "Pourquoi le coût moyen devient-il plus prévisible quand on mutualise davantage de contrats ?"
+    pourquoi: "La mutualisation répartit le risque aléatoire entre de nombreux assurés. La loi des grands nombres stabilise la moyenne, mais la dépendance entre risques crée une composante systématique qui ne se diversifie pas."
+    objectifs:
+      - "Calculer l'espérance et la variance d'une somme et d'une moyenne."
+      - "Interpréter la loi des grands nombres."
+      - "Utiliser le théorème central limite pour approximer une somme."
+      - "Quantifier la mutualisation d'un portefeuille de contrats."
+      - "Comprendre l'effet de la corrélation sur le risque agrégé."
+      - "Distinguer risque diversifiable et risque systématique."
+    prerequis:
+      - "Espérance, variance et écart-type."
+      - "Binomiale et loi normale."
+      - "Probabilité conditionnelle et indépendance."
+    carte:
+      - "Somme : l'espérance s'additionne; sous indépendance, les variances s'additionnent."
+      - "Moyenne : la variance décroît en σ²/n sous indépendance."
+      - "LLN : la moyenne observée se rapproche de l'espérance."
+      - "CLT : la somme standardisée est approximativement normale."
+      - "Mutualisation : le risque individuel se diversifie."
+      - "Corrélation : une composante systématique persiste à grande taille."
+    duree_minutes: 40
+  cours_complet:
+    sections:
+      - titre: "1. Somme et moyenne de risques indépendants"
+        contenu: "Pour n variables indépendantes de même espérance μ et variance σ², la somme a une espérance nμ et une variance nσ². La moyenne garde l'espérance μ, mais sa variance est divisée par n. L'écart-type de la moyenne diminue en 1/√n."
+        formules:
+          - formule: "E[S_n]=n\\mu,\\quad \\operatorname{Var}(S_n)=n\\sigma^2"
+            explication: "Somme de n variables indépendantes de même loi."
+          - formule: "E[\\bar X_n]=\\mu,\\quad \\operatorname{Var}(\\bar X_n)=\\frac{\\sigma^2}{n},\\quad \\sigma_{\\bar X}=\\frac{\\sigma}{\\sqrt n}"
+            explication: "La moyenne réduit la variance et l'écart-type."
+      - titre: "2. Loi des grands nombres"
+        contenu: "Lorsque n augmente, la moyenne empirique converge vers l'espérance sous les conditions de la loi des grands nombres. Cela rend le coût moyen d'un portefeuille plus prévisible. La loi ne garantit ni que chaque contrat coûte la moyenne, ni qu'un portefeuille réalise exactement son espérance."
+        formules:
+          - formule: "\\bar X_n\\xrightarrow{P}\\mu"
+            explication: "Convergence en probabilité de la moyenne empirique."
+      - titre: "3. Théorème central limite"
+        contenu: "Pour des variables indépendantes de même loi, d'espérance μ et de variance finie σ², la somme centrée et réduite est approximativement normale lorsque n est grand. Le CLT permet d'estimer des probabilités de perte agrégée, mais l'approximation peut être mauvaise pour un petit portefeuille ou une queue très lourde."
+        formules:
+          - formule: "\\frac{S_n-n\\mu}{\\sigma\\sqrt n}\\approx\\mathcal N(0,1)"
+            explication: "Approximation normale de la somme standardisée."
+          - formule: "S_n\\approx\\mathcal N(n\\mu,n\\sigma^2)"
+            explication: "Approximation de la somme par une normale."
+      - titre: "4. Mutualisation d'un portefeuille Bernoulli"
+        contenu: "Si chaque contrat génère un sinistre avec probabilité p et un coût fixe c, alors le nombre de sinistres suit une binomiale(n,p) sous indépendance. Le coût total cN a une moyenne npc et une variance c²np(1−p). Le coût moyen par contrat a une moyenne pc et un écart-type qui décroît avec n."
+        formules:
+          - formule: "N\\sim\\operatorname{Binomiale}(n,p),\\quad E[N]=np,\\quad \\operatorname{Var}(N)=np(1-p)"
+            explication: "Nombre de contrats sinistrés."
+          - formule: "E[cN]=npc,\\quad \\operatorname{Var}(cN)=c^2np(1-p)"
+            explication: "Coût total."
+          - formule: "E[cN/n]=pc,\\quad \\sigma_{cN/n}=c\\sqrt{\\frac{p(1-p)}{n}}"
+            explication: "Coût moyen par contrat."
+      - titre: "5. Dépendance et corrélation"
+        contenu: "L'indépendance est centrale à la diversification. Pour n risques de même variance σ² et corrélation commune ρ, la variance de la moyenne comprend un terme individuel qui diminue avec n et un terme systématique qui tend vers ρσ². Une catastrophe peut toucher plusieurs contrats simultanément et empêcher la mutualisation complète."
+        formules:
+          - formule: "\\operatorname{Var}(\\bar X)=\\frac{\\sigma^2}{n}+\\frac{n-1}{n}\\rho\\sigma^2"
+            explication: "Variance de la moyenne pour une corrélation commune."
+          - formule: "\\lim_{n\\to\\infty}\\operatorname{Var}(\\bar X)=\\rho\\sigma^2"
+            explication: "Le risque systématique ne disparaît pas lorsque ρ>0."
+      - titre: "6. Diversification et risque agrégé"
+        contenu: "La mutualisation réduit la volatilité du coût moyen, pas nécessairement celle du coût total. Le coût total attendu croît avec n, tandis que son écart-type croît en √n sous indépendance. La concentration géographique, les événements catastrophiques et les facteurs macroéconomiques peuvent créer une dépendance."
+        formules:
+          - formule: "E[S_n]=n\\mu,\\quad \\sigma_{S_n}=\\sqrt n\\,\\sigma"
+            explication: "Sous indépendance, le coût total attendu et sa volatilité."
+          - formule: "\\operatorname{CV}(S_n)=\\frac{\\sigma}{\\mu\\sqrt n}"
+            explication: "Coefficient de variation du coût total, si μ>0."
+      - titre: "7. Hypothèses et limites"
+        contenu: "La diversification n'élimine pas les sinistres, elle réduit l'incertitude relative de la moyenne. Vérifie l'indépendance, l'homogénéité, la variance finie, la concentration, les catastrophes et l'adéquation de l'approximation normale. Une fréquence ou sévérité hétérogène exige un modèle plus riche."
+        formules:
+          - formule: "\\text{Indépendance}\\Rightarrow\\operatorname{Var}(\\bar X)=\\sigma^2/n;\\quad \\rho>0\\Rightarrow\\text{plancher de variance}"
+            explication: "Le bénéfice de mutualisation dépend de la dépendance."
+  methodes:
+    methodes:
+      - titre: "Calculer le risque d'une somme et d'une moyenne"
+        quand_utiliser: "n risques indépendants de même loi sont agrégés."
+        etapes:
+          - "Identifier n, μ et σ²."
+          - "Pour la somme, calculer nμ et nσ²."
+          - "Pour la moyenne, calculer μ et σ²/n."
+          - "Prendre la racine pour obtenir l'écart-type."
+        controles:
+          - "La variance de la somme est n fois celle d'un risque."
+          - "La variance de la moyenne est divisée par n."
+          - "L'écart-type de la moyenne est divisé par √n."
+        erreurs:
+          - "Confondre somme et moyenne."
+          - "Diviser l'écart-type par n au lieu de √n."
+      - titre: "Quantifier la mutualisation"
+        quand_utiliser: "Un portefeuille de contrats a une probabilité de sinistre et un coût fixe par sinistre."
+        etapes:
+          - "Modéliser le nombre de sinistres par une binomiale(n,p)."
+          - "Calculer l'espérance et la variance du nombre."
+          - "Multiplier par le coût c pour obtenir le coût total."
+          - "Diviser par n pour le coût moyen et interpréter la volatilité."
+        controles:
+          - "E[N]=np."
+          - "Var(N)=np(1−p)."
+          - "Le coût moyen attendu est pc."
+        erreurs:
+          - "Utiliser une variance de Poisson np sans vérifier l'approximation."
+          - "Oublier que le coût total et le coût moyen n'ont pas la même échelle."
+      - titre: "Évaluer l'effet de la corrélation"
+        quand_utiliser: "Des risques ont une corrélation positive ou partagent un événement commun."
+        etapes:
+          - "Identifier σ², n et la corrélation commune ρ."
+          - "Calculer la variance de la moyenne avec le terme de dépendance."
+          - "Comparer à la variance sous indépendance."
+          - "Interpréter le plancher systématique lorsque n devient grand."
+        controles:
+          - "Pour ρ=0, retrouver σ²/n."
+          - "Pour ρ>0, la variance est supérieure à celle sous indépendance."
+          - "La limite lorsque n tend vers l'infini vaut ρσ²."
+        erreurs:
+          - "Supposer que la diversification élimine le risque catastrophe."
+          - "Oublier les covariances."
+  exemples_guides:
+    exemples:
+      - titre: "10 000 contrats : fréquence et coût"
+        enonce: "10 000 contrats indépendants ont chacun 1 % de probabilité de sinistre, avec un coût fixe de 10 000 €. Calcule le nombre attendu, son écart-type, le coût total attendu et le coût moyen par contrat."
+        raisonnement:
+          - "N~Binomiale(10 000,0,01); E[N]=100 et Var(N)=99."
+          - "σ_N=√99≈9,9499."
+          - "Coût total attendu=100×10 000=1 000 000 €; écart-type=10 000×√99≈99 498,74 €."
+          - "Coût moyen attendu=100 €; écart-type par contrat=99 498,74/10 000≈9,95 €."
+        resultat: "100 sinistres attendus; σ_N≈9,95; coût total moyen 1 M€; coût moyen par contrat 100 € avec σ≈9,95 €."
+        interpretation: "Le coût moyen du portefeuille est bien plus stable que le coût d'un contrat individuel."
+        controles:
+          - "Le coût moyen attendu est p×c=100 €."
+          - "La variance du nombre de sinistres vaut 99."
+      - titre: "Corrélation : limite de diversification"
+        enonce: "1 000 risques ont σ=10 000 € et corrélation commune ρ=5 %. Compare l'écart-type de la moyenne avec et sans corrélation."
+        raisonnement:
+          - "Indépendance : σ_moyenne=10 000/√1 000≈316,23 €."
+          - "Corrélation : Var(moyenne)=10 000²(1/1 000+999/1 000×0,05)=5 095 000."
+          - "σ_moyenne≈2 257,21 €; le plancher asymptotique=10 000√0,05≈2 236,07 €."
+        resultat: "316,23 € sous indépendance contre 2 257,21 € avec 5 % de corrélation."
+        interpretation: "Une faible dépendance commune peut réduire fortement le bénéfice de mutualisation."
+        controles:
+          - "La variance corrélée est supérieure à la variance indépendante."
+          - "L'écart-type tend vers σ√ρ, pas vers zéro."
+      - titre: "CLT : probabilité de 120 sinistres ou plus"
+        enonce: "Dans 10 000 contrats avec p=1 %, approxime P(N≥120) par la normale avec correction de continuité."
+        raisonnement:
+          - "μ=np=100; σ=√(np(1−p))=√99≈9,9499."
+          - "P(N≥120)≈P(Z≥(119,5−100)/√99)=P(Z≥1,9598)."
+          - "La probabilité de queue est ≈2,50 %."
+        resultat: "Approximation normale avec correction : 2,50 %."
+        interpretation: "Le CLT permet d'estimer un risque de portefeuille, mais l'approximation doit être contrôlée."
+        controles:
+          - "La correction de continuité utilise 119,5."
+          - "Le résultat est une probabilité de queue."
+  exercices_corriges:
+    exercices:
+      - titre: "Fondamental — 100 contrats"
+        niveau: fondamental
+        enonce: "100 contrats indépendants ont p=2 % et un coût fixe de 5 000 €. Calcule le nombre moyen, son écart-type, le coût total attendu et son écart-type."
+        corrige:
+          - "E[N]=2; Var(N)=1,96; σ_N=1,4."
+          - "Coût total moyen=10 000 €; écart-type=7 000 €."
+        feedback: "Le coût total est 5 000 € multiplié par le nombre de sinistres."
+      - titre: "Intermédiaire — approximation normale"
+        niveau: intermediaire
+        enonce: "10 000 contrats ont p=1 %. Approxime P(N≥120) avec la normale et correction de continuité."
+        corrige:
+          - "μ=100; σ=√99≈9,9499."
+          - "z=(119,5−100)/√99≈1,9598; P(N≥120)≈2,50 %."
+        feedback: "Le seuil de 120 devient 119,5 dans la correction de continuité."
+      - titre: "Avancé — corrélation"
+        niveau: avance
+        enonce: "100 risques ont σ=5 000 € et ρ=10 %. Compare l'écart-type de la moyenne à l'indépendance."
+        corrige:
+          - "Indépendance : 5 000/√100=500 €."
+          - "Corrélation : Var(moyenne)=5 000²(0,01+0,99×0,10)=2 725 000; σ≈1 650,76 €."
+        feedback: "La corrélation positive crée une composante de risque systématique."
+  applications_labs:
+    applications:
+      - titre: "Simuler et comparer la mutualisation"
+        contexte: "Un portefeuille fictif de contrats Bernoulli permet de voir la stabilité du coût moyen et l'effet d'une corrélation commune."
+        objectif: "Comparer la moyenne et l'écart-type pour plusieurs tailles de portefeuille et illustrer le plancher de variance avec corrélation."
+        outils: [python, excel]
+        entrees:
+          - "Probabilité individuelle p=1 %."
+          - "Coût par sinistre c=10 000 €."
+          - "Tailles n=100, 1 000 et 10 000."
+          - "Corrélation commune ρ=5 % pour le scénario dépendant."
+        hypotheses:
+          - "Le scénario indépendant utilise des contrats Bernoulli indépendants."
+          - "Le scénario corrélé est illustratif d'une dépendance commune, pas un modèle catastrophe complet."
+        procedure:
+          - "Calculer E[N]=np et σ_N=√np(1−p) pour chaque taille."
+          - "Calculer le coût total attendu et son écart-type."
+          - "Calculer l'écart-type du coût moyen sous indépendance."
+          - |
+            ```python
+            import math
+
+            p, c = 0.01, 10000
+            for n in (100, 1000, 10000):
+                mean_n = n*p
+                sd_n = math.sqrt(n*p*(1-p))
+                mean_total = mean_n*c
+                sd_total = sd_n*c
+                sd_average = sd_total/n
+                rho = 0.05
+                sd_average_corr = c*math.sqrt(p*(1-p)*(1/n+(n-1)/n*rho))
+                print(n, mean_n, sd_n, mean_total, sd_total, sd_average, sd_average_corr)
+            ```
+          - "Comparer les écarts-types des moyennes et commenter la part systématique."
+        sorties:
+          - "Nombre moyen et écart-type de sinistres."
+          - "Coût total moyen et écart-type."
+          - "Volatilité du coût moyen avec et sans dépendance."
+        validation:
+          - "La volatilité de la moyenne diminue lorsque n augmente sous indépendance."
+          - "Avec ρ>0, elle ne tend pas vers zéro."
+          - "La moyenne du coût par contrat reste pc."
+        limites:
+          - "La corrélation commune est une simplification; les événements catastrophiques exigent des modèles de dépendance plus réalistes."
+  synthese_references:
+    memo:
+      - "Somme indépendante : E[S_n]=nμ; Var(S_n)=nσ²."
+      - "Moyenne : E[ X̄ ]=μ; Var(X̄)=σ²/n; σ_X̄=σ/√n."
+      - "LLN : la moyenne empirique converge vers μ."
+      - "CLT : (S_n−nμ)/(σ√n)≈N(0,1)."
+      - "Binomiale(n,p) : E[N]=np; Var(N)=np(1−p)."
+      - "Coût total cN : E=npc; Var=c²np(1−p)."
+      - "Corrélation commune : Var(X̄)=σ²/n+(n−1)ρσ²/n; plancher ρσ²."
+      - "La mutualisation réduit le risque relatif, pas le risque systématique."
+    glossaire:
+      - {terme_fr: "Mutualisation", terme_en: "Pooling", definition: "Sharing random losses across a large group of policies."}
+      - {terme_fr: "Loi des grands nombres", terme_en: "Law of large numbers", definition: "The sample average converges toward the expected value under suitable conditions."}
+      - {terme_fr: "Théorème central limite", terme_en: "Central limit theorem", definition: "The standardized sum is approximately normal for a large sample under conditions."}
+      - {terme_fr: "Risque diversifiable", terme_en: "Diversifiable risk", definition: "Risk whose relative impact decreases as independent exposures are pooled."}
+      - {terme_fr: "Risque systématique", terme_en: "Systematic risk", definition: "Risk shared across exposures that does not disappear through pooling."}
+      - {terme_fr: "Corrélation", terme_en: "Correlation", definition: "Measure of linear association between risks."}
+      - {terme_fr: "Correction de continuité", terme_en: "Continuity correction", definition: "Adjustment of a discrete threshold when approximating by a continuous distribution."}
+    maitrise:
+      - "Je calcule la variance d'une somme et d'une moyenne."
+      - "J'interprète la loi des grands nombres."
+      - "J'utilise le CLT avec une correction de continuité."
+      - "Je quantifie la mutualisation d'un portefeuille."
+      - "Je distingue indépendance et corrélation."
+      - "Je reconnais le risque systématique."
+    references:
+      - {titre: "Ross, A First Course in Probability, limit theorems chapter", detail: "Law of large numbers and central limit theorem."}
+      - {titre: "Klugman, Panjer & Willmot, Loss Models, aggregation chapter", detail: "Aggregate loss models and pooling."}
+      - {titre: "Society of Actuaries — Exam P Probability", url: "https://www.soa.org/education/exam-req/edu-exam-p-detail/", detail: "Probability exam syllabus."}
+    liens:
+      - {titre: "A2/S03 — Continuous claim severity", cible: "a2/s03"}
+
 etapes:
   - type: quiz
     titre: "Test de positionnement"
