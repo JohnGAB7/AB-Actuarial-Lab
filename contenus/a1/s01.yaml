@@ -164,7 +164,7 @@ fiche:
         enonce: "Un régime verse 2 000 unités à $t=1$, $1\\,500$ à $t=4$ et reçoit $300$ à $t=2$. Calculer la valeur actuelle nette à 5 % annuel effectif."
         corrige:
           - "Fixer la convention : sorties positives comme prestations et entrée négative dans le coût net, ou l'inverse, mais rester cohérent."
-          - "Avec prestations positives et encaissement reçu négatif : VAN=2 000/1,05+1 500/(1,05)⁴−300/(1,05)²."
+          - "Avec prestations positives et encaissement reçu négatif : $VA=2\\,000/1{,}05+1\\,500/(1{,}05)^4-300/(1{,}05)^2$."
           - "Évaluer chaque terme à sa date puis sommer ; la VAN est d'environ 2 866,7 unités."
         feedback: "Le point déterminant est le signe du flux reçu et les dates exactes. Une somme nominale de 2 000+1 500−300 ne répond pas à la question car les flux ne sont pas simultanés."
   applications_labs:
