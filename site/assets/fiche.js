@@ -199,6 +199,8 @@
         root.append(block(copy.references,content));
       });
       (data.liens||[]).forEach(link=>{
+        // Translation overlays may translate labels, but must retain navigation targets.
+        if(typeof link.cible!=="string" || !link.cible.includes("/") || typeof data.id!=="string") return;
         const a=make("a","reference-link",link.titre);
         const [target,anchor] = link.cible.split("#");
         const [targetDomain,targetSession] = target.split("/");
