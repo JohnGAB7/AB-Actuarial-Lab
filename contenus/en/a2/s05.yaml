@@ -1,6 +1,261 @@
 # English texts for session A2.05. Numbers, answers and tests live in contenus/a2/s05.yaml.
 titre: "Frequency, severity and aggregate loss"
 
+fiche:
+  vue_ensemble:
+    question: "How do we combine a random number of claims and their amounts to calculate aggregate loss?"
+    pourquoi: "Total portfolio cost has two sources of risk: claim frequency and severity. The random-sum model aggregates both and estimates the mean, variance and probability of large losses."
+    objectifs:
+      - "Define aggregate loss as a random sum of severities."
+      - "Calculate E[S] by conditioning."
+      - "Calculate Var(S) using the total variance formula."
+      - "Use compound Poisson formulas."
+      - "Calculate moments of exponential severity."
+      - "Interpret zero-loss probability and model assumptions."
+    prerequis:
+      - "Expected value, variance and conditioning."
+      - "Binomial, Poisson and exponential distributions."
+      - "Independence between frequency and severity."
+    carte:
+      - "Aggregate loss: S=X₁+…+X_N."
+      - "Frequency N: random claim count."
+      - "Severity X: cost of one claim."
+      - "Expected loss: E[N]E[X]."
+      - "Variance: E[N]Var(X)+Var(N)(E[X])²."
+      - "Compound Poisson: E[S]=λE[X], Var(S)=λE[X²]."
+    duree_minutes: 45
+  cours_complet:
+    sections:
+      - titre: "1. Random sum of severities"
+        contenu: "Aggregate loss S is the sum of claim amounts X_i for a random claim count N. We assume N is independent of severities and the X_i are independent and identically distributed. Conditional on N=n, S is a sum of n severities."
+        formules:
+          - formule: "S=\\sum_{i=1}^{N}X_i"
+            explication: "Aggregate portfolio loss."
+          - formule: "E[S\\mid N]=N E[X],\\quad \\operatorname{Var}(S\\mid N)=N\\operatorname{Var}(X)"
+            explication: "Conditional moments given claim count."
+      - titre: "2. Expected aggregate loss"
+        contenu: "By the law of total expectation, expected aggregate loss equals expected claim count times mean claim amount. This is often called frequency × severity."
+        formules:
+          - formule: "E[S]=E[N]E[X]"
+            explication: "Expected random sum under independence of N and severities."
+      - titre: "3. Aggregate variance"
+        contenu: "Total variance combines uncertainty in claim amount and uncertainty in claim count. The first term reflects severity; the second reflects frequency. Do not omit Var(N)(E[X])²."
+        formules:
+          - formule: "\\operatorname{Var}(S)=E[N]\\operatorname{Var}(X)+\\operatorname{Var}(N)(E[X])^2"
+            explication: "General random-sum variance under independence."
+          - formule: "E[X^2]=\\operatorname{Var}(X)+(E[X])^2"
+            explication: "Identity linking second moment and variance."
+      - titre: "4. Compound Poisson"
+        contenu: "If N is Poisson with parameter λ, then E[N]=Var(N)=λ. Aggregate variance simplifies to λE[X²]. Severity can be any distribution with finite second moment; it need not be exponential."
+        formules:
+          - formule: "N\\sim\\operatorname{Poisson}(\\lambda):\\quad E[S]=\\lambda E[X]"
+            explication: "Expected aggregate loss."
+          - formule: "\\operatorname{Var}(S)=\\lambda E[X^2]"
+            explication: "Compound Poisson variance."
+          - formule: "P(S=0)=P(N=0)=e^{-\\lambda}"
+            explication: "If severities are strictly positive, zero loss is equivalent to no claims."
+      - titre: "5. Exponential severity"
+        contenu: "If X is exponential with mean θ, then Var(X)=θ² and E[X²]=2θ². These moments give aggregate moments directly for a compound Poisson model. θ is the mean, not the rate 1/θ."
+        formules:
+          - formule: "E[X]=\\theta,\\quad \\operatorname{Var}(X)=\\theta^2"
+            explication: "Mean and variance."
+          - formule: "E[X^2]=2\\theta^2"
+            explication: "Second moment."
+          - formule: "S\\text{ compound Poisson: }E[S]=\\lambda\\theta,\\quad \\operatorname{Var}(S)=2\\lambda\\theta^2"
+            explication: "Aggregate moments for exponential severity."
+      - titre: "6. Separate frequency and severity"
+        contenu: "The model separates two mechanisms. Frequency depends on policy count, exposure and risk characteristics. Severity depends on costs, inflation, deductibles and limits. This separation helps explain portfolio changes and build flexible models."
+        formules:
+          - formule: "E[S]=E[N]E[X]"
+            explication: "Expected cost is the product of the two components."
+      - titre: "7. Assumptions and limitations"
+        contenu: "The formulas assume N is independent of severities and severities are independent and identically distributed. In practice, insured heterogeneity, dependence, catastrophes, deductibles, limits, censoring and inflation can violate assumptions. Moment formulas do not fully describe the distribution of S."
+        formules:
+          - formule: "\\text{Independence of }N\\text{ and }X_i\\text{ : condition for the classical formula}"
+            explication: "If frequency and severity are dependent, adapt the model."
+  methodes:
+    methodes:
+      - titre: "Calculate random-sum moments"
+        quand_utiliser: "Frequency N and severity X are characterized by their moments."
+        etapes:
+          - "Identify E[N], Var(N), E[X] and Var(X)."
+          - "Calculate E[S]=E[N]E[X]."
+          - "Calculate Var(S)=E[N]Var(X)+Var(N)(E[X])²."
+          - "Take the square root for standard deviation."
+        controles:
+          - "First variance term reflects severity."
+          - "Second variance term reflects frequency."
+          - "Variance is non-negative."
+        erreurs:
+          - "Omit Var(N)(E[X])²."
+          - "Confuse E[X²] with Var(X)."
+      - titre: "Use compound Poisson"
+        quand_utiliser: "N~Poisson(λ) and severity has a finite second moment."
+        etapes:
+          - "Identify λ, E[X] and E[X²]."
+          - "Calculate E[S]=λE[X]."
+          - "Calculate Var(S)=λE[X²]."
+          - "If severities are strictly positive, calculate P(S=0)=e^{-λ}."
+        controles:
+          - "Variance uses the second moment of X."
+          - "Zero loss equals N=0 when X>0."
+          - "Standard deviation is the square root of variance."
+        erreurs:
+          - "Use λVar(X) instead of λE[X²]."
+          - "Use P(S=0)=e^{-λ} when a zero payment can occur despite a claim."
+      - titre: "Compare frequency–severity portfolios"
+        quand_utiliser: "Two portfolios have different frequencies and mean claim amounts."
+        etapes:
+          - "Calculate E[N] and E[X] separately."
+          - "Compare expected aggregate loss E[S]."
+          - "Calculate aggregate variance using appropriate moments."
+          - "Interpret frequency, severity and volatility without conflating them."
+        controles:
+          - "E[S] is in monetary units."
+          - "Variance is in squared monetary units."
+          - "Higher frequency does not necessarily imply higher severity."
+        erreurs:
+          - "Compare frequency only."
+          - "Ignore the second severity moment."
+  exemples_guides:
+    exemples:
+      - titre: "Compound Poisson with exponential severity"
+        enonce: "N~Poisson(50) and X is exponential with mean €2,000. Calculate aggregate mean, variance and standard deviation."
+        raisonnement:
+          - "E[X]=2 000; Var(X)=4 000 000; E[X²]=8 000 000."
+          - "E[S]=50×2 000=100 000 €."
+          - "Var(S)=50×8 000 000=400 000 000 €²."
+          - "σ_S=√400 000 000=20 000 €."
+        resultat: "Mean €100 000; variance €400 million²; standard deviation €20 000."
+        interpretation: "Expected loss uses frequency and mean severity; variance uses the second severity moment."
+        controles:
+          - "E[S]=λE[X]."
+          - "Var(S)=λE[X²], not λVar(X)."
+      - titre: "Binomial frequency, fixed severity"
+        enonce: "100 policies each have a 10% claim probability; each claim costs €5,000. Calculate E[S] and Var(S)."
+        raisonnement:
+          - "N~Binomial(n=100; p=0.1); E[N]=10; Var(N)=9."
+          - "X=5 000 is constant, so Var(X)=0."
+          - "E[S]=10×5 000=50 000 €."
+          - "Var(S)=9×5 000²=225 000 000 €²; σ=15 000 €."
+        resultat: "Mean €50 000; variance €225 million²; standard deviation €15 000."
+        interpretation: "With fixed severity, all aggregate variance comes from frequency."
+        controles:
+          - "Var(X)=0 for a fixed cost."
+          - "Var(S)=Var(N)(E[X])²."
+      - titre: "Compound Poisson with discrete severity"
+        enonce: "N~Poisson(10). Each claim is 1 or 2 units with equal probability. Calculate E[S] and Var(S)."
+        raisonnement:
+          - "E[X]=(1+2)/2=1.5; E[X²]=(1+4)/2=2.5."
+          - "E[S]=10×1.5=15."
+          - "Var(S)=10×2.5=25; σ=5."
+        resultat: "Mean 15; variance 25; standard deviation 5."
+        interpretation: "Aggregate variance uses E[X²], which includes severity variability."
+        controles:
+          - "Severity moments are calculated from both possible values."
+          - "Compound Poisson variance is λE[X²]."
+  exercices_corriges:
+    exercices:
+      - titre: "Fundamental — fixed severity"
+        niveau: fondamental
+        enonce: "N~Poisson(20) and each claim costs €3,000. Calculate E[S], Var(S) and σ_S."
+        corrige:
+          - "E[S]=20×3 000=€60 000."
+          - "Var(S)=20×3 000²=€180 000 000²."
+          - "σ_S=√180 000 000≈€13 416.41."
+        feedback: "For fixed severity, E[X²]=c²."
+      - titre: "Intermediate — binomial frequency and exponential severity"
+        niveau: intermediaire
+        enonce: "N~Binomial(n=50; p=10%). Severities are exponential with mean €1,000. Calculate E[S] and Var(S)."
+        corrige:
+          - "E[N]=5; Var(N)=4.5; E[X]=1 000; Var(X)=1 000 000."
+          - "E[S]=5×1 000=€5 000."
+          - "Var(S)=5×1 000 000+4.5×1 000²=€9 500 000²."
+        feedback: "Use the general formula because N is not Poisson."
+      - titre: "Advanced — second moment"
+        niveau: avance
+        enonce: "N~Poisson(10); X is 1 or 2 with equal probabilities. Calculate P(S=0), E[S] and Var(S)."
+        corrige:
+          - "P(S=0)=e^{-10}≈0.0000454."
+          - "E[X]=1.5; E[X²]=2.5."
+          - "E[S]=15; Var(S)=25."
+        feedback: "Zero aggregate loss equals zero claims if severities are positive."
+  applications_labs:
+    applications:
+      - titre: "Calculate compound Poisson moments"
+        contexte: "A fictional portfolio follows a Poisson frequency and exponential severity. Aggregate moments are computed from model parameters."
+        objectif: "Calculate E[S], Var(S), σ_S and P(S=0), then verify the identities."
+        entrees:
+          - "λ=50 expected claims."
+          - "Exponential severity with mean θ=€2,000."
+          - "E[X²]=2θ²."
+        hypotheses:
+          - "N is independent of severities."
+          - "Severities are independent, identically distributed and strictly positive."
+          - "Severity second moment is finite."
+        procedure:
+          - "Calculate E[X], Var(X) and E[X²]."
+          - "Apply E[S]=λE[X] and Var(S)=λE[X²]."
+          - "Calculate standard deviation and P(S=0)."
+          - |
+            ```python
+            import math
+
+            lam, theta = 50, 2000
+            ex = theta
+            var_x = theta**2
+            ex2 = var_x + ex**2
+            mean_s = lam * ex
+            var_s = lam * ex2
+            sd_s = math.sqrt(var_s)
+            p_zero = math.exp(-lam)
+            print(mean_s, var_s, sd_s, p_zero)
+            assert mean_s == 100000
+            assert var_s == 400000000
+            assert sd_s == 20000
+            ```
+          - "Interpret frequency and severity contributions."
+        sorties:
+          - "Aggregate expected loss."
+          - "Aggregate variance and standard deviation."
+          - "Probability of zero aggregate loss."
+        validation:
+          - "Variance is λE[X²]."
+          - "Zero loss is e^{-λ} if severities are positive."
+          - "Variance units are €²."
+        limites:
+          - "The model does not explicitly represent dependence, heterogeneity or policy limits."
+  synthese_references:
+    memo:
+      - "S=Σ_{i=1}^N X_i, frequency N and severity X."
+      - "E[S]=E[N]E[X]."
+      - "Var(S)=E[N]Var(X)+Var(N)(E[X])²."
+      - "Compound Poisson: E[S]=λE[X]; Var(S)=λE[X²]."
+      - "Exponential mean θ: E[X]=θ; Var(X)=θ²; E[X²]=2θ²."
+      - "If X>0, P(S=0)=P(N=0)=e^{-λ} for Poisson N."
+      - "Separate frequency and severity; verify independence."
+    glossaire:
+      - {terme_fr: "Charge agrégée", terme_en: "Aggregate loss", definition: "Sum of claim amounts over a random number of claims."}
+      - {terme_fr: "Fréquence", terme_en: "Claim frequency", definition: "Number of claims during a defined period or exposure."}
+      - {terme_fr: "Sévérité", terme_en: "Claim severity", definition: "Amount paid for one claim."}
+      - {terme_fr: "Poisson composé", terme_en: "Compound Poisson", definition: "Random sum with Poisson claim count and independent severities."}
+      - {terme_fr: "Second moment", terme_en: "Second moment", definition: "Expected square E[X²], not the variance."}
+      - {terme_fr: "Indépendance", terme_en: "Independence", definition: "Frequency and severity do not influence each other in the model."}
+      - {terme_fr: "Fréquence–sévérité", terme_en: "Frequency–severity model", definition: "Separate models for claim count and claim amount."}
+    maitrise:
+      - "I define aggregate loss as a random sum."
+      - "I calculate aggregate expectation by conditioning."
+      - "I use the total variance formula."
+      - "I apply compound Poisson moments."
+      - "I calculate severity moments and aggregate them."
+      - "I explain the model assumptions and limitations."
+    references:
+      - {titre: "Klugman, Panjer & Willmot, Loss Models, aggregate loss chapter", detail: "Random sums, frequency–severity models and compound distributions."}
+      - {titre: "Ross, A First Course in Probability, random sums", detail: "Expectation and variance of random sums."}
+      - {titre: "Society of Actuaries — Exam P Probability", url: "https://www.soa.org/education/exam-req/edu-exam-p-detail/", detail: "Probability exam syllabus."}
+    liens:
+      - {titre: "A2/S04 — Pooling and aggregate risk", cible: "a2/s04"}
+
 etapes:
   - titre: "Placement check"
     intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
