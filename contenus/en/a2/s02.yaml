@@ -232,13 +232,13 @@ fiche:
       - "Binomial–Poisson approximation: λ=np, n large and p small."
       - "Overdispersion: variance clearly exceeds mean; consider a more flexible model."
     glossaire:
-      - {terme_fr: "Variable aléatoire discrète", terme_en: "Discrete random variable", definition: "A variable taking countable values."}
-      - {terme_fr: "Fonction de masse", terme_en: "Probability mass function", definition: "Probability associated with each value of a variable."}
-      - {terme_fr: "Espérance", terme_en: "Expected value", definition: "Theoretical mean weighted by probabilities."}
-      - {terme_fr: "Variance", terme_en: "Variance", definition: "Squared dispersion around the expected value."}
-      - {terme_fr: "Binomiale", terme_en: "Binomial distribution", definition: "Number of successes among n independent trials with the same probability."}
-      - {terme_fr: "Poisson", terme_en: "Poisson distribution", definition: "Distribution of an event count with average rate λ."}
-      - {terme_fr: "Surdispersion", terme_en: "Overdispersion", definition: "Observed variance clearly exceeds the mean."}
+      - {definition: "A variable taking countable values."}
+      - {definition: "Probability associated with each value of a variable."}
+      - {definition: "Theoretical mean weighted by probabilities."}
+      - {definition: "Squared dispersion around the expected value."}
+      - {definition: "Number of successes among n independent trials with the same probability."}
+      - {definition: "Distribution of an event count with average rate λ."}
+      - {definition: "Observed variance clearly exceeds the mean."}
     maitrise:
       - "I validate a probability mass function."
       - "I calculate expected value, variance and standard deviation."
@@ -249,9 +249,9 @@ fiche:
     references:
       - {titre: "Klugman, Panjer & Willmot, Loss Models, Chapter 6", detail: "Frequency models: binomial, Poisson and negative binomial."}
       - {titre: "Ross, A First Course in Probability, Chapters 4–5", detail: "Discrete distributions, expectation and variance."}
-      - {titre: "Society of Actuaries — Exam P Probability", url: "https://www.soa.org/education/exam-req/edu-exam-p-detail/", detail: "Probability exam syllabus."}
+      - {titre: "Society of Actuaries — Exam P Probability", detail: "Probability exam syllabus."}
     liens:
-      - {titre: "A2/S01 — Conditional probability and Bayes", cible: "a2/s01"}
+      - {titre: "A2/S01 — Conditional probability and Bayes"}
 
 etapes:
   - titre: "Placement check"
