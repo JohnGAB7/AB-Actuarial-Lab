@@ -156,21 +156,18 @@ fiche:
   exercices_corriges:
     exercices:
       - titre: "Fundamental — 100 policies"
-        niveau: fondamental
         enonce: "100 independent policies have p=2% and fixed claim cost €5,000. Calculate mean count, standard deviation, expected total cost and its standard deviation."
         corrige:
           - "E[N]=2; Var(N)=1.96; σ_N=1.4."
           - "Mean total cost €10,000; standard deviation €7,000."
         feedback: "Total cost is €5,000 times the number of claims."
       - titre: "Intermediate — normal approximation"
-        niveau: intermediaire
         enonce: "10,000 policies have p=1%. Approximate P(N≥120) using normal and continuity correction."
         corrige:
           - "μ=100; σ=√99≈9.9499."
           - "z=(119.5−100)/√99≈1.9598; P(N≥120)≈2.50%."
         feedback: "The threshold 120 becomes 119.5 with continuity correction."
       - titre: "Advanced — correlation"
-        niveau: avance
         enonce: "100 risks have σ=€5,000 and ρ=10%. Compare average standard deviation with independence."
         corrige:
           - "Independence: 5,000/√100=€500."
@@ -230,13 +227,13 @@ fiche:
       - "Common correlation: Var(X̄)=σ²/n+(n−1)ρσ²/n; floor ρσ²."
       - "Pooling reduces relative risk, not systematic risk."
     glossaire:
-      - {terme_fr: "Mutualisation", terme_en: "Pooling", definition: "Sharing random losses across a large group of policies."}
-      - {terme_fr: "Loi des grands nombres", terme_en: "Law of large numbers", definition: "Sample average converges toward the expected value under suitable conditions."}
-      - {terme_fr: "Théorème central limite", terme_en: "Central limit theorem", definition: "The standardized sum is approximately normal for a large sample under conditions."}
-      - {terme_fr: "Risque diversifiable", terme_en: "Diversifiable risk", definition: "Risk whose relative impact decreases as independent exposures are pooled."}
-      - {terme_fr: "Risque systématique", terme_en: "Systematic risk", definition: "Risk shared across exposures that does not disappear through pooling."}
-      - {terme_fr: "Corrélation", terme_en: "Correlation", definition: "Measure of linear association between risks."}
-      - {terme_fr: "Correction de continuité", terme_en: "Continuity correction", definition: "Adjustment of a discrete threshold when approximating by a continuous distribution."}
+      - {definition: "Sharing random losses across a large group of policies."}
+      - {definition: "Sample average converges toward the expected value under suitable conditions."}
+      - {definition: "The standardized sum is approximately normal for a large sample under conditions."}
+      - {definition: "Risk whose relative impact decreases as independent exposures are pooled."}
+      - {definition: "Risk shared across exposures that does not disappear through pooling."}
+      - {definition: "Measure of linear association between risks."}
+      - {definition: "Adjustment of a discrete threshold when approximating by a continuous distribution."}
     maitrise:
       - "I calculate variance of sums and averages."
       - "I interpret the law of large numbers."
@@ -247,9 +244,9 @@ fiche:
     references:
       - {titre: "Ross, A First Course in Probability, limit theorems chapter", detail: "Law of large numbers and central limit theorem."}
       - {titre: "Klugman, Panjer & Willmot, Loss Models, aggregation chapter", detail: "Aggregate loss models and pooling."}
-      - {titre: "Society of Actuaries — Exam P Probability", url: "https://www.soa.org/education/exam-req/edu-exam-p-detail/", detail: "Probability exam syllabus."}
+      - {titre: "Society of Actuaries — Exam P Probability", detail: "Probability exam syllabus."}
     liens:
-      - {titre: "A2/S03 — Continuous claim severity", cible: "a2/s03"}
+      - {titre: "A2/S03 — Continuous claim severity"}
 
 etapes:
   - titre: "Placement check"
