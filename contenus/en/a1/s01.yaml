@@ -44,7 +44,7 @@ fiche:
           - {formule: "a_{\\overline{n}|}=n,\\quad i=0", explication: "The preceding closed form is indeterminate at i=0; summing n factors equal to 1 gives n directly."}
           - {explication: "Multiplying the sum $v+v^2+\\cdots+v^n$ by $(1-v)$ makes the intermediate terms cancel, leaving $v-v^{n+1}$. Since $1-v=iv$, this gives $a_{n|}=(1-v^n)/i$."}
       - titre: "5. Annuity due"
-        contenu: "An annuity due makes the same n unit payments at times 0 ; 1 ; … ; n−1: each payment is brought forward by one period compared with an annuity immediate. Its present value is 1+v+…+v^{n-1}. It equals (1-v^n)/d when d is non-zero, or (1+i)a_{n|}. This multiplicative identity is a useful check: if it fails, payment dates or the summation index may have been set incorrectly."
+        contenu: "An annuity due makes the same n unit payments at times 0 ; 1 ; … ; n−1: each payment is brought forward by one period compared with an annuity immediate. Its present value is 1+v+…+v^{n-1}. It equals $(1-v^n)/d$ when $d\\ne0$, or $(1+i)a_{n|}$. This multiplicative identity is a useful check: if it fails, payment dates or the summation index may have been set incorrectly."
         formules:
           - {formule: "\\ddot{a}_{\\overline{n}|}=\\sum_{k=0}^{n-1}v^k=\\frac{1-v^n}{d}=(1+i)a_{\\overline{n}|}", explication: "The double dot indicates payments at the beginning of each period. For i>0, the value exceeds that of an annuity immediate."}
           - {formule: "\\ddot{a}_{\\overline{n}|}=1+a_{\\overline{n-1}|}", explication: "Separate the payment at time 0; the remaining n−1 payments form an annuity immediate."}
