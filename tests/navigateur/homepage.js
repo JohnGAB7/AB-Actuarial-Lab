@@ -19,16 +19,17 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
     const brand = await page.evaluate(() => ({
       title: document.title,
       label: document.querySelector(".brand-copy")?.textContent || "",
-      logoCount: document.querySelectorAll(".brand-logo").length,
-      logoSrc: document.querySelector(".brand-logo")?.getAttribute("src") || "",
-      logoLoaded: Boolean(document.querySelector(".brand-logo")?.complete && document.querySelector(".brand-logo")?.naturalWidth > 0)
+      logoCount: document.querySelectorAll(".brand").length,
+      eachBrandHasOneMark: Array.from(document.querySelectorAll(".brand")).every((brand) => brand.querySelectorAll(".brand-logo").length === 1),
+      logoSrc: document.querySelector(".brand-logo")?.src || "",
+      logoLoaded: Array.from(document.querySelectorAll(".brand-logo")).every((img) => img.complete && img.naturalWidth > 0)
     }));
     console.log("brand FR:", brand);
     if (!brand.title.startsWith("Laboratoire d’apprentissage actuariel par ACTU-BASICS")) failures.push("French site title");
     if (!brand.label.includes("LABORATOIRE ACTUARIEL") || !brand.label.includes("PAR ACTU-BASICS")) failures.push("French sub-brand lockup");
     if (!brand.logoLoaded) failures.push("custom Actuarial Learning Lab mark did not load");
-    if (brand.logoCount !== 1) failures.push("brand should use one non-duplicated mark image");
-    if (!brand.logoSrc.startsWith("../assets/actuarial-lab-mark.svg")) failures.push("English homepage logo should use the site-root asset path");
+    if (!brand.eachBrandHasOneMark) failures.push("each brand lockup should contain exactly one mark image");
+    if (!brand.logoSrc.includes("/assets/actuarial-lab-mark.svg")) failures.push("English homepage logo should resolve to the site-root asset path");
     const mobile = await page.evaluate(() => ({
       lang: document.documentElement.lang,
       width: window.innerWidth,
