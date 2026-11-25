@@ -233,7 +233,7 @@ fiche:
           - "Probabilités approximatives Poisson."
           - "Écart absolu pour les événements comparés."
         validation:
-          - "Les probabilités sont dans [0,1]."
+          - "Les probabilités sont comprises entre 0 et 1."
           - "P(X≥1)=1−P(X=0)."
           - "La Poisson utilise λ=np."
         limites:
