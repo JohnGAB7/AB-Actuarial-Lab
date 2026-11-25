@@ -119,7 +119,7 @@ fiche:
   exemples_guides:
     exemples:
       - titre: "Comparer une annuité immédiate et une annuité due"
-        enonce: "Un contrat verse 1 unité monétaire par an pendant 3 ans. Le taux annuel effectif est $i=2{,}5\%$. Calculer la valeur à la date 0 si les versements sont faits en fin d'année, puis en début d'année."
+        enonce: "Un contrat verse 1 unité monétaire par an pendant 3 ans. Le taux annuel effectif est $i=2{,}5\\%$. Calculer la valeur à la date 0 si les versements sont faits en fin d'année, puis en début d'année."
         raisonnement:
           - "Calculer $v=1/1{,}025\\approx0{,}9756098$."
           - "Fin d'année : $a_{3|}=v+v^2+v^3\\approx0{,}9756098+0{,}9518144+0{,}9285994=2{,}8560236$."
@@ -133,7 +133,7 @@ fiche:
       - titre: "Actualiser deux prestations futures"
         enonce: "Une caisse doit payer 1 000 unités à la fin de l'année 5 et 500 unités à la fin de l'année 10. Au taux annuel effectif constant de 2,5 %, déterminer la valeur actuelle à la date 0."
         raisonnement:
-          - "Écrire $VA=1\,000/(1{,}025)^5+500/(1{,}025)^{10}$."
+          - "Écrire $VA=1\\,000/(1{,}025)^5+500/(1{,}025)^{10}$."
           - "Calculer séparément les deux termes : environ 883,85 et 390,60."
           - "Additionner les montants actualisés, sans déplacer les dates des flux."
         resultat: "VA≈1 274,45 unités monétaires à la date 0."
@@ -161,7 +161,7 @@ fiche:
         feedback: "Un paiement au début de la première année n'est pas actualisé. Si tu utilises a_{5|}, tu décales à tort le premier loyer d'un an."
       - titre: "Niveau avancé — flux irréguliers"
         niveau: avance
-        enonce: "Un régime verse 2 000 unités à $t=1$, $1\,500$ à $t=4$ et reçoit $300$ à $t=2$. Calculer la valeur actuelle nette à 5 % annuel effectif."
+        enonce: "Un régime verse 2 000 unités à $t=1$, $1\\,500$ à $t=4$ et reçoit $300$ à $t=2$. Calculer la valeur actuelle nette à 5 % annuel effectif."
         corrige:
           - "Fixer la convention : sorties positives comme prestations et entrée négative dans le coût net, ou l'inverse, mais rester cohérent."
           - "Avec prestations positives et encaissement reçu négatif : VAN=2 000/1,05+1 500/(1,05)⁴−300/(1,05)²."
@@ -174,7 +174,7 @@ fiche:
         objectif: "Reproduire la valeur actuelle d'une série de paiements, vérifier les dates et comparer le résultat d'un tableur à une fonction Python."
         outils: [excel, python]
         entrees:
-          - "Flux fictifs : $1\,000$ à $t=5$ et $500$ à $t=10$."
+          - "Flux fictifs : $1\\,000$ à $t=5$ et $500$ à $t=10$."
           - "Taux annuel effectif constant : 2,5 %."
           - "Date d'évaluation : $t=0$ ; montants dans une unité monétaire commune."
         hypotheses:
@@ -432,7 +432,7 @@ etapes:
       - {nom: '$v^{10}$ vaut 0,78120 à 2,5 %', expr: "abs(discount_factor(0.025, 10) - 0.78120) < 0.00001"}
       - {nom: '$a_{\\overline{10}|}$ vaut 8,75206 à 2,5 %', expr: "abs(annuity_immediate(10, 0.025) - 8.75206) < 0.00001"}
       - {nom: '$\\ddot{a}_{\\overline{10}|}$ vaut 8,97087 à 2,5 %', expr: "abs(annuity_due(10, 0.025) - 8.97087) < 0.00001"}
-      - {nom: '$\\ddot{a}_{\\overline{n}|} = (1+i)\,a_{\\overline{n}|}$', expr: "abs(annuity_due(20, 0.04) - 1.04 * annuity_immediate(20, 0.04)) < 1e-9"}
+      - {nom: '$\\ddot{a}_{\\overline{n}|} = (1+i)\\,a_{\\overline{n}|}$', expr: "abs(annuity_due(20, 0.04) - 1.04 * annuity_immediate(20, 0.04)) < 1e-9"}
       - {nom: 'Avec $i = 0$, $a_{\\overline{n}|} = n$', expr: "abs(annuity_immediate(7, 0) - 7) < 1e-12"}
       - {nom: '1 000 € à 5 ans et 500 € à 10 ans valent 1 274,45 €', expr: "abs(present_value({5: 1000, 10: 500}, 0.025) - 1274.45) < 0.01"}
 
