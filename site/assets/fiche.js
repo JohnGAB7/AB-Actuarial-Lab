@@ -235,7 +235,9 @@
     tab.addEventListener("click",()=>activate(index,true));
     tabs.append(tab);panels.append(panel);tabButtons.push(tab);panelNodes.push(panel);
   });
+  let activeIndex=0;
   function activate(index,focus){
+    activeIndex=index;
     tabButtons.forEach((tab,i)=>{
       tab.setAttribute("aria-selected",i===index?"true":"false");
       tab.tabIndex=i===index?0:-1;
@@ -259,7 +261,12 @@
     steps.hidden=reference;sheetNode.hidden=!reference;
     $("#mode-steps").setAttribute("aria-pressed",reference?"false":"true");
     $("#mode-reference").setAttribute("aria-pressed",reference?"true":"false");
-    if(reference)renderMath(panelNodes[0]);
+    if(reference){
+      // Reassert the selected tab when returning to reference mode. This prevents
+      // a hidden panel from leaving the sheet blank after a mode transition.
+      panelNodes.forEach((panel,index)=>{panel.hidden=index!==activeIndex;});
+      renderMath(panelNodes[activeIndex]);
+    }
   }
   $("#mode-steps").addEventListener("click",()=>mode(false));
   $("#mode-reference").addEventListener("click",()=>mode(true));
