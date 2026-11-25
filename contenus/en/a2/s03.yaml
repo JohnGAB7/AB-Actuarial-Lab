@@ -140,7 +140,7 @@ fiche:
         raisonnement:
           - "S(x)=e^{-x/θ}, so P(X>5,000)=e^{-2.5}=0.0821."
           - "q_{0.99}=−2,000 ln(0.01)=€9,210.34."
-        resultat: "Exceedance 8.21%; 99th quantile €9,210.34."
+        resultat: "Exceedance 8.21%; 99% quantile €9,210.34."
         interpretation: "About 8.21% of amounts exceed €5,000; 1% exceed €9,210.34."
         controles:
           - "Survival decreases with x."
