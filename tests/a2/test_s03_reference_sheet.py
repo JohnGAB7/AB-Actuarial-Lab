@@ -1,5 +1,5 @@
 """Numerical and bilingual checks for the A2/S03 continuous severity reference sheet."""
-from math import isclose, exp, log
+from math import isclose, exp, log, erf, sqrt
 from pathlib import Path
 import yaml
 
@@ -30,7 +30,8 @@ def test_a2_s03_exponential_lognormal_and_pareto_values():
 
     ln_mean=exp(7+1/2)
     ln_median=exp(7)
-    ln_surv=0.064608957412716
+    z_ln=(log(5000)-7)/1
+    ln_surv=1-0.5*(1+erf(z_ln/sqrt(2)))
     ln_q95=exp(7+1.6448536269514722)
     assert isclose(ln_mean,1808.0424144560632,abs_tol=1e-12)
     assert isclose(ln_median,1096.6331584284585,abs_tol=1e-12)
