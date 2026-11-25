@@ -75,9 +75,12 @@ def test_actu_basics_parent_brand_is_consistent_in_both_languages():
     assert "LABORATOIRE ACTUARIEL" in french and "PAR ACTU-BASICS" in french
     assert "ACTUARIAL LEARNING LAB" in english and "BY ACTU-BASICS" in english
     assert 'assets/actuarial-lab-mark.svg' in french
-    assert 'assets/actuarial-lab-mark-dark.svg' in french
+    assert 'assets/actuarial-lab-mark-dark.svg' not in french
     assert 'assets/actuarial-lab-mark.svg' in english
-    assert 'assets/actuarial-lab-mark-dark.svg' in english
+    assert 'assets/actuarial-lab-mark-dark.svg' not in english
+    assert 'loading="eager" decoding="async"' in french
+    assert 'src="../../assets/actuarial-lab-mark.svg"' in builder.marque("../../en/", "en", "../../")
+    assert 'src="../../assets/actuarial-lab-mark.svg"' in builder.marque("../../", "fr", "../../")
     assert builder.favicon_url("fr") == "assets/actuarial-lab-mark.svg"
     assert builder.favicon_url("en") == "assets/actuarial-lab-mark.svg"
     assert builder.titre_site("fr") == "Laboratoire d’apprentissage actuariel par ACTU-BASICS"
