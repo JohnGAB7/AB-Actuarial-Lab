@@ -1,6 +1,244 @@
 # English texts for session A2.02. Numbers, answers and tests live in contenus/a2/s02.yaml.
 titre: "Claim counts: binomial and Poisson"
 
+fiche:
+  vue_ensemble:
+    question: "How do we turn an average claim rate into a distribution of possible claim counts?"
+    pourquoi: "Frequency is not just a mean. Actuaries quantify the probability of 0, 1, 2 or more claims, then choose a distribution that fits the assumptions and data."
+    objectifs:
+      - "Define a discrete random variable and its probability mass function."
+      - "Calculate expectation, variance and standard deviation from a distribution."
+      - "Use Bernoulli and binomial models for a fixed number of policies."
+      - "Use Poisson for event counts over a period."
+      - "Approximate a binomial by Poisson when justified."
+      - "Diagnose overdispersion and recognize model limitations."
+    prerequis:
+      - "Probabilities, events and conditional probability."
+      - "Sums, products, powers and factorials."
+      - "Mean and variance."
+    carte:
+      - "Discrete variable: isolated values with a probability mass function."
+      - "Expected value: probability-weighted mean."
+      - "Variance: squared dispersion around the expected value."
+      - "Binomial: number of successes in n independent trials."
+      - "Poisson: event count with parameter λ equal to the mean."
+      - "Approximation: Binomial(n,p) ≈ Poisson(np) when n is large and p small."
+    duree_minutes: 45
+  cours_complet:
+    sections:
+      - titre: "1. Discrete random variable and probability mass function"
+        contenu: "A discrete random variable X takes countable values. Its probability mass function p_k=P(X=k) describes the probability of each value. All probabilities are non-negative and sum to 1 over the support. The cumulative distribution F(x)=P(X≤x) adds the masses up to x."
+        formules:
+          - formule: "p_k=P(X=k),\\quad p_k\\ge0,\\quad \\sum_k p_k=1"
+            explication: "Probabilities over all possible values form a valid distribution."
+          - formule: "F(x)=P(X\\le x)=\\sum_{k\\le x}p_k"
+            explication: "The cumulative distribution adds probabilities up to x."
+      - titre: "2. Expected value and moments"
+        contenu: "The expected value is the long-run theoretical average, not necessarily a value that X can take. It weights each value by its probability. The second moment E[X²] is useful for calculating variance."
+        formules:
+          - formule: "E[X]=\\sum_k k\\,p_k"
+            explication: "Theoretical mean of the distribution."
+          - formule: "E[X^2]=\\sum_k k^2p_k"
+            explication: "Second moment, used to calculate variance."
+      - titre: "3. Variance, standard deviation and transformations"
+        contenu: "Variance measures dispersion around the expected value. Standard deviation, its square root, is in the same unit as X. Adding a constant shifts the mean without changing variance; multiplying by a scales variance by a²."
+        formules:
+          - formule: "\\operatorname{Var}(X)=E[X^2]-(E[X])^2"
+            explication: "Computational formula for variance."
+          - formule: "E[aX+b]=aE[X]+b,\\quad \\operatorname{Var}(aX+b)=a^2\\operatorname{Var}(X)"
+            explication: "Affine transformation of a random variable."
+          - formule: "\\sigma_X=\\sqrt{\\operatorname{Var}(X)}"
+            explication: "Standard deviation, expressed in the unit of X."
+      - titre: "4. Bernoulli and binomial"
+        contenu: "A Bernoulli trial has success probability p and failure probability 1−p. The binomial counts successes among n identical independent trials with probability p. In insurance, it can represent the number of policies with a claim when each policy has at most one claim during the period."
+        formules:
+          - formule: "X\\sim\\operatorname{Bernoulli}(p):\\quad E[X]=p,\\quad \\operatorname{Var}(X)=p(1-p)"
+            explication: "Indicator of a success."
+          - formule: "X\\sim\\operatorname{Binomiale}(n,p):\\quad P(X=k)=\\binom{n}{k}p^k(1-p)^{n-k}"
+            explication: "Probability of exactly k successes among n trials."
+          - formule: "E[X]=np,\\quad \\operatorname{Var}(X)=np(1-p)"
+            explication: "Binomial mean and variance."
+      - titre: "5. Poisson distribution"
+        contenu: "Poisson models the number of events over a time, space or exposure interval, with average rate λ. It is often used for claim frequency. λ is a mean and may exceed 1; it is not a probability."
+        formules:
+          - formule: "N\\sim\\operatorname{Poisson}(\\lambda):\\quad P(N=k)=e^{-\\lambda}\\frac{\\lambda^k}{k!}"
+            explication: "Probability of observing k events."
+          - formule: "E[N]=\\operatorname{Var}(N)=\\lambda,\\quad \\sigma_N=\\sqrt{\\lambda}"
+            explication: "Poisson signature: mean and variance are equal."
+      - titre: "6. Binomial–Poisson approximation"
+        contenu: "When n is large and p is small, the binomial may be approximated by Poisson with parameter λ=np. This is useful for rare events, but should be checked: for larger p or modest portfolios, the exact binomial may be preferable."
+        formules:
+          - formule: "\\operatorname{Binomiale}(n,p)\\approx\\operatorname{Poisson}(\\lambda=np)"
+            explication: "Approximation for large n and small p, to be compared with exact probabilities."
+      - titre: "7. Model choice and limitations"
+        contenu: "Model choice depends on the mechanism and data. The binomial assumes a fixed number of trials, equal probabilities and independence. Poisson assumes an average rate and a structure compatible with independent events. If empirical variance clearly exceeds the mean, Poisson may be too restrictive: heterogeneity, dependence or overdispersion may motivate a negative binomial or another model. Diagnostics do not replace data analysis."
+        formules:
+          - formule: "\\text{Poisson: }\\operatorname{Var}(N)=E[N]\\quad\\text{; overdispersion: }\\operatorname{Var}(N)>E[N]"
+            explication: "A marked variance–mean gap suggests the simple Poisson model may be inadequate."
+  methodes:
+    methodes:
+      - titre: "Summarize a discrete distribution"
+        quand_utiliser: "A probability mass function or a table of values and probabilities is given."
+        etapes:
+          - "Check that probabilities are non-negative and sum to 1."
+          - "Calculate E[X]=Σx p(x)."
+          - "Calculate E[X²]=Σx²p(x)."
+          - "Derive Var(X)=E[X²]−E[X]² and the standard deviation."
+        controles:
+          - "The expected value lies between the support's minimum and maximum."
+          - "Variance is non-negative."
+          - "Probabilities sum to 1."
+        erreurs:
+          - "Confuse E[X²] with (E[X])²."
+          - "Forget to check the probability sum."
+      - titre: "Calculate a binomial probability"
+        quand_utiliser: "n independent trials, the same probability p, and at most one success per trial."
+        etapes:
+          - "Identify n, p and the required number of successes k."
+          - "Use the binomial formula for P(X=k)."
+          - "For at least one success, use 1−P(X=0)."
+          - "For several values, sum probabilities or use a complement."
+        controles:
+          - "E[X]=np and Var(X)=np(1−p)."
+          - "P(X=0)=(1−p)^n."
+          - "The target probability is between 0 and 1."
+        erreurs:
+          - "Use binomial when trials are dependent or p is not constant."
+          - "Confuse exactly k with at least k."
+      - titre: "Calculate Poisson probabilities and assess an approximation"
+        quand_utiliser: "An event count is modelled by an average rate λ over a period or exposure."
+        etapes:
+          - "Define λ on the same period/exposure as the event."
+          - "Calculate P(N=k) using the Poisson formula."
+          - "For N≥m, sum masses below m and subtract from 1."
+          - "If a binomial is available, compare λ=np and exact probabilities."
+        controles:
+          - "E[N]=Var(N)=λ."
+          - "Masses over a sufficiently wide support sum close to 1."
+          - "The approximation improves when n is large and p is small."
+        erreurs:
+          - "Treat λ as a probability."
+          - "Omit k=0,1,… when calculating a complement."
+          - "Use an approximation without checking its fit."
+  exemples_guides:
+    exemples:
+      - titre: "Binomial and Poisson approximation"
+        enonce: "20 independent policies each have a 5% claim probability. Compare the probabilities of 0, exactly 1 and at least 1 claim using binomial and Poisson λ=np."
+        raisonnement:
+          - "n=20, p=0.05, so λ=np=1."
+          - "Binomial: P(X=0)=0.95^{20}=0.3585; P(X=1)=20×0.05×0.95^{19}=0.3774."
+          - "P(X≥1)=1−0.95^{20}=0.6415."
+          - "Poisson(1): P(N=0)=e^{-1}=0.3679; P(N=1)=e^{-1}=0.3679; P(N≥1)=0.6321."
+        resultat: "Values are close, but the binomial remains the exact model for the 20 policies."
+        interpretation: "Poisson simplifies calculations for rare events; it is not identical to the binomial."
+        controles:
+          - "The two at-least-one probabilities are close."
+          - "The exact binomial retains n and p."
+      - titre: "Poisson: at least two claims"
+        enonce: "A policy has annual claim count N~Poisson(0.3). Calculate P(N≥2)."
+        raisonnement:
+          - "P(N≥2)=1−P(N=0)−P(N=1)."
+          - "P(N=0)=e^{-0.3}=0.7408; P(N=1)=0.3e^{-0.3}=0.2222."
+          - "P(N≥2)=1−0.7408−0.2222=0.0369."
+        resultat: "3.69%."
+        interpretation: "A mean of 0.3 claims does not mean the count is always near 0.3; possible counts are integers."
+        controles:
+          - "P(N≥2) is positive and less than P(N≥1)."
+          - "The complement includes counts 0 and 1."
+      - titre: "Discrete distribution and claim cost"
+        enonce: "X is 0, 1 or 2 with probabilities 0.7, 0.2 and 0.1. A €500 payment is made per claim. Calculate E[X], Var(X), E[500X] and Var(500X)."
+        raisonnement:
+          - "E[X]=0×0.7+1×0.2+2×0.1=0.4."
+          - "E[X²]=0+1×0.2+4×0.1=0.6."
+          - "Var(X)=0.6−0.4²=0.44."
+          - "E[500X]=500×0.4=200; Var(500X)=500²×0.44=110000."
+        resultat: "Mean cost €200; variance €110,000²; standard deviation ≈€331.66."
+        interpretation: "The mean cost is not a possible individual cost. Variance uses squared euros, unlike standard deviation."
+        controles:
+          - "Variance is positive."
+          - "Mean cost equals €500 times the mean claim count."
+  exercices_corriges:
+    exercices:
+      - titre: "Fundamental — binomial"
+        niveau: fondamental
+        enonce: "10 independent policies have p=10%. Calculate P(X=0), P(X=1) and P(X≥1)."
+        corrige:
+          - "P(X=0)=0.9^{10}=0.3487."
+          - "P(X=1)=10×0.1×0.9^9=0.3874."
+          - "P(X≥1)=1−0.3487=0.6513."
+        feedback: "Exactly one claim and at least one claim are different events."
+      - titre: "Intermediate — Poisson"
+        niveau: intermediaire
+        enonce: "N~Poisson(2). Calculate P(N≥3)."
+        corrige:
+          - "P(N≥3)=1−e^{-2}(1+2+2)."
+          - "Result ≈0.3233."
+        feedback: "The complement includes 0, 1 and 2 events."
+      - titre: "Advanced — cost transformation"
+        niveau: avance
+        enonce: "Given Var(X)=0.44 and a €500 payment per event, calculate cost variance and standard deviation."
+        corrige:
+          - "Var(500X)=500²×0.44=110000 €²."
+          - "σ=√110000≈€331.66."
+        feedback: "Variance is multiplied by the square of the factor; standard deviation by its absolute value."
+  applications_labs:
+    applications:
+      - titre: "Compare binomial and Poisson for a portfolio"
+        contexte: "A portfolio of 20 policies has a 5% individual claim probability. The actuary compares the number of policies with claims to a Poisson approximation."
+        objectif: "Calculate binomial masses, Poisson masses with parameter np, then compare probabilities 0, 1 and at least 1."
+        entrees:
+          - "n=20 independent policies."
+          - "p=0.05 per policy."
+          - "λ=np=1 for the Poisson approximation."
+        hypotheses:
+          - "Binomial assumes fixed n, independence and equal probability p."
+          - "Poisson approximates rare events."
+        procedure:
+          - "Calculate P_bin(X=0), P_bin(X=1) and P_bin(X≥1)."
+          - "Calculate P_pois(N=0), P_pois(N=1) and P_pois(N≥1) with λ=np."
+          - "Compare results and absolute error."
+          - "Conclude whether the approximation is acceptable for this example."
+        sorties:
+          - "Exact binomial probabilities."
+          - "Approximate Poisson probabilities."
+          - "Absolute difference for the events compared."
+        validation:
+          - "Probabilities lie in [0,1]."
+          - "P(X≥1)=1−P(X=0)."
+          - "Poisson uses λ=np."
+        limites:
+          - "The approximation is not universal; it depends on n and p."
+  synthese_references:
+    memo:
+      - "Discrete variable: p_k=P(X=k), p_k≥0 and Σp_k=1."
+      - "E[X]=Σx p(x); Var(X)=E[X²]−E[X]²; σ=√Var."
+      - "Bernoulli(p): E=p, Var=p(1−p)."
+      - "Binomial(n,p): E=np, Var=np(1−p)."
+      - "Poisson(λ): P(k)=e^{-λ}λ^k/k!; E=Var=λ."
+      - "Binomial–Poisson approximation: λ=np, n large and p small."
+      - "Overdispersion: variance clearly exceeds mean; consider a more flexible model."
+    glossaire:
+      - {terme_fr: "Variable aléatoire discrète", terme_en: "Discrete random variable", definition: "A variable taking countable values."}
+      - {terme_fr: "Fonction de masse", terme_en: "Probability mass function", definition: "Probability associated with each value of a variable."}
+      - {terme_fr: "Espérance", terme_en: "Expected value", definition: "Theoretical mean weighted by probabilities."}
+      - {terme_fr: "Variance", terme_en: "Variance", definition: "Squared dispersion around the expected value."}
+      - {terme_fr: "Binomiale", terme_en: "Binomial distribution", definition: "Number of successes among n independent trials with the same probability."}
+      - {terme_fr: "Poisson", terme_en: "Poisson distribution", definition: "Distribution of an event count with average rate λ."}
+      - {terme_fr: "Surdispersion", terme_en: "Overdispersion", definition: "Observed variance clearly exceeds the mean."}
+    maitrise:
+      - "I validate a probability mass function."
+      - "I calculate expected value, variance and standard deviation."
+      - "I recognize a binomial and calculate its probabilities."
+      - "I recognize a Poisson and use the complement."
+      - "I justify or reject a binomial–Poisson approximation."
+      - "I diagnose possible overdispersion."
+    references:
+      - {titre: "Klugman, Panjer & Willmot, Loss Models, Chapter 6", detail: "Frequency models: binomial, Poisson and negative binomial."}
+      - {titre: "Ross, A First Course in Probability, Chapters 4–5", detail: "Discrete distributions, expectation and variance."}
+      - {titre: "Society of Actuaries — Exam P Probability", url: "https://www.soa.org/education/exam-req/edu-exam-p-detail/", detail: "Probability exam syllabus."}
+    liens:
+      - {titre: "A2/S01 — Conditional probability and Bayes", cible: "a2/s01"}
+
 etapes:
   - titre: "Placement check"
     intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
