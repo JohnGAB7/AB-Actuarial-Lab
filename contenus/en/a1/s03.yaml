@@ -103,6 +103,7 @@ fiche:
           - "Use the increasing-annuity formula with the annuity due and the discounted final term."
           - "(Da)=(10−a_10)/i."
           - "Check their sum using 11a_10."
+        resultat: "(Ia)=39.37378280; (Da)=45.56530142; total=84.93908422."
         interpretation: "The decreasing annuity has a higher present value because larger payments occur earlier."
         controles:
           - "Both nominal payment sequences total 55."
@@ -113,6 +114,7 @@ fiche:
           - "C_1=1,000, g=2%, i=5%, n=10."
           - "Growth and discounting have the same annual periodicity."
           - "Use the finite formula because i≠g."
+        resultat: "PV≈8,388.11. The level annuity of 1,000 is worth approximately 7,721.73."
         resultat: "PV≈8,388.11. The level annuity of 1,000 is worth approximately 7,721.73."
         interpretation: "Growth raises present value, while each cash flow is still discounted."
         controles:
@@ -184,6 +186,19 @@ fiche:
       - "Finite geometric: [1−((1+g)/(1+i))^n]/(i−g); if i=g: nv."
       - "Growing perpetuity: 1/(i−g), only if g<i."
       - "Check first payment date, rate units, convergence and limiting cases."
+    glossaire:
+      - {definition: "Value of payments accumulated to a future date."}
+      - {definition: "A stream of payments with no final payment date."}
+      - {definition: "Payments 1, 2, …, n at successive dates."}
+      - {definition: "Payments n, n−1, …, 1 at successive dates."}
+      - {definition: "Payments multiplied by 1+g from one period to the next."}
+      - {definition: "Rate that multiplies payment amounts from period to period."}
+    references:
+      - {titre: "Kellison, The Theory of Interest, chapters 3–4", detail: "Accumulated value, perpetuities and varying annuities. Edition and page numbers are not specified in the lesson source."}
+      - {titre: "Society of Actuaries — Financial Mathematics (FM)", detail: "Official FM exam syllabus; a general reference source."}
+    liens:
+      - {titre: "A1/S01 — Compound interest and certain annuities"}
+      - {titre: "A1/S02 — Nominal rates and fractional payments"}
     maitrise:
       - "I distinguish present value and accumulated value."
       - "I can explain perpetuity convergence."
