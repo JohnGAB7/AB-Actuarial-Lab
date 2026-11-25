@@ -106,11 +106,11 @@ fiche:
           - "Déterminer le nombre n de paiements."
           - "Écrire leurs dates : 1 à n pour une annuité immédiate, 0 à n−1 pour une annuité due."
           - "Choisir la formule correspondant exactement à ces dates."
-          - "Traiter i=0 séparément si une formule contient une division par i ou d."
+          - "Traiter $i=0$ séparément si une formule contient une division par $i$ ou $d$."
           - "Comparer annuité due et immédiate avec la relation double-point=(1+i) fois immédiate."
         controles:
           - "Pour i>0, annuité due supérieure à annuité immédiate."
-          - "Pour i=0, les deux valeurs sont égales à n."
+          - "Pour $i=0$, les deux valeurs sont égales à $n$."
           - "La somme explicite des facteurs doit retrouver la formule fermée."
         erreurs:
           - "Décaler les paiements d'une période en confondant début et fin."
@@ -119,7 +119,7 @@ fiche:
   exemples_guides:
     exemples:
       - titre: "Comparer une annuité immédiate et une annuité due"
-        enonce: "Un contrat verse 1 unité monétaire par an pendant 3 ans. Le taux annuel effectif est i=2,5 %. Calculer la valeur à la date 0 si les versements sont faits en fin d'année, puis en début d'année."
+        enonce: "Un contrat verse 1 unité monétaire par an pendant 3 ans. Le taux annuel effectif est $i=2{,}5\%$. Calculer la valeur à la date 0 si les versements sont faits en fin d'année, puis en début d'année."
         raisonnement:
           - "Calculer $v=1/1{,}025\\approx0{,}9756098$."
           - "Fin d'année : $a_{3|}=v+v^2+v^3\\approx0{,}9756098+0{,}9518144+0{,}9285994=2{,}8560236$."
@@ -161,7 +161,7 @@ fiche:
         feedback: "Un paiement au début de la première année n'est pas actualisé. Si tu utilises a_{5|}, tu décales à tort le premier loyer d'un an."
       - titre: "Niveau avancé — flux irréguliers"
         niveau: avance
-        enonce: "Un régime verse 2 000 unités à t=1, 1 500 à t=4 et reçoit 300 à t=2. Calculer la valeur actuelle nette à 5 % annuel effectif."
+        enonce: "Un régime verse 2 000 unités à $t=1$, $1\,500$ à $t=4$ et reçoit $300$ à $t=2$. Calculer la valeur actuelle nette à 5 % annuel effectif."
         corrige:
           - "Fixer la convention : sorties positives comme prestations et entrée négative dans le coût net, ou l'inverse, mais rester cohérent."
           - "Avec prestations positives et encaissement reçu négatif : VAN=2 000/1,05+1 500/(1,05)⁴−300/(1,05)²."
@@ -174,9 +174,9 @@ fiche:
         objectif: "Reproduire la valeur actuelle d'une série de paiements, vérifier les dates et comparer le résultat d'un tableur à une fonction Python."
         outils: [excel, python]
         entrees:
-          - "Flux fictifs : 1 000 à t=5 et 500 à t=10."
+          - "Flux fictifs : $1\,000$ à $t=5$ et $500$ à $t=10$."
           - "Taux annuel effectif constant : 2,5 %."
-          - "Date d'évaluation : t=0 ; montants dans une unité monétaire commune."
+          - "Date d'évaluation : $t=0$ ; montants dans une unité monétaire commune."
         hypotheses:
           - "Flux déterministes, taux plat et constant, périodes annuelles entières."
           - "Aucun risque, inflation, frais, impôt ou probabilité de survie n'est modélisé."
@@ -205,7 +205,7 @@ fiche:
   synthese_references:
     memo:
       - "Capitalisation : multiplier par $(1+i)^t$ ; actualisation : multiplier par $v^t$."
-      - "$v=\\frac{1}{1+i}$, d=i/(1+i), δ=ln(1+i)."
+      - "$v=\\frac{1}{1+i}$, $d=i/(1+i)$, $\\delta=\\ln(1+i)$."
       - "Annuité immédiate : paiements aux dates 1,…,n ; annuité due : dates 0,…,n−1."
       - "$\\ddot{a}_{n|}=(1+i)a_{n|}$ ; pour $i=0$, les deux annuités valent $n$."
       - "Toujours annoncer la date d'évaluation, la périodicité, le taux et la convention de signe."
