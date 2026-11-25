@@ -201,7 +201,7 @@ fiche:
           - "Calculer chaque poids conjoint, puis la probabilité a posteriori."
           - "Vérifier que les posteriori somment à 1."
           - |
-            \`\`\`python
+            ```python
             weights = [0.50, 0.30, 0.20]
             rates = [0.04, 0.10, 0.20]
             p_claim = sum(w * r for w, r in zip(weights, rates))
@@ -212,7 +212,7 @@ fiche:
             assert abs(sum(posterior) - 1) < 1e-12
             assert abs(p_any - 0.4012630607616215) < 1e-12
             print(p_claim, posterior, p_any)
-            \`\`\`
+            ```
           - "Comparer la composition initiale et la composition après sinistre."
         sorties:
           - "Taux global et poids conjoints."
@@ -242,7 +242,7 @@ fiche:
     maitrise:
       - "Je calcule une conditionnelle en utilisant le bon dénominateur."
       - "Je distingue indépendance et incompatibilité."
-      - "Je recomposer un taux global par probabilités totales."
+      - "Je recompose un taux global par probabilités totales."
       - "J'applique Bayes et vérifie les posteriori."
       - "Je calcule un risque de portefeuille par le complément sous indépendance."
     references:
