@@ -360,6 +360,12 @@ fiche:
       - "Forward: implied no-arbitrage rate under a convention, not a forecast."
       - "Modified duration approximates relative price change; convexity adds curvature."
       - "Exact repricing, credit, liquidity, options and conventions still matter."
+    liens:
+      - {titre: "A1/S04 — Loans and amortization"}
+    references:
+      - {titre: "Kellison — The Theory of Interest", detail: "Chapters on bonds, term structure and sensitivity measures."}
+      - {titre: "Tuckman and Serrat — Fixed Income Securities", detail: "Bond valuation, yield curves, forward rates, duration and convexity."}
+      - {titre: "Society of Actuaries — Financial Mathematics (FM)", detail: "Financial mathematics syllabus and bond concepts."}
     glossaire:
       - {definition: "Debt security with contractual cash flows and redemption according to its terms."}
       - {definition: "Periodic interest payment specified by the bond contract."}
