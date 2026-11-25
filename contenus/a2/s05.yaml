@@ -156,7 +156,7 @@ fiche:
           - "Var(X)=0 pour un coût fixe."
           - "Var(S)=Var(N)(E[X])²."
       - titre: "Poisson composé avec sévérité discrète"
-        enonce: "N~Poisson(10). Chaque sinistre vaut 1 ou 2 unités avec probabilité 50 % chacune. Calcule E[S] et Var(S)."
+        enonce: "N~Poisson(10). Chaque sinistre vaut 1 ou 2 unités, avec probabilité 50 % pour chaque valeur. Calcule E[S] et Var(S)."
         raisonnement:
           - "E[X]=(1+2)/2=1,5; E[X²]=(1+4)/2=2,5."
           - "E[S]=10×1,5=15."
