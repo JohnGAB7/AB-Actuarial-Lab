@@ -158,7 +158,7 @@ fiche:
         enonce: "À 3 %, évaluer les paiements 1, 2, …,8 en fin d'année."
         corrige:
           - "Calculer v=1/1,03 et ä_8=(1−v^8)/d."
-          - "Utiliser $(Ia)$=(ä_8−8v^8)/i."
+          - "Utiliser l'identité de l'annuité croissante et vérifier par somme directe."
           - "Résultat : environ 30,5003 ; confirmer par somme k v^k."
         feedback: "Le montant croît d'une unité chaque année, ce n'est pas une indexation en pourcentage."
       - titre: "Avancé — convergence"
