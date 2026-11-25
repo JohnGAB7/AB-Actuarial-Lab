@@ -15,7 +15,7 @@ actu_basics:
     - {id: zVX2Oy68W5Y, langue: en, titre: "Why is the average claim cost more predictable with 10,000 policies?", duree: "6:39"}
 
 fiche:
-  statut: brouillon
+  statut: prete
   vue_ensemble:
     question: "Pourquoi le coût moyen devient-il plus prévisible quand on mutualise davantage de contrats ?"
     pourquoi: "La mutualisation répartit le risque aléatoire entre de nombreux assurés. La loi des grands nombres stabilise la moyenne, mais la dépendance entre risques crée une composante systématique qui ne se diversifie pas."
