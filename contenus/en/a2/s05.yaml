@@ -157,7 +157,6 @@ fiche:
   exercices_corriges:
     exercices:
       - titre: "Fundamental — fixed severity"
-        niveau: fondamental
         enonce: "N~Poisson(20) and each claim costs €3,000. Calculate E[S], Var(S) and σ_S."
         corrige:
           - "E[S]=20×3 000=€60 000."
@@ -165,7 +164,6 @@ fiche:
           - "σ_S=√180 000 000≈€13 416.41."
         feedback: "For fixed severity, E[X²]=c²."
       - titre: "Intermediate — binomial frequency and exponential severity"
-        niveau: intermediaire
         enonce: "N~Binomial(n=50; p=10%). Severities are exponential with mean €1,000. Calculate E[S] and Var(S)."
         corrige:
           - "E[N]=5; Var(N)=4.5; E[X]=1 000; Var(X)=1 000 000."
@@ -173,7 +171,6 @@ fiche:
           - "Var(S)=5×1 000 000+4.5×1 000²=€9 500 000²."
         feedback: "Use the general formula because N is not Poisson."
       - titre: "Advanced — second moment"
-        niveau: avance
         enonce: "N~Poisson(10); X is 1 or 2 with equal probabilities. Calculate P(S=0), E[S] and Var(S)."
         corrige:
           - "P(S=0)=e^{-10}≈0.0000454."
@@ -235,13 +232,13 @@ fiche:
       - "If X>0, P(S=0)=P(N=0)=e^{-λ} for Poisson N."
       - "Separate frequency and severity; verify independence."
     glossaire:
-      - {terme_fr: "Charge agrégée", terme_en: "Aggregate loss", definition: "Sum of claim amounts over a random number of claims."}
-      - {terme_fr: "Fréquence", terme_en: "Claim frequency", definition: "Number of claims during a defined period or exposure."}
-      - {terme_fr: "Sévérité", terme_en: "Claim severity", definition: "Amount paid for one claim."}
-      - {terme_fr: "Poisson composé", terme_en: "Compound Poisson", definition: "Random sum with Poisson claim count and independent severities."}
-      - {terme_fr: "Second moment", terme_en: "Second moment", definition: "Expected square E[X²], not the variance."}
-      - {terme_fr: "Indépendance", terme_en: "Independence", definition: "Frequency and severity do not influence each other in the model."}
-      - {terme_fr: "Fréquence–sévérité", terme_en: "Frequency–severity model", definition: "Separate models for claim count and claim amount."}
+      - {definition: "Sum of claim amounts over a random number of claims."}
+      - {definition: "Number of claims during a defined period or exposure."}
+      - {definition: "Amount paid for one claim."}
+      - {definition: "Random sum with Poisson claim count and independent severities."}
+      - {definition: "Expected square E[X²], not the variance."}
+      - {definition: "Frequency and severity do not influence each other in the model."}
+      - {definition: "Separate models for claim count and claim amount."}
     maitrise:
       - "I define aggregate loss as a random sum."
       - "I calculate aggregate expectation by conditioning."
@@ -252,9 +249,9 @@ fiche:
     references:
       - {titre: "Klugman, Panjer & Willmot, Loss Models, aggregate loss chapter", detail: "Random sums, frequency–severity models and compound distributions."}
       - {titre: "Ross, A First Course in Probability, random sums", detail: "Expectation and variance of random sums."}
-      - {titre: "Society of Actuaries — Exam P Probability", url: "https://www.soa.org/education/exam-req/edu-exam-p-detail/", detail: "Probability exam syllabus."}
+      - {titre: "Society of Actuaries — Exam P Probability", detail: "Probability exam syllabus."}
     liens:
-      - {titre: "A2/S04 — Pooling and aggregate risk", cible: "a2/s04"}
+      - {titre: "A2/S04 — Pooling and aggregate risk"}
 
 etapes:
   - titre: "Placement check"
