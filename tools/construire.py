@@ -196,7 +196,7 @@ def bascule(langue: str, autre: str) -> str:
     return f'<span class="langs" role="group" aria-label="Langue · Language">{cote("fr")}{cote("en")}</span>'
 
 
-def entete(parcours: dict, racine: str, autre: str, langue: str, actif: str = "") -> str:
+def entete(parcours: dict, racine: str, autre: str, langue: str, actif: str = "", base: str | None = None) -> str:
     """Global header: brand, domain menu (inline on wide screens, a sheet on phones), language switch, account."""
     t = TXT[langue]
     liens = "".join(
@@ -204,7 +204,7 @@ def entete(parcours: dict, racine: str, autre: str, langue: str, actif: str = ""
         for d in parcours["domaines"])
     return (
         f'<header class="nav gutter"><div class="nav-in">'
-        f'{marque(racine, langue)}'
+        f'{marque(racine, langue, base)}'
         f'<nav class="nav-links" aria-label="{t["domaines"]}">{liens}</nav>'
         f'<details class="nav-menu"><summary aria-label="{t["menu"]}" aria-controls="nav-sheet" aria-expanded="false"><span></span><span></span></summary>'
         f'<nav class="nav-sheet" id="nav-sheet" aria-label="{t["domaines"]}">{liens}</nav></details>'
@@ -213,7 +213,7 @@ def entete(parcours: dict, racine: str, autre: str, langue: str, actif: str = ""
         f'</div></header>')
 
 
-def pied(parcours: dict, racine: str, autre: str, langue: str) -> str:
+def pied(parcours: dict, racine: str, autre: str, langue: str, base: str | None = None) -> str:
     t = TXT[langue]
     liens = "".join(f'<a href="{racine}{d["id"]}/index.html">{e(dom_court(d, langue))}</a>' for d in parcours["domaines"])
     return (
@@ -448,8 +448,8 @@ def construire() -> None:
                 titre=e(titre), description=e(description), favicon=base + favicon_url(langue), base=base, classe=classe, plan=plan, lang=langue,
                 alt_fr=base + (chemin + "/" if chemin else "") + "index.html",
                 alt_en=base + "en/" + (chemin + "/" if chemin else "") + "index.html",
-                entete=entete(parcours, racine, autre, langue, actif), contenu=contenu,
-                pied=pied(parcours, racine, autre, langue)), encoding="utf-8")
+                entete=entete(parcours, racine, autre, langue, actif, base), contenu=contenu,
+                pied=pied(parcours, racine, autre, langue, base)), encoding="utf-8")
 
         nom_site = titre_site(langue)
         ecrire("", nom_site, parcours["sous_titre"] if langue == "fr" else parcours["sous_titre_en"],
