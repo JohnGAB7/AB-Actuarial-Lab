@@ -392,7 +392,7 @@ fiche:
         corrige:
           - "Le coupon monétaire vaut 40 € et le rendement exigé est 5 %."
           - "Le coupon est inférieur au rendement : l'obligation cote en décote."
-          - "$P=40a_{4|5\%}+1\,000v_{5\%}^4\approx964{,}54$ €."
+          - "$P=40a_{\\overline{4}|5\\%}+1\\,000v_{5\\%}^4\\approx964{,}54$ €."
         feedback: "Compare le coupon monétaire au rendement exigé avant de calculer le prix."
       - titre: "Intermédiaire — spot versus YTM"
         niveau: intermediaire
