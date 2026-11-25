@@ -178,7 +178,7 @@ fiche:
         enonce: "Emprunter 25 000 € à 3,5 % effectif annuel sur 12 ans, avec paiements annuels en fin d'année. Calculer le paiement."
         corrige:
           - "$a_{\\overline{12}|}=(1-1{,}035^{-12})/0{,}035\\approx9{,}663$."
-          - "P=25 000/a_{12|}≈2 587,10 €."
+          - "$P=25\\,000/a_{\\overline{12}|}\\approx2\\,587{,}10$ €."
         feedback: "Le paiement comprend principal et intérêts. Une durée plus longue réduit généralement le paiement, mais augmente le total des intérêts."
       - titre: "Solde — niveau intermédiaire"
         niveau: intermediaire
