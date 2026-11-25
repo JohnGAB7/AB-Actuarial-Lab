@@ -144,14 +144,14 @@ fiche:
         raisonnement:
           - "Taux mensuel effectif équivalent : $(1{,}04)^{1/12}-1\\approx0{,}00327374$."
           - "Nominal d'intérêt : $12$ fois ce taux, soit environ $3{,}92849\\%$."
-          - "Facteur mensuel d'escompte : $(1{,}04)^{-1/12$."
+          - "Facteur mensuel d'escompte : $(1{,}04)^{-1/12}$."
           - "Nominal d'escompte : $12[1-(1{,}04)^{-1/12}]\\approx3{,}91567\\%$."
           - "Force d'intérêt : $\\ln(1{,}04)\\approx3{,}92207\\%$."
         resultat: "i^(12)≈3,92849 %, d^(12)≈3,91567 %, δ≈3,92207 %."
         interpretation: "À effectif annuel fixé, le nominal d'intérêt et le nominal d'escompte se situent de part et d'autre de la force d'intérêt."
         controles:
           - "Recomposer le nominal mensuel donne un facteur annuel $1{,}04$."
-          - "Pour $i>0$, $d^{(12)}<\\delta<i^{(12}$."
+          - "Pour $i>0$, $d^{(12)}<\\delta<i^{(12)}$."
       - titre: "Valeur actuelle d'une pension payée mensuellement"
         enonce: "Une pension de 1 200 unités par an est versée en 12 paiements de 100 en fin de mois pendant 10 ans. Le taux annuel effectif est 4 %. Quelle est sa valeur actuelle ?"
         raisonnement:
