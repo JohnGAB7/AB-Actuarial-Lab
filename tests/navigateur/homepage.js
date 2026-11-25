@@ -241,6 +241,22 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       await page.locator("#mode-steps").click();
       if (!(await page.locator("#stage").isVisible())) failures.push(language + " guided pathway should be restored");
     }
+    // A1 math notation regression: prose tokens with indices, powers and nominal-rate superscripts.
+    for (const language of ["fr", "en"]) {
+      for (const session of ["s01", "s02"]) {
+        const path = language === "en" ? "en/a1/" + session + "/index.html" : "a1/" + session + "/index.html";
+        await page.setViewportSize({ width: 390, height: 844 });
+        await page.goto(new URL(path, BASE).toString(), { waitUntil: "domcontentloaded" });
+        await page.locator("#lesson-mode").waitFor();
+        await page.locator("#mode-reference").click();
+        await page.locator("#reference-tabs [role=tab]").nth(1).click();
+        const tex = await page.locator("#reference-panel-1 .katex annotation[encoding=\"application/x-tex\"]").allTextContents();
+        const joined = tex.join(" ");
+        if (session === "s01" && (!joined.includes("C_t") || !joined.includes("(1+i)^t"))) failures.push(language + " A1/S01 should typeset C_t and (1+i)^t in prose");
+        if (session === "s02" && (!joined.includes("i^{(m)}") || !joined.includes("v^{1/m}"))) failures.push(language + " A1/S02 should typeset nominal-rate superscripts and fractional powers");
+      }
+    }
+
     // A1/S03 reference sheet is ready and must be rendered and usable in both languages.
     for (const language of ["fr", "en"]) {
       const path = language === "en" ? "en/a1/s03/index.html" : "a1/s03/index.html";
