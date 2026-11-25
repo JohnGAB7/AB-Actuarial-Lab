@@ -1,6 +1,256 @@
 # English texts for session A2.04. Numbers, answers and tests live in contenus/a2/s04.yaml.
 titre: "Pooling and the law of large numbers"
 
+fiche:
+  vue_ensemble:
+    question: "Why does average cost become more predictable as more policies are pooled?"
+    pourquoi: "Pooling spreads random risk across many insureds. The law of large numbers stabilizes the average, but dependence creates a systematic component that cannot be diversified away."
+    objectifs:
+      - "Calculate expectation and variance of sums and averages."
+      - "Interpret the law of large numbers."
+      - "Use the central limit theorem to approximate a sum."
+      - "Quantify portfolio pooling."
+      - "Understand how correlation affects aggregate risk."
+      - "Distinguish diversifiable and systematic risk."
+    prerequis:
+      - "Expected value, variance and standard deviation."
+      - "Binomial and normal distributions."
+      - "Conditional probability and independence."
+    carte:
+      - "Sum: expectations add; under independence, variances add."
+      - "Average: variance falls as σ²/n under independence."
+      - "LLN: the observed average approaches the expected value."
+      - "CLT: the standardized sum is approximately normal."
+      - "Pooling diversifies individual risk."
+      - "Correlation: a systematic component persists at large scale."
+    duree_minutes: 40
+  cours_complet:
+    sections:
+      - titre: "1. Sum and average of independent risks"
+        contenu: "For n independent variables with the same mean μ and variance σ², the sum has mean nμ and variance nσ². The average retains mean μ, but its variance is divided by n. Its standard deviation decreases as 1/√n."
+        formules:
+          - formule: "E[S_n]=n\\mu,\\quad \\operatorname{Var}(S_n)=n\\sigma^2"
+            explication: "Sum of n independent identically distributed variables."
+          - formule: "E[\\bar X_n]=\\mu,\\quad \\operatorname{Var}(\\bar X_n)=\\frac{\\sigma^2}{n},\\quad \\sigma_{\\bar X}=\\frac{\\sigma}{\\sqrt n}"
+            explication: "The average reduces variance and standard deviation."
+      - titre: "2. Law of large numbers"
+        contenu: "As n grows, the sample average converges to the expected value under the law of large numbers. This makes a portfolio's average cost more predictable. It does not guarantee every policy costs the average or that a portfolio realizes exactly its expected value."
+        formules:
+          - formule: "\\bar X_n\\xrightarrow{P}\\mu"
+            explication: "Convergence in probability of the sample average."
+      - titre: "3. Central limit theorem"
+        contenu: "For independent identically distributed variables with mean μ and finite variance σ², the centered and scaled sum is approximately normal when n is large. The CLT estimates aggregate-loss probabilities, but can be inaccurate for small portfolios or very heavy tails."
+        formules:
+          - formule: "\\frac{S_n-n\\mu}{\\sigma\\sqrt n}\\approx\\mathcal N(0,1)"
+            explication: "Normal approximation to the standardized sum."
+          - formule: "S_n\\approx\\mathcal N(n\\mu,n\\sigma^2)"
+            explication: "Approximate distribution of the sum."
+      - titre: "4. Pooling a Bernoulli portfolio"
+        contenu: "If each policy has claim probability p and fixed claim cost c, the number of claims follows Binomial(n,p) under independence. Total cost cN has mean npc and variance c²np(1−p). Average cost per policy has mean pc and standard deviation decreasing with n."
+        formules:
+          - formule: "N\\sim\\operatorname{Binomiale}(n,p),\\quad E[N]=np,\\quad \\operatorname{Var}(N)=np(1-p)"
+            explication: "Number of policies with claims."
+          - formule: "E[cN]=npc,\\quad \\operatorname{Var}(cN)=c^2np(1-p)"
+            explication: "Total claim cost."
+          - formule: "E[cN/n]=pc,\\quad \\sigma_{cN/n}=c\\sqrt{\\frac{p(1-p)}{n}}"
+            explication: "Average cost per policy."
+      - titre: "5. Dependence and correlation"
+        contenu: "Independence is central to diversification. For n risks with the same variance σ² and common correlation ρ, the average's variance includes an individual term that shrinks with n and a systematic term that tends to ρσ². A catastrophe can affect several policies simultaneously and prevent full pooling."
+        formules:
+          - formule: "\\operatorname{Var}(\\bar X)=\\frac{\\sigma^2}{n}+\\frac{n-1}{n}\\rho\\sigma^2"
+            explication: "Variance of the average under common correlation."
+          - formule: "\\lim_{n\\to\\infty}\\operatorname{Var}(\\bar X)=\\rho\\sigma^2"
+            explication: "Systematic risk does not disappear when ρ>0."
+      - titre: "6. Diversification and aggregate risk"
+        contenu: "Pooling reduces the volatility of average cost, not necessarily the total cost's volatility. Expected total cost grows with n, while standard deviation grows as √n under independence. Geographic concentration, catastrophe events and macroeconomic factors can create dependence."
+        formules:
+          - formule: "E[S_n]=n\\mu,\\quad \\sigma_{S_n}=\\sqrt n\\,\\sigma"
+            explication: "Expected total cost and volatility under independence."
+          - formule: "\\operatorname{CV}(S_n)=\\frac{\\sigma}{\\mu\\sqrt n}"
+            explication: "Coefficient of variation of total cost, if μ>0."
+      - titre: "7. Assumptions and limitations"
+        contenu: "Pooling does not eliminate claims; it reduces relative uncertainty in the average. Check independence, homogeneity, finite variance, concentration, catastrophes and the normal approximation. Heterogeneous frequency or severity requires a richer model."
+        formules:
+          - formule: "\\text{Independence}\\Rightarrow\\operatorname{Var}(\\bar X)=\\sigma^2/n;\\quad \\rho>0\\Rightarrow\\text{variance floor}"
+            explication: "The pooling benefit depends on dependence."
+  methodes:
+    methodes:
+      - titre: "Calculate sum and average risk"
+        quand_utiliser: "n independent risks with the same distribution are aggregated."
+        etapes:
+          - "Identify n, μ and σ²."
+          - "For the sum, calculate nμ and nσ²."
+          - "For the average, calculate μ and σ²/n."
+          - "Take the square root to obtain standard deviation."
+        controles:
+          - "Sum variance is n times individual variance."
+          - "Average variance is divided by n."
+          - "Average standard deviation is divided by √n."
+        erreurs:
+          - "Confuse sum and average."
+          - "Divide standard deviation by n instead of √n."
+      - titre: "Quantify pooling"
+        quand_utiliser: "A portfolio has claim probability and fixed cost per claim."
+        etapes:
+          - "Model claim count as Binomial(n,p)."
+          - "Calculate its expected value and variance."
+          - "Multiply by claim cost c for total cost."
+          - "Divide by n for average cost and interpret volatility."
+        controles:
+          - "E[N]=np."
+          - "Var(N)=np(1−p)."
+          - "Expected average cost is pc."
+        erreurs:
+          - "Use Poisson variance np without checking the approximation."
+          - "Confuse total cost and average cost scales."
+      - titre: "Assess correlation"
+        quand_utiliser: "Risks are correlated or share a common event."
+        etapes:
+          - "Identify σ², n and common correlation ρ."
+          - "Calculate average variance including dependence."
+          - "Compare with independence."
+          - "Interpret the systematic floor as n grows."
+        controles:
+          - "For ρ=0, recover σ²/n."
+          - "For ρ>0, variance exceeds independence."
+          - "The limit as n grows is ρσ²."
+        erreurs:
+          - "Assume pooling eliminates catastrophe risk."
+          - "Forget covariance terms."
+  exemples_guides:
+    exemples:
+      - titre: "10,000 policies: frequency and cost"
+        enonce: "10,000 independent policies each have a 1% claim probability and fixed claim cost €10,000. Calculate expected claim count, its standard deviation, expected total cost and average cost per policy."
+        raisonnement:
+          - "N~Binomial(10,000,0.01); E[N]=100 and Var(N)=99."
+          - "σ_N=√99≈9.9499."
+          - "Expected total cost=100×10,000=€1,000,000; standard deviation=10,000×√99≈€99,498.74."
+          - "Expected average cost=€100; per-policy standard deviation=99,498.74/10,000≈€9.95."
+        resultat: "100 expected claims; σ_N≈9.95; mean total cost €1M; average cost €100 with σ≈€9.95."
+        interpretation: "Portfolio average cost is much more stable than individual policy cost."
+        controles:
+          - "Expected average cost is p×c=€100."
+          - "Claim-count variance is 99."
+      - titre: "Correlation: diversification limit"
+        enonce: "1,000 risks have σ=€10,000 and common correlation 5%. Compare standard deviation of the average with and without correlation."
+        raisonnement:
+          - "Independence: σ_average=10,000/√1,000≈€316.23."
+          - "Correlation: Var(average)=10,000²(1/1,000+999/1,000×0.05)=5,095,000."
+          - "σ_average≈€2,257.21; asymptotic floor=10,000√0.05≈€2,236.07."
+        resultat: "€316.23 under independence versus €2,257.21 with 5% correlation."
+        interpretation: "Small common dependence can sharply reduce pooling benefits."
+        controles:
+          - "Correlated variance exceeds independent variance."
+          - "Standard deviation tends to σ√ρ, not zero."
+      - titre: "CLT: probability of 120 claims or more"
+        enonce: "Among 10,000 policies with p=1%, approximate P(N≥120) using a normal distribution and continuity correction."
+        raisonnement:
+          - "μ=np=100; σ=√(np(1−p))=√99≈9.9499."
+          - "P(N≥120)≈P(Z≥(119.5−100)/√99)=P(Z≥1.9598)."
+          - "Tail probability ≈2.50%."
+        resultat: "Normal approximation with continuity correction: 2.50%."
+        interpretation: "The CLT estimates portfolio risk, but the approximation must be checked."
+        controles:
+          - "Continuity correction uses 119.5."
+          - "The result is a tail probability."
+  exercices_corriges:
+    exercices:
+      - titre: "Fundamental — 100 policies"
+        niveau: fondamental
+        enonce: "100 independent policies have p=2% and fixed claim cost €5,000. Calculate mean count, standard deviation, expected total cost and its standard deviation."
+        corrige:
+          - "E[N]=2; Var(N)=1.96; σ_N=1.4."
+          - "Mean total cost €10,000; standard deviation €7,000."
+        feedback: "Total cost is €5,000 times the number of claims."
+      - titre: "Intermediate — normal approximation"
+        niveau: intermediaire
+        enonce: "10,000 policies have p=1%. Approximate P(N≥120) using normal and continuity correction."
+        corrige:
+          - "μ=100; σ=√99≈9.9499."
+          - "z=(119.5−100)/√99≈1.9598; P(N≥120)≈2.50%."
+        feedback: "The threshold 120 becomes 119.5 with continuity correction."
+      - titre: "Advanced — correlation"
+        niveau: avance
+        enonce: "100 risks have σ=€5,000 and ρ=10%. Compare average standard deviation with independence."
+        corrige:
+          - "Independence: 5,000/√100=€500."
+          - "Correlation: Var(average)=5,000²(0.01+0.99×0.10)=2,725,000; σ≈€1,650.76."
+        feedback: "Positive correlation creates systematic risk."
+  applications_labs:
+    applications:
+      - titre: "Simulate and compare pooling"
+        contexte: "A fictional Bernoulli portfolio illustrates average-cost stability and the variance floor caused by common dependence."
+        objectif: "Compare mean and standard deviation across portfolio sizes and illustrate the correlated variance floor."
+        entrees:
+          - "Individual claim probability p=1%."
+          - "Claim cost c=€10,000."
+          - "Portfolio sizes n=100, 1,000 and 10,000."
+          - "Common correlation ρ=5% in the dependent scenario."
+        hypotheses:
+          - "Independent scenario uses independent Bernoulli policies."
+          - "Correlated scenario is illustrative of common dependence, not a full catastrophe model."
+        procedure:
+          - "Calculate E[N]=np and σ_N=√np(1−p) for each portfolio size."
+          - "Calculate expected total cost and its standard deviation."
+          - "Calculate average-cost standard deviation under independence."
+          - |
+            ```python
+            import math
+
+            p, c = 0.01, 10000
+            for n in (100, 1000, 10000):
+                mean_n = n*p
+                sd_n = math.sqrt(n*p*(1-p))
+                mean_total = mean_n*c
+                sd_total = sd_n*c
+                sd_average = sd_total/n
+                rho = 0.05
+                sd_average_corr = c*math.sqrt(p*(1-p)*(1/n+(n-1)/n*rho))
+                print(n, mean_n, sd_n, mean_total, sd_total, sd_average, sd_average_corr)
+            ```
+          - "Compare average standard deviations and comment on the systematic component."
+        sorties:
+          - "Expected claim count and standard deviation."
+          - "Expected total cost and standard deviation."
+          - "Average-cost volatility with and without dependence."
+        validation:
+          - "Average volatility decreases as n grows under independence."
+          - "With ρ>0, it does not converge to zero."
+          - "Expected average cost remains pc."
+        limites:
+          - "Common correlation is a simplification; catastrophe events require richer dependence models."
+  synthese_references:
+    memo:
+      - "Independent sum: E[S_n]=nμ; Var(S_n)=nσ²."
+      - "Average: E[X̄]=μ; Var(X̄)=σ²/n; σ_X̄=σ/√n."
+      - "LLN: sample average converges to μ."
+      - "CLT: (S_n−nμ)/(σ√n)≈N(0,1)."
+      - "Binomial(n,p): E[N]=np; Var(N)=np(1−p)."
+      - "Total cost cN: E=npc; Var=c²np(1−p)."
+      - "Common correlation: Var(X̄)=σ²/n+(n−1)ρσ²/n; floor ρσ²."
+      - "Pooling reduces relative risk, not systematic risk."
+    glossaire:
+      - {terme_fr: "Mutualisation", terme_en: "Pooling", definition: "Sharing random losses across a large group of policies."}
+      - {terme_fr: "Loi des grands nombres", terme_en: "Law of large numbers", definition: "Sample average converges toward the expected value under suitable conditions."}
+      - {terme_fr: "Théorème central limite", terme_en: "Central limit theorem", definition: "The standardized sum is approximately normal for a large sample under conditions."}
+      - {terme_fr: "Risque diversifiable", terme_en: "Diversifiable risk", definition: "Risk whose relative impact decreases as independent exposures are pooled."}
+      - {terme_fr: "Risque systématique", terme_en: "Systematic risk", definition: "Risk shared across exposures that does not disappear through pooling."}
+      - {terme_fr: "Corrélation", terme_en: "Correlation", definition: "Measure of linear association between risks."}
+      - {terme_fr: "Correction de continuité", terme_en: "Continuity correction", definition: "Adjustment of a discrete threshold when approximating by a continuous distribution."}
+    maitrise:
+      - "I calculate variance of sums and averages."
+      - "I interpret the law of large numbers."
+      - "I use the CLT with continuity correction."
+      - "I quantify portfolio pooling."
+      - "I distinguish independence and correlation."
+      - "I recognize systematic risk."
+    references:
+      - {titre: "Ross, A First Course in Probability, limit theorems chapter", detail: "Law of large numbers and central limit theorem."}
+      - {titre: "Klugman, Panjer & Willmot, Loss Models, aggregation chapter", detail: "Aggregate loss models and pooling."}
+      - {titre: "Society of Actuaries — Exam P Probability", url: "https://www.soa.org/education/exam-req/edu-exam-p-detail/", detail: "Probability exam syllabus."}
+    liens:
+      - {titre: "A2/S03 — Continuous claim severity", cible: "a2/s03"}
+
 etapes:
   - titre: "Placement check"
     intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
