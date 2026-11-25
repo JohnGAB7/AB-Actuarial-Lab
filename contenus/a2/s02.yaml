@@ -12,6 +12,263 @@ actu_basics:
   accroche_fr: "Combien de sinistres l'an prochain ? Une loi, pas un chiffre."
   accroche_en: "How many claims next year? A distribution, not a number."
 
+fiche:
+  statut: prete
+  vue_ensemble:
+    question: "Comment passer d'un taux moyen de sinistres à une distribution du nombre de sinistres possible ?"
+    pourquoi: "La fréquence ne se résume pas à une moyenne. L'actuaire doit quantifier la probabilité de 0, 1, 2 ou davantage de sinistres, puis choisir une loi adaptée aux hypothèses et aux données."
+    objectifs:
+      - "Définir une variable aléatoire discrète et sa fonction de masse."
+      - "Calculer espérance, variance et écart-type à partir d'une distribution."
+      - "Utiliser les lois de Bernoulli et binomiale pour un nombre fixe de contrats."
+      - "Utiliser la loi de Poisson pour un nombre d'événements sur une période."
+      - "Approximer une binomiale par une Poisson lorsque les conditions le justifient."
+      - "Diagnostiquer la surdispersion et connaître les limites des modèles."
+    prerequis:
+      - "Probabilités, événements et probabilités conditionnelles."
+      - "Sommes, produits, puissances et factorielle."
+      - "Notion de moyenne et de variance."
+    carte:
+      - "Variable discrète : valeurs isolées avec une fonction de masse."
+      - "Espérance : moyenne pondérée par les probabilités."
+      - "Variance : dispersion quadratique autour de l'espérance."
+      - "Binomiale : nombre de succès parmi n essais indépendants."
+      - "Poisson : nombre d'événements, paramètre λ égal à la moyenne."
+      - "Approximation : binomiale(n,p) ≈ Poisson(np) si n est grand et p faible."
+    duree_minutes: 45
+  cours_complet:
+    sections:
+      - titre: "1. Variable discrète et fonction de masse"
+        contenu: "Une variable aléatoire discrète X prend des valeurs dénombrables. Sa fonction de masse p_k=P(X=k) décrit la probabilité de chaque valeur. Toutes les probabilités sont non négatives et leur somme sur le support vaut 1. La fonction de répartition F(x)=P(X≤x) additionne les masses jusqu'à x."
+        formules:
+          - formule: "p_k=P(X=k),\\quad p_k\\ge0,\\quad \\sum_k p_k=1"
+            explication: "Les probabilités de toutes les valeurs possibles forment une distribution valide."
+          - formule: "F(x)=P(X\\le x)=\\sum_{k\\le x}p_k"
+            explication: "La fonction de répartition cumule les probabilités jusqu'à x."
+      - titre: "2. Espérance et moments"
+        contenu: "L'espérance est la moyenne théorique à long terme, pas nécessairement une valeur que X peut prendre. Elle pondère chaque valeur par sa probabilité. Le deuxième moment E[X²] sert notamment au calcul de la variance."
+        formules:
+          - formule: "E[X]=\\sum_k k\\,p_k"
+            explication: "Moyenne théorique de la distribution."
+          - formule: "E[X^2]=\\sum_k k^2p_k"
+            explication: "Moment d'ordre 2, utile pour la variance."
+      - titre: "3. Variance, écart-type et transformation"
+        contenu: "La variance mesure la dispersion autour de l'espérance. L'écart-type, sa racine carrée, est exprimé dans la même unité que X. Ajouter une constante déplace la moyenne sans changer la variance; multiplier par a multiplie la variance par a²."
+        formules:
+          - formule: "\\operatorname{Var}(X)=E[X^2]-(E[X])^2"
+            explication: "Formule de calcul de la variance."
+          - formule: "E[aX+b]=aE[X]+b,\\quad \\operatorname{Var}(aX+b)=a^2\\operatorname{Var}(X)"
+            explication: "Transformation affine d'une variable aléatoire."
+          - formule: "\\sigma_X=\\sqrt{\\operatorname{Var}(X)}"
+            explication: "Écart-type : dispersion exprimée dans l'unité de X."
+      - titre: "4. Bernoulli et binomiale"
+        contenu: "Une Bernoulli modélise un essai avec succès de probabilité p et échec de probabilité 1−p. La binomiale compte les succès parmi n essais indépendants, identiques et de probabilité p. En assurance, elle peut représenter le nombre de contrats sinistrés lorsque chaque contrat a au plus un sinistre pendant la période."
+        formules:
+          - formule: "X\\sim\\operatorname{Bernoulli}(p):\\quad E[X]=p,\\quad \\operatorname{Var}(X)=p(1-p)"
+            explication: "Variable indicatrice d'un succès."
+          - formule: "X\\sim\\operatorname{Binomiale}(n,p):\\quad P(X=k)=\\binom{n}{k}p^k(1-p)^{n-k}"
+            explication: "Probabilité d'exactement k succès parmi n essais."
+          - formule: "E[X]=np,\\quad \\operatorname{Var}(X)=np(1-p)"
+            explication: "Moyenne et variance de la binomiale."
+      - titre: "5. Loi de Poisson"
+        contenu: "La loi de Poisson modélise un nombre d'événements sur un intervalle de temps, d'espace ou d'exposition, avec un taux moyen λ. Elle est souvent utilisée pour la fréquence de sinistres. Le paramètre λ est une moyenne et peut dépasser 1; ce n'est pas une probabilité."
+        formules:
+          - formule: "N\\sim\\operatorname{Poisson}(\\lambda):\\quad P(N=k)=e^{-\\lambda}\\frac{\\lambda^k}{k!}"
+            explication: "Probabilité d'observer k événements."
+          - formule: "E[N]=\\operatorname{Var}(N)=\\lambda,\\quad \\sigma_N=\\sqrt{\\lambda}"
+            explication: "Signature de la Poisson : moyenne et variance égales."
+      - titre: "6. Approximation binomiale–Poisson"
+        contenu: "Lorsque n est grand et p faible, la binomiale peut être approchée par une Poisson de paramètre λ=np. L'approximation est utile pour les événements rares, mais doit être contrôlée : pour des p plus élevés ou des portefeuilles modestes, la binomiale exacte peut être préférable."
+        formules:
+          - formule: "\\operatorname{Binomiale}(n,p)\\approx\\operatorname{Poisson}(\\lambda=np)"
+            explication: "Approximation pour n grand et p faible, à comparer aux probabilités exactes."
+      - titre: "7. Choix du modèle et limites"
+        contenu: "Le choix repose sur le mécanisme et les données. La binomiale suppose un nombre fixe d'essais, une probabilité identique et l'indépendance. La Poisson suppose un taux moyen et une structure compatible avec des événements indépendants. Si la variance empirique dépasse nettement la moyenne, la Poisson peut être trop restrictive : hétérogénéité, dépendance ou surdispersion peuvent motiver une binomiale négative ou un autre modèle. Le diagnostic ne remplace pas l'analyse des données."
+        formules:
+          - formule: "\\text{Poisson : }\\operatorname{Var}(N)=E[N]\\quad\\text{; surdispersion : }\\operatorname{Var}(N)>E[N]"
+            explication: "Un écart marqué entre variance et moyenne signale que le modèle Poisson simple peut être inadéquat."
+  methodes:
+    methodes:
+      - titre: "Résumer une distribution discrète"
+        quand_utiliser: "La fonction de masse ou un tableau de valeurs et probabilités est fourni."
+        etapes:
+          - "Vérifier que $p_k\\ge0$ et que $\\sum_k p_k=1$."
+          - "Calculer $E[X]=\\sum_x x p(x)$."
+          - "Calculer $E[X^2]=\\sum_x x^2p(x)$."
+          - "Déduire $\\operatorname{Var}(X)=E[X^2]-(E[X])^2$ et l'écart-type."
+        controles:
+          - "L'espérance est entre les valeurs minimale et maximale du support."
+          - "La variance est non négative."
+          - "Les probabilités totalisent 1."
+        erreurs:
+          - "Confondre E[X²] et (E[X])²."
+          - "Oublier de vérifier la somme des probabilités."
+      - titre: "Calculer une probabilité binomiale"
+        quand_utiliser: "n essais indépendants, chacun avec la même probabilité p, et au plus un succès par essai."
+        etapes:
+          - "Identifier n, p et le nombre de succès k."
+          - "Utiliser la formule binomiale pour $P(X=k)$."
+          - "Pour au moins un succès, utiliser $1-P(X=0)$."
+          - "Pour plusieurs valeurs, sommer les probabilités ou utiliser le complément."
+        controles:
+          - "$E[X]=np$ et $\\operatorname{Var}(X)=np(1-p)$."
+          - "$P(X=0)=(1-p)^n$."
+          - "La probabilité recherchée est entre 0 et 1."
+        erreurs:
+          - "Utiliser la binomiale si les essais ne sont pas indépendants ou p n'est pas constant."
+          - "Confondre exactement k et au moins k."
+      - titre: "Calculer une probabilité Poisson et juger l'approximation"
+        quand_utiliser: "Un nombre d'événements est modélisé par un taux moyen λ sur une période ou une exposition."
+        etapes:
+          - "Définir λ sur la même période/exposition que l'événement."
+          - "Calculer $P(N=k)$ avec la formule Poisson."
+          - "Pour $N\\ge m$, sommer les masses pour $k<m$ puis soustraire de $1$."
+          - "Si une binomiale est disponible, comparer $\\lambda=np$ et les probabilités exactes."
+        controles:
+          - "$E[N]=\\operatorname{Var}(N)=\\lambda$."
+          - "La somme des masses sur un support suffisamment large est proche de $1$."
+          - "L'approximation est meilleure lorsque $n$ est grand et $p$ faible."
+        erreurs:
+          - "Interpréter $\\lambda$ comme une probabilité."
+          - "Oublier les événements k=0 et 1 dans le complément."
+          - "Utiliser l'approximation sans vérifier son adéquation."
+  exemples_guides:
+    exemples:
+      - titre: "Binomiale et approximation de Poisson"
+        enonce: "20 contrats indépendants ont chacun 5 % de probabilité de sinistre. Compare la probabilité de 0 sinistre, exactement 1 et au moins 1 avec la binomiale et la Poisson λ=np."
+        raisonnement:
+          - "n=20, p=0,05, donc λ=np=1."
+          - "Binomiale : P(X=0)=0,95^{20}=0,3585; P(X=1)=20×0,05×0,95^{19}=0,3774."
+          - "P(X≥1)=1−0,95^{20}=0,6415."
+          - "Poisson(1) : P(N=0)=e^{-1}=0,3679; P(N=1)=e^{-1}=0,3679; P(N≥1)=0,6321."
+        resultat: "Les valeurs sont proches, mais la binomiale reste le modèle exact des 20 contrats."
+        interpretation: "L'approximation Poisson simplifie le calcul lorsque les événements sont rares; elle n'est pas identique à la binomiale."
+        controles:
+          - "Les deux probabilités d'au moins un sinistre sont proches."
+          - "La binomiale exacte conserve n et p."
+      - titre: "Poisson : au moins deux sinistres"
+        enonce: "Un contrat a un nombre annuel de sinistres N~Poisson(0,3). Calcule P(N≥2)."
+        raisonnement:
+          - "P(N≥2)=1−P(N=0)−P(N=1)."
+          - "P(N=0)=e^{-0,3}=0,7408; P(N=1)=0,3e^{-0,3}=0,2222."
+          - "P(N≥2)=1−0,7408−0,2222=0,0369."
+        resultat: "3,69 %."
+        interpretation: "Un taux moyen de 0,3 sinistre ne signifie pas que le nombre de sinistres est toujours proche de 0,3; les valeurs possibles sont entières."
+        controles:
+          - "P(N≥2) est positif et inférieur à P(N≥1)."
+          - "Le complément comprend les cas 0 et 1."
+      - titre: "Distribution discrète et coût"
+        enonce: "X vaut 0, 1 ou 2 avec probabilités 0,7, 0,2 et 0,1. Une indemnité de 500 € est versée par sinistre. Calcule E[X], Var(X), E[500X] et Var(500X)."
+        raisonnement:
+          - "E[X]=0×0,7+1×0,2+2×0,1=0,4."
+          - "E[X²]=0+1×0,2+4×0,1=0,6."
+          - "Var(X)=0,6−0,4²=0,44."
+          - "E[500X]=500×0,4=200; Var(500X)=500²×0,44=110000."
+        resultat: "Moyenne du coût 200 €; variance 110000 €²; écart-type ≈331,66 €."
+        interpretation: "Le coût moyen n'est pas un coût possible pour un contrat. La variance est exprimée en euros carrés, contrairement à l'écart-type."
+        controles:
+          - "La variance est positive."
+          - "Le coût moyen correspond à 500 € multipliés par la moyenne du nombre de sinistres."
+  exercices_corriges:
+    exercices:
+      - titre: "Fondamental — binomiale"
+        niveau: fondamental
+        enonce: "10 contrats indépendants ont p=10 %. Calcule P(X=0), P(X=1) et P(X≥1)."
+        corrige:
+          - "P(X=0)=0,9^{10}=0,3487."
+          - "P(X=1)=10×0,1×0,9^9=0,3874."
+          - "P(X≥1)=1−0,3487=0,6513."
+        feedback: "Exactement un sinistre et au moins un sinistre sont deux événements différents."
+      - titre: "Intermédiaire — Poisson"
+        niveau: intermediaire
+        enonce: "N~Poisson(2). Calcule P(N≥3)."
+        corrige:
+          - "P(N≥3)=1−e^{-2}(1+2+2)."
+          - "Résultat ≈0,3233."
+        feedback: "Le complément inclut 0, 1 et 2 événements."
+      - titre: "Avancé — transformation du coût"
+        niveau: avance
+        enonce: "Avec Var(X)=0,44 et un coût de 500 € par événement, calcule la variance et l'écart-type du coût."
+        corrige:
+          - "Var(500X)=500²×0,44=110000 €²."
+          - "σ=√110000≈331,66 €."
+        feedback: "La variance est multipliée par le carré du facteur; l'écart-type par sa valeur absolue."
+  applications_labs:
+    applications:
+      - titre: "Comparer binomiale et Poisson pour un portefeuille"
+        contexte: "Un portefeuille de 20 contrats a une fréquence individuelle de 5 %. L'actuaire compare le nombre de contrats sinistrés à une approximation Poisson."
+        objectif: "Calculer les masses binomiales, les masses Poisson de paramètre np, puis comparer les probabilités 0, 1 et au moins 1."
+        outils: [python, excel]
+        entrees:
+          - "n=20 contrats indépendants."
+          - "p=0,05 par contrat."
+          - "λ=np=1 pour l'approximation Poisson."
+        hypotheses:
+          - "La binomiale suppose n fixé, indépendance et probabilité p identique."
+          - "La Poisson est une approximation pour événements rares."
+        procedure:
+          - "Calculer P_bin(X=0), P_bin(X=1) et P_bin(X≥1)."
+          - "Calculer P_pois(N=0), P_pois(N=1) et P_pois(N≥1) avec λ=np."
+          - "Comparer les résultats et l'erreur absolue."
+          - |
+            ```python
+            import math
+
+            n, p = 20, 0.05
+            lam = n * p
+            binom_p0 = (1 - p) ** n
+            binom_p1 = n * p * (1 - p) ** (n - 1)
+            binom_any = 1 - binom_p0
+            pois_p0 = math.exp(-lam)
+            pois_p1 = lam * math.exp(-lam)
+            pois_any = 1 - pois_p0
+            print(binom_p0, binom_p1, binom_any)
+            print(pois_p0, pois_p1, pois_any)
+            assert abs(binom_any - 0.6415141) < 1e-6
+            assert abs(pois_any - 0.6321206) < 1e-6
+            ```
+          - "Conclure si l'approximation est acceptable pour cet exemple."
+        sorties:
+          - "Probabilités exactes binomiales."
+          - "Probabilités approximatives Poisson."
+          - "Écart absolu pour les événements comparés."
+        validation:
+          - "Les probabilités sont comprises entre 0 et 1."
+          - "P(X≥1)=1−P(X=0)."
+          - "La Poisson utilise λ=np."
+        limites:
+          - "L'approximation n'est pas universelle; elle dépend de n et p."
+  synthese_references:
+    memo:
+      - "Variable discrète : p_k=P(X=k), p_k≥0 et Σp_k=1."
+      - "E[X]=Σx p(x); Var(X)=E[X²]−E[X]²; σ=√Var."
+      - "Bernoulli(p) : E=p, Var=p(1−p)."
+      - "Binomiale(n,p) : E=np, Var=np(1−p)."
+      - "Poisson(λ) : P(k)=e^{-λ}λ^k/k!; E=Var=λ."
+      - "Approximation binomiale–Poisson : λ=np, n grand et p faible."
+      - "Surdispersion : variance nettement supérieure à la moyenne; tester un modèle plus flexible."
+    glossaire:
+      - {terme_fr: "Variable aléatoire discrète", terme_en: "Discrete random variable", definition: "Variable prenant des valeurs dénombrables."}
+      - {terme_fr: "Fonction de masse", terme_en: "Probability mass function", definition: "Probabilité associée à chaque valeur de la variable."}
+      - {terme_fr: "Espérance", terme_en: "Expected value", definition: "Moyenne théorique pondérée par les probabilités."}
+      - {terme_fr: "Variance", terme_en: "Variance", definition: "Dispersion quadratique autour de l'espérance."}
+      - {terme_fr: "Binomiale", terme_en: "Binomial distribution", definition: "Nombre de succès parmi n essais indépendants de même probabilité."}
+      - {terme_fr: "Poisson", terme_en: "Poisson distribution", definition: "Distribution d'un nombre d'événements de taux moyen λ."}
+      - {terme_fr: "Surdispersion", terme_en: "Overdispersion", definition: "Variance observée nettement supérieure à la moyenne."}
+    maitrise:
+      - "Je valide une fonction de masse."
+      - "Je calcule l'espérance, la variance et l'écart-type."
+      - "Je reconnais une binomiale et calcule ses probabilités."
+      - "Je reconnais une Poisson et utilise le complément."
+      - "Je justifie ou rejette une approximation binomiale–Poisson."
+      - "Je diagnostique une possible surdispersion."
+    references:
+      - {titre: "Klugman, Panjer & Willmot, Loss Models, Chapter 6", detail: "Frequency models: binomial, Poisson and negative binomial."}
+      - {titre: "Ross, A First Course in Probability, Chapters 4–5", detail: "Discrete distributions, expectation and variance."}
+      - {titre: "Society of Actuaries — Exam P Probability", url: "https://www.soa.org/education/exam-req/edu-exam-p-detail/", detail: "Probability exam syllabus."}
+    liens:
+      - {titre: "A2/S01 — Conditional probability and Bayes", cible: "a2/s01"}
+
 etapes:
   - type: quiz
     titre: "Test de positionnement"
