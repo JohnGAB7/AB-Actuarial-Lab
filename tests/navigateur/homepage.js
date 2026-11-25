@@ -248,6 +248,7 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       await page.goto(new URL(path, BASE).toString(), { waitUntil: "domcontentloaded" });
       await page.locator("#lesson-mode").waitFor({ state: "visible" });
       await page.locator("#mode-reference").click();
+      await page.locator("#reference-panel-0").waitFor({ state: "visible" });
       const tabs = page.locator("#reference-tabs [role=tab]");
       if (await tabs.count() !== 7) failures.push(language + " S03 should have seven reference tabs");
       await tabs.nth(1).click();
