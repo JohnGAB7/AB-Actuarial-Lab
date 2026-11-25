@@ -246,7 +246,7 @@ etapes:
           rappel: >-
             Une perpétuité (perpetuity) paie pour toujours, mais les paiements lointains sont fortement actualisés. La somme converge dès que $i > 0$.
           formule: |-
-            a_{\overline{\infty}|} = \lim_{n \to \infty} \frac{1 - $v^n$}{i} = \frac{1}{i}
+            a_{\overline{\infty}|} = \lim_{n \to \infty} \frac{1 - v^n}{i} = \frac{1}{i}
           exemple: >-
             À 5 %, toucher 1 € par an pour toujours vaut 20 € aujourd'hui : placés à 5 %, 20 € rapportent exactement 1 € par an.
           piege: >-
@@ -258,21 +258,21 @@ etapes:
           rappel: >-
             $s_{\overline{n}|}$ est la valeur accumulée (accumulated value) : on capitalise chaque paiement jusqu'au temps $n$, au lieu de l'actualiser au temps 0.
           formule: |-
-            s_{\overline{n}|} = \sum_{k=0}^{n-1} (1+i)^k = \frac{$(1+i)^n$ - 1}{i} = $(1+i)^n$\,a_{\overline{n}|}
+            s_{\overline{n}|} = \sum_{k=0}^{n-1} (1+i)^k = \frac{(1+i)^n - 1}{i} = (1+i)^n\,a_{\overline{n}|}
           exemple: >-
             À 5 % sur 10 ans : $s_{\overline{10}|} = 12{,}5779$, et $1{,}05^{10} \times 7{,}7217 = 12{,}5779$.
           piege: >-
-            $s_{\overline{n}|}$ et $a_{\overline{n}|}$ décrivent les mêmes flux à deux dates différentes : $s_{\overline{n}|} = $(1+i)^n$\,a_{\overline{n}|}$.
-      - q: 'L''annuité croissante $$(Ia)$_{\overline{n}|}$ verse…'
+            $s_{\overline{n}|}$ et $a_{\overline{n}|}$ décrivent les mêmes flux à deux dates différentes : $s_{\overline{n}|} = (1+i)^n\,a_{\overline{n}|}$.
+      - q: 'L''annuité croissante $(Ia)_{\overline{n}|}$ verse…'
         options: ['1, 2, 3, …, $n$ en fin d''années 1 à $n$', '$n$, $n-1$, …, 1', '1 chaque année, indexé sur l''inflation']
         reponse: 0
         pourquoi:
           rappel: >-
-            Le $I$ signifie « increasing » : le paiement de l'année $k$ vaut $k$. L'annuité décroissante $$(Da)$_{\overline{n}|}$ verse $n$, puis $n-1$, jusqu'à 1.
+            Le $I$ signifie « increasing » : le paiement de l'année $k$ vaut $k$. L'annuité décroissante $(Da)_{\overline{n}|}$ verse $n$, puis $n-1$, jusqu'à 1.
           formule: |-
-            $(Ia)$_{\overline{n}|} = \sum_{k=1}^{n} k\,v^k = \frac{\ddot{a}_{\overline{n}|} - n\,$v^n$}{i}
+            $(Ia)_{\overline{n}|} = \sum_{k=1}^{n} k\,v^k = \frac{\ddot{a}_{\overline{n}|} - n\,v^n}{i}$
           exemple: >-
-            À 5 % sur 10 ans : $$(Ia)$_{\overline{10}|} = 39{,}3738$.
+            À 5 % sur 10 ans : $(Ia)_{\overline{10}|} = 39{,}3738$.
           piege: >-
             Une rente indexée sur l'inflation croît de façon géométrique, pas arithmétique : c'est une autre formule.
       - q: 'Une perpétuité verse 1 dans un an, puis croît de $g$ par an, avec $g < i$. Elle vaut…'
@@ -304,7 +304,7 @@ etapes:
           paiement. Elle se déduit de la valeur actuelle en capitalisant sur $n$ années.
       - formule: |
           \begin{gathered}
-          s_{\overline{n}|} = \frac{$(1+i)^n$ - 1}{i} = $(1+i)^n$\,a_{\overline{n}|} \qquad \ddot{s}_{\overline{n}|} = (1+i)\,s_{\overline{n}|}
+          s_{\overline{n}|} = \frac{(1+i)^n - 1}{i} = (1+i)^n\,a_{\overline{n}|} \qquad \ddot{s}_{\overline{n}|} = (1+i)\,s_{\overline{n}|}
           \end{gathered}
       - p: >-
           Une <b>perpétuité</b> <i>(perpetuity)</i> paie sans fin. Sa valeur est la limite de l'annuité quand $n \to \infty$ :
@@ -317,8 +317,8 @@ etapes:
           <b>géométrique</b> (croissance d'un pourcentage fixe).
       - formule: |
           \begin{gathered}
-          $(Ia)$_{\overline{n}|} = \frac{\ddot{a}_{\overline{n}|} - n\,$v^n$}{i} \qquad $(Da)$_{\overline{n}|} = \frac{n - a_{\overline{n}|}}{i} \\[6pt]
-          $(Ia)$_{\overline{n}|} + $(Da)$_{\overline{n}|} = (n+1)\,a_{\overline{n}|} \\[6pt]
+          (Ia)_{\overline{n}|} = \frac{\ddot{a}_{\overline{n}|} - n\,v^n}{i} \qquad (Da)_{\overline{n}|} = \frac{n - a_{\overline{n}|}}{i} \\[6pt]
+          (Ia)_{\overline{n}|} + (Da)_{\overline{n}|} = (n+1)\,a_{\overline{n}|} \\[6pt]
           \sum_{k=1}^{n} (1+g)^{k-1} v^k = \frac{1 - \left(\frac{1+g}{1+i}\right)^{n}}{i - g} \quad (g \ne i)
           \end{gathered}
       - p: >-
@@ -367,9 +367,9 @@ etapes:
           rappel: >-
             Les deux versent le même total (55). L'annuité décroissante verse les gros montants au début, donc moins actualisés.
           formule: |-
-            $(Da)$_{\overline{n}|} = (n+1)\,a_{\overline{n}|} - $(Ia)$_{\overline{n}|}
+            (Da)_{\overline{n}|} = (n+1)\,a_{\overline{n}|} - (Ia)_{\overline{n}|}
           exemple: >-
-            $$(Da)$_{\overline{10}|} = 45{,}5653$ et $$(Ia)$_{\overline{10}|} = 39{,}3738$ ; leur somme vaut $11 \times 7{,}7217 = 84{,}9391$.
+            $(Da)_{\overline{10}|} = 45{,}5653$ et $(Ia)_{\overline{10}|} = 39{,}3738$ ; leur somme vaut $11 \times 7{,}7217 = 84{,}9391$.
           piege: >-
             Sans intérêt, les deux vaudraient 55. Avec intérêt, l'ordre des paiements compte.
       - q: 'Une rente verse 1 000 € dans un an, puis croît de 2 % par an pendant 10 ans au total. À 5 %, elle vaut environ…'
@@ -412,11 +412,11 @@ etapes:
           raise NotImplementedError
 
       def increasing_annuity(n, i):
-          """$(Ia)$_n: payments 1, 2, ..., n at the end of years 1 .. n."""
+          """(Ia)_n: payments 1, 2, ..., n at the end of years 1 .. n."""
           raise NotImplementedError
 
       def decreasing_annuity(n, i):
-          """$(Da)$_n: payments n, n-1, ..., 1 at the end of years 1 .. n."""
+          """(Da)_n: payments n, n-1, ..., 1 at the end of years 1 .. n."""
           raise NotImplementedError
 
       def geometric_annuity(n, i, g):
@@ -424,9 +424,9 @@ etapes:
           raise NotImplementedError
     tests:
       - {nom: '$s_{\overline{10}|}$ vaut 12,57789 à 5 %', expr: "abs(accumulated_value(10, 0.05) - 12.57789) < 0.00001"}
-      - {nom: '$$(Ia)$_{\overline{10}|}$ vaut 39,37378 à 5 %', expr: "abs(increasing_annuity(10, 0.05) - 39.37378) < 0.00001"}
-      - {nom: '$$(Da)$_{\overline{10}|}$ vaut 45,56530 à 5 %', expr: "abs(decreasing_annuity(10, 0.05) - 45.56530) < 0.00001"}
-      - {nom: '$$(Ia)$ + $(Da)$ = (n+1)\,a_{\overline{n}|}$', expr: "abs(increasing_annuity(25, 0.03) + decreasing_annuity(25, 0.03) - 26 * (1 - 1.03 ** -25) / 0.03) < 1e-9"}
+      - {nom: '$(Ia)_{\overline{10}|}$ vaut 39,37378 à 5 %', expr: "abs(increasing_annuity(10, 0.05) - 39.37378) < 0.00001"}
+      - {nom: '$(Da)_{\overline{10}|}$ vaut 45,56530 à 5 %', expr: "abs(decreasing_annuity(10, 0.05) - 45.56530) < 0.00001"}
+      - {nom: '$(Ia) + (Da) = (n+1)\,a_{\overline{n}|}$', expr: "abs(increasing_annuity(25, 0.03) + decreasing_annuity(25, 0.03) - 26 * (1 - 1.03 ** -25) / 0.03) < 1e-9"}
       - {nom: 'Géométrique à 2 % : 8,38811', expr: "abs(geometric_annuity(10, 0.05, 0.02) - 8.38811) < 0.00001"}
       - {nom: 'Cas $g = i$ : $n\,v$', expr: "abs(geometric_annuity(10, 0.05, 0.05) - 10 / 1.05) < 1e-9"}
 
