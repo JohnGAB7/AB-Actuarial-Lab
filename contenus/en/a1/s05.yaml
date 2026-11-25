@@ -133,3 +133,251 @@ etapes:
 
   - titre: "Vocabulary"
     intro: "Tap a card: the French term and a job-interview sentence."
+
+fiche:
+  vue_ensemble:
+    question: "How do we move from bond pricing to a consistent reading of the yield curve and rate sensitivity?"
+    pourquoi: "Bonds are central to investing, valuing obligations and measuring interest-rate risk. A single yield summarizes cash flows, while a spot curve discounts them by maturity."
+    objectifs:
+      - "Price a coupon bond from its yield to maturity."
+      - "Interpret premium, discount and par pricing."
+      - "Distinguish yield to maturity from spot rates."
+      - "Derive forward rates from spot rates under a stated compounding convention."
+      - "Calculate Macaulay duration, modified duration and convexity and interpret their approximations."
+      - "Identify key bond risks and limitations."
+    prerequis:
+      - "Present value of an annuity and a single cash flow."
+      - "Compound accumulation and effective rates."
+      - "Derivatives and discounted cash-flow sums."
+    carte:
+      - "Price: present value of coupons and redemption."
+      - "YTM: the single rate reproducing the price, under contractual cash-flow assumptions."
+      - "Spot: maturity-specific rate used to discount a cash flow."
+      - "Forward: implied rate between future dates."
+      - "Duration and convexity: sensitivity measures."
+    cours_complet:
+      sections:
+        - titre: "1. Coupon bond pricing"
+          contenu: "A standard bond pays coupon c on scheduled dates and repays face value F at maturity n. Its price is the present value of contractual cash flows. With constant annual coupons and an annual effective yield y, it is a coupon annuity plus discounted redemption. Yield to maturity (YTM) is the rate solving this equation from the observed price; it assumes, among other things, that cash flows are paid and that rate conventions and dates are consistent."
+          formules:
+            - {explication: "Price of a bond with constant annual coupon and redemption of face value at maturity."}
+            - {explication: "The cash coupon c equals face value F times coupon rate q."}
+            - {explication: "Identity linking premium to the difference between the cash coupon and interest at the yield."}
+        - titre: "2. Premium, discount and par"
+          contenu: "The bond trades at par when the cash coupon equals the required yield. If the coupon exceeds the yield, it is worth more than face value and trades at a premium. If the coupon is below the yield, it trades at a discount. With fixed cash flows, price decreases as yield rises; as maturity approaches, price tends towards redemption, provided cash flows are paid and there is no default or embedded option."
+          formules:
+            - {explication: "Compare coupon rate q and yield y for a standard bond."}
+            - {explication: "For fixed positive cash flows, a higher yield reduces price."}
+        - titre: "3. YTM, spot rates and clean/dirty price"
+          contenu: "YTM is one rate that reproduces a bond's price from its cash flows. Spot rates apply to zero-coupon cash flows at each maturity and allow curve-consistent valuation. A spot-discounted price is the theoretical value on the curve. In markets, the quoted clean price generally excludes accrued coupon, while the dirty price paid includes it. Accrued coupon depends on the day-count convention, coupon dates and market; no universal convention is assumed here."
+          formules:
+            - {explication: "Discount each cash flow at the spot rate for its payment date, using annual effective compounding."}
+            - {explication: "Usual relation between dirty and clean prices; CC is accrued coupon under the market convention."}
+        - titre: "4. Spot curve and forward rates"
+          contenu: "A spot curve is a set of zero-coupon rates by maturity. Under annual effective compounding and no-arbitrage, investing for two years must equal investing for one year and reinvesting for another year at the implied forward rate. A forward is implied mathematically by the curve, not necessarily a forecast of the future rate. Rates may be interpolated for missing maturities, but the interpolation method must be stated."
+          formules:
+            - {explication: "Equivalence between two-year investment and a one-year investment followed by a forward rate."}
+            - {explication: "One-year forward rate between t−1 and t, with s_0=0."}
+            - {explication: "Bond valuation using the spot curve, rather than a single YTM."}
+        - titre: "5. Macaulay and modified duration"
+          contenu: "Macaulay duration is the weighted average payment date, with weights equal to present values of cash flows divided by price. It is measured in years for annual cash flows. Modified duration approximates relative price change for a small YTM change, under annual effective compounding and fixed cash flows. For m-times-per-year compounding, the formula must be adjusted to the convention."
+          formules:
+            - {explication: "Weighted average of cash-flow dates by present value."}
+            - {explication: "Modified duration for annual effective yield and annual compounding."}
+            - {explication: "First-order approximation: modified duration only, for a small yield change."}
+        - titre: "6. Convexity and price-yield approximation"
+          contenu: "Convexity measures curvature of price with respect to yield. For a standard bond with positive cash flows, price is convex: duration-only approximation generally understates the gain when yield falls and overstates the loss when yield rises, for sufficiently small and comparable changes. Duration and convexity do not replace exact repricing; they are local approximations."
+          formules:
+            - {explication: "Conventional convexity under annual effective compounding and fixed cash flows."}
+            - {explication: "Second-order approximation; yield change is expressed as a decimal."}
+        - titre: "7. Risks, conventions and limitations"
+          contenu: "A bond can face interest-rate, credit/default, liquidity, reinvestment, inflation, currency and model risks. Callable or convertible bonds have option-driven cash flows: duration and convexity may differ, and convexity can be negative in some regions. A spot curve must be built from consistent instruments and conventions; rates may not be observable at every maturity. YTM is not a guaranteed realized return: the outcome depends on resale price, default and coupon reinvestment. This reference assumes annual coupons, effective rates, deterministic cash flows and no options, taxes or fees."
+          formules:
+            - {explication: "YTM is a valuation measure under assumptions, not a promise of realized return."}
+    methodes:
+      methodes:
+        - titre: "Price at YTM"
+          quand_utiliser: "A bond price or yield is required for known contractual cash flows."
+          etapes:
+            - "Draw coupons and redemption on a timeline."
+            - "Identify cash coupon, frequency, maturity and YTM."
+            - "Check that rate and frequency are consistent."
+            - "Discount each cash flow or use the annuity formula."
+            - "Compare price with face value and interpret premium/discount."
+          controles:
+            - "When coupon equals YTM, price should equal par."
+            - "Price should fall as YTM rises for fixed positive cash flows."
+            - "Discounted cash flows should sum to the price."
+          erreurs:
+            - "Confusing coupon rate with YTM."
+            - "Discounting coupons at the wrong period count."
+            - "Forgetting redemption of face value."
+        - titre: "Build a spot-curve price"
+          quand_utiliser: "A spot curve is supplied and cash flows have different maturities."
+          etapes:
+            - "List cash flows C_t and their payment dates."
+            - "Match each cash flow to its spot rate s_t."
+            - "Discount each flow using its own rate and maturity."
+            - "Sum present values."
+            - "Optionally compare with a YTM price and explain the difference."
+          controles:
+            - "Each spot rate must match the cash-flow maturity."
+            - "Curve and compounding conventions must be consistent."
+            - "Present values must sum to the theoretical price."
+          erreurs:
+            - "Using the final-maturity spot rate for every cash flow."
+            - "Confusing spot rate with YTM."
+            - "Averaging rates without a weighting or model."
+        - titre: "Measure sensitivity"
+          quand_utiliser: "Compare bond sensitivities or approximate a yield shock."
+          etapes:
+            - "Calculate price at the base yield."
+            - "Calculate cash-flow present values and weights."
+            - "Calculate Macaulay duration, then modified duration."
+            - "Calculate convexity under the stated convention."
+            - "Approximate post-shock price and compare with exact repricing."
+          controles:
+            - "Macaulay duration lies between first and last payment dates for positive cash flows."
+            - "Modified duration is below Macaulay when y>0."
+            - "Convexity is positive for a standard fixed-cash-flow bond."
+          erreurs:
+            - "Confusing years with percentage price change."
+            - "Entering 1 instead of 0.01 for a 1% shock."
+            - "Ignoring convexity or applying it to large shocks without checking."
+    exemples_guides:
+      exemples:
+        - titre: "Price, premium and discount"
+          enonce: "Synthetic bond: face value 1,000, annual coupon 5%, maturity 5 years. Calculate price for YTM 4%, 5% and 6%."
+          raisonnement:
+            - "Coupons of 50 at years 1 to 5 and redemption of 1,000 at year 5."
+            - "At 4%, P≈1,044.52: premium."
+            - "At 5%, P=1,000: par."
+            - "At 6%, P≈957.88: discount."
+          resultat: "P(4 %)≈1,044.52; P(5 %)=1,000; P(6 %)≈957.88."
+          interpretation: "Price moves inversely to required yield because contractual cash flows remain fixed."
+          controles:
+            - "Recalculate by discounting coupons and redemption."
+            - "At 5%, price must equal face value to numerical precision."
+        - titre: "Spot-curve price and forward rates"
+          enonce: "Synthetic spot curve s_1=3 %, s_2=3.5 %, s_3=4 %. Price a 3-year bond with face value 1,000 and coupon 5%; also calculate f_1,2 and f_2,3."
+          raisonnement:
+            - "P=50/1.03+50/1.035²+1,050/1.04³."
+            - "Forward rates follow from accumulation-factor equivalence."
+            - "f_1,2=(1.035²/1.03)−1≈4.0024 %."
+            - "f_2,3=(1.04³/1.035²)−1≈5.0073 %."
+          resultat: "Price≈1,028.67; f_1,2≈4.0024 %; f_2,3≈5.0073 %."
+          interpretation: "Spot valuation discounts each coupon at its own rate; forwards are implied rates, not guaranteed forecasts."
+          controles:
+            - "Check each PV individually."
+            - "Compare with a YTM price at approximately 3.9677 %."
+        - titre: "Duration and convexity"
+          enonce: "For the 5-year bond with face value 1,000, coupon 5%, and YTM 4%, calculate sensitivity measures."
+          raisonnement:
+            - "Price≈1,044.5182."
+            - "Macaulay duration≈4.5571 years; modified duration≈4.3818."
+            - "Conventional convexity≈24.4766."
+            - "For a +1 percentage-point yield shock, the second-order approximation gives a relative change of about −4.2599 %."
+          resultat: "D_Mac≈4.5571; D_mod≈4.3818; Conv≈24.4766."
+          interpretation: "Duration measures local sensitivity; convexity adjusts for curvature. Exact repricing is preferable for a material shock."
+          controles:
+            - "Compare the approximation with P(5 %)−P(4 %)."
+            - "PV weights should sum to 1."
+    exercices_corriges:
+      exercices:
+        - titre: "Fundamental — premium or discount"
+          niveau: fondamental
+          enonce: "Face value 1,000, coupon 4%, maturity 4 years, YTM 5%. Is it at par, premium or discount?"
+          corrige:
+            - "Cash coupon is 40 and required yield is 5%."
+            - "Coupon is below yield: the bond trades at a discount."
+            - "P=40 a_4|5%+1,000 v_5%^4≈964.54."
+          feedback: "Compare the cash coupon with the required yield before calculating price."
+        - titre: "Intermediate — spot versus YTM"
+          niveau: intermediaire
+          enonce: "A 3-year bond, face value 1,000, coupon 5%, is valued with s_1=3 %, s_2=3.5 %, s_3=4 %. Calculate its price and explain why its YTM is not necessarily 4%."
+          corrige:
+            - "Discount 50 at year 1 with 3%, 50 at year 2 with 3.5%, and 1,050 at year 3 with 4%."
+            - "P≈1,028.67."
+            - "The single YTM reproducing this price is approximately 3.9677%; coupons affect the rate."
+          feedback: "Spot rates are maturity-specific; YTM is a single rate summarizing all cash flows."
+        - titre: "Advanced — duration and shock"
+          niveau: avance
+          enonce: "At YTM 4%, estimate the price change when yield rises by 0.5 percentage points. Use modified duration 4.3818 and convexity 24.4766."
+          corrige:
+            - "Δy=0.005."
+            - "Approximation: −4.3818×0.005+0.5×24.4766×0.005²≈−2.1600 %."
+            - "Duration alone gives about −2.1909%; convexity moderates the decline."
+          feedback: "Express the shock as a decimal. Convexity is multiplied by the squared shock and by one half."
+    applications_labs:
+      applications:
+        - titre: "Spot-curve, pricing and sensitivity lab"
+          contexte: "Synthetic curve and bond for illustration, not market data."
+          objectif: "Compare YTM pricing, spot pricing, forwards and sensitivity approximations."
+          outils: [excel, python]
+          entrees:
+            - "Face value 1,000, annual coupon 5%, maturity 5 years."
+            - "Base YTM 4%, then shocks −1, +0.5 and +1 percentage points."
+            - "Illustrative spot curve: 3%, 3.5%, 4%, 4.25%, 4.5%."
+          hypotheses:
+            - "Annual coupons, annual effective compounding, fixed cash flows."
+            - "Synthetic curve; no default, options, taxes or fees."
+          procedure:
+            - "Create annual cash flows 50, 50, 50, 50, 1,050."
+            - "Calculate YTM price from discounted cash flows."
+            - "Discount each cash flow using its spot rate."
+            - "Derive annual forwards from spot accumulation factors."
+            - "Calculate duration, convexity and approximate price change."
+            - |
+              ```python
+              face, coupon, n, y = 1000.0, 0.05, 5, 0.04
+              cash = [face * coupon] * (n - 1) + [face * (1 + coupon)]
+              pv = [cf / (1 + y) ** t for t, cf in enumerate(cash, 1)]
+              price = sum(pv)
+              macaulay = sum(t * x for t, x in enumerate(pv, 1)) / price
+              modified = macaulay / (1 + y)
+              convexity = sum(t * (t + 1) * x for t, x in enumerate(pv, 1)) / price / (1 + y) ** 2
+              spot = [0.03, 0.035, 0.04, 0.0425, 0.045]
+              spot_price = sum(cf / (1 + s) ** t for t, (cf, s) in enumerate(zip(cash, spot), 1)
+              forwards = [(1 + spot[t]) ** (t + 1) / (1 + spot[t - 1]) ** t - 1 for t in range(1, len(spot))]
+              shock = 0.005
+              approx_change = -modified * shock + 0.5 * convexity * shock ** 2
+              exact_change = sum(cf / (1 + y + shock) ** t for t, cf in enumerate(cash, 1) / price - 1
+              print(price, spot_price, macaulay, modified, convexity, approx_change, exact_change)
+              ```
+          sorties:
+            - "YTM price and spot price."
+            - "Implied forward rates."
+            - "Duration, convexity, approximate and exact changes."
+          validation:
+            - "YTM price equals the sum of discounted cash flows."
+            - "Spot price uses the rate for each maturity."
+            - "Forward rates satisfy accumulation-factor equivalence."
+            - "Approximation is close to exact repricing for a small shock."
+          limites:
+            - "The curve and cash flows are synthetic and deterministic."
+            - "Annual convention; do not transfer directly to other market conventions."
+    synthese_references:
+      memo:
+        - "Bond price: PV of coupons and face value; YTM is the single rate reproducing the price."
+        - "Coupon above YTM: premium; below: discount; equal: par."
+        - "Spot discounts each cash flow by maturity; YTM does not replace the curve."
+        - "Forward: implied no-arbitrage rate under a convention, not a forecast."
+        - "Modified duration approximates relative price change; convexity adds curvature."
+        - "Exact repricing, credit, liquidity, options and conventions still matter."
+      glossaire:
+        - {definition: "Debt security with contractual cash flows and redemption according to its terms."}
+        - {definition: "Periodic interest payment specified by the bond contract."}
+        - {definition: "Reference amount generally repaid at maturity."}
+        - {definition: "Single rate reproducing the price from contractual cash flows."}
+        - {definition: "Zero-coupon rate associated with a maturity, used to discount one cash flow."}
+        - {definition: "Implied rate between future dates derived from the spot curve."}
+        - {definition: "PV-weighted average of payment dates."}
+        - {definition: "Approximate relative price sensitivity to yield for a small change."}
+        - {definition: "Measure of price curvature with respect to yield."}
+        - {definition: "Quoted price excluding accrued coupon and paid price including accrued coupon."}
+      maitrise:
+        - "I can price a bond and explain premium, discount or par."
+        - "I can distinguish YTM from spot rates and value cash flows using the curve."
+        - "I can derive a forward rate under annual compounding."
+        - "I can interpret duration, convexity and their limits."
+        - "I can name the main risks and conventions of a bond."
