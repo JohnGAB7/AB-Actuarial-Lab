@@ -217,7 +217,7 @@ fiche:
           - "Approximate Poisson probabilities."
           - "Absolute difference for the events compared."
         validation:
-          - "Probabilities lie in [0,1]."
+          - "Probabilities lie between 0 and 1."
           - "P(X≥1)=1−P(X=0)."
           - "Poisson uses λ=np."
         limites:
