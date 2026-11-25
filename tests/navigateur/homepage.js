@@ -259,7 +259,7 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
 
     // Continue notation regression coverage through the remaining A1 sessions.
     const mathChecks = {
-      s03: ["v^n", "(1+g)^{k-1}", "i/(1+i)"],
+      s03: ["v^n", "(1+g)^{k-1}", "i/(1+i)", "g<i"],
       s04: ["B_{k-1}", "PR_k", "P=L/n"],
       s05: ["D_{Mac}", "D_{mod}", "Conv"]
     };
