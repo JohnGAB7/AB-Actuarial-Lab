@@ -136,7 +136,7 @@ fiche:
   exemples_guides:
     exemples:
       - titre: "Exponential: exceedance and quantile"
-        enonce: "An amount follows an exponential distribution with mean θ=€2,000. Calculate P(X>€5,000) and the 99th quantile."
+        enonce: "An amount follows an exponential distribution with mean θ=€2,000. Calculate P(X>€5,000) and the 99% quantile."
         raisonnement:
           - "S(x)=e^{-x/θ}, so P(X>5,000)=e^{-2.5}=0.0821."
           - "q_{0.99}=−2,000 ln(0.01)=€9,210.34."
