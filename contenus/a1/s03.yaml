@@ -48,7 +48,7 @@ fiche:
           - formule: "a_{\\overline{\\infty}|}=\\frac{1}{i},\\quad i>0"
             explication: "Un capital 1/i produit 1 d'intérêt par période au taux i, dans le modèle déterministe."
           - formule: "\\ddot{a}_{\\overline{\\infty}|}=\\frac{1}{d}=\\frac{1+i}{i}=1+\\frac{1}{i}"
-            explication: "La perpétuité due inclut le paiement immédiat à t=0."
+            explication: "La perpétuité due inclut le paiement immédiat à $t=0$."
       - titre: "3. Annuités arithmétiques"
         contenu: "L'annuité croissante verse $1,2,\\ldots,n$ aux dates $1,\\ldots,n$. L'annuité décroissante verse $n,n-1,\\ldots,1$. Elles ont le même total nominal, mais pour $i>0$ la décroissante a une valeur actuelle plus grande car ses montants élevés arrivent plus tôt."
         formules:
@@ -92,7 +92,7 @@ fiche:
         erreurs:
           - "Confondre croissance additive et pourcentage."
           - "Décaler les paiements d'une période."
-          - "Appliquer 1/(i−g) sans tester la convergence."
+          - "Appliquer $1/(i-g)$ sans tester la convergence."
           - "Utiliser une formule avec division par i lorsque $i=0$."
       - titre: "Vérifier par une somme de flux"
         quand_utiliser: "Contrôler une formule fermée ou comparer deux scénarios de rente."
@@ -113,11 +113,11 @@ fiche:
       - titre: "Perpétuité immédiate"
         enonce: "Une fondation verse 10 000 par an à partir de dans un an, sans fin. Le taux annuel effectif est 5 %."
         raisonnement:
-          - "Le premier paiement est à t=1 : perpétuité immédiate."
+          - "Le premier paiement est à $t=1$ : perpétuité immédiate."
           - "Utiliser C/i."
           - "Calculer 10 000/0,05."
         resultat: "$PV=200\\,000$ unités monétaires."
-        interpretation: "La valeur est à t=0. Le capital de 200 000 génère 10 000 d'intérêts annuels à 5 %."
+        interpretation: "La valeur est à $t=0$. Le capital de $200\,000$ génère $10\,000$ d'intérêts annuels à $5\%$."
         controles:
           - "La perpétuité due serait supérieure d'un paiement, soit 210 000."
       - titre: "Annuités arithmétiques sur dix ans"
@@ -163,7 +163,7 @@ fiche:
         feedback: "Le montant croît d'une unité chaque année, ce n'est pas une indexation en pourcentage."
       - titre: "Avancé — convergence"
         niveau: avance
-        enonce: "Une perpétuité verse 1 dans un an puis croît de 3 %. Compare i=5 % et i=2,5 %."
+        enonce: "Une perpétuité verse $1$ dans un an puis croît de $3\%$. Compare $i=5\%$ et $i=2{,}5\%$."
         corrige:
           - "À 5 %, $g<i$ : $PV=\\frac{1}{0{,}05-0{,}03}=50$."
           - "À 2,5 %, $g\\ge i$ : la série diverge et n'a pas de valeur finie."
@@ -176,14 +176,14 @@ fiche:
         objectif: "Comparer formule fermée et somme directe, puis mesurer l'effet de l'indexation."
         outils: [excel, python]
         entrees:
-          - "Premier paiement : 1 000 à t=1."
-          - "Croissance g=2 %, taux i=5 %, durée n=10."
+          - "Premier paiement : $1\,000$ à $t=1$."
+          - "Croissance $g=2\%$, taux $i=5\%$, durée $n=10$."
         hypotheses:
           - "Flux certains, taux et croissance constants, échéances annuelles."
           - "Pas de mortalité, frais, fiscalité, risque ou changement de devise."
         procedure:
-          - "Créer k=1,…,10 et le flux 1000×1,02^(k−1)."
-          - "Actualiser par (1,05)^k et sommer."
+          - "Créer $k=1,\\ldots,10$ et le flux $1\,000\\times1{,}02^{k-1$."
+          - "Actualiser par $(1{,}05)^k$ et sommer."
           - |
             ```python
             n, i, g, first = 10, 0.05, 0.02, 1000.0
@@ -216,8 +216,8 @@ fiche:
     glossaire:
       - {terme_fr: "Valeur accumulée", terme_en: "Accumulated value", definition: "Valeur des paiements capitalisés à une date future."}
       - {terme_fr: "Perpétuité", terme_en: "Perpetuity", definition: "Suite de paiements sans échéance finale."}
-      - {terme_fr: "Annuité arithmétique croissante", terme_en: "Increasing arithmetic annuity", definition: "Montants 1, 2, …,n versés à des dates successives."}
-      - {terme_fr: "Annuité arithmétique décroissante", terme_en: "Decreasing arithmetic annuity", definition: "Montants n,n−1,…,1 versés à des dates successives."}
+      - {terme_fr: "Annuité arithmétique croissante", terme_en: "Increasing arithmetic annuity", definition: "Montants $1,2,\\ldots,n$ versés à des dates successives."}
+      - {terme_fr: "Annuité arithmétique décroissante", terme_en: "Decreasing arithmetic annuity", definition: "Montants $n,n-1,\\ldots,1$ versés à des dates successives."}
       - {terme_fr: "Annuité géométrique", terme_en: "Geometric annuity", definition: "Montants multipliés d'une période à l'autre par 1+g."}
       - {terme_fr: "Taux de croissance", terme_en: "Growth rate", definition: "Taux multiplicatif de variation du montant des paiements."}
     maitrise:
