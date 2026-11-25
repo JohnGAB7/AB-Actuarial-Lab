@@ -50,23 +50,23 @@ fiche:
           - formule: "VA_0=\\sum_{j=1}^{m} C_{t_j}v^{t_j}"
             explication: "La somme porte sur les $m$ flux aux dates $t_j$. Chaque flux doit être associé à sa propre date et au taux cohérent avec cette échéance."
       - titre: "3. Taux d'escompte et force d'intérêt"
-        contenu: "Le taux d'escompte annuel d exprime l'intérêt rapporté à la valeur au début de la période. Pour un même facteur annuel, $d=\frac{i}{1+i}=iv=1-v$. Il ne faut pas confondre d avec i : le premier rapporte l'intérêt au capital initial après déduction anticipée, le second au capital prêté et rémunéré sur la période. La force d'intérêt constante $\delta$ décrit une accumulation continue. L'équivalence sur une année impose $e^\delta=1+i$, donc $\delta=\ln(1+i)$. Pour $i>0$, l'ordre est $d<\delta<i$. Pour de petits taux positifs, ces trois mesures sont proches mais ne sont pas interchangeables."
+        contenu: "Le taux d'escompte annuel d exprime l'intérêt rapporté à la valeur au début de la période. Pour un même facteur annuel, $d=\\frac{i}{1+i}=iv=1-v$. Il ne faut pas confondre d avec i : le premier rapporte l'intérêt au capital initial après déduction anticipée, le second au capital prêté et rémunéré sur la période. La force d'intérêt constante $\\delta$ décrit une accumulation continue. L'équivalence sur une année impose $e^\\delta=1+i$, donc $\\delta=\\ln(1+i)$. Pour $i>0$, l'ordre est $d<\\delta<i$. Pour de petits taux positifs, ces trois mesures sont proches mais ne sont pas interchangeables."
         formules:
           - formule: "d=\\frac{i}{1+i}=iv=1-v"
             explication: "Le taux d'escompte est la réduction relative appliquée au montant payable en fin de période lorsque l'intérêt est payé d'avance."
           - formule: "\\delta=\\ln(1+i),\\qquad (1+i)^t=e^{\\delta t}"
             explication: "La force δ est un taux instantané constant. Elle reproduit exactement le facteur annuel effectif après une année."
       - titre: "4. Annuité certaine immédiate"
-        contenu: "Une annuité certaine de n paiements unitaires comporte des paiements connus, indépendants d'une condition de survie. Pour une annuité immédiate, les paiements ont lieu aux dates 1 ; 2 ; … ; n, donc en fin de période. Sa valeur actuelle est la somme $v+v^2+\cdots+v^n$. Cette somme géométrique donne $(1-v^n)/i$ lorsque $i\ne0$. Si $i=0$, chaque paiement vaut 1 à la date 0 et la valeur est n ; il faut traiter ce cas séparément dans une implémentation numérique."
+        contenu: "Une annuité certaine de n paiements unitaires comporte des paiements connus, indépendants d'une condition de survie. Pour une annuité immédiate, les paiements ont lieu aux dates 1 ; 2 ; … ; n, donc en fin de période. Sa valeur actuelle est la somme $v+v^2+\\cdots+v^n$. Cette somme géométrique donne $(1-v^n)/i$ lorsque $i\\ne0$. Si $i=0$, chaque paiement vaut 1 à la date 0 et la valeur est n ; il faut traiter ce cas séparément dans une implémentation numérique."
         formules:
           - formule: "a_{\\overline{n}|}=\\sum_{k=1}^{n}v^k=\\frac{1-v^n}{i},\\quad i\\ne0"
             explication: "a_{n|} désigne la valeur actuelle d'une annuité immédiate de n paiements unitaires."
           - formule: "a_{\\overline{n}|}=n,\\quad i=0"
             explication: "La formule fermée précédente est indéterminée en $i=0$ ; la somme des n facteurs égaux à 1 donne directement n."
           - formule: "a_{\\overline{n}|}(1-v)=v(1-v^n),\\qquad 1-v=\\frac{i}{1+i}=iv"
-            explication: "En multipliant la somme $v+v^2+\cdots+v^n$ par $(1-v)$, les termes intermédiaires s'annulent : il reste $v-v^{n+1}$. Comme $1-v=iv$, on obtient $a_{n|}=(1-v^n)/i$."
+            explication: "En multipliant la somme $v+v^2+\\cdots+v^n$ par $(1-v)$, les termes intermédiaires s'annulent : il reste $v-v^{n+1}$. Comme $1-v=iv$, on obtient $a_{n|}=(1-v^n)/i$."
       - titre: "5. Annuité certaine due"
-        contenu: "L'annuité due verse les mêmes n paiements unitaires aux dates 0 ; 1 ; … ; n−1 : chaque paiement est avancé d'une période par rapport à l'annuité immédiate. Sa valeur actuelle est $1+v+\cdots+v^{n-1}$. Elle vaut $(1-v^n)/d$ pour $d\ne0$, ou $(1+i)a_{n|}$. La relation multiplicative est un contrôle puissant : si elle échoue, les dates de paiement ou l'indexation de la somme ont probablement été mal posées."
+        contenu: "L'annuité due verse les mêmes n paiements unitaires aux dates 0 ; 1 ; … ; n−1 : chaque paiement est avancé d'une période par rapport à l'annuité immédiate. Sa valeur actuelle est $1+v+\\cdots+v^{n-1}$. Elle vaut $(1-v^n)/d$ pour $d\\ne0$, ou $(1+i)a_{n|}$. La relation multiplicative est un contrôle puissant : si elle échoue, les dates de paiement ou l'indexation de la somme ont probablement été mal posées."
         formules:
           - formule: "\\ddot{a}_{\\overline{n}|}=\\sum_{k=0}^{n-1}v^k=\\frac{1-v^n}{d}=(1+i)a_{\\overline{n}|}"
             explication: "Le double point indique des paiements en début de période. La valeur est supérieure à l'annuité immédiate pour i>0."
@@ -121,10 +121,10 @@ fiche:
       - titre: "Comparer une annuité immédiate et une annuité due"
         enonce: "Un contrat verse 1 unité monétaire par an pendant 3 ans. Le taux annuel effectif est i=2,5 %. Calculer la valeur à la date 0 si les versements sont faits en fin d'année, puis en début d'année."
         raisonnement:
-          - "Calculer $v=1/1{,}025\approx0{,}9756098$."
-          - "Fin d'année : $a_{3|}=v+v^2+v^3\approx0{,}9756098+0{,}9518144+0{,}9285994=2{,}8560236$."
-          - "Début d'année : $\ddot{a}_{3|}=1+v+v^2\approx2{,}9274242$."
-          - "Contrôle : $1{,}025\times2{,}8560236\approx2{,}9274242$."
+          - "Calculer $v=1/1{,}025\\approx0{,}9756098$."
+          - "Fin d'année : $a_{3|}=v+v^2+v^3\\approx0{,}9756098+0{,}9518144+0{,}9285994=2{,}8560236$."
+          - "Début d'année : $\\ddot{a}_{3|}=1+v+v^2\\approx2{,}9274242$."
+          - "Contrôle : $1{,}025\\times2{,}8560236\\approx2{,}9274242$."
         resultat: "Annuité immédiate : 2,8560. Annuité due : 2,9274 unités monétaires à la date 0."
         interpretation: "Le versement dû intervient une période plus tôt ; il est donc moins actualisé. La différence ne provient pas du montant ni du nombre de paiements, mais uniquement de leur calendrier."
         controles:
@@ -147,8 +147,8 @@ fiche:
         niveau: fondamental
         enonce: "Calculer la valeur actuelle de 500 unités payables dans 2 ans au taux annuel effectif de 4 %."
         corrige:
-          - "$v=1/1{,}04\approx0{,}9615385$."
-          - "$VA=500v^2=500/(1{,}04)^2\approx462{,}2781$."
+          - "$v=1/1{,}04\\approx0{,}9615385$."
+          - "$VA=500v^2=500/(1{,}04)^2\\approx462{,}2781$."
           - "Arrondir à deux décimales : 462,28 unités."
         feedback: "Si tu obtiens plus de 500, tu as probablement capitalisé au lieu d'actualiser. Vérifie aussi que l'exposant est bien 2."
       - titre: "Niveau intermédiaire — annuité due"
@@ -207,7 +207,7 @@ fiche:
       - "Capitalisation : multiplier par $(1+i)^t$ ; actualisation : multiplier par $v^t$."
       - "$v=\\frac{1}{1+i}$, d=i/(1+i), δ=ln(1+i)."
       - "Annuité immédiate : paiements aux dates 1,…,n ; annuité due : dates 0,…,n−1."
-      - "$\ddot{a}_{n|}=(1+i)a_{n|}$ ; pour $i=0$, les deux annuités valent $n$."
+      - "$\\ddot{a}_{n|}=(1+i)a_{n|}$ ; pour $i=0$, les deux annuités valent $n$."
       - "Toujours annoncer la date d'évaluation, la périodicité, le taux et la convention de signe."
     glossaire:
       - {terme_fr: "Intérêt composé", terme_en: "Compound interest", definition: "Intérêt calculé sur le capital augmenté des intérêts déjà accumulés."}
@@ -430,10 +430,10 @@ etapes:
           raise NotImplementedError
     tests:
       - {nom: '$v^{10}$ vaut 0,78120 à 2,5 %', expr: "abs(discount_factor(0.025, 10) - 0.78120) < 0.00001"}
-      - {nom: '$a_{\overline{10}|}$ vaut 8,75206 à 2,5 %', expr: "abs(annuity_immediate(10, 0.025) - 8.75206) < 0.00001"}
-      - {nom: '$\ddot{a}_{\overline{10}|}$ vaut 8,97087 à 2,5 %', expr: "abs(annuity_due(10, 0.025) - 8.97087) < 0.00001"}
-      - {nom: '$\ddot{a}_{\overline{n}|} = (1+i)\,a_{\overline{n}|}$', expr: "abs(annuity_due(20, 0.04) - 1.04 * annuity_immediate(20, 0.04)) < 1e-9"}
-      - {nom: 'Avec $i = 0$, $a_{\overline{n}|} = n$', expr: "abs(annuity_immediate(7, 0) - 7) < 1e-12"}
+      - {nom: '$a_{\\overline{10}|}$ vaut 8,75206 à 2,5 %', expr: "abs(annuity_immediate(10, 0.025) - 8.75206) < 0.00001"}
+      - {nom: '$\\ddot{a}_{\\overline{10}|}$ vaut 8,97087 à 2,5 %', expr: "abs(annuity_due(10, 0.025) - 8.97087) < 0.00001"}
+      - {nom: '$\\ddot{a}_{\\overline{n}|} = (1+i)\,a_{\\overline{n}|}$', expr: "abs(annuity_due(20, 0.04) - 1.04 * annuity_immediate(20, 0.04)) < 1e-9"}
+      - {nom: 'Avec $i = 0$, $a_{\\overline{n}|} = n$', expr: "abs(annuity_immediate(7, 0) - 7) < 1e-12"}
       - {nom: '1 000 € à 5 ans et 500 € à 10 ans valent 1 274,45 €', expr: "abs(present_value({5: 1000, 10: 500}, 0.025) - 1274.45) < 0.01"}
 
   - type: vocabulaire
