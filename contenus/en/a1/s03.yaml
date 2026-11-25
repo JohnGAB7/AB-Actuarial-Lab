@@ -48,7 +48,7 @@ fiche:
         formules:
           - explication: "Growing-perpetuity formula. First payment occurs in one year; rates and growth are constant and satisfy strict convergence."
       - titre: "6. Limiting cases and model limitations"
-        contenu: "At zero interest, formulas dividing by i are replaced by direct sums: accumulated value n, increasing arithmetic annuity n(n+1)/2 and decreasing annuity n(n+1)/2. A perpetuity at i=0 diverges. A growing perpetuity formula is invalid when g≥i. These models assume deterministic periodic cash flows and a constant rate; mortality, risk, taxes, expenses and a term structure are not automatically included."
+        contenu: "At zero interest, formulas dividing by i are replaced by direct sums: accumulated value n, increasing arithmetic annuity n(n+1)/2 and decreasing annuity n(n+1)/2. A level perpetuity at i=0 diverges. A geometrically growing or declining perpetuity (with −1<g<0 for decline) converges when g<i under i>−1 and g>−1; it can therefore converge at zero interest when g<0. These models assume deterministic periodic cash flows and a constant rate; mortality, risk, taxes, expenses and a term structure are not automatically included."
         formules:
           - explication: "With zero interest, discounting and accumulation do not change the cash flows."
   methodes:
