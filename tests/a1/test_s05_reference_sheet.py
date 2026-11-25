@@ -49,7 +49,9 @@ def test_duration_convexity_and_second_order_approximation():
 
 def test_reference_lab_code_is_valid_and_runs():
     app = SESSION["fiche"]["applications_labs"]["applications"][0]
-    code = next(x for x in app["procedure"] if "face, coupon, n, y" in x)
+    block = next(x for x in app["procedure"] if "face, coupon, n, y" in x)
+    fence = chr(96) * 3
+    code = block.split(fence + "python", 1)[1].split(fence, 1)[0].strip()
     compiled = compile(code, "a1_s05_reference_lab.py", "exec")
     namespace = {}
     exec(compiled, namespace)
