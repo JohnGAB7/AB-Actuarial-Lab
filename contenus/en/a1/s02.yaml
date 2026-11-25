@@ -249,7 +249,7 @@ fiche:
       - {titre: "Kellison, The Theory of Interest, chapters 1 and 4", detail: "Nominal rates, equivalent rates, m-thly annuities and continuous annuities. Edition and page details are not specified in the source content."}
       - {titre: "Society of Actuaries — Financial Mathematics (FM) Exam", detail: "The official syllabus places equivalent rates, compounding and annuities within the financial mathematics core."}
     liens:
-      - {titre: "Recap — compound interest and annuities certain", cible: "a1/s01"}
+      - {titre: "Recap — compound interest and annuities certain"}
 
 etapes:
   - titre: "Placement check"
