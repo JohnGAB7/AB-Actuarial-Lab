@@ -28,12 +28,12 @@ fiche:
         formules:
           - explication: "The accumulated sum of n unit payments. When $i=0$, $s_n=n$."
       - titre: "2. Perpetuities immediate and due"
-        contenu: "An immediate perpetuity pays $1$ at times $1,2,\\ldots$ and its present value is the limit of the annuity. For i>0, v^n tends to zero and the series converges. A due perpetuity begins at $t=0$: it is an immediate perpetuity advanced by one period. The effective discount rate is $d=i/(1+i)$."
+        contenu: "An immediate perpetuity pays $1$ at times $1;2;\\ldots$ and its present value is the limit of the annuity. For i>0, v^n tends to zero and the series converges. A due perpetuity begins at $t=0$: it is an immediate perpetuity advanced by one period. The effective discount rate is $d=i/(1+i)$."
         formules:
           - explication: "A capital 1/i earns 1 interest per period at rate i in this deterministic model."
           - explication: "The perpetuity due includes the payment immediately at $t=0$."
       - titre: "3. Arithmetic annuities"
-        contenu: "The increasing annuity pays $1,2,\\ldots,n$ at times $1,\\ldots,n$. The decreasing annuity pays $n,n-1,\\ldots,1$. Both have the same nominal total, but for i>0 the decreasing annuity has a higher present value because its larger payments occur earlier."
+        contenu: "The increasing annuity pays $1;2;\\ldots;n$ at times $1;\\ldots;n$. The decreasing annuity pays $n,n-1,\\ldots,1$. Both have the same nominal total, but for i>0 the decreasing annuity has a higher present value because its larger payments occur earlier."
         formules:
           - explication: "Formula for the increasing annuity, for i≠0."
           - explication: "Formula for the decreasing annuity, for i≠0."
