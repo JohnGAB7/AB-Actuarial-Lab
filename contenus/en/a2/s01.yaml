@@ -122,7 +122,7 @@ fiche:
         resultat: "Overall rate 7%; 42.86% of claims come from young drivers."
         interpretation: "Young drivers are 20% of the portfolio but nearly 43% of claims. The conditional probabilities are not interchangeable."
         controles:
-          - "The overall rate lies between 5% and 15%."
+          - "The 7% overall rate lies between 5% and 15%."
           - "Posterior weights are 42.86% and 57.14%."
       - titre: "Bayes with three classes"
         enonce: "Class weights are 50%, 30%, 20%, with claim rates 4%, 10%, 20%. After a claim, find the probability of each class."
