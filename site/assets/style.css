@@ -776,3 +776,25 @@ a.mod .mod-n{color:var(--progress);font-weight:600}
 
 .reference-tabs,.reference-panels,.reference-panel{width:100%;max-width:100%;min-width:0}
 .reference-tabs{overflow-x:auto}
+
+/* Homepage mini-lab: a small, real experiment rather than decorative hero art. */
+.home-mini-lab{display:grid;gap:24px;padding:clamp(22px,4vw,44px);border:1px solid var(--line);border-radius:24px;background:var(--surface);box-shadow:0 16px 42px rgba(6,21,43,.045)}
+.mini-lab-head{display:grid;gap:12px;max-width:var(--measure)}
+.mini-lab-head h2{font-size:clamp(1.7rem,3vw,2.4rem)}
+.mini-lab-head p{color:var(--muted)}
+.mini-lab-grid{display:grid;grid-template-columns:minmax(260px,.85fr) minmax(0,1.15fr);gap:24px;align-items:stretch}
+.mini-lab-controls{display:grid;gap:18px}
+.mini-control{display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center;color:var(--text);font-weight:500}
+.mini-control output{font:500 .9rem var(--f-mono);color:var(--ink);font-variant-numeric:tabular-nums}
+.mini-control input{grid-column:1/-1;width:100%;accent-color:var(--data);height:28px;cursor:pointer}
+.mini-lab-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.mini-lab-stats>div{background:var(--paper);padding:13px;display:grid;gap:5px;min-width:0}
+.mini-lab-stats>div:first-child{grid-column:1/-1}
+.mini-lab-stats span{font-size:.78rem;color:var(--muted)}
+.mini-lab-stats strong{font:500 clamp(1.1rem,2vw,1.5rem)/1.25 var(--f-display);color:var(--ink);overflow-wrap:anywhere}
+.mini-formula{padding:12px 14px;border-radius:10px;background:var(--data-soft);color:var(--ink);font:500 .88rem/1.6 var(--f-mono)}
+.mini-lab-chart{display:grid;align-content:center;gap:12px;padding:16px;border-radius:16px;background:var(--paper);border:1px solid var(--line);min-width:0}
+#mini-growth{display:block;width:100%;height:250px}
+.mini-chart-summary{font-size:.84rem;color:var(--muted);text-align:center}
+@media(max-width:760px){.mini-lab-grid{grid-template-columns:1fr}.mini-lab-chart{min-height:220px}.home-mini-lab{padding:20px 16px}}
+@media(prefers-reduced-motion:reduce){.mini-lab-grid *{scroll-behavior:auto}}

@@ -273,6 +273,12 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
         hero_art_label = "FROM DATA TO DECISION"
         hero_art = [("01", "OBSERVE", "A real question"), ("02", "MODEL", "A mathematical structure"), ("03", "DECIDE", "An explained result")]
         hero_cta = "Start learning"
+        mini_kicker, mini_title = "A SMALL EXPERIMENT", "See compound interest take shape."
+        mini_text = "Change the starting capital, rate or horizon. The curve and final value update instantly — no account, no spreadsheet."
+        mini_capital, mini_rate, mini_years = "Starting capital", "Annual effective rate", "Time horizon"
+        mini_future, mini_interest, mini_factor = "Future value", "Interest earned", "Growth factor"
+        mini_formula = "A = C × (1 + i)ⁿ · annual compounding, no additional payments"
+        mini_chart_aria = "Growth of the capital over time"
         domains_count = "domains"
     else:
         intro_kicker = "LABORATOIRE D'APPRENTISSAGE ACTUARIEL · PAR ACTU-BASICS"
@@ -294,6 +300,12 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
         hero_art_label = "DE LA DONNÉE À LA DÉCISION"
         hero_art = [("01", "OBSERVER", "Une question réelle"), ("02", "MODÉLISER", "Une structure mathématique"), ("03", "DÉCIDER", "Un résultat expliqué")]
         hero_cta = "Commencer le parcours"
+        mini_kicker, mini_title = "UNE EXPÉRIENCE EN 30 SECONDES", "Visualise la puissance des intérêts composés."
+        mini_text = "Modifie le capital de départ, le taux ou la durée. La courbe et le résultat évoluent instantanément — sans compte ni tableur."
+        mini_capital, mini_rate, mini_years = "Capital initial", "Taux annuel effectif", "Durée"
+        mini_future, mini_interest, mini_factor = "Capital final", "Intérêts cumulés", "Multiplicateur"
+        mini_formula = "A = C × (1 + i)ⁿ · capitalisation annuelle, sans versements supplémentaires"
+        mini_chart_aria = "Évolution du capital au fil du temps"
         domains_count = "domaines"
     art = "".join(
         f'<div class="hero-step"><span class="hero-step-n mono">{num}</span>'
@@ -325,6 +337,15 @@ def page_accueil(parcours: dict, titres: dict, langue: str) -> str:
         f'<span class="start-domain">{e(dom_court(premier_dom, langue))}</span>'
         f'<strong>{e(mod_titre(premier_module, langue))}</strong>'
         f'<span class="start-duration">{( "One session at a time" if en else "Une séance à la fois")}</span></div></section>'
+        f'<section class="home-mini-lab" id="mini-lab"><div class="mini-lab-head"><span class="eyebrow">{mini_kicker}</span>'
+        f'<h2>{mini_title}</h2><p>{mini_text}</p></div>'
+        f'<div class="mini-lab-grid"><div class="mini-lab-controls">'
+        f'<label class="mini-control"><span>{mini_capital}</span><output id="mini-capital-label">3 000</output><input id="mini-capital" type="range" min="500" max="10000" step="500" value="3000"></label>'
+        f'<label class="mini-control"><span>{mini_rate}</span><output id="mini-rate-label">4 %</output><input id="mini-rate" type="range" min="0" max="12" step="0.5" value="4"></label>'
+        f'<label class="mini-control"><span>{mini_years}</span><output id="mini-years-label">5</output><input id="mini-years" type="range" min="1" max="30" step="1" value="5"></label>'
+        f'<div class="mini-lab-stats"><div><span>{mini_future}</span><strong id="mini-future">—</strong></div><div><span>{mini_interest}</span><strong id="mini-interest">—</strong></div><div><span>{mini_factor}</span><strong id="mini-factor">—</strong></div></div>'
+        f'<p class="mini-formula">{mini_formula}</p></div>'
+        f'<div class="mini-lab-chart"><canvas id="mini-growth" aria-label="{mini_chart_aria}" role="img"></canvas><p id="mini-chart-summary" class="mini-chart-summary"></p></div></div></section>'
         f'<section class="home-domains"><div class="home-head"><span class="eyebrow">{domains_kicker}</span>'
         f'<h2>{domains_heading}</h2><p class="lead">{domains_text}</p></div>'
         f'<div class="doms">{"".join(cartes)}</div></section>'
