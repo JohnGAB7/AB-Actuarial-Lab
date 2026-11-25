@@ -14,7 +14,7 @@ actu_basics:
   accroche_en: "What is an income that never stops worth?"
 
 fiche:
-  statut: prete
+  statut: brouillon
   vue_ensemble:
     question: "Comment valoriser des paiements dont le montant varie ou qui se poursuivent sans échéance ?"
     pourquoi: "Les annuités variables interviennent dans les revenus indexés, remboursements, prestations et engagements actuariels. Leur valeur dépend du calendrier, du taux d'actualisation et du mode de variation."
@@ -124,14 +124,14 @@ fiche:
         enonce: "À 5 %, calculer les valeurs actuelles des paiements 1, 2, …,10 et 10, 9, …, 1 aux dates 1 à 10."
         raisonnement:
           - "$a_{10}$=7,72173493 et $\\ddot{a}_{10}$=8,10782168."
-          - "Utiliser la formule de l'annuite croissante avec l'annuite due et le terme final actualise."
+          - "Utiliser la formule de l’annuité croissante avec l’annuité due et le terme final actualisé."
           - "$(Da)$=(10−$a_{10}$)/i."
-          - "Contrôler la somme avec 11$a_{10}$."
+          - "Contrôler la somme avec $11\\,a_{\\overline{10}|}$."
         resultat: "$(Ia)$=39,37378280 ; $(Da)$=45,56530142 ; somme=84,93908422."
         interpretation: "La décroissante a une valeur actuelle plus élevée, car les flux les plus élevés sont plus tôt."
         controles:
           - "Les valeurs nominales des deux séries sont 55."
-          - "La somme des valeurs actuelles égale 11$a_{10}$."
+          - "La somme des valeurs actuelles égale $11\\,a_{\\overline{10}|}$."
       - titre: "Annuité géométrique"
         enonce: "Un revenu de 1 000 est payé dans un an, puis croît de 2 % par an pendant dix paiements. Le taux est 5 %."
         raisonnement:
