@@ -173,7 +173,7 @@ fiche:
         entrees:
           - "Class weights: 0.50; 0.30; 0.20."
           - "Claim rates: 0.04; 0.10; 0.20."
-          - "Ten independent policies; individual probability 0.05."
+          - "Independent policies: 10; individual probability 0.05."
         hypotheses:
           - "Classes form a partition."
           - "Rates are fictional and treated as known."
