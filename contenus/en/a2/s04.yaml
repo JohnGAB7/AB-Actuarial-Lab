@@ -119,31 +119,31 @@ fiche:
           - "Forget covariance terms."
   exemples_guides:
     exemples:
-      - titre: "10,000 policies: frequency and cost"
-        enonce: "10,000 independent policies each have a 1% claim probability and fixed claim cost €10,000. Calculate expected claim count, its standard deviation, expected total cost and average cost per policy."
+      - titre: "10 000 policies: frequency and cost"
+        enonce: "10 000 independent policies each have a 1% claim probability and fixed claim cost €10 000. Calculate expected claim count, its standard deviation, expected total cost and average cost per policy."
         raisonnement:
-          - "N~Binomial(10,000,0.01); E[N]=100 and Var(N)=99."
+          - "N~Binomial(n=10 000; p=0.01); E[N]=100; Var(N)=99."
           - "σ_N=√99≈9.9499."
-          - "Expected total cost=100×10,000=€1,000,000; standard deviation=10,000×√99≈€99,498.74."
-          - "Expected average cost=€100; per-policy standard deviation=99,498.74/10,000≈€9.95."
+          - "Expected total cost=100×10 000=€1 000 000; standard deviation=10 000×√99≈€99 498.74."
+          - "Expected average cost=€100; per-policy standard deviation=99 498.74/10 000≈€9.95."
         resultat: "100 expected claims; σ_N≈9.95; mean total cost €1M; average cost €100 with σ≈€9.95."
         interpretation: "Portfolio average cost is much more stable than individual policy cost."
         controles:
           - "Expected average cost is p×c=€100."
           - "Claim-count variance is 99."
       - titre: "Correlation: diversification limit"
-        enonce: "1,000 risks have σ=€10,000 and common correlation 5%. Compare standard deviation of the average with and without correlation."
+        enonce: "1,000 risks have σ=€10 000 and common correlation 5%. Compare standard deviation of the average with and without correlation."
         raisonnement:
-          - "Independence: σ_average=10,000/√1,000≈€316.23."
-          - "Correlation: Var(average)=10,000²(1/1,000+999/1,000×0.05)=5,095,000."
-          - "σ_average≈€2,257.21; asymptotic floor=10,000√0.05≈€2,236.07."
+          - "Independence: σ_average=10 000/√1,000≈€316.23."
+          - "Correlation: Var(average)=10 000²(1/1,000+999/1,000×0.05)=5,095,000."
+          - "σ_average≈€2,257.21; asymptotic floor=10 000√0.05≈€2,236.07."
         resultat: "€316.23 under independence versus €2,257.21 with 5% correlation."
         interpretation: "Small common dependence can sharply reduce pooling benefits."
         controles:
           - "Correlated variance exceeds independent variance."
           - "Standard deviation tends to σ√ρ, not zero."
       - titre: "CLT: probability of 120 claims or more"
-        enonce: "Among 10,000 policies with p=1%, approximate P(N≥120) using a normal distribution and continuity correction."
+        enonce: "Among 10 000 policies with p=1%, approximate P(N≥120) using a normal distribution and continuity correction."
         raisonnement:
           - "μ=np=100; σ=√(np(1−p))=√99≈9.9499."
           - "P(N≥120)≈P(Z≥(119.5−100)/√99)=P(Z≥1.9598)."
@@ -159,10 +159,10 @@ fiche:
         enonce: "100 independent policies have p=2% and fixed claim cost €5,000. Calculate mean count, standard deviation, expected total cost and its standard deviation."
         corrige:
           - "E[N]=2; Var(N)=1.96; σ_N=1.4."
-          - "Mean total cost €10,000; standard deviation €7,000."
+          - "Mean total cost €10 000; standard deviation €7,000."
         feedback: "Total cost is €5,000 times the number of claims."
       - titre: "Intermediate — normal approximation"
-        enonce: "10,000 policies have p=1%. Approximate P(N≥120) using normal and continuity correction."
+        enonce: "10 000 policies have p=1%. Approximate P(N≥120) using normal and continuity correction."
         corrige:
           - "μ=100; σ=√99≈9.9499."
           - "z=(119.5−100)/√99≈1.9598; P(N≥120)≈2.50%."
@@ -171,7 +171,7 @@ fiche:
         enonce: "100 risks have σ=€5,000 and ρ=10%. Compare average standard deviation with independence."
         corrige:
           - "Independence: 5,000/√100=€500."
-          - "Correlation: Var(average)=5,000²(0.01+0.99×0.10)=2,725,000; σ≈€1,650.76."
+          - "Correlation: Var(average)=5,000²(0.01+0.99×0.10)=2 725 000; σ≈€1,650.76."
         feedback: "Positive correlation creates systematic risk."
   applications_labs:
     applications:
@@ -180,8 +180,8 @@ fiche:
         objectif: "Compare mean and standard deviation across portfolio sizes and illustrate the correlated variance floor."
         entrees:
           - "Individual claim probability p=1%."
-          - "Claim cost c=€10,000."
-          - "Portfolio sizes n=100, 1,000 and 10,000."
+          - "Claim cost c=€10 000."
+          - "Portfolio sizes n=100, 1,000 and 10 000."
           - "Common correlation ρ=5% in the dependent scenario."
         hypotheses:
           - "Independent scenario uses independent Bernoulli policies."
@@ -266,7 +266,7 @@ etapes:
           rappel: >-
             The law of large numbers is about the mean of many independent variables with the same distribution, not about each policy.
           exemple: >-
-            A policy costs €0 or €10,000, never €100. But the average cost of 10,000 policies stays close to €100.
+            A policy costs €0 or €10 000, never €100. But the average cost of 10 000 policies stays close to €100.
           piege: >-
             It promises no exact offsetting and no profit: it makes the mean predictable.
       - q: 'The central limit theorem lets us approximate the distribution of the sum of $n$ claims by…'
@@ -305,12 +305,12 @@ etapes:
           <b>central limit theorem</b> <i>(théorème central limite)</i> says how fast, and with which distribution.
       - {}
       - p: >-
-          Fictional example: each policy has a 1% chance of a €10,000 claim. Then $\mu = 100$ euros and
-          $\sigma = 994.99$ euros. With 100 policies, the standard deviation of the average cost is €99.50; with 10,000
+          Fictional example: each policy has a 1% chance of a €10 000 claim. Then $\mu = 100$ euros and
+          $\sigma = 994.99$ euros. With 100 policies, the standard deviation of the average cost is €99.50; with 10 000
           policies, €9.95.
       - p: >-
           For the premium to suffice with probability 95%, a <b>safety loading</b> <i>(chargement de sécurité)</i> of
-          $1.645\,\sigma/\sqrt{n}$ per policy must be added: €16.37 for 10,000 policies.
+          $1.645\,\sigma/\sqrt{n}$ per policy must be added: €16.37 for 10 000 policies.
       - note: >-
           These assumptions (independence, size, homogeneity) never hold perfectly. Natural catastrophes create
           correlation; that is why reinsurance and solvency capital exist (A8).
@@ -319,7 +319,7 @@ etapes:
           - {titre: "SOA, Probability (P) Exam", detail: "Official exam syllabus"}
 
   - titre: "Check"
-    intro: "Four questions on the fictional portfolio: a 1% chance of a €10,000 claim per policy."
+    intro: "Four questions on the fictional portfolio: a 1% chance of a €10 000 claim per policy."
     questions:
       - q: 'What is the standard deviation of the cost of a single policy?'
         options: ['€994.99', '€100', '€9,900']
@@ -330,7 +330,7 @@ etapes:
             $\sigma^2 = 990{,}000$ and $\sigma = 994.99$ euros: almost ten times the mean of €100.
           piege: >-
             €100 is the expected value. €9,900 forgets the square root of the Bernoulli variance.
-      - q: 'With 10,000 policies, what is the probability that the average cost exceeds €110?'
+      - q: 'With 10 000 policies, what is the probability that the average cost exceeds €110?'
         options: ['15.7%', '46.0%', '5%']
         pourquoi:
           rappel: >-
@@ -340,14 +340,14 @@ etapes:
           piege: >-
             46.0% is the result for only 100 policies: pooling is still weak there.
       - q: 'How many policies are needed for the standard deviation of the average cost to fall to 5% of the mean?'
-        options: ['39,600', '10,000', '200']
+        options: ['39,600', '10 000', '200']
         pourquoi:
           rappel: >-
             We want $\sigma / (\mu\sqrt{n}) = 0.05$, so $n = (\sigma / (0.05\,\mu))^2$.
           exemple: >-
             $(198.997)^2 = 39{,}600$ policies.
           piege: >-
-            With 10,000 policies, the ratio is 9.95%, not 5%. Dividing the risk by 2 takes 4 times as many policies.
+            With 10 000 policies, the ratio is 9.95%, not 5%. Dividing the risk by 2 takes 4 times as many policies.
       - q: 'If all the policies are exposed to the same windstorm, pooling…'
         options: ['reduces the risk much less', 'reduces it even more', 'is not affected']
         pourquoi:
@@ -359,9 +359,9 @@ etapes:
             Adding policies from the same area adds no diversification against the windstorm.
 
   - titre: "By hand"
-    intro: "Fictional portfolio: a 1% chance of a €10,000 claim per policy, independent policies. Enter your results to the cent, and the probability to 4 decimal places."
+    intro: "Fictional portfolio: a 1% chance of a €10 000 claim per policy, independent policies. Enter your results to the cent, and the probability to 4 decimal places."
     donnees:
-      lignes: [['0.01', '10,000', '10,000']]
+      lignes: [['0.01', '10 000', '10 000']]
     solution: |
       $\mu = 100$, $\sigma^2 = 10{,}000^2 \times 0.01 \times 0.99 = 990{,}000$, $\sigma = 994.99$ and $\sigma/\sqrt{n} = 9.95$.
       $z = 10 / 9.95 = 1.005$, so $P = 1 - \Phi(1.005) = 0.1574$. Premium at 95%: $100 + 1.645 \times 9.95 = 116.37$ euros.
@@ -369,7 +369,7 @@ etapes:
   - titre: "Your turn to code"
     intro: "Write the body of the three functions, without AI. All the tests must pass."
     tests:
-      - {nom: '$\sigma/\sqrt{n}$ is 9.94987 for 10,000 policies'}
+      - {nom: '$\sigma/\sqrt{n}$ is 9.94987 for 10 000 policies'}
       - {nom: 'Probability of exceeding €110: 0.15744'}
       - {nom: 'At the mean, the probability is 1/2'}
       - {nom: 'More policies, less risk of exceeding'}
