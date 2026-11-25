@@ -99,7 +99,7 @@ fiche:
       - titre: "Arithmetic annuities over ten years"
         enonce: "At 5%, find the present values of payments 1, 2, …,10 and 10, 9, …, 1 at times 1 to 10."
         raisonnement:
-          - "$a_{10|}=7.72173493$ and $\\ddot{a}_{10|}=8.10782168$."
+          - "$a_{\\overline{10}|}=7.72173493$ and $\\ddot{a}_{10|}=8.10782168$."
           - "Use the increasing-annuity formula with the annuity due and the discounted final term."
           - "$(Da)=(10-a_{\\overline{10}|})/i$."
           - "Check their sum using 11a_10."
@@ -155,7 +155,7 @@ fiche:
           - "Certain cash flows, constant rate and growth, annual dates."
           - "No mortality, expenses, tax, risk or currency change."
         procedure:
-          - "Create $k=1,\\ldots,10$ and cash flow $1,000\\times1.02^{k-1$."
+          - "Create $k=1,\\ldots,10$ and cash flow $1,000\\times1.02^{k-1}$."
           - "Discount by $(1.05)^k$ and sum."
           - |
             ```python
