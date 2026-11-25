@@ -135,7 +135,7 @@ fiche:
       - titre: "3. NPV and IRR of a simple project"
         enonce: "Invest €1,000 today and receive €600 at the end of year 1 and €600 at the end of year 2."
         raisonnement:
-          - "NPV(j)=−1,000+600/(1+j)+600/(1+j)²."
+          - "NPV(j)=−1,000+600/(1+j)+600/(1+j)^2."
           - "IRR is the root of NPV(j)=0."
           - "Numerical IRR is approximately 13.0662%."
           - "At a 10% decision rate, NPV is positive: approximately €41.32."
