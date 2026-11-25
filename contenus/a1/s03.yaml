@@ -14,7 +14,7 @@ actu_basics:
   accroche_en: "What is an income that never stops worth?"
 
 fiche:
-  statut: brouillon
+  statut: prete
   vue_ensemble:
     question: "Comment valoriser des paiements dont le montant varie ou qui se poursuivent sans échéance ?"
     pourquoi: "Les annuités variables interviennent dans les revenus indexés, remboursements, prestations et engagements actuariels. Leur valeur dépend du calendrier, du taux d'actualisation et du mode de variation."
