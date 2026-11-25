@@ -93,7 +93,7 @@ fiche:
   exemples_guides:
     exemples:
       - titre: "Compare an annuity immediate and an annuity due"
-        enonce: "A contract pays 1 monetary unit per year for 3 years. The annual effective rate is $i=2.5\%$. Find the value at time 0 if payments are made at year-end, then at the beginning of each year."
+        enonce: "A contract pays 1 monetary unit per year for 3 years. The annual effective rate is $i=2.5\\%$. Find the value at time 0 if payments are made at year-end, then at the beginning of each year."
         raisonnement:
           - "Compute v=1/1.025≈0.9756098."
           - "Year-end: a_{3|}=v+v²+v³≈0.9756098+0.9518144+0.9285994=2.8560236."
