@@ -322,7 +322,7 @@ etapes:
           \sum_{k=1}^{n} (1+g)^{k-1} v^k = \frac{1 - \left(\frac{1+g}{1+i}\right)^{n}}{i - g} \quad (g \ne i)
           \end{gathered}
       - p: >-
-          La relation $$(Ia)$ + $(Da)$ = (n+1)\,a$ se lit sur les flux : chaque année, $k + (n+1-k) = n+1$. C'est un bon
+          La relation $(Ia) + (Da) = (n+1)\,a_{\overline{n}|}$ se lit sur les flux : chaque année, $k + (n+1-k) = n+1$. C'est un bon
           moyen de vérifier un calcul.
       - note: >-
           Les rentes de retraite indexées sont des annuités géométriques. Pour un régime à prestations définies, un taux
@@ -360,7 +360,7 @@ etapes:
             $1{,}05^{10} = 1{,}628895$, donc $s_{\overline{10}|} = 12{,}5779$ et le total vaut 12 577,89 €.
           piege: >-
             7 722 € est la valeur actuelle des mêmes versements, au temps 0. 10 000 € oublie les intérêts.
-      - q: 'À 5 % sur 10 ans, $$(Da)$_{\overline{10}|}$ est-elle plus grande ou plus petite que $$(Ia)$_{\overline{10}|}$ ?'
+      - q: 'À 5 % sur 10 ans, $(Da)_{\overline{10}|}$ est-elle plus grande ou plus petite que $(Ia)_{\overline{10}|}$ ?'
         options: ['Plus grande', 'Plus petite', 'Égale']
         reponse: 0
         pourquoi:
