@@ -272,3 +272,8 @@ def test_s03_reference_examples_and_limiting_cases_are_numerically_consistent():
     # Growing perpetuity converges only if the discounted geometric ratio is below one.
     assert (1 + 0.03) / (1 + 0.05) < 1
     assert (1 + 0.03) / (1 + 0.025) >= 1
+    # At i=0, a geometrically declining perpetuity with -1<g<0 still converges.
+    assert math.isclose(sum((1 - 0.02) ** (k - 1) for k in range(1, 10000)), 50.0, abs_tol=1e-10)
+    assert (1 - 0.02) / (1 + 0.0) < 1
+    # A level perpetuity at zero interest does not converge.
+    assert (1 + 0.0) / (1 + 0.0) == 1
