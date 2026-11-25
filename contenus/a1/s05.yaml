@@ -485,7 +485,6 @@ fiche:
       - "Je peux citer les principaux risques et conventions d'un instrument obligataire."
     liens:
       - {titre: "A1/S04 — Emprunts et amortissement", cible: "a1/s04"}
-      - {titre: "ALM — Duration et immunisation", cible: "alm/index"}
     references:
       - {titre: "Kellison — The Theory of Interest", detail: "Chapitres sur les obligations, la structure par terme et les mesures de sensibilité."}
       - {titre: "Tuckman and Serrat — Fixed Income Securities", detail: "Valorisation des obligations, courbe des taux, forwards, duration et convexité."}
