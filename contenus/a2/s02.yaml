@@ -13,7 +13,7 @@ actu_basics:
   accroche_en: "How many claims next year? A distribution, not a number."
 
 fiche:
-  statut: brouillon
+  statut: prete
   vue_ensemble:
     question: "Comment passer d'un taux moyen de sinistres à une distribution du nombre de sinistres possible ?"
     pourquoi: "La fréquence ne se résume pas à une moyenne. L'actuaire doit quantifier la probabilité de 0, 1, 2 ou davantage de sinistres, puis choisir une loi adaptée aux hypothèses et aux données."
