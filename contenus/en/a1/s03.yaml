@@ -93,13 +93,13 @@ fiche:
           - "Use C/i."
           - "Calculate 10,000/0.05."
         resultat: "PV=200,000 monetary units."
-        interpretation: "The value is at $t=0$. A capital of $200,000$ earns $10,000$ interest each year at $5\%$."
+        interpretation: "The value is at $t=0$. A capital of $200,000$ earns $10,000$ interest each year at $5\\%$."
         controles:
           - "The due perpetuity would be one payment higher, or 210,000."
       - titre: "Arithmetic annuities over ten years"
         enonce: "At 5%, find the present values of payments 1, 2, …,10 and 10, 9, …, 1 at times 1 to 10."
         raisonnement:
-          - "$a_{\\overline{10}|}=7.72173493$ and $\\ddot{a}_{10|}=8.10782168$."
+          - "$a_{\\overline{10}|}=7.72173493$ and $\\ddot{a}_{\\overline{10}|}=8.10782168$."
           - "Use the increasing-annuity formula with the annuity due and the discounted final term."
           - "$(Da)=(10-a_{\\overline{10}|})/i$."
           - "Check their sum using 11a_10."
@@ -111,7 +111,7 @@ fiche:
       - titre: "Geometric annuity"
         enonce: "An income of 1,000 is paid in one year, then grows by 2% annually for ten payments. The rate is 5%."
         raisonnement:
-          - "$C_1=1,000$, $g=2\%$, $i=5\%$, $n=10$."
+          - "$C_1=1,000$, $g=2\\%$, $i=5\\%$, $n=10$."
           - "Growth and discounting have the same annual periodicity."
           - "Use the finite formula because i≠g."
         resultat: "PV≈8,388.11. The level annuity of 1,000 is worth approximately 7,721.73."
@@ -137,9 +137,9 @@ fiche:
           - "Result: approximately $30.5003$; confirm using the sum $\\sum_{k=1}^{8}kv^k$."
         feedback: "The payment increases by one each year; this is not percentage indexation."
       - titre: "Advanced — convergence"
-        enonce: "A perpetuity pays $1$ in one year and then grows by $3\%$. Compare $i=5\%$ and $i=2.5\%$."
+        enonce: "A perpetuity pays $1$ in one year and then grows by $3\\%$. Compare $i=5\\%$ and $i=2.5\\%$."
         corrige:
-          - "At $5\%$, $g<i$: $PV=1/(0.05-0.03)=50$."
+          - "At $5\\%$, $g<i$: $PV=1/(0.05-0.03)=50$."
           - "At 2.5%, g≥i: the series diverges and has no finite value."
           - "The condition is strict: g<i."
         feedback: "Always check convergence before using the formula."
@@ -150,7 +150,7 @@ fiche:
         objectif: "Compare the closed form and direct sum, then measure the effect of indexation."
         entrees:
           - "First payment: $1,000$ at $t=1$."
-          - "Growth $g=2\%$, rate $i=5\%$, duration $n=10$."
+          - "Growth $g=2\\%$, rate $i=5\\%$, duration $n=10$."
         hypotheses:
           - "Certain cash flows, constant rate and growth, annual dates."
           - "No mortality, expenses, tax, risk or currency change."
