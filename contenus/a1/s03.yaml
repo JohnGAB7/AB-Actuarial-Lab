@@ -124,7 +124,7 @@ fiche:
         enonce: "À 5 %, calculer les valeurs actuelles des paiements 1, 2, …,10 et 10, 9, …, 1 aux dates 1 à 10."
         raisonnement:
           - "$a_{10}$=7,72173493 et $\\ddot{a}_{10}$=8,10782168."
-          - "$(Ia)$=($\\ddot{a}_{10}$−10v^{10})/i."
+          - "Utiliser la formule de l'annuite croissante avec l'annuite due et le terme final actualise."
           - "$(Da)$=(10−$a_{10}$)/i."
           - "Contrôler la somme avec 11$a_{10}$."
         resultat: "$(Ia)$=39,37378280 ; $(Da)$=45,56530142 ; somme=84,93908422."
