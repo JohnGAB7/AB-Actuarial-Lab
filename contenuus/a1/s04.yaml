@@ -335,7 +335,7 @@ etapes:
           formule: |-
             \text{PR}_k = P - i\,B_{k-1} = P\,v^{\,n-k+1}
           exemple: >-
-            Année 1 : 1 773,96 € de capital. Année 3 : 1 993,23 €, soit $1\,773{,}96 \times 1{,}06^2$.
+            Année 1 : 1 773,96 € de capital. Année 3 : 1 993,23 €. Le remboursement de capital augmente au fil du prêt.
           piege: >-
             Un capital constant chaque année, c'est un autre type de prêt : l'amortissement constant, avec des paiements qui baissent.
       - q: 'Le taux de rendement interne (internal rate of return, IRR) d''un projet est le taux qui…'
