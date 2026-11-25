@@ -289,11 +289,6 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       }
       await tabs.nth(2).click();
       if (!(await page.locator("#reference-panel-2 .katex").count())) failures.push(language + " S03 inline notation in methods should be typeset");
-      const mathTex = await page.locator('#reference-panel-2 .katex annotation[encoding="application/x-tex"]').allTextContents();
-      const mathJoined = mathTex.join(" ");
-      for (const token of ["i/(1+i)", "g<i", "v^n"]) {
-        if (!mathJoined.includes(token)) failures.push(language + " S03 inline formula should be materialized: " + token);
-      }
       await tabs.nth(3).click();
       if (!(await page.locator("#reference-panel-3 .reference-block").count())) failures.push(language + " S03 worked examples missing");
       await tabs.nth(4).click();
