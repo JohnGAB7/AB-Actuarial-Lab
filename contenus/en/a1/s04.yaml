@@ -249,8 +249,10 @@ fiche:
       - titre: "Varying annuities and perpetuities"
       - titre: "Bonds and pricing"
     references:
-      - detail: "Actuarial reference in life-contingent mathematics; this sheet does not claim to reproduce a specific section."
-      - detail: "Open reference for NPV, IRR and investment decisions; verify the chapter in the edition used."
+      - titre: "Actuarial Mathematics for Life Contingent Risks"
+        detail: "Actuarial reference in life-contingent mathematics; this sheet does not claim to reproduce a specific section."
+      - titre: "OpenStax — Principles of Finance"
+        detail: "Open reference for NPV, IRR and investment decisions; verify the chapter in the edition used."
 
 
 etapes:
