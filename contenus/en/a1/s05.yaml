@@ -302,7 +302,7 @@ fiche:
         enonce: "At YTM $4\\%$, estimate the price change when yield rises by 0.5 percentage points. Use modified duration 4.3818 and convexity 24.4766."
         corrige:
           - "$\\Delta y=0.005$."
-          - "Approximation: −4.3818×0.005+0.5×24.4766×0.005²≈−2.1603 %."
+          - "Approximation: $-4.3818\\times0.005+0.5\\times24.4766\\times0.005^2\\approx-2.1603\\%$."
           - "Duration alone gives about $-2.1909\\%$; convexity moderates the decline."
         feedback: "Express the shock as a decimal. Convexity is multiplied by the squared shock and by one half."
   applications_labs:
