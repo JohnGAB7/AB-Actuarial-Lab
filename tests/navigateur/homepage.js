@@ -247,7 +247,7 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
         const path = language === "en" ? "en/a1/" + session + "/index.html" : "a1/" + session + "/index.html";
         await page.setViewportSize({ width: 390, height: 844 });
         await page.goto(new URL(path, BASE).toString(), { waitUntil: "domcontentloaded" });
-        await page.locator("#lesson-mode").waitFor();
+        await page.locator("#lesson-mode").waitFor({ state: "visible" });
         await page.locator("#mode-reference").click();
         await page.locator("#reference-tabs [role=tab]").nth(1).click();
         const tex = await page.locator("#reference-panel-1 .katex annotation[encoding=\"application/x-tex\"]").allTextContents();
