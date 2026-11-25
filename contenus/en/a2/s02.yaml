@@ -152,7 +152,7 @@ fiche:
           - "E[X²]=0+1×0.2+4×0.1=0.6."
           - "Var(X)=0.6−0.4²=0.44."
           - "E[500X]=500×0.4=200; Var(500X)=500²×0.44=110000."
-        resultat: "Mean cost €200; variance €110,000²; standard deviation ≈€331.66."
+        resultat: "Mean cost €200; variance 110,000 €²; standard deviation ≈€331.66."
         interpretation: "The mean cost is not a possible individual cost. Variance uses squared euros, unlike standard deviation."
         controles:
           - "Variance is positive."
