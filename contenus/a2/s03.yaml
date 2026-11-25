@@ -13,7 +13,7 @@ actu_basics:
   accroche_en: "Same average cost, very different risk: the tail of the distribution."
 
 fiche:
-  statut: brouillon
+  statut: prete
   vue_ensemble:
     question: "Deux sinistres ont le même coût moyen : pourquoi leur risque extrême peut-il être très différent ?"
     pourquoi: "La fréquence décrit le nombre de sinistres; la sévérité décrit leur montant. Les lois continues servent à quantifier les dépassements, les quantiles et les queues de distribution, essentiels pour la tarification, les provisions et la réassurance."
