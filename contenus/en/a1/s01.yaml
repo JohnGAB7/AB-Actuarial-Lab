@@ -121,7 +121,7 @@ fiche:
         enonce: "Find the present value of 500 monetary units payable in 2 years at an annual effective rate of 4%."
         corrige:
           - "v=1/1.04≈0.9615385."
-          - "PV=500v²=500/(1.04)²≈462.2781."
+          - "$PV=500v^2=500/(1.04)^2\\approx462.2781$."
           - "Rounded to two decimals: 462.28 monetary units."
         feedback: "If your result is above 500, you probably accumulated instead of discounted. Also check that the exponent is 2."
       - titre: "Intermediate — annuity due"
