@@ -1,6 +1,239 @@
 # English texts for session A2.01. Numbers, answers and tests live in contenus/a2/s01.yaml.
 titre: "Conditional probability and Bayes' theorem"
 
+fiche:
+  vue_ensemble:
+    question: "After a claim, how should we update the probability that a policyholder belongs to a given risk class?"
+    pourquoi: "Pricing and portfolio analysis require moving from prior probabilities to conditional probabilities. Bayes updates the direction without confusing a class claim rate with the composition of claims."
+    objectifs:
+      - "Define conditional probability and calculate it from an intersection."
+      - "Distinguish independence from mutual exclusivity."
+      - "Use a partition and the law of total probability."
+      - "Apply Bayes to calculate posterior probabilities."
+      - "Calculate the probability of at least one claim among independent policies."
+      - "Interpret results and avoid the prosecutor's fallacy."
+    prerequis:
+      - "Probabilities, events, complements and intersections."
+      - "Sums and products of probabilities."
+      - "Fractions and percentages."
+    carte:
+      - "Conditional probability: restrict the universe to B and renormalize."
+      - "Independence: information about B does not change the probability of A."
+      - "Total probability: reconstruct an overall rate from classes."
+      - "Bayes: reverse conditioning using prior weights."
+      - "Portfolio: the complement gives the probability of at least one event."
+    duree_minutes: 40
+  cours_complet:
+    sections:
+      - titre: "1. Events and conditional probability"
+        contenu: "P(A given B) is calculated within the universe where B occurred. We require P(B)>0. The intersection A∩B represents cases where both events occur. Conditioning does not reverse two words: the denominator changes."
+        formules:
+          - formule: "P(A\\mid B)=\\frac{P(A\\cap B)}{P(B)},\\quad P(B)>0"
+            explication: "Probability of A among cases where B is observed."
+          - formule: "P(A\\cap B)=P(A\\mid B)P(B)"
+            explication: "Product rule: intersection equals conditional probability times the condition's probability."
+      - titre: "2. Independence and mutual exclusivity"
+        contenu: "A and B are independent if one does not change the probability of the other. They are mutually exclusive if their intersection is empty. Disjoint events with positive probabilities cannot be independent: one rules out the other."
+        formules:
+          - formule: "A\\perp B\\iff P(A\\cap B)=P(A)P(B)"
+            explication: "Independence criterion."
+          - formule: "P(A\\mid B)=P(A),\\quad P(B)>0"
+            explication: "Knowing B does not change the probability of A."
+      - titre: "3. Partitions and total probability"
+        contenu: "A partition B_1,…,B_k consists of disjoint events whose union is the entire universe. To calculate P(A), add the conditional probabilities by class, weighted by class frequencies. Class rates must not be averaged without their weights."
+        formules:
+          - formule: "P(A)=\\sum_{j=1}^{k}P(A\\mid B_j)P(B_j)"
+            explication: "Reconstruct an overall rate from the classes of a partition."
+      - titre: "4. Bayes' theorem"
+        contenu: "Bayes moves from an observed event A back to the class B_j that may have produced it. The numerator is the joint probability; the denominator is the overall probability of A. The posterior depends on both the class rate and its initial frequency."
+        formules:
+          - formule: "P(B_j\\mid A)=\\frac{P(A\\mid B_j)P(B_j)}{P(A)}"
+            explication: "Bayes' theorem when P(A)>0."
+          - formule: "P(B_j\\mid A)=\\frac{P(A\\mid B_j)P(B_j)}{\\sum_{l=1}^{k}P(A\\mid B_l)P(B_l)}"
+            explication: "Version with total probability in the denominator."
+      - titre: "5. Reading a contingency table"
+        contenu: "A contingency table cross-tabulates categorical variables. Cells contain joint probabilities or counts. To obtain a conditional probability, divide by the row or column total corresponding to the condition. State the conditioning direction explicitly."
+        formules:
+          - formule: "P(A\\mid B)=\\frac{P(A\\cap B)}{P(B)}"
+            explication: "The margin of B is the denominator when B is the condition."
+      - titre: "6. Probability of at least one claim"
+        contenu: "For n independent policies with the same claim probability p, the probability of no claims is (1−p)^n. Use the complement to calculate at least one claim. If policies are dependent or have different probabilities, adapt the model."
+        formules:
+          - formule: "P(N\\ge1)=1-(1-p)^n"
+            explication: "Complement of no claims under independence and a common probability."
+      - titre: "7. Interpretation, limitations and traps"
+        contenu: "A conditional probability depends on the direction of the condition. A high class rate does not mean the class makes up most claims: its size matters. Bayes does not prove causality. Examples assume calibrated probabilities and, for portfolio aggregation, independence. Dependence, heterogeneity and parameter uncertainty can change results."
+        formules:
+          - formule: "P(A\\mid B)\\ne P(B\\mid A)\\quad\\text{in general}"
+            explication: "Never reverse a conditional probability without Bayes."
+  methodes:
+    methodes:
+      - titre: "Calculate a conditional probability"
+        quand_utiliser: "An intersection and the probability of the conditioning event are known."
+        etapes:
+          - "Identify A and B, then write $P(A\\mid B)$."
+          - "Check $P(B)>0$."
+          - "Calculate or read $P(A\\cap B)$."
+          - "Divide by $P(B)$ and interpret among cases $B$."
+        controles:
+          - "The result lies between 0 and 1."
+          - "The denominator is the condition."
+        erreurs:
+          - "Reverse P(A|B) and P(B|A)."
+          - "Use P(A) in the denominator."
+      - titre: "Reconstruct a rate and apply Bayes"
+        quand_utiliser: "A portfolio is split into classes and an event is observed."
+        etapes:
+          - "Check that the classes form a partition."
+          - "Calculate $P(A)=\\sum_j P(A\\mid B_j)P(B_j)$ by weighted summation."
+          - "Calculate each joint weight $P(A\\cap B_j)$."
+          - "Divide each joint weight by $P(A)$ to obtain $P(B_j\\mid A)$."
+          - "Check that posterior probabilities sum to $1$."
+        controles:
+          - "The overall rate is a weighted average."
+          - "Posterior probabilities sum to $1$."
+          - "Joint weights sum to $P(A)$."
+        erreurs:
+          - "Take a simple average of class rates."
+          - "Forget prior class frequencies."
+          - "Interpret the result as causality."
+      - titre: "Calculate the risk of at least one event"
+        quand_utiliser: "Several units are independent with the same event probability."
+        etapes:
+          - "Define $n$ and individual probability $p$."
+          - "Calculate the complement $(1-p)^n$."
+          - "Subtract from $1$."
+          - "Check $n=0$ and $p=0$."
+        controles:
+          - "The result is $0$ if $n=0$ or $p=0$."
+          - "It increases with n and p."
+          - "It remains between $0$ and $1$."
+        erreurs:
+          - "Use $np$ as an exact probability."
+          - "Assume independence without justification."
+  exemples_guides:
+    exemples:
+      - titre: "Two-class portfolio"
+        enonce: "20% of policyholders are young, with 15% claims; 80% of others have 5% claims. Calculate the overall rate and the share of young drivers among claims."
+        raisonnement:
+          - "P(J)=0.20; P(S|J)=0.15; P(S|J^c)=0.05."
+          - "P(S)=0.20×0.15+0.80×0.05=0.07."
+          - "P(J|S)=0.20×0.15/0.07=0.428571."
+        resultat: "Overall rate 7%; 42.86% of claims come from young drivers."
+        interpretation: "Young drivers are 20% of the portfolio but nearly 43% of claims. The conditional probabilities are not interchangeable."
+        controles:
+          - "The 7% overall rate lies between 5% and 15%."
+          - "Posterior weights are 42.86% and 57.14%."
+      - titre: "Bayes with three classes"
+        enonce: "Class weights are 50%, 30%, 20%, with claim rates 4%, 10%, 20%. After a claim, find the probability of each class."
+        raisonnement:
+          - "P(S)=0.50×0.04+0.30×0.10+0.20×0.20=0.09."
+          - "Joint weights are 0.02, 0.03 and 0.04."
+          - "Divide each by 0.09."
+        resultat: "Posterior probabilities: 22.22%, 33.33%, 44.44%."
+        interpretation: "The riskiest class becomes the largest among claims despite a 20% prior weight."
+        controles:
+          - "Posterior probabilities sum to 100%."
+          - "Joint probabilities sum to 9%."
+      - titre: "At least one claim among ten policies"
+        enonce: "Ten independent policies each have a 5% claim probability. Calculate the probability of at least one claim."
+        raisonnement:
+          - "P(none)=0.95^{10}=0.598737."
+          - "P(at least one)=1−0.598737=0.401263."
+        resultat: "40.13%."
+        interpretation: "A rare individual event becomes likely when observing several independent policies."
+        controles:
+          - "The result is above 5% and below 50%."
+          - "np=50% is an upper bound, not the exact probability."
+  exercices_corriges:
+    exercices:
+      - titre: "Fundamental — conditional probability"
+        enonce: "If P(A∩B)=0.12 and P(B)=0.30, calculate P(A|B)."
+        corrige:
+          - "P(A|B)=0.12/0.30=0.40."
+          - "40% of cases B satisfy A."
+        feedback: "The denominator is the condition B."
+      - titre: "Intermediate — Bayes"
+        enonce: "10% of policies are in class X. The claim rate is 12% in X and 4% elsewhere. Given a claim, what is the probability of class X?"
+        corrige:
+          - "P(S)=0.10×0.12+0.90×0.04=0.048."
+          - "P(X|S)=0.10×0.12/0.048=0.25."
+        feedback: "Despite a three-times-higher rate, X accounts for 25% of claims because of its prior size."
+      - titre: "Advanced — aggregation"
+        enonce: "With 25 independent policies and p=2%, calculate the probability of at least one claim and compare with np."
+        corrige:
+          - "P(at least one)=1−0.98^{25}≈0.3965."
+          - "np=0.50 is an upper bound and first-order approximation, not the exact result."
+        feedback: "The complement is exact under independence; np is not an exact probability, even if it exceeds 1."
+  applications_labs:
+    applications:
+      - titre: "Portfolio table and Bayesian update"
+        contexte: "An analyst compares risk classes in a fictional portfolio and measures how the composition of claims differs from the composition of policyholders."
+        objectif: "Calculate overall rates, joint weights and posterior probabilities, then verify the identities."
+        entrees:
+          - "Class weights: 0.50; 0.30; 0.20."
+          - "Claim rates: 0.04; 0.10; 0.20."
+          - "Independent policies: 10; individual probability 0.05."
+        hypotheses:
+          - "Classes form a partition."
+          - "Rates are fictional and treated as known."
+          - "Policies are independent for the portfolio calculation."
+        procedure:
+          - "Calculate the overall claim probability."
+          - "Calculate joint weights and posterior probabilities."
+          - "Check that posterior probabilities sum to 1."
+          - |
+            ```python
+            weights = [0.50, 0.30, 0.20]
+            rates = [0.04, 0.10, 0.20]
+            p_claim = sum(w * r for w, r in zip(weights, rates))
+            joint = [w * r for w, r in zip(weights, rates)]
+            posterior = [j / p_claim for j in joint]
+            p_any = 1 - (1 - 0.05) ** 10
+            assert abs(p_claim - 0.09) < 1e-12
+            assert abs(sum(posterior) - 1) < 1e-12
+            assert abs(p_any - 0.4012630607616215) < 1e-12
+            print(p_claim, posterior, p_any)
+            ```
+          - "Compare the initial and post-claim class composition."
+        sorties:
+          - "Overall rate and joint weights."
+          - "Posterior probability for each class."
+          - "Probability of at least one claim among ten policies."
+        validation:
+          - "Posterior weights sum to 1."
+          - "Overall rate is a weighted average."
+          - "Portfolio probability matches the complement."
+        limites:
+          - "No policy dependence, parameter uncertainty or time variation is modelled."
+  synthese_references:
+    memo:
+      - "Conditional: P(A|B)=P(A∩B)/P(B), if P(B)>0."
+      - "Independence: P(A∩B)=P(A)P(B); disjoint ≠ independent."
+      - "Total probability: P(A)=ΣP(A|B_j)P(B_j), for a partition."
+      - "Bayes: P(B_j|A)=P(A|B_j)P(B_j)/P(A)."
+      - "At least one: 1−(1−p)^n, for independent trials."
+      - "Always distinguish the condition, prior weights and posterior probabilities."
+    glossaire:
+      - {definition: "Probability of an event given that another event occurred."}
+      - {definition: "Occurrence of one event does not change the probability of the other."}
+      - {definition: "Disjoint events whose union covers the universe."}
+      - {definition: "Probability of a class before observing the event."}
+      - {definition: "Probability updated after the observation."}
+      - {definition: "Probability that multiple events occur simultaneously."}
+    maitrise:
+      - "I calculate conditional probability with the correct denominator."
+      - "I distinguish independence from mutual exclusivity."
+      - "I reconstruct an overall rate with total probability."
+      - "I apply Bayes and verify posterior probabilities."
+      - "I calculate portfolio risk by complement under independence."
+    references:
+      - {titre: "Hogg, McKean & Craig, Introduction to Mathematical Statistics, Chapter 1", detail: "Conditional probability, independence and Bayes."}
+      - {titre: "Ross, A First Course in Probability, Chapters 2–3", detail: "Conditioning, independence and total probability."}
+      - {titre: "Society of Actuaries — Exam P Probability", detail: "Probability exam syllabus."}
+    liens:
+      - {titre: "A2/S02 — Discrete distributions"}
+
 etapes:
   - titre: "Placement check"
     intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
