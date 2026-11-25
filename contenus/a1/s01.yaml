@@ -43,7 +43,7 @@ fiche:
           - formule: "A_t=C(1+i)^t"
             explication: "A_t est la valeur acquise à la date t d'un capital initial C. Le facteur (1+i)^t multiplie le capital par le même facteur annuel à chaque période."
       - titre: "2. Facteur d'actualisation et valeur actuelle"
-        contenu: "L'actualisation est l'opération inverse de la capitalisation. Le facteur d'actualisation annuel v est l'inverse du facteur d'accumulation : v=1/(1+i). Un montant F payable à la date t a pour valeur à la date 0 la quantité Fv^t. Pour une suite finie de flux C_t payables aux dates t, la valeur actuelle est la somme des valeurs actuelles individuelles. Un flux reçu est positif et un flux payé peut être représenté négativement ; la convention de signe doit rester cohérente."
+        contenu: "L'actualisation est l'opération inverse de la capitalisation. Le facteur d'actualisation annuel v est l'inverse du facteur d'accumulation : $v=\\frac{1}{1+i}$. Un montant F payable à la date t a pour valeur à la date 0 la quantité $Fv^t$. Pour une suite finie de flux C_t payables aux dates t, la valeur actuelle est la somme des valeurs actuelles individuelles. Un flux reçu est positif et un flux payé peut être représenté négativement ; la convention de signe doit rester cohérente."
         formules:
           - formule: "v=(1+i)^{-1},\\qquad VA_0(F_t)=F_t v^t=\\frac{F_t}{(1+i)^t}"
             explication: "Pour i>0 et t>0, v^t est inférieur à 1 : un paiement futur positif vaut moins à la date 0."
@@ -90,7 +90,7 @@ fiche:
           - "Fixer la date d'évaluation et tracer une chronologie des flux."
           - "Noter le montant et la date de chaque flux ; conserver une convention de signe cohérente."
           - "Vérifier que le taux est exprimé sur la même base de temps que les échéances."
-          - "Calculer v=1/(1+i), puis chaque valeur actuelle C_t v^t."
+          - "Calculer $v=\\frac{1}{1+i}$, puis chaque valeur actuelle $C_t\\,v^t$."
           - "Additionner les valeurs actuelles et présenter la date à laquelle le résultat se rapporte."
         controles:
           - "Un flux positif futur doit être inférieur à sa valeur nominale lorsque i>0 et t>0."
@@ -205,7 +205,7 @@ fiche:
   synthese_references:
     memo:
       - "Capitalisation : multiplier par (1+i)^t ; actualisation : multiplier par v^t."
-      - "v=1/(1+i), d=i/(1+i), δ=ln(1+i)."
+      - "$v=\\frac{1}{1+i}$, d=i/(1+i), δ=ln(1+i)."
       - "Annuité immédiate : paiements aux dates 1,…,n ; annuité due : dates 0,…,n−1."
       - "ä_{n|}=(1+i)a_{n|} ; pour i=0, les deux annuités valent n."
       - "Toujours annoncer la date d'évaluation, la périodicité, le taux et la convention de signe."
