@@ -71,7 +71,7 @@ fiche:
           - formule: "PV=\\frac{1}{i-g},\\quad g<i"
             explication: "Formule de croissance perpétuelle. Le premier flux est dans un an; taux et croissance sont constants et strictement compatibles avec la convergence."
       - titre: "6. Cas limites et limites du modèle"
-        contenu: "À taux nul, les formules divisant par i sont remplacées par les sommes directes : valeur accumulée n, annuité arithmétique croissante n(n+1)/2 et décroissante n(n+1)/2. La perpétuité à $i=0$ diverge. Une formule de perpétuité croissante n'est pas valide lorsque $g\\ge i$. Ces modèles supposent des flux déterministes, une périodicité cohérente et un taux constant; ils ne tiennent pas compte automatiquement de mortalité, risque, fiscalité, frais ou courbe de taux."
+        contenu: "À taux nul, les formules divisant par i sont remplacées par les sommes directes : valeur accumulée n, annuité arithmétique croissante n(n+1)/2 et décroissante n(n+1)/2. Une perpétuité de niveau à $i=0$ diverge. Une perpétuité géométrique croissante ou décroissante (avec $-1<g<0$ pour une décroissance) converge lorsque $g<i$, sous les hypothèses $i>-1$ et $g>-1$; elle peut donc converger à taux nul si $g<0$. Ces modèles supposent des flux déterministes, une périodicité cohérente et un taux constant; ils ne tiennent pas compte automatiquement de mortalité, risque, fiscalité, frais ou courbe de taux."
         formules:
           - formule: "s_{\\overline{n}|}=n,\\quad (Ia)_{\\overline{n}|}=(Da)_{\\overline{n}|}=\\frac{n(n+1)}{2},\\quad i=0"
             explication: "Quand le taux est nul, actualisation et capitalisation ne changent pas les flux."
