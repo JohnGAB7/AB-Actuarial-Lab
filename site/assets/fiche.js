@@ -67,14 +67,16 @@
   };
   const paragraph = (text) => make("p","",text);
   const formula = (text) => {
-    const node = make("div","reference-formula","$"+text+"$");
+    const node = make("div","reference-formula");
     node.setAttribute("aria-label", text);
+    if (window.katex) katex.render(text, node, {displayMode:true, throwOnError:false, strict:"ignore"});
+    else node.textContent = text;
     return node;
   };
   const renderMath = (root) => {
     if (window.renderMathInElement) {
       window.renderMathInElement(root,{
-        delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],
+        delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false},{left:"$",right:"$",display:true},{left:"$",right:"$",display:false}],
         throwOnError:false
       });
     }
