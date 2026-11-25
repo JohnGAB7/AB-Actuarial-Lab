@@ -66,7 +66,7 @@ fiche:
           - formule: "s_{\\overline{k}|}=\\frac{(1+i)^k-1}{i},\\quad i>0"
             explication: "Valeur accumulée d'une annuité immédiate unitaire; si i=0, s_k=k."
       - titre: "5. Amortissement constant"
-        contenu: "Dans un plan à amortissement constant, le principal remboursé A est identique chaque période : A=L/n. Le solde décroît linéairement. Les intérêts diminuent avec le solde, donc les paiements totaux diminuent. Ce plan est différent d'un prêt à annuités constantes, où le paiement total P est fixe."
+        contenu: "Dans un plan à amortissement constant, le principal remboursé A est identique chaque période : A=L/n. Le solde décroît linéairement. Les intérêts diminuent avec le solde : les paiements totaux diminuent si i>0 et restent constants si i=0. Ce plan est différent d'un prêt à annuités constantes, où le paiement total P est fixe."
         formules:
           - formule: "A=\\frac{L}{n},\\quad B_k=L-kA"
             explication: "Principal constant et solde après k échéances."
@@ -194,7 +194,7 @@ fiche:
         corrige:
           - "VAN(8%)=−2 000+1 200/1,08+1 200/1,08²≈139,92 €."
           - "Le TRI résout −2 000+1 200/(1+j)+1 200/(1+j)²=0."
-          - "Pour deux recettes identiques, résoudre 2 000=P a_{2|} : j≈13,0662 %."
+          - "Pour deux recettes identiques, résoudre 2 000=1 200 a_{2|} : j≈13,0662 %."
         feedback: "Une VAN positive au taux de décision indique une création de valeur dans ce modèle. Le TRI est une solution de l'équation de VAN; ne pas supposer qu'il est unique pour tout calendrier de flux."
   applications_labs:
     applications:
@@ -258,7 +258,7 @@ fiche:
       - "L=P a_{n|} et P=L/a_{n|}; à taux nul, P=L/n."
       - "Paiement = intérêts iB_{k−1} + principal remboursé PR_k."
       - "B_k=P a_{n−k|} (prospective) = L(1+i)^k−P s_{k|} (rétrospective)."
-      - "Amortissement constant : A=L/n; paiements totaux décroissants si i≥0."
+      - "Amortissement constant : A=L/n; paiements totaux décroissants si i>0 et constants si i=0."
       - "VAN(j)=somme des flux actualisés; le TRI est une racine, pas nécessairement unique."
     glossaire:
       - terme_fr: "Prêt amorti"
