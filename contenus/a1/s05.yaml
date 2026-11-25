@@ -246,55 +246,55 @@ fiche:
       - titre: "1. Prix d'une obligation à coupons"
         contenu: "Une obligation standard verse un coupon c à chaque date prévue puis rembourse le nominal F à l'échéance n. Le prix est la valeur actuelle des flux contractuels. Pour des coupons annuels constants et un rendement effectif annuel y, la formule est une annuité de coupons plus le remboursement actualisé. Le rendement à l'échéance (YTM) est le taux qui résout cette équation à partir du prix observé; il suppose notamment que les flux sont honorés et que la convention de taux et les dates sont cohérentes."
         formules:
-          - formule: "P=\sum_{t=1}^{n}\frac{c}{(1+y)^t}+\frac{F}{(1+y)^n}=c\,a_{\overline{n}|y}+Fv_y^n"
+          - formule: 'P=\sum_{t=1}^{n}\frac{c}{(1+y)^t}+\frac{F}{(1+y)^n}=c\,a_{\overline{n}|y}+Fv_y^n'
             explication: "Prix d'une obligation à coupon annuel constant, avec remboursement du nominal à l'échéance."
-          - formule: "c=Fq,\qquad v_y=\frac{1}{1+y}"
+          - formule: 'c=Fq,\qquad v_y=\frac{1}{1+y}'
             explication: "Le coupon monétaire c correspond au nominal F multiplié par le taux de coupon q."
-          - formule: "P-F=(c-Fy)\,a_{\overline{n}|y}"
+          - formule: 'P-F=(c-Fy)\,a_{\overline{n}|y}'
             explication: "Identité qui relie le prix au pair à l'écart entre coupon monétaire et intérêt au rendement."
       - titre: "2. Prime, décote et prix au pair"
         contenu: "Le prix est au pair lorsque le coupon monétaire égale le rendement exigé. Si le coupon est supérieur au rendement, l'obligation vaut plus que son nominal : elle cote avec une prime. Si le coupon est inférieur au rendement, elle cote avec une décote. À flux fixes, le prix est décroissant avec le rendement; à mesure que l'échéance approche, le prix tend vers le remboursement final, sous réserve que les flux soient payés et qu'il n'y ait pas de défaut ni option."
         formules:
-          - formule: "q>y\Rightarrow P>F;\qquad q=y\Rightarrow P=F;\qquad q<y\Rightarrow P<F"
+          - formule: 'q>y\Rightarrow P>F;\qquad q=y\Rightarrow P=F;\qquad q<y\Rightarrow P<F'
             explication: "Comparaison du taux de coupon q et du rendement y pour une obligation standard."
-          - formule: "\frac{\partial P}{\partial y}=-\sum_{t=1}^{n}\frac{tC_t}{(1+y)^{t+1}}<0"
+          - formule: '\frac{\partial P}{\partial y}=-\sum_{t=1}^{n}\frac{tC_t}{(1+y)^{t+1}}<0'
             explication: "Pour des flux positifs fixes, une hausse du rendement réduit le prix."
       - titre: "3. YTM, taux spot et prix clean/dirty"
         contenu: "Le YTM est un taux unique qui reproduit le prix d'un instrument avec ses flux. Les taux spot s'appliquent plutôt à un flux zéro-coupon de chaque échéance : ils permettent de construire une valorisation cohérente avec la courbe. Le prix calculé par flux spot est le prix théorique sur la courbe. En marché, le prix coté clean exclut généralement le coupon couru, tandis que le prix dirty payé inclut ce coupon. Le coupon couru dépend de la convention de jours, des dates de coupon et du marché; aucune convention universelle n'est supposée ici."
         formules:
-          - formule: "P=\sum_{t=1}^{n}\frac{C_t}{(1+s_t)^t}"
+          - formule: 'P=\sum_{t=1}^{n}\frac{C_t}{(1+s_t)^t}'
             explication: "Actualisation par taux spot correspondant à la date de chaque flux, avec capitalisation annuelle effective."
-          - formule: "P_{dirty}=P_{clean}+CC"
+          - formule: 'P_{dirty}=P_{clean}+CC'
             explication: "Relation usuelle entre prix dirty et clean; CC désigne le coupon couru calculé selon la convention de marché."
       - titre: "4. Courbe spot et taux à terme"
         contenu: "Une courbe spot est un ensemble de taux zéro-coupon par échéance. Sous capitalisation annuelle effective et absence d'arbitrage, investir jusqu'à deux ans doit avoir la même valeur qu'investir un an puis réinvestir un an au taux à terme implicite. Le forward est un taux mathématiquement implicite dans la courbe, pas nécessairement une prévision du taux futur. Les taux peuvent être interpolés pour des échéances absentes, mais la méthode d'interpolation doit être annoncée."
         formules:
-          - formule: "(1+s_2)^2=(1+s_1)(1+f_{1,2})"
+          - formule: '(1+s_2)^2=(1+s_1)(1+f_{1,2})'
             explication: "Équivalence de placements sur deux ans et d'un placement suivi d'un taux à terme."
-          - formule: "1+f_{t-1,t}=\frac{(1+s_t)^t}{(1+s_{t-1})^{t-1}}"
+          - formule: '1+f_{t-1,t}=\frac{(1+s_t)^t}{(1+s_{t-1})^{t-1}}'
             explication: "Taux à terme annuel entre les dates t−1 et t, avec s_0=0."
-          - formule: "P=\sum_{t=1}^{n}\frac{C_t}{(1+s_t)^t}"
+          - formule: 'P=\sum_{t=1}^{n}\frac{C_t}{(1+s_t)^t}'
             explication: "Valorisation d'une obligation par la courbe spot, différente du calcul à un YTM unique."
       - titre: "5. Duration de Macaulay et duration modifiée"
         contenu: "La duration de Macaulay est la moyenne pondérée des dates de paiement, où les poids sont les valeurs actuelles des flux divisées par le prix. Elle s'exprime en années pour des flux annuels. La duration modifiée mesure approximativement la variation relative du prix pour une petite variation du YTM, sous capitalisation annuelle et flux fixes. Pour des taux composés m fois par an, la formule doit être adaptée à la convention."
         formules:
-          - formule: "D_{Mac}=\frac{\sum_{t=1}^{n}t\,PV(C_t)}{P}"
+          - formule: 'D_{Mac}=\frac{\sum_{t=1}^{n}t\,PV(C_t)}{P}'
             explication: "Moyenne pondérée des dates de flux par leur valeur actuelle."
-          - formule: "D_{mod}=\frac{D_{Mac}}{1+y}"
+          - formule: 'D_{mod}=\frac{D_{Mac}}{1+y}'
             explication: "Duration modifiée pour un rendement annuel effectif et capitalisation annuelle."
-          - formule: "\frac{\Delta P}{P}\approx-D_{mod}\,\Delta y"
+          - formule: '\frac{\Delta P}{P}\approx-D_{mod}\,\Delta y'
             explication: "Approximation de premier ordre : duration modifiée seule, pour une petite variation du rendement."
       - titre: "6. Convexité et approximation prix-rendement"
         contenu: "La convexité mesure la courbure du prix par rapport au rendement. Pour des flux positifs d'une obligation standard, le prix est convexe : l'approximation par duration seule sous-estime généralement le gain quand le rendement baisse et surestime la perte quand il monte, pour des variations assez petites et comparables. Duration et convexité ne remplacent pas le recalcul exact du prix; elles sont des approximations locales."
         formules:
-          - formule: "Conv=\frac{1}{P}\sum_{t=1}^{n}\frac{t(t+1)C_t}{(1+y)^{t+2}}"
+          - formule: 'Conv=\frac{1}{P}\sum_{t=1}^{n}\frac{t(t+1)C_t}{(1+y)^{t+2}}'
             explication: "Convexité conventionnelle pour capitalisation annuelle effective et flux fixes."
-          - formule: "\frac{\Delta P}{P}\approx-D_{mod}\Delta y+\frac12 Conv(\Delta y)^2"
+          - formule: '\frac{\Delta P}{P}\approx-D_{mod}\Delta y+\frac12 Conv(\Delta y)^2'
             explication: "Approximation de second ordre, avec variation de rendement exprimée en valeur décimale."
       - titre: "7. Risques, conventions et limites"
         contenu: "Une obligation peut subir un risque de taux, de crédit/défaut, de liquidité, de réinvestissement, d'inflation, de change et de modèle. Les obligations remboursables par anticipation ou convertibles ont des flux optionnels : duration et convexité peuvent être différentes, voire la convexité négative dans certaines zones. Une courbe spot doit être construite à partir d'instruments et de conventions cohérents; les taux ne sont pas toujours observables à toutes les maturités. Le YTM ne représente pas un rendement réalisé garanti : celui-ci dépend du prix de revente, du défaut et du réinvestissement des coupons. Les calculs de cette fiche supposent des coupons annuels, taux effectifs, flux déterministes et aucune option, taxe ou frais."
         formules:
-          - formule: "\text{Rendement réalisé}\ne\text{YTM garanti}"
+          - formule: '\text{Rendement réalisé}\ne\text{YTM garanti}'
             explication: "Le YTM est une mesure de valorisation sous hypothèses, pas une promesse de rendement ex post."
   methodes:
     methodes:
