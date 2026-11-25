@@ -14,6 +14,244 @@ actu_basics:
   videos:
     - {id: GEJvRrnJLk8, langue: en, titre: "Actuaries: how maths helps make decisions under risk", duree: "6:55"}
 
+fiche:
+  statut: brouillon
+  vue_ensemble:
+    question: "Après un sinistre, comment mettre à jour la probabilité qu'un assuré appartienne à une classe de risque donnée ?"
+    pourquoi: "La tarification, la sélection, l'analyse de portefeuille et la détection reposent sur le passage des probabilités a priori aux probabilités conditionnelles observées. Bayes permet de raisonner dans le bon sens, sans confondre un taux de sinistre par classe et la composition des sinistres."
+    objectifs:
+      - "Définir une probabilité conditionnelle et la calculer à partir d'une intersection."
+      - "Distinguer indépendance et incompatibilité."
+      - "Utiliser une partition et la formule des probabilités totales."
+      - "Appliquer Bayes pour calculer une probabilité a posteriori."
+      - "Calculer la probabilité d'au moins un sinistre dans un portefeuille de contrats indépendants."
+      - "Interpréter les résultats et éviter l'erreur du procureur."
+    prerequis:
+      - "Probabilités, événements, complémentaire et intersection."
+      - "Sommes et produits de probabilités."
+      - "Fractions et pourcentages."
+    carte:
+      - "Conditionnelle : on restreint l'univers à B et on renormalise."
+      - "Indépendance : l'information sur B ne change pas la probabilité de A."
+      - "Probabilités totales : recomposer un taux global à partir de classes."
+      - "Bayes : inverser le conditionnement avec les poids a priori."
+      - "Portefeuille : le complément permet de calculer la probabilité d'au moins un événement."
+    duree_minutes: 40
+  cours_complet:
+    sections:
+      - titre: "1. Événements et probabilité conditionnelle"
+        contenu: "Pour deux événements A et B, la probabilité de A sachant B est calculée dans l'univers où B est réalisé. Il faut que P(B)>0. L'intersection A∩B correspond aux cas où A et B arrivent ensemble. Conditionner n'est pas inverser simplement deux mots : le dénominateur change."
+        formules:
+          - formule: "P(A\\mid B)=\\frac{P(A\\cap B)}{P(B)},\\quad P(B)>0"
+            explication: "La probabilité de A parmi les cas où B est observé."
+          - formule: "P(A\\cap B)=P(A\\mid B)P(B)"
+            explication: "Règle du produit : intersection = conditionnelle × probabilité de la condition."
+      - titre: "2. Indépendance et incompatibilité"
+        contenu: "A et B sont indépendants si la réalisation de l'un ne change pas la probabilité de l'autre. Ils sont incompatibles (disjoints) si leur intersection est vide. Deux événements disjoints de probabilités strictement positives ne sont pas indépendants : l'un exclut l'autre."
+        formules:
+          - formule: "A\\perp B\\iff P(A\\cap B)=P(A)P(B)"
+            explication: "Critère d'indépendance, valable même lorsque la conditionnelle n'est pas définie."
+          - formule: "P(A\\mid B)=P(A),\\quad P(B)>0"
+            explication: "Équivalence intuitive : connaître B ne modifie pas la probabilité de A."
+      - titre: "3. Partition et probabilités totales"
+        contenu: "Une partition B_1,…,B_k de l'univers est formée d'événements disjoints dont l'union est l'univers. Pour calculer P(A), on décompose A selon chaque classe, puis on additionne les probabilités conditionnelles pondérées par la fréquence de la classe. Les taux de classes ne doivent pas être moyennés sans leurs poids."
+        formules:
+          - formule: "P(A)=\\sum_{j=1}^{k}P(A\\mid B_j)P(B_j)"
+            explication: "Recomposition du taux global à partir des classes d'une partition."
+      - titre: "4. Formule de Bayes"
+        contenu: "Bayes permet de remonter d'un événement observé A vers la classe B_j qui a pu le produire. Le numérateur est la probabilité conjointe de la classe et de l'événement; le dénominateur est la probabilité totale de l'événement. Le résultat est une probabilité a posteriori et dépend à la fois du taux de la classe et de sa fréquence initiale."
+        formules:
+          - formule: "P(B_j\\mid A)=\\frac{P(A\\mid B_j)P(B_j)}{P(A)}"
+            explication: "Formule de Bayes pour P(A)>0."
+          - formule: "P(B_j\\mid A)=\\frac{P(A\\mid B_j)P(B_j)}{\\sum_{l=1}^{k}P(A\\mid B_l)P(B_l)}"
+            explication: "Version avec probabilités totales au dénominateur."
+      - titre: "5. Lire un tableau de contingence"
+        contenu: "Un tableau croise deux variables catégorielles. Les cellules donnent des probabilités conjointes ou des effectifs. Pour obtenir une conditionnelle, on divise une cellule par le total de la ligne ou de la colonne qui correspond à la condition. Le sens de la condition doit être annoncé explicitement."
+        formules:
+          - formule: "P(A\\mid B)=\\frac{P(A\\cap B)}{P(B)}"
+            explication: "La marge de B est le dénominateur lorsque B est la condition."
+      - titre: "6. Probabilité d'au moins un sinistre"
+        contenu: "Pour n contrats indépendants ayant chacun la même probabilité p de sinistre, la probabilité qu'aucun ne sinistre est (1−p)^n. On utilise le complément pour calculer la probabilité d'au moins un sinistre. Si les contrats ne sont pas indépendants ou n'ont pas la même probabilité, il faut adapter le modèle."
+        formules:
+          - formule: "P(N\\ge1)=1-(1-p)^n"
+            explication: "Complément de l'événement aucun sinistre, sous indépendance et probabilité identique."
+      - titre: "7. Interprétation, limites et pièges"
+        contenu: "Une probabilité conditionnelle dépend du sens de la condition. Un taux élevé dans une classe ne signifie pas que cette classe représente la majorité des sinistres : sa taille compte. Bayes ne prouve pas une causalité. Les exemples supposent des classes correctement définies, des probabilités calibrées et, pour l'agrégation de portefeuille, l'indépendance. En pratique, la dépendance, l'hétérogénéité et l'incertitude d'estimation peuvent modifier les résultats."
+        formules:
+          - formule: "P(A\\mid B)\\ne P(B\\mid A)\\quad\\text{en général}"
+            explication: "Ne jamais inverser une conditionnelle sans appliquer Bayes."
+  methodes:
+    methodes:
+      - titre: "Calculer une probabilité conditionnelle"
+        quand_utiliser: "On connaît une intersection et la probabilité de l'événement qui sert de condition."
+        etapes:
+          - "Identifier clairement A et B, puis écrire la question sous la forme P(A|B)."
+          - "Vérifier que P(B)>0."
+          - "Calculer ou relever P(A∩B)."
+          - "Diviser par P(B), puis interpréter comme une proportion parmi les cas B."
+        controles:
+          - "Le résultat est compris entre 0 et 1."
+          - "Le dénominateur correspond à la condition, pas à l'événement recherché."
+        erreurs:
+          - "Inverser P(A|B) et P(B|A)."
+          - "Utiliser P(A) au dénominateur par réflexe."
+      - titre: "Recomposer un taux et appliquer Bayes"
+        quand_utiliser: "Le portefeuille est découpé en classes de risque et un événement est observé."
+        etapes:
+          - "Vérifier que les classes forment une partition."
+          - "Calculer P(A)=ΣP(A|B_j)P(B_j)."
+          - "Calculer le poids conjoint P(A∩B_j)."
+          - "Diviser ce poids par P(A) pour obtenir P(B_j|A)."
+          - "Vérifier que les probabilités a posteriori somment à 1."
+        controles:
+          - "Le taux global est une moyenne pondérée, entre le minimum et le maximum des taux de classe."
+          - "Les posteriori somment à 1."
+          - "La somme des poids conjoints égale P(A)."
+        erreurs:
+          - "Faire une moyenne simple des taux de classe."
+          - "Oublier la fréquence a priori des classes."
+          - "Interpréter le résultat comme une causalité."
+      - titre: "Calculer le risque d'au moins un événement"
+        quand_utiliser: "Plusieurs contrats ou unités sont modélisés comme indépendants et l'on cherche au moins un événement."
+        etapes:
+          - "Définir n et la probabilité individuelle p."
+          - "Calculer la probabilité complémentaire (1−p)^n."
+          - "Soustraire de 1."
+          - "Vérifier les cas n=0 et p=0."
+        controles:
+          - "Le résultat vaut 0 si n=0 ou p=0."
+          - "Il augmente avec n et p."
+          - "Il reste compris entre 0 et 1."
+        erreurs:
+          - "Utiliser np comme probabilité exacte."
+          - "Supposer l'indépendance sans justification."
+  exemples_guides:
+    exemples:
+      - titre: "Portefeuille à deux classes"
+        enonce: "20 % des assurés sont jeunes, avec 15 % de sinistres; 80 % des autres ont 5 % de sinistres. Calculer le taux global et la part des jeunes parmi les sinistres."
+        raisonnement:
+          - "P(J)=0,20; P(S|J)=0,15; P(S|J^c)=0,05."
+          - "P(S)=0,20×0,15+0,80×0,05=0,07."
+          - "P(J|S)=0,20×0,15/0,07=0,428571."
+        resultat: "Taux global 7 %; 42,86 % des sinistres viennent des jeunes."
+        interpretation: "Les jeunes représentent 20 % du portefeuille mais près de 43 % des sinistres. Les deux conditionnelles ne sont pas interchangeables."
+        controles:
+          - "Le taux global 7 % est entre 5 % et 15 %."
+          - "Les poids a posteriori jeunes/autres sont 42,86 % et 57,14 %."
+      - titre: "Bayes avec trois classes"
+        enonce: "Trois classes ont des poids 50 %, 30 %, 20 % et des taux de sinistre 4 %, 10 %, 20 %. Après un sinistre, quelle est la probabilité que le contrat soit dans chaque classe ?"
+        raisonnement:
+          - "P(S)=0,50×0,04+0,30×0,10+0,20×0,20=0,09."
+          - "Les poids conjoints valent 0,02, 0,03 et 0,04."
+          - "Diviser chaque poids conjoint par 0,09."
+        resultat: "Posteriori : 22,22 %, 33,33 %, 44,44 %."
+        interpretation: "La classe la plus risquée devient la plus représentée parmi les sinistres, malgré un poids initial de 20 %."
+        controles:
+          - "Les posteriori somment à 100 %."
+          - "Les probabilités conjointes somment à 9 %."
+      - titre: "Au moins un sinistre dans dix contrats"
+        enonce: "Dix contrats indépendants ont chacun 5 % de probabilité de sinistre. Calculer la probabilité d'au moins un sinistre."
+        raisonnement:
+          - "P(aucun)=0,95^{10}=0,598737."
+          - "P(au moins un)=1−0,598737=0,401263."
+        resultat: "40,13 %."
+        interpretation: "Un événement individuel rare peut devenir assez probable lorsqu'on observe plusieurs contrats indépendants."
+        controles:
+          - "Le résultat est supérieur à 5 % et inférieur à 50 %."
+          - "La somme np=50 % est une borne supérieure, pas la probabilité exacte."
+  exercices_corriges:
+    exercices:
+      - titre: "Fondamental — conditionnelle"
+        niveau: fondamental
+        enonce: "Si P(A∩B)=0,12 et P(B)=0,30, calcule P(A|B)."
+        corrige:
+          - "P(A|B)=0,12/0,30=0,40."
+          - "Interprétation : 40 % des cas B satisfont A."
+        feedback: "Le dénominateur est la probabilité de la condition B."
+      - titre: "Intermédiaire — Bayes"
+        niveau: intermediaire
+        enonce: "Un portefeuille comporte 10 % de contrats de classe X. Le taux de sinistre est 12 % en X et 4 % ailleurs. Après un sinistre, quelle est la probabilité d'être en X ?"
+        corrige:
+          - "P(S)=0,10×0,12+0,90×0,04=0,048."
+          - "P(X|S)=0,10×0,12/0,048=0,25."
+        feedback: "Même si X a un taux trois fois plus élevé, elle ne représente que 25 % des sinistres à cause de son poids initial."
+      - titre: "Avancé — agrégation"
+        niveau: avance
+        enonce: "Avec 25 contrats indépendants et p=2 %, calcule la probabilité d'au moins un sinistre et compare-la à np."
+        corrige:
+          - "P(au moins un)=1−0,98^{25}≈0,3965."
+          - "np=0,50 : c'est une borne supérieure et une approximation de premier ordre, pas le résultat exact."
+        feedback: "Le complément est exact sous indépendance; np peut dépasser 1 et ne doit pas être utilisé comme probabilité exacte."
+  applications_labs:
+    applications:
+      - titre: "Tableau de portefeuille et mise à jour bayésienne"
+        contexte: "Un analyste compare les classes de risque d'un portefeuille fictif et mesure comment la composition des sinistres diffère de la composition des assurés."
+        objectif: "Calculer les taux globaux, les poids conjoints, les posteriori et vérifier les identités par une somme directe."
+        outils: [excel, python]
+        entrees:
+          - "Poids des classes : 0,50; 0,30; 0,20."
+          - "Taux de sinistre : 0,04; 0,10; 0,20."
+          - "Nombre de contrats indépendants : 10; probabilité individuelle : 0,05."
+        hypotheses:
+          - "Les classes sont une partition."
+          - "Les taux sont des probabilités fictives supposées connues."
+          - "Pour le calcul d'au moins un sinistre, les contrats sont indépendants."
+        procedure:
+          - "Calculer la probabilité globale du sinistre par somme pondérée."
+          - "Calculer chaque poids conjoint, puis la probabilité a posteriori."
+          - "Vérifier que les posteriori somment à 1."
+          - |
+            \`\`\`python
+            weights = [0.50, 0.30, 0.20]
+            rates = [0.04, 0.10, 0.20]
+            p_claim = sum(w * r for w, r in zip(weights, rates))
+            joint = [w * r for w, r in zip(weights, rates)]
+            posterior = [j / p_claim for j in joint]
+            p_any = 1 - (1 - 0.05) ** 10
+            assert abs(p_claim - 0.09) < 1e-12
+            assert abs(sum(posterior) - 1) < 1e-12
+            assert abs(p_any - 0.4012630607616215) < 1e-12
+            print(p_claim, posterior, p_any)
+            \`\`\`
+          - "Comparer la composition initiale et la composition après sinistre."
+        sorties:
+          - "Taux global et poids conjoints."
+          - "Probabilités a posteriori par classe."
+          - "Probabilité d'au moins un sinistre sur dix contrats."
+        validation:
+          - "Les poids a posteriori somment à 1."
+          - "Le taux global est une moyenne pondérée."
+          - "La probabilité de portefeuille correspond au complément."
+        limites:
+          - "Le laboratoire ne modélise ni dépendance entre contrats, ni incertitude sur les paramètres, ni évolution temporelle."
+  synthese_references:
+    memo:
+      - "Conditionnelle : P(A|B)=P(A∩B)/P(B), si P(B)>0."
+      - "Indépendance : P(A∩B)=P(A)P(B); disjoint ≠ indépendant."
+      - "Probabilités totales : P(A)=ΣP(A|B_j)P(B_j), pour une partition."
+      - "Bayes : P(B_j|A)=P(A|B_j)P(B_j)/P(A)."
+      - "Au moins un : 1−(1−p)^n, pour n essais indépendants de probabilité p."
+      - "Toujours distinguer la condition, les poids a priori et les probabilités a posteriori."
+    glossaire:
+      - {terme_fr: "Probabilité conditionnelle", terme_en: "Conditional probability", definition: "Probabilité d'un événement lorsque l'on sait qu'un autre s'est réalisé."}
+      - {terme_fr: "Indépendance", terme_en: "Independence", definition: "La réalisation d'un événement ne change pas la probabilité de l'autre."}
+      - {terme_fr: "Partition", terme_en: "Partition", definition: "Événements disjoints dont l'union couvre l'univers."}
+      - {terme_fr: "Probabilité a priori", terme_en: "Prior probability", definition: "Probabilité de la classe avant d'observer l'événement."}
+      - {terme_fr: "Probabilité a posteriori", terme_en: "Posterior probability", definition: "Probabilité mise à jour après l'observation."}
+      - {terme_fr: "Probabilité conjointe", terme_en: "Joint probability", definition: "Probabilité que plusieurs événements arrivent simultanément."}
+    maitrise:
+      - "Je calcule une conditionnelle en utilisant le bon dénominateur."
+      - "Je distingue indépendance et incompatibilité."
+      - "Je recomposer un taux global par probabilités totales."
+      - "J'applique Bayes et vérifie les posteriori."
+      - "Je calcule un risque de portefeuille par le complément sous indépendance."
+    references:
+      - {titre: "Hogg, McKean & Craig, Introduction to Mathematical Statistics, chapitre 1", detail: "Probabilités conditionnelles, indépendance et Bayes."}
+      - {titre: "Ross, A First Course in Probability, chapitres 2–3", detail: "Conditionnelles, indépendance et probabilités totales."}
+      - {titre: "Society of Actuaries — Exam P Probability", url: "https://www.soa.org/education/exam-req/edu-exam-p-detail/", detail: "Syllabus de référence pour probabilités."}
+    liens:
+      - {titre: "A2/S02 — Distributions discrètes", cible: "a2/s02"}
+
 etapes:
   - type: quiz
     titre: "Test de positionnement"
