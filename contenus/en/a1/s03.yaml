@@ -97,7 +97,7 @@ fiche:
         controles:
           - "The due perpetuity would be one payment higher, or 210,000."
       - titre: "Arithmetic annuities over ten years"
-        enonce: "At 5%, find the present values of payments 1, 2, …,10 and 10,9,…,1 at times 1 to 10."
+        enonce: "At 5%, find the present values of payments 1, 2, …,10 and 10, 9, …, 1 at times 1 to 10."
         raisonnement:
           - "a_10=7.72173493 and ä_10=8.10782168."
           - "(Ia)=(ä_10−10v^10)/i."
