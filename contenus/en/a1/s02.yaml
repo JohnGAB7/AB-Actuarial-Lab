@@ -142,7 +142,7 @@ fiche:
         controles:
           - "The 120 payments of 100 total 12,000 before discounting."
           - "Present value is positive and below nominal total for i>0."
-          - "Compare with 1,200×a_{10|}≈9,733.09; monthly fractions have a higher value."
+          - "Compare with 1,200×a_{10|}≈9,733.07; monthly fractions have a higher value."
   exercices_corriges:
     exercices:
       - titre: "Fundamental — convert to effective"
