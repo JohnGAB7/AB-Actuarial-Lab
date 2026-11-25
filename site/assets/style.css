@@ -733,6 +733,17 @@ a.mod .mod-n{color:var(--progress);font-weight:600}
  .reference-table{font-size:.82rem}
  .reference-table th,.reference-table td{padding:8px}
 }
+/* Prevent the tab rail's intrinsic width from escaping the lesson card at tablet sizes. */
+.reference-sheet,.reference-tabs,.reference-panels,.reference-panel{width:100%;max-width:100%;min-width:0}
+.reference-sheet{overflow-x:clip}
+.reference-tabs{overflow-x:auto;overscroll-behavior-inline:contain}
+.reference-panels{overflow-x:clip}
+@media(max-width:620px){
+ .brand-mark{width:36px;height:36px}
+ .brand-lockup{gap:8px}
+ .brand-copy strong{font-size:.72rem}
+ .brand-copy small{font-size:.52rem;letter-spacing:.08em}
+}
 @media(prefers-reduced-motion:reduce){.reference-panel{animation:none}}
 
 @media(max-width:600px){
