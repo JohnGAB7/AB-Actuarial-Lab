@@ -62,7 +62,7 @@ const DROP_TAGS = new Set([
 // Convert common bare formula notation in prose to inline KaTeX delimiters.
 // Explicitly delimited math and existing rich-text sub/sup markup are preserved.
 function inlineNotation(value) {
-  const pattern = /\b[A-Za-z]\([^()]{1,24}\)\^[A-Za-z0-9]+|\b[A-Za-z]_[A-Za-z0-9]+|\b[A-Za-z0-9)\]}]\^[A-Za-z0-9]+|\b[A-Za-z]\([^()]{1,24}\)/g;
+  const pattern = /\\frac\{[^{}]+\}\{[^{}]+\}|\b[A-Za-z]\([^()]{1,24}\)\^\{?[A-Za-z0-9]+\}?|\b[A-Za-z]_\{?[A-Za-z0-9,]+\}?|\b[A-Za-z]_[A-Za-z0-9]+|\b[A-Za-z0-9)\]}]\^\{?[A-Za-z0-9]+\}?|\b[A-Za-z]\([^()]{1,24}\)/g;
   return String(value ?? "").split(/(\$[^$]*\$|\\\([^)]*\\\))/g).map((part,index) => {
     if (index % 2 === 1) return part;
     return part.replace(pattern, (match) => "$" + match + "$");
