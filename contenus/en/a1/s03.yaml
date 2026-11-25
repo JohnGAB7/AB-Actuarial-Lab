@@ -28,12 +28,12 @@ fiche:
         formules:
           - explication: "The accumulated sum of n unit payments. When i=0, s_n=n."
       - titre: "2. Perpetuities immediate and due"
-        contenu: "An immediate perpetuity pays 1 at times 1,2,… and its present value is the limit of the annuity. For i>0, v^n tends to zero and the series converges. A due perpetuity begins at t=0: it is an immediate perpetuity advanced by one period. The effective discount rate is d=i/(1+i)."
+        contenu: "An immediate perpetuity pays 1 at times 1, 2, … and its present value is the limit of the annuity. For i>0, v^n tends to zero and the series converges. A due perpetuity begins at t=0: it is an immediate perpetuity advanced by one period. The effective discount rate is d=i/(1+i)."
         formules:
           - explication: "A capital 1/i earns 1 interest per period at rate i in this deterministic model."
           - explication: "The perpetuity due includes the payment immediately at t=0."
       - titre: "3. Arithmetic annuities"
-        contenu: "The increasing annuity pays 1,2,…,n at times 1,…,n. The decreasing annuity pays n,n−1,…,1. Both have the same nominal total, but for i>0 the decreasing annuity has a higher present value because its larger payments occur earlier."
+        contenu: "The increasing annuity pays 1, 2, …,n at times 1,…,n. The decreasing annuity pays n,n−1,…,1. Both have the same nominal total, but for i>0 the decreasing annuity has a higher present value because its larger payments occur earlier."
         formules:
           - explication: "Formula for the increasing annuity, for i≠0."
           - explication: "Formula for the decreasing annuity, for i≠0."
@@ -97,7 +97,7 @@ fiche:
         controles:
           - "The due perpetuity would be one payment higher, or 210,000."
       - titre: "Arithmetic annuities over ten years"
-        enonce: "At 5%, find the present values of payments 1,2,…,10 and 10,9,…,1 at times 1 to 10."
+        enonce: "At 5%, find the present values of payments 1, 2, …,10 and 10,9,…,1 at times 1 to 10."
         raisonnement:
           - "a_10=7.72173493 and ä_10=8.10782168."
           - "(Ia)=(ä_10−10v^10)/i."
@@ -128,7 +128,7 @@ fiche:
           - "At 4%, this capital earns 2,400 interest each year."
         feedback: "If you obtain 61,500, you may have treated the first payment as immediate. Check its date."
       - titre: "Intermediate — increasing annuity"
-        enonce: "At 3%, value payments 1,2,…,8 at each year-end."
+        enonce: "At 3%, value payments 1, 2, …,8 at each year-end."
         corrige:
           - "Calculate v=1/1.03 and ä_8=(1−v^8)/d."
           - "Use (Ia)=(ä_8−8v^8)/i."
