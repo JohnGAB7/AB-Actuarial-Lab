@@ -92,10 +92,10 @@ fiche:
       - titre: "Résumer une distribution discrète"
         quand_utiliser: "La fonction de masse ou un tableau de valeurs et probabilités est fourni."
         etapes:
-          - "Vérifier que les probabilités sont positives et somment à 1."
-          - "Calculer E[X]=Σx p(x)."
-          - "Calculer E[X²]=Σx²p(x)."
-          - "Déduire Var(X)=E[X²]−E[X]² et l'écart-type."
+          - "Vérifier que $p_k\\ge0$ et que $\\sum_k p_k=1$."
+          - "Calculer $E[X]=\\sum_x x p(x)$."
+          - "Calculer $E[X^2]=\\sum_x x^2p(x)$."
+          - "Déduire $\\operatorname{Var}(X)=E[X^2]-(E[X])^2$ et l'écart-type."
         controles:
           - "L'espérance est entre les valeurs minimale et maximale du support."
           - "La variance est non négative."
@@ -107,12 +107,12 @@ fiche:
         quand_utiliser: "n essais indépendants, chacun avec la même probabilité p, et au plus un succès par essai."
         etapes:
           - "Identifier n, p et le nombre de succès k."
-          - "Utiliser la formule binomiale pour P(X=k)."
-          - "Pour au moins un succès, utiliser 1−P(X=0)."
+          - "Utiliser la formule binomiale pour $P(X=k)$."
+          - "Pour au moins un succès, utiliser $1-P(X=0)$."
           - "Pour plusieurs valeurs, sommer les probabilités ou utiliser le complément."
         controles:
-          - "E[X]=np et Var(X)=np(1−p)."
-          - "P(X=0)=(1−p)^n."
+          - "$E[X]=np$ et $\\operatorname{Var}(X)=np(1-p)$."
+          - "$P(X=0)=(1-p)^n$."
           - "La probabilité recherchée est entre 0 et 1."
         erreurs:
           - "Utiliser la binomiale si les essais ne sont pas indépendants ou p n'est pas constant."
@@ -121,15 +121,15 @@ fiche:
         quand_utiliser: "Un nombre d'événements est modélisé par un taux moyen λ sur une période ou une exposition."
         etapes:
           - "Définir λ sur la même période/exposition que l'événement."
-          - "Calculer P(N=k) avec la formule Poisson."
-          - "Pour N≥m, sommer les masses sous m puis soustraire de 1."
-          - "Si une binomiale est disponible, comparer λ=np et les probabilités exactes."
+          - "Calculer $P(N=k)$ avec la formule Poisson."
+          - "Pour $N\\ge m$, sommer les masses pour $k<m$ puis soustraire de $1$."
+          - "Si une binomiale est disponible, comparer $\\lambda=np$ et les probabilités exactes."
         controles:
-          - "E[N]=Var(N)=λ."
-          - "La somme des masses sur un support suffisamment large est proche de 1."
-          - "L'approximation est meilleure lorsque n est grand et p faible."
+          - "$E[N]=\\operatorname{Var}(N)=\\lambda$."
+          - "La somme des masses sur un support suffisamment large est proche de $1$."
+          - "L'approximation est meilleure lorsque $n$ est grand et $p$ faible."
         erreurs:
-          - "Interpréter λ comme une probabilité."
+          - "Interpréter $\\lambda$ comme une probabilité."
           - "Oublier les événements k=0 et 1 dans le complément."
           - "Utiliser l'approximation sans vérifier son adéquation."
   exemples_guides:
