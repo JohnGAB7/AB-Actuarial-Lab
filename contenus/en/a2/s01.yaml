@@ -164,7 +164,7 @@ fiche:
         corrige:
           - "P(at least one)=1−0.98^{25}≈0.3965."
           - "np=0.50 is an upper bound and first-order approximation, not the exact result."
-        feedback: "The complement is exact under independence; np is not an exact probability."
+        feedback: "The complement is exact under independence; np is not an exact probability, even if it exceeds 1."
   applications_labs:
     applications:
       - titre: "Portfolio table and Bayesian update"
