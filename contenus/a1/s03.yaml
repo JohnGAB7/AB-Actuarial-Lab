@@ -394,8 +394,8 @@ etapes:
       lignes: [['5 %', '10', '2 %']]
     champs:
       - {cle: s, libelle: '$s_{\overline{10}|}$', valeur: 12.5778925, tolerance: 0.0015}
-      - {cle: ia, libelle: '$$(Ia)$_{\overline{10}|}$', valeur: 39.3737828, tolerance: 0.0015}
-      - {cle: da, libelle: '$$(Da)$_{\overline{10}|}$', valeur: 45.5653014, tolerance: 0.0015}
+      - {cle: ia, libelle: '$(Ia)_{\overline{10}|}$', valeur: 39.3737828, tolerance: 0.0015}
+      - {cle: da, libelle: '$(Da)_{\overline{10}|}$', valeur: 45.5653014, tolerance: 0.0015}
       - {cle: geo, libelle: '$\sum_{k=1}^{10} (1+g)^{k-1}\,v^k$', valeur: 8.3881057, tolerance: 0.0015}
     solution: |
       $v^{10} = 0{,}613913$, $a_{\overline{10}|} = 7{,}7217$, $\ddot{a}_{\overline{10}|} = 8{,}1078$, $s_{\overline{10}|} = 0{,}628895 / 0{,}05 = 12{,}5779$.
