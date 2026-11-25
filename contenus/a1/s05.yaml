@@ -361,13 +361,13 @@ fiche:
           - "Recalculer par somme de coupons actualisés et remboursement."
           - "Le prix à 5 % doit être exactement le nominal à la précision numérique."
       - titre: "Prix par courbe spot et taux à terme"
-        enonce: "Courbe fictive s_1=3 %, s_2=3,5 %, s_3=4 %. Prix d'une obligation 3 ans, nominal 1 000 €, coupon 5 %; calculer aussi f_1,2 et f_2,3."
+        enonce: "Courbe fictive s_1=3 %, s_2=3,5 %, s_3=4 %. Prix d'une obligation 3 ans, nominal 1 000 €, coupon 5 %; calculer aussi les taux à terme entre les années 1 et 2, puis 2 et 3."
         raisonnement:
           - "P=50/1,03+50/1,035²+1 050/1,04³."
           - "Les taux à terme découlent de l'équivalence des facteurs de capitalisation."
-          - "f_1,2=(1,035²/1,03)−1≈4,0024 %."
-          - "f_2,3=(1,04³/1,035²)−1≈5,0073 %."
-        resultat: "Prix≈1 028,67 €; f_1,2≈4,0024 %; f_2,3≈5,0073 %."
+          - "f_{1→2}=(1,035²/1,03)−1≈4,0024 %."
+          - "f_{2→3}=(1,04³/1,035²)−1≈5,0073 %."
+        resultat: "Prix≈1 028,67 €; f_{1→2}≈4,0024 %; f_{2→3}≈5,0073 %."
         interpretation: "Le prix spot actualise chaque coupon à son taux propre; les forwards sont implicites et ne constituent pas des prévisions garanties."
         controles:
           - "Vérifier chaque PV individuellement."
