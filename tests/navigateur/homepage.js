@@ -276,6 +276,48 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       await page.locator("#mode-steps").click();
       if (!(await page.locator("#stage").isVisible())) failures.push(language + " guided pathway should be restored");
     }
+    // A2/S04 reference sheet: pooling, LLN, CLT and systematic risk.
+    for (const language of ["fr", "en"]) {
+      const path = language === "en" ? "en/a2/s04/index.html" : "a2/s04/index.html";
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto(new URL(path, BASE).toString(), { waitUntil: "domcontentloaded" });
+      await page.locator("#lesson-mode").waitFor({ state: "visible" });
+      await page.locator("#mode-reference").click();
+      await page.waitForFunction(() => {
+        const sheet = document.querySelector("#reference-sheet");
+        const panel = document.querySelector("#reference-panel-0");
+        return sheet && !sheet.hidden && panel && !panel.hidden;
+      }, null, { timeout: 5000 }).catch(async () => {
+        const state = await page.evaluate(() => ({
+          sheetHidden: document.querySelector("#reference-sheet")?.hidden,
+          panelHidden: document.querySelector("#reference-panel-0")?.hidden,
+          tabs: document.querySelectorAll("#reference-tabs [role=tab]").length
+        }));
+        console.error("A2/S04 reference-mode diagnostic:", language, state, errors);
+        failures.push(language + " A2/S04 reference mode failed to expose overview");
+      });
+      const tabs = page.locator("#reference-tabs [role=tab]");
+      if (await tabs.count() !== 7) failures.push(language + " A2/S04 should have seven tabs");
+      await tabs.nth(1).click();
+      if (!(await page.locator("#reference-panel-1 .reference-formula .katex-display").count())) failures.push(language + " A2/S04 display formulas should render");
+      await tabs.nth(2).click();
+      if (!(await page.locator("#reference-panel-2 .katex").count())) failures.push(language + " A2/S04 inline method formulas should render");
+      const inlineCount = await page.locator("#reference-panel-2 .reference-block li .katex").count();
+      const displayCount = await page.locator("#reference-panel-2 .reference-block li .katex-display").count();
+      if (!inlineCount) failures.push(language + " A2/S04 inline formulas should remain inside method lists");
+      if (displayCount) failures.push(language + " A2/S04 inline formulas must not become display math");
+      await tabs.nth(3).click();
+      if (!(await page.locator("#reference-panel-3 .reference-block").count())) failures.push(language + " A2/S04 worked examples missing");
+      await tabs.nth(4).click();
+      if (!(await page.locator("#reference-panel-4 .reference-block").count())) failures.push(language + " A2/S04 solved exercises missing");
+      await tabs.nth(5).click();
+      if (!(await page.locator("#reference-panel-5 pre.reference-code code").count())) failures.push(language + " A2/S04 pooling lab code missing");
+      await tabs.nth(6).click();
+      if (!(await page.locator("#reference-panel-6 .reference-table").count())) failures.push(language + " A2/S04 glossary missing");
+      await page.setViewportSize({ width: 320, height: 844 });
+      if (await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)) failures.push(language + " A2/S04 reference sheet overflow at 320px");
+    }
+
     // A2/S03 reference sheet: continuous severity and tail risk.
     for (const language of ["fr", "en"]) {
       const path = language === "en" ? "en/a2/s03/index.html" : "a2/s03/index.html";
