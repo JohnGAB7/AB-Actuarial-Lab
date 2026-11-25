@@ -170,20 +170,17 @@ fiche:
   exercices_corriges:
     exercices:
       - titre: "Fundamental — exponential"
-        niveau: fondamental
         enonce: "θ=€3,000. Calculate P(X>€6,000)."
         corrige:
           - "S(6,000)=e^{-6,000/3,000}=e^{-2}≈0.135335."
         feedback: "Use survival for an exceedance."
       - titre: "Intermediate — lognormal quantile"
-        niveau: intermediaire
         enonce: "ln(X)~N(8,0.25). Calculate the 95% quantile and mean."
         corrige:
           - "q_{0.95}=e^{8+0.5×1.644854}=€6,784.71."
           - "E[X]=e^{8+0.5×0.25}=€3,377.87."
         feedback: "μ and σ are parameters of the logarithm."
       - titre: "Advanced — Pareto"
-        niveau: avance
         enonce: "θ=€1,000 and α=2.5. Calculate the mean and 99% quantile."
         corrige:
           - "E[X]=1,000/(2.5−1)=€666.67."
@@ -194,7 +191,6 @@ fiche:
       - titre: "Compare claim exceedances"
         contexte: "Three fictional severity distributions are compared at €5,000: exponential, lognormal and Pareto/Lomax."
         objectif: "Calculate survival, quantiles and compare models by the probability of large amounts."
-        outils: [python, excel]
         entrees:
           - "Exponential: θ=€2,000."
           - "Lognormal: μ=7, σ=1."
@@ -257,13 +253,13 @@ fiche:
       - "Pareto/Lomax: S=(θ/(θ+x))^α; mean finite for α>1, variance for α>2."
       - "Compare survival and high quantiles, not only the mean."
     glossaire:
-      - {terme_fr: "Densité", terme_en: "Density", definition: "A function whose integral over an interval gives its probability."}
-      - {terme_fr: "Fonction de répartition", terme_en: "Cumulative distribution function", definition: "Probability that the variable is at or below a threshold."}
-      - {terme_fr: "Fonction de survie", terme_en: "Survival function", definition: "Probability of exceeding a threshold."}
-      - {terme_fr: "Quantile", terme_en: "Quantile", definition: "Threshold associated with a cumulative probability level."}
-      - {terme_fr: "Value at Risk", terme_en: "Value at Risk (VaR)", definition: "Loss quantile at a chosen confidence level."}
-      - {terme_fr: "Queue lourde", terme_en: "Heavy tail", definition: "A slowly decaying tail that assigns more probability to large amounts."}
-      - {terme_fr: "Lognormale", terme_en: "Lognormal distribution", definition: "A positive distribution whose logarithm is normal."}
+      - {definition: "A function whose integral over an interval gives its probability."}
+      - {definition: "Probability that the variable is at or below a threshold."}
+      - {definition: "Probability of exceeding a threshold."}
+      - {definition: "Threshold associated with a cumulative probability level."}
+      - {definition: "Loss quantile at a chosen confidence level."}
+      - {definition: "A slowly decaying tail that assigns more probability to large amounts."}
+      - {definition: "A positive distribution whose logarithm is normal."}
     maitrise:
       - "I distinguish density from probability."
       - "I calculate survival and quantiles."
@@ -274,9 +270,9 @@ fiche:
     references:
       - {titre: "Klugman, Panjer & Willmot, Loss Models, Chapters 3–4", detail: "Severity distributions and tail models."}
       - {titre: "Ross, A First Course in Probability, continuous distributions chapter", detail: "CDF, density, normal, exponential and lognormal."}
-      - {titre: "Society of Actuaries — Exam P Probability", url: "https://www.soa.org/education/exam-req/edu-exam-p-detail/", detail: "Probability exam syllabus."}
+      - {titre: "Society of Actuaries — Exam P Probability", detail: "Probability exam syllabus."}
     liens:
-      - {titre: "A2/S02 — Discrete distributions", cible: "a2/s02"}
+      - {titre: "A2/S02 — Discrete distributions"}
 
 etapes:
   - titre: "Placement check"
