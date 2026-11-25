@@ -271,7 +271,7 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
         await page.locator("#lesson-mode").waitFor();
         await page.locator("#mode-reference").click();
         await page.locator("#reference-tabs [role=tab]").nth(1).click();
-        const tex = await page.locator("#reference-panel-1 .katex annotation[encoding="application/x-tex"]").allTextContents();
+        const tex = await page.locator('#reference-panel-1 .katex annotation[encoding="application/x-tex"]').allTextContents();
         const joined = tex.join(" ");
         for (const token of mathChecks[session]) {
           if (!joined.includes(token)) failures.push(language + " " + session + " should typeset " + token);
