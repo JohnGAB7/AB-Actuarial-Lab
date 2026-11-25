@@ -207,11 +207,11 @@ fiche:
   synthese_references:
     memo:
       - "Valeur accumulée : $s_{\\overline{n}|}=\\frac{(1+i)^n-1}{i}=(1+i)^n a_{\\overline{n}|}$ ; $i=0$ : $n$."
-      - "Perpétuité immédiate :
-      - "Arithmétiques :
-      - "Contrôle :
-      - "Géométrique finie :
-      - "Perpétuité croissante :
+      - "Perpétuité immédiate : $1/i$ ; due : $1/d$, pour $i>0$."
+      - "Arithmétiques : $(Ia)=\\frac{\\ddot{a}_{\\overline{n}|}-n v^n}{i}$ ; $(Da)=\\frac{n-a_{\\overline{n}|}}{i}$."
+      - "Contrôle : $(Ia)+(Da)=(n+1)a_{\\overline{n}|}$."
+      - "Géométrique finie : $\\frac{1-\\left(\\frac{1+g}{1+i}\\right)^n}{i-g}$ ; si $i=g$ : $nv$."
+      - "Perpétuité croissante : $\\frac{1}{i-g}$, seulement si $g<i$."
       - "Toujours vérifier la date du premier flux, les taux, la convergence et les cas limites."
     glossaire:
       - {terme_fr: "Valeur accumulée", terme_en: "Accumulated value", definition: "Valeur des paiements capitalisés à une date future."}
