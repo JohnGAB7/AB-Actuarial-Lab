@@ -43,14 +43,14 @@ fiche:
           - formule: "s_{\\overline{n}|}=\\frac{(1+i)^n-1}{i}=(1+i)^n a_{\\overline{n}|}"
             explication: "La somme capitalisée des n paiements unitaires. Cas particulier $i=0$ : $s_n=n$."
       - titre: "2. Perpétuités immédiate et due"
-        contenu: "La perpétuité immédiate verse 1 aux dates $1,2,\\ldots$ et sa valeur actuelle est la limite de l'annuité. Pour $i>0$, $v^n$ tend vers zéro et la somme converge. La perpétuité due commence à $t=0$ : elle vaut une perpétuité immédiate avancée d'une période. Le taux d'escompte effectif est $d=i/(1+i)$."
+        contenu: "La perpétuité immédiate verse 1 aux dates $1;2;\\ldots$ et sa valeur actuelle est la limite de l'annuité. Pour $i>0$, $v^n$ tend vers zéro et la somme converge. La perpétuité due commence à $t=0$ : elle vaut une perpétuité immédiate avancée d'une période. Le taux d'escompte effectif est $d=i/(1+i)$."
         formules:
           - formule: "a_{\\overline{\\infty}|}=\\frac{1}{i},\\quad i>0"
             explication: "Un capital 1/i produit 1 d'intérêt par période au taux i, dans le modèle déterministe."
           - formule: "\\ddot{a}_{\\overline{\\infty}|}=\\frac{1}{d}=\\frac{1+i}{i}=1+\\frac{1}{i}"
             explication: "La perpétuité due inclut le paiement immédiat à $t=0$."
       - titre: "3. Annuités arithmétiques"
-        contenu: "L'annuité croissante verse $1,2,\\ldots,n$ aux dates $1,\\ldots,n$. L'annuité décroissante verse $n,n-1,\\ldots,1$. Elles ont le même total nominal, mais pour $i>0$ la décroissante a une valeur actuelle plus grande car ses montants élevés arrivent plus tôt."
+        contenu: "L'annuité croissante verse $1;2;\\ldots;n$ aux dates $1;\\ldots;n$. L'annuité décroissante verse $n,n-1,\\ldots,1$. Elles ont le même total nominal, mais pour $i>0$ la décroissante a une valeur actuelle plus grande car ses montants élevés arrivent plus tôt."
         formules:
           - formule: "(Ia)_{\\overline{n}|}=\\sum_{k=1}^{n}k v^k=\\frac{\\ddot{a}_{\\overline{n}|}-n v^n}{i}"
             explication: "Formule de l'annuité croissante, pour $i\\ne0$."
