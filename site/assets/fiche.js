@@ -65,7 +65,18 @@
     if (content) node.append(content);
     return node;
   };
-  const paragraph = (text) => make("p","",text);
+  // Materialize bare mathematical notation in prose, not only explicitly delimited TeX.
+  // The conversion is deliberately conservative and only targets common formula tokens.
+  const inlineNotation = (value) => {
+    let text = String(value ?? "");
+    const wrap = (pattern) => { text = text.replace(pattern, (match) => "$" + match + "$"); };
+    wrap(/\b[A-Za-z]\([^()]{1,24}\)\^[A-Za-z0-9]+/g); // C(1+i)^t
+    wrap(/\b[A-Za-z]_[A-Za-z0-9]+/g);                  // C_t, i_m, a_n
+    wrap(/\b[A-Za-z0-9)\]}]\^[A-Za-z0-9]+/g);           // v^n, x^2, )^t
+    wrap(/\b[A-Za-z]\([^()]{1,24}\)/g);                 // C(1+i)
+    return text;
+  };
+  const paragraph = (text) => make("p","",inlineNotation(text));
   const formula = (text) => {
     const node = make("div","reference-formula");
     node.setAttribute("aria-label", text);
