@@ -100,7 +100,7 @@ fiche:
         enonce: "At 5%, find the present values of payments 1, 2, …,10 and 10, 9, …, 1 at times 1 to 10."
         raisonnement:
           - "a_10=7.72173493 and ä_10=8.10782168."
-          - "(Ia)=(ä_10−10v^10)/i."
+          - "(Ia)=(ä_10−n v^n)/i."
           - "(Da)=(10−a_10)/i."
           - "Check their sum using 11a_10."
         interpretation: "The decreasing annuity has a higher present value because larger payments occur earlier."
