@@ -138,7 +138,7 @@ fiche:
           - "Unit fractional annuity: a^(12)_{10|}=(1−v^10)/i^(12)≈8.25854."
           - "Scale by 1,200 for the pension amount."
         resultat: "PV≈1,200×8.25854≈9,910.25 units."
-        interpretation: "Payments arrive earlier than one annual payment of 1,200 at year-end; their present value is greater than that of an annual immediate annuity with the same total."
+        interpretation: "Payments arrive earlier than the 1,200 annual payment at year-end; their present value is greater than that of an annual immediate annuity with an annual total of 1,200."
         controles:
           - "The 120 payments of 100 total 12,000 before discounting."
           - "Present value is positive and below nominal total for i>0."
