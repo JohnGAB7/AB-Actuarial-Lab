@@ -103,7 +103,7 @@ const el = (tag, attrs = {}, ...kids) => {
   for (const [k, v] of Object.entries(attrs)) {
     if (k === "html") e.append(rich(v)); else if (k === "class") e.className = v; else e.setAttribute(k, v);
   }
-  e.append(...kids.filter((k) => k !== null && k !== undefined && k !== ""));
+  e.append(...kids.filter((k) => k !== null && k !== undefined && k !== "").map((k) => typeof k === "string" ? inlineNotation(k) : k));
   return e;
 };
 const KEY = "parcours:" + S.id;
