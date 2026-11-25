@@ -24,21 +24,21 @@ fiche:
   cours_complet:
     sections:
       - titre: "1. Time convention and annual effective rate"
-        contenu: "Let t be the number of years elapsed since valuation date 0. The annual effective interest rate i is the return over one year: capital C invested for one year becomes C(1+i). The annual accumulation factor is 1+i. Unless stated otherwise, this sheet assumes i is constant, deterministic, annual and greater than -1; cash flows use the same currency unit. For an integer number of years, the capital becomes C(1+i)^t. For fractional periods, the convention must be stated: C(1+i)^t is consistent with a constant force of interest, but contractual conventions may differ."
+        contenu: "Let $t\\geq 0$ denote elapsed time in years since the valuation date $t=0$. The annual effective interest rate $i$ is the return over one year: initial capital $C_0$ invested for one year becomes $C_1=C_0(1+i)$. The annual accumulation factor is $1+i$. Unless stated otherwise, $i$ is constant, deterministic and greater than $-1$; cash flows use the same currency unit. For integer $t$, the accumulated value is $C_t=C_0(1+i)^t$. For fractional periods, the compounding convention must be stated. Under a constant force of interest $\\delta=\\ln(1+i)$, exponential accumulation gives $C_t=C_0e^{\\delta t}=C_0(1+i)^t$. Other contractual conventions may apply."
         formules:
-          - {formule: "A_t=C(1+i)^t", explication: "A_t is the accumulated value at time t of initial capital C. The factor (1+i)^t applies the same annual factor in each period."}
+          - {formule: "C_t=C_0(1+i)^t=C_0e^{\\delta t},\\qquad \\delta=\\ln(1+i)", explication: "C_0 is the initial capital at time 0 and C_t is its accumulated value at time t. The exponential form assumes a constant force of interest and a consistent fractional-period convention."}
       - titre: "2. Discount factor and present value"
-        contenu: "Discounting is the inverse of accumulation. The annual discount factor v is the reciprocal of the accumulation factor: $v=\\frac{1}{1+i}$. An amount F payable at time t has value at time 0 equal to $Fv^t$. For a finite stream of cash flows C_t payable at dates t, present value is the sum of their individual discounted values. A receipt may be positive and a payment negative; keep the sign convention consistent."
+        contenu: "Discounting is the inverse of accumulation. The annual discount factor v is the reciprocal of the accumulation factor: $v=\\frac{1}{1+i}$. An amount F payable at time t has value at time 0 equal to $Fv^t$. For a finite stream of cash flows $C_t$ payable at dates $t$, present value is the sum of their individual discounted values. A receipt may be positive and a payment negative; keep the sign convention consistent."
         formules:
-          - {formule: "v=(1+i)^{-1},\\qquad VA_0(F_t)=F_t v^t=\\frac{F_t}{(1+i)^t}", explication: "For i>0 and t>0, v^t is below 1: a positive future payment is worth less at time 0."}
+          - {formule: "v=(1+i)^{-1},\\qquad VA_0(F_t)=F_t v^t=\\frac{F_t}{(1+i)^t}", explication: "For $i>0$ and $t>0$, $v^t$ is below $1$: a positive future payment is worth less at time 0."}
           - {formule: "VA_0=\\sum_{j=1}^{m} C_{t_j}v^{t_j}", explication: "The sum runs over m cash flows at dates t_j. Each flow must use its own date and a rate consistent with that maturity."}
       - titre: "3. Rate of discount and force of interest"
-        contenu: "The annual rate of discount d expresses interest relative to the value at the beginning of the period. For the same annual accumulation factor, d=i/(1+i)=iv=1-v. Do not confuse d with i: the former relates interest to the initial value after deduction in advance, while the latter relates interest to the capital lent over the period. The constant force of interest δ describes continuous accumulation. Equivalence over one year requires e^δ=1+i, hence δ=ln(1+i). For i>0, d<δ<i. At small positive rates these measures are close, but they are not interchangeable."
+        contenu: "The annual rate of discount $d$ expresses interest relative to the value at the beginning of the period. For the same annual accumulation factor, $d=\\frac{i}{1+i}=iv=1-v$. Do not confuse d with i: the former relates interest to the initial value after deduction in advance, while the latter relates interest to the capital lent over the period. The constant force of interest $\\delta$ describes continuous accumulation. Equivalence over one year requires $e^\\delta=1+i$, hence $\\delta=\\ln(1+i)$. For $i>0$, $d<\\delta<i$. At small positive rates these measures are close, but they are not interchangeable."
         formules:
           - {formule: "d=\\frac{i}{1+i}=iv=1-v", explication: "The rate of discount is the relative reduction applied to the amount due at the end of the period when interest is paid in advance."}
           - {formule: "\\delta=\\ln(1+i),\\qquad (1+i)^t=e^{\\delta t}", explication: "The force δ is a constant instantaneous rate. It reproduces the annual effective accumulation factor after one year."}
       - titre: "4. Annuity immediate"
-        contenu: "An annuity certain of n unit payments has known payments and no survival contingency. For an annuity immediate, payments occur at times 1 ; 2 ; … ; n, at the end of each period. Its present value is v+v²+…+vⁿ. The geometric sum is (1-vⁿ)/i when i is non-zero. If i=0, each payment is worth 1 at time 0 and the value is n; handle this case separately in numerical implementations."
+        contenu: "An annuity certain of n unit payments has known payments and no survival contingency. For an annuity immediate, payments occur at times 1 ; 2 ; … ; n, at the end of each period. Its present value is $v+v^2+\\cdots+v^n$. The geometric sum is $(1-v^n)/i$ when $i\\ne0$. If $i=0$, each payment is worth 1 at time 0 and the value is n; handle this case separately in numerical implementations."
         formules:
           - {formule: "a_{\\overline{n}|}=\\sum_{k=1}^{n}v^k=\\frac{1-v^n}{i},\\quad i\\ne0", explication: "a_{n|} denotes the present value of an annuity immediate with n unit payments."}
           - {formule: "a_{\\overline{n}|}=n,\\quad i=0", explication: "The preceding closed form is indeterminate at i=0; summing n factors equal to 1 gives n directly."}
@@ -49,7 +49,7 @@ fiche:
           - {formule: "\\ddot{a}_{\\overline{n}|}=\\sum_{k=0}^{n-1}v^k=\\frac{1-v^n}{d}=(1+i)a_{\\overline{n}|}", explication: "The double dot indicates payments at the beginning of each period. For i>0, the value exceeds that of an annuity immediate."}
           - {formule: "\\ddot{a}_{\\overline{n}|}=1+a_{\\overline{n-1}|}", explication: "Separate the payment at time 0; the remaining n−1 payments form an annuity immediate."}
       - titre: "6. Accumulated value of an annuity"
-        contenu: "The accumulated value at time n of an annuity immediate is the sum of payments accumulated to that date. It is denoted s_{n|} and equals (1+i)^n a_{n|}. This is not a present value: it is measured at time n, whereas a_{n|} is measured at time 0. Always state the valuation date of a financial amount."
+        contenu: "The accumulated value at time $n$ of an annuity immediate is the sum of payments accumulated to that date. It is denoted $s_{n|}$ and equals $(1+i)^n a_{n|}$. This is not a present value: it is measured at time n, whereas a_{n|} is measured at time 0. Always state the valuation date of a financial amount."
         formules:
           - {formule: "s_{\\overline{n}|}=\\sum_{k=1}^{n}(1+i)^{n-k}=\\frac{(1+i)^n-1}{i}=(1+i)^n a_{\\overline{n}|}", explication: "Each payment is accumulated for the number of periods between its payment date and time n."}
       - titre: "7. Sensitivity and model limitations"
@@ -80,11 +80,11 @@ fiche:
           - "Determine the number n of payments."
           - "Write their dates: 1 to n for an annuity immediate, 0 to n−1 for an annuity due."
           - "Choose the formula that matches those exact dates."
-          - "Handle i=0 separately if a formula divides by i or d."
+          - "Handle $i=0$ separately if a formula divides by $i$ or $d$."
           - "Check annuity due against the identity (1+i) times annuity immediate."
         controles:
           - "For i>0, annuity due is greater than annuity immediate."
-          - "For i=0, both values equal n."
+          - "For $i=0$, both values equal $n$."
           - "The explicit sum of discount factors must match the closed form."
         erreurs:
           - "Shift payments by one period by confusing beginning and end of period."
@@ -93,7 +93,7 @@ fiche:
   exemples_guides:
     exemples:
       - titre: "Compare an annuity immediate and an annuity due"
-        enonce: "A contract pays 1 monetary unit per year for 3 years. The annual effective rate is i=2.5%. Find the value at time 0 if payments are made at year-end, then at the beginning of each year."
+        enonce: "A contract pays 1 monetary unit per year for 3 years. The annual effective rate is $i=2.5\\%$. Find the value at time 0 if payments are made at year-end, then at the beginning of each year."
         raisonnement:
           - "Compute v=1/1.025≈0.9756098."
           - "Year-end: a_{3|}=v+v²+v³≈0.9756098+0.9518144+0.9285994=2.8560236."
@@ -132,7 +132,7 @@ fiche:
           - "Present value is 900×ä_{5|}≈4,245.4 monetary units (rounded to one decimal)."
         feedback: "The first payment at the beginning of the first year is not discounted. Using a_{5|} incorrectly moves the first rent one year later."
       - titre: "Advanced — irregular cash flows"
-        enonce: "A scheme pays 2,000 units at t=1 and 1,500 at t=4, and receives 300 at t=2. Calculate net present value at a 5% annual effective rate."
+        enonce: "A scheme pays 2,000 units at $t=1$ and $1,500$ at $t=4$, and receives $300$ at $t=2$. Calculate net present value at a 5% annual effective rate."
         corrige:
           - "Set a convention: treat benefits as positive and the receipt as a negative cost, or reverse all signs consistently."
           - "With benefits positive and the receipt negative: NPV=2,000/1.05+1,500/(1.05)⁴−300/(1.05)²."
@@ -144,9 +144,9 @@ fiche:
         contexte: "A simplified first estimate of a pension obligation can represent certain future benefits as a list of dated cash flows. This lab is not a regulatory valuation; it isolates the financial discounting mechanism."
         objectif: "Reproduce the present value of a cash-flow stream and compare a spreadsheet result with a Python function."
         entrees:
-          - "Fictional cash flows: 1,000 at t=5 and 500 at t=10."
+          - "Fictional cash flows: $1,000$ at $t=5$ and $500$ at $t=10$."
           - "Constant annual effective rate: 2.5%."
-          - "Valuation date: t=0; amounts use one common monetary unit."
+          - "Valuation date: $t=0$; amounts use one common monetary unit."
         hypotheses:
           - "Deterministic flows, flat constant rate and integer annual periods."
           - "No risk, inflation, expenses, tax or survival probability is modelled."
@@ -177,7 +177,7 @@ fiche:
       - "Accumulation: multiply by (1+i)^t; discounting: multiply by v^t."
       - "$v=\\frac{1}{1+i}$, d=i/(1+i), δ=ln(1+i)."
       - "Annuity immediate: payments at 1,…,n; annuity due: payments at 0,…,n−1."
-      - "ä_{n|}=(1+i)a_{n|}; at i=0, both annuity values equal n."
+      - "$\\ddot{a}_{n|}=(1+i)a_{n|}$; at $i=0$, both annuity values equal $n$."
       - "Always state the valuation date, frequency, rate and sign convention."
     glossaire:
       - {definition: "Interest calculated on capital increased by previously accumulated interest."}
