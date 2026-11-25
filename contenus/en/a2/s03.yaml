@@ -1,6 +1,283 @@
 # English texts for session A2.03. Numbers, answers and tests live in contenus/a2/s03.yaml.
 titre: "Claim size: continuous distributions"
 
+fiche:
+  vue_ensemble:
+    question: "Two claims have the same average cost: why can their tail risk be very different?"
+    pourquoi: "Frequency describes the number of claims; severity describes their amount. Continuous distributions quantify exceedances, quantiles and tails, which are essential for pricing, reserving and reinsurance."
+    objectifs:
+      - "Distinguish density, cumulative distribution and survival functions."
+      - "Calculate interval and exceedance probabilities."
+      - "Calculate and interpret quantiles, including Value at Risk."
+      - "Use exponential, normal and lognormal distributions."
+      - "Use Pareto/Lomax to represent a heavy tail."
+      - "Compare distributions by means, quantiles and exceedance probabilities."
+    prerequis:
+      - "Random variables, expected value and variance."
+      - "Standard normal distribution and logarithm."
+      - "Discrete probabilities and cumulative distribution functions."
+    carte:
+      - "Density f: probability per unit; integral over an interval gives probability."
+      - "CDF F(x): probability of being at or below x."
+      - "Survival S(x)=1−F(x): probability of exceeding x."
+      - "Quantile q_p: threshold exceeded with probability 1−p."
+      - "Exponential: basic memoryless model."
+      - "Lognormal and Pareto: positive amounts with right skew/heavy tails."
+    duree_minutes: 45
+  cours_complet:
+    sections:
+      - titre: "1. Density, CDF and probability"
+        contenu: "For a continuous variable, P(X=x)=0. The density f(x) is not a point probability and can exceed 1; its integral over an interval gives probability. The CDF F(x) accumulates probability up to x."
+        formules:
+          - formule: "F(x)=P(X\\le x)=\\int_{-\\infty}^{x}f(t)\\,dt"
+            explication: "Cumulative distribution function."
+          - formule: "P(a<X\\le b)=F(b)-F(a)=\\int_a^b f(t)\\,dt"
+            explication: "Probability of an interval."
+      - titre: "2. Survival, exceedance and quantile"
+        contenu: "In insurance, the survival function describes the probability of an amount exceeding a threshold. The p-quantile is the threshold below which p% of observations lie; VaR at level p is this quantile. For a continuous distribution, the probability of exceeding q_p is 1−p."
+        formules:
+          - formule: "S(x)=P(X>x)=1-F(x)"
+            explication: "Survival or exceedance probability."
+          - formule: "q_p=F^{-1}(p),\\quad F(q_p)=p"
+            explication: "Quantile of order p."
+          - formule: "P(X>q_p)=1-p"
+            explication: "Probability of exceeding a quantile, for a continuous distribution."
+      - titre: "3. Exponential distribution"
+        contenu: "The exponential with scale θ>0 models a positive amount or waiting time. Its mean is θ. It is memoryless: conditional on having exceeded a threshold, the probability of exceeding an additional amount does not depend on the threshold already reached. This property is not suitable for every claim severity."
+        formules:
+          - formule: "f(x)=\\frac{1}{\\theta}e^{-x/\\theta},\\quad x\\ge0"
+            explication: "Exponential density."
+          - formule: "F(x)=1-e^{-x/\\theta},\\quad S(x)=e^{-x/\\theta}"
+            explication: "CDF and survival."
+          - formule: "E[X]=\\theta,\\quad \\operatorname{Var}(X)=\\theta^2"
+            explication: "Mean and variance."
+          - formule: "q_p=-\\theta\\ln(1-p)"
+            explication: "Quantile."
+      - titre: "4. Normal distribution"
+        contenu: "The normal is symmetric around μ with standard deviation σ. It is useful for some aggregate quantities, but an individual claim amount is non-negative: a normal distribution assigns probability to negative values. Check whether this approximation is reasonable."
+        formules:
+          - formule: "X\\sim\\mathcal N(\\mu,\\sigma^2),\\quad E[X]=\\mu,\\quad \\operatorname{Var}(X)=\\sigma^2"
+            explication: "Parameters and moments."
+          - formule: "q_p=\\mu+z_p\\sigma"
+            explication: "Quantile, where z_p is the standard-normal quantile."
+      - titre: "5. Lognormal distribution"
+        contenu: "X is lognormal when ln(X) is normal. X is positive and right-skewed. μ and σ are parameters of the logarithm, not the mean and standard deviation of X. Its median is e^μ and its mean is e^{μ+σ²/2}; large claims increase the mean."
+        formules:
+          - formule: "\\ln X\\sim\\mathcal N(\\mu,\\sigma^2)"
+            explication: "Definition."
+          - formule: "E[X]=e^{\\mu+\\sigma^2/2},\\quad \\operatorname{Med}(X)=e^\\mu"
+            explication: "Mean and median."
+          - formule: "S(x)=1-\\Phi\\left(\\frac{\\ln x-\\mu}{\\sigma}\\right),\\quad x>0"
+            explication: "Probability of exceeding x."
+          - formule: "q_p=e^{\\mu+\\sigma z_p}"
+            explication: "Quantile."
+      - titre: "6. Pareto/Lomax distribution and heavy tail"
+        contenu: "Type-II Pareto (Lomax), with θ>0 and α>0, has polynomial survival. It can represent amounts where large claims remain more likely than under an exponential. Its mean is finite if α>1 and variance finite if α>2. State the parameterization."
+        formules:
+          - formule: "S(x)=\\left(\\frac{\\theta}{\\theta+x}\\right)^\\alpha,\\quad x\\ge0"
+            explication: "Lomax survival."
+          - formule: "f(x)=\\frac{\\alpha\\theta^\\alpha}{(\\theta+x)^{\\alpha+1}}"
+            explication: "Density."
+          - formule: "E[X]=\\frac{\\theta}{\\alpha-1},\\quad \\alpha>1"
+            explication: "Mean."
+          - formule: "\\operatorname{Var}(X)=\\frac{\\alpha\\theta^2}{(\\alpha-1)^2(\\alpha-2)},\\quad \\alpha>2"
+            explication: "Variance."
+          - formule: "q_p=\\theta\\left((1-p)^{-1/\\alpha}-1\\right)"
+            explication: "Quantile."
+      - titre: "7. Choosing and comparing severity models"
+        contenu: "Do not compare only means. Examine medians, high quantiles and survival beyond important thresholds. A heavy-tailed distribution can have a comparable mean but more large claims. Check assumptions, fit, censored data, inflation, deductibles, policy limits and parameter uncertainty."
+        formules:
+          - formule: "P(X>x)=S(x)\\quad\\text{and}\\quad q_p=F^{-1}(p)"
+            explication: "Two tail-risk indicators: exceedance and quantile."
+  methodes:
+    methodes:
+      - titre: "Calculate an interval or exceedance probability"
+        quand_utiliser: "A continuous distribution is known and the target is a probability between thresholds or above a threshold."
+        etapes:
+          - "Identify F or S and its parameters."
+          - "For an interval, calculate F(b)−F(a)."
+          - "For exceedance, calculate S(x)=1−F(x)."
+          - "Check that the probability is between 0 and 1."
+        controles:
+          - "Survival decreases as the threshold increases."
+          - "An interval probability is non-negative."
+          - "For x≥0, F(x)+S(x)=1."
+        erreurs:
+          - "Confuse density f(x) with probability F(x)."
+          - "Use the CDF instead of survival for P(X>x)."
+      - titre: "Calculate a quantile or VaR"
+        quand_utiliser: "A threshold amount is required for a confidence level p."
+        etapes:
+          - "Identify p and the distribution."
+          - "Use the quantile formula or standard-normal quantile z_p."
+          - "Interpret q_p as a threshold exceeded with probability 1−p."
+          - "State the period and unit."
+        controles:
+          - "The quantile increases with p."
+          - "For a continuous distribution, F(q_p)=p."
+          - "VaR does not describe the average loss beyond the threshold."
+        erreurs:
+          - "Confuse the 99% quantile with the mean of the largest 1%."
+          - "Use z=1.96 for one-sided 95% instead of 1.645."
+      - titre: "Compare distribution tails"
+        quand_utiliser: "Two models describe claim amounts and the goal is to compare large-claim risk."
+        etapes:
+          - "Compare parameters and means, checking their existence."
+          - "Calculate survival at the same threshold x."
+          - "Compare several thresholds and high quantiles."
+          - "Conclude on assumptions and limitations, not only a single number."
+        controles:
+          - "Thresholds, units and periods are identical."
+          - "Survival is a probability between 0 and 1."
+          - "Tail comparison uses a relevant data range."
+        erreurs:
+          - "Conclude about tail risk from the mean alone."
+          - "Ignore policy limits or censoring."
+  exemples_guides:
+    exemples:
+      - titre: "Exponential: exceedance and quantile"
+        enonce: "An amount follows an exponential distribution with mean θ=€2,000. Calculate P(X>€5,000) and the 99th quantile."
+        raisonnement:
+          - "S(x)=e^{-x/θ}, so P(X>5,000)=e^{-2.5}=0.0821."
+          - "q_{0.99}=−2,000 ln(0.01)=€9,210.34."
+        resultat: "Exceedance 8.21%; 99th quantile €9,210.34."
+        interpretation: "About 8.21% of amounts exceed €5,000; 1% exceed €9,210.34."
+        controles:
+          - "Survival decreases with x."
+          - "The 99th quantile exceeds the 50th quantile."
+      - titre: "Lognormal: mean, median and tail"
+        enonce: "ln(X)~N(7,1). Calculate the median, mean and P(X>5,000)."
+        raisonnement:
+          - "Median=e^7=€1,096.63."
+          - "Mean=e^{7.5}=€1,808.04."
+          - "z=(ln 5,000−7)/1=1.5172; survival=1−Φ(z)=0.06461."
+        resultat: "Median €1,096.63; mean €1,808.04; exceedance 6.46%."
+        interpretation: "The mean exceeds the median because of right skew."
+        controles:
+          - "Mean exceeds median."
+          - "Exceedance probability lies between 0 and 1."
+      - titre: "Pareto/Lomax: heavy tail"
+        enonce: "With θ=€4,000 and α=3, calculate P(X>5,000), the mean and variance."
+        raisonnement:
+          - "S(5,000)=(4,000/9,000)^3=64/729≈0.08779."
+          - "E[X]=θ/(α−1)=€2,000."
+          - "Var(X)=αθ²/((α−1)²(α−2))=12,000,000 €²."
+        resultat: "Exceedance 8.78%; mean €2,000; standard deviation ≈€3,464.10."
+        interpretation: "Variance exists because α>2. Large amounts remain more likely than under an exponential with the same mean."
+        controles:
+          - "α>2 ensures finite variance."
+          - "Exceedance is a probability, not a density."
+  exercices_corriges:
+    exercices:
+      - titre: "Fundamental — exponential"
+        niveau: fondamental
+        enonce: "θ=€3,000. Calculate P(X>€6,000)."
+        corrige:
+          - "S(6,000)=e^{-6,000/3,000}=e^{-2}≈0.135335."
+        feedback: "Use survival for an exceedance."
+      - titre: "Intermediate — lognormal quantile"
+        niveau: intermediaire
+        enonce: "ln(X)~N(8,0.25). Calculate the 95% quantile and mean."
+        corrige:
+          - "q_{0.95}=e^{8+0.5×1.644854}=€6,784.71."
+          - "E[X]=e^{8+0.5×0.25}=€3,377.87."
+        feedback: "μ and σ are parameters of the logarithm."
+      - titre: "Advanced — Pareto"
+        niveau: avance
+        enonce: "θ=€1,000 and α=2.5. Calculate the mean and 99% quantile."
+        corrige:
+          - "E[X]=1,000/(2.5−1)=€666.67."
+          - "q_{0.99}=1,000((0.01)^{-1/2.5}−1)=€5,309.57."
+        feedback: "Mean is finite for α>1; variance is finite only for α>2."
+  applications_labs:
+    applications:
+      - titre: "Compare claim exceedances"
+        contexte: "Three fictional severity distributions are compared at €5,000: exponential, lognormal and Pareto/Lomax."
+        objectif: "Calculate survival, quantiles and compare models by the probability of large amounts."
+        outils: [python, excel]
+        entrees:
+          - "Exponential: θ=€2,000."
+          - "Lognormal: μ=7, σ=1."
+          - "Pareto/Lomax: θ=€4,000, α=3."
+          - "Threshold x=€5,000; quantile p=99%."
+        hypotheses:
+          - "Parameters are fictional and assumed known."
+          - "Each distribution is a candidate model, not an empirical fit."
+          - "Pareto/Lomax uses survival parameterization θ/(θ+x)."
+        procedure:
+          - "Calculate survival at €5,000 for each distribution."
+          - "Calculate the 99% quantile of the exponential and lognormal."
+          - "Compare means and exceedance probabilities."
+          - |
+            ```python
+            import math
+
+            def normal_cdf(z):
+                return 0.5 * (1 + math.erf(z / math.sqrt(2)))
+
+            theta_exp = 2000
+            exp_surv = math.exp(-5000 / theta_exp)
+            exp_q99 = -theta_exp * math.log(1 - 0.99)
+
+            mu, sigma = 7, 1
+            z = (math.log(5000) - mu) / sigma
+            ln_surv = 1 - normal_cdf(z)
+            ln_mean = math.exp(mu + sigma**2 / 2)
+            ln_q99 = math.exp(mu + sigma * 2.326347874)
+
+            theta_par, alpha = 4000, 3
+            par_surv = (theta_par / (theta_par + 5000)) ** alpha
+            par_mean = theta_par / (alpha - 1)
+            par_var = alpha * theta_par**2 / ((alpha-1)**2 * (alpha-2))
+            print(exp_surv, ln_surv, par_surv)
+            print(exp_q99, ln_q99, ln_mean, par_mean, par_var)
+            assert abs(exp_surv - 0.0820849986) < 1e-8
+            assert abs(ln_surv - 0.0646089574) < 1e-8
+            assert abs(par_surv - 64/729) < 1e-12
+            ```
+          - "Present the results in a table and comment on each distribution's tail."
+        sorties:
+          - "Survival at €5,000."
+          - "99th quantiles."
+          - "Means and variance when they exist."
+        validation:
+          - "Survivals lie between 0 and 1."
+          - "Survival decreases as the threshold increases."
+          - "Quantiles increase with p."
+        limites:
+          - "No parameters are fitted to real data; this comparison is illustrative."
+  synthese_references:
+    memo:
+      - "Interval: P(a<X≤b)=F(b)−F(a)."
+      - "Survival: S(x)=1−F(x); exceedance is tail probability."
+      - "Quantile: q_p=F^{-1}(p); VaR_p=q_p."
+      - "Exponential(θ): S=e^{-x/θ}; E=θ; q_p=−θ ln(1−p)."
+      - "Normal(μ,σ²): q_p=μ+z_pσ."
+      - "Lognormal: ln X~N(μ,σ²); E=e^{μ+σ²/2}; median=e^μ."
+      - "Pareto/Lomax: S=(θ/(θ+x))^α; mean finite for α>1, variance for α>2."
+      - "Compare survival and high quantiles, not only the mean."
+    glossaire:
+      - {terme_fr: "Densité", terme_en: "Density", definition: "A function whose integral over an interval gives its probability."}
+      - {terme_fr: "Fonction de répartition", terme_en: "Cumulative distribution function", definition: "Probability that the variable is at or below a threshold."}
+      - {terme_fr: "Fonction de survie", terme_en: "Survival function", definition: "Probability of exceeding a threshold."}
+      - {terme_fr: "Quantile", terme_en: "Quantile", definition: "Threshold associated with a cumulative probability level."}
+      - {terme_fr: "Value at Risk", terme_en: "Value at Risk (VaR)", definition: "Loss quantile at a chosen confidence level."}
+      - {terme_fr: "Queue lourde", terme_en: "Heavy tail", definition: "A slowly decaying tail that assigns more probability to large amounts."}
+      - {terme_fr: "Lognormale", terme_en: "Lognormal distribution", definition: "A positive distribution whose logarithm is normal."}
+    maitrise:
+      - "I distinguish density from probability."
+      - "I calculate survival and quantiles."
+      - "I recognize exponential, normal, lognormal and Pareto."
+      - "I check moment existence conditions."
+      - "I compare distributions by their tails."
+      - "I justify severity-model limitations."
+    references:
+      - {titre: "Klugman, Panjer & Willmot, Loss Models, Chapters 3–4", detail: "Severity distributions and tail models."}
+      - {titre: "Ross, A First Course in Probability, continuous distributions chapter", detail: "CDF, density, normal, exponential and lognormal."}
+      - {titre: "Society of Actuaries — Exam P Probability", url: "https://www.soa.org/education/exam-req/edu-exam-p-detail/", detail: "Probability exam syllabus."}
+    liens:
+      - {titre: "A2/S02 — Discrete distributions", cible: "a2/s02"}
+
 etapes:
   - titre: "Placement check"
     intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
