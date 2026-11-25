@@ -144,7 +144,7 @@ fiche:
           - "Var(X)=0 for a fixed cost."
           - "Var(S)=Var(N)(E[X])²."
       - titre: "Compound Poisson with discrete severity"
-        enonce: "N~Poisson(10). Each claim is 1 or 2 units with equal probability. Calculate E[S] and Var(S)."
+        enonce: "N~Poisson(10). Each claim is 1 or 2 units, with 50% probability for each value. Calculate E[S] and Var(S)."
         raisonnement:
           - "E[X]=(1+2)/2=1.5; E[X²]=(1+4)/2=2.5."
           - "E[S]=10×1.5=15."
