@@ -80,10 +80,10 @@ fiche:
       - titre: "Summarize a discrete distribution"
         quand_utiliser: "A probability mass function or a table of values and probabilities is given."
         etapes:
-          - "Check that probabilities are non-negative and sum to 1."
-          - "Calculate E[X]=Σx p(x)."
-          - "Calculate E[X²]=Σx²p(x)."
-          - "Derive Var(X)=E[X²]−E[X]² and the standard deviation."
+          - "Check that $p_k\\ge0$ and $\\sum_k p_k=1$."
+          - "Calculate $E[X]=\\sum_x x p(x)$."
+          - "Calculate $E[X^2]=\\sum_x x^2p(x$."
+          - "Derive $\\operatorname{Var}(X)=E[X^2]-(E[X])^2$ and the standard deviation."
         controles:
           - "The expected value lies between the support's minimum and maximum."
           - "Variance is non-negative."
@@ -95,12 +95,12 @@ fiche:
         quand_utiliser: "n independent trials, the same probability p, and at most one success per trial."
         etapes:
           - "Identify n, p and the required number of successes k."
-          - "Use the binomial formula for P(X=k)."
-          - "For at least one success, use 1−P(X=0)."
+          - "Use the binomial formula for $P(X=k)$."
+          - "For at least one success, use $1-P(X=0)$."
           - "For several values, sum probabilities or use a complement."
         controles:
-          - "E[X]=np and Var(X)=np(1−p)."
-          - "P(X=0)=(1−p)^n."
+          - "$E[X]=np$ and $\\operatorname{Var}(X)=np(1-p)$."
+          - "$P(X=0)=(1-p)^n$."
           - "The target probability is between 0 and 1."
         erreurs:
           - "Use binomial when trials are dependent or p is not constant."
@@ -109,15 +109,15 @@ fiche:
         quand_utiliser: "An event count is modelled by an average rate λ over a period or exposure."
         etapes:
           - "Define λ on the same period/exposure as the event."
-          - "Calculate P(N=k) using the Poisson formula."
-          - "For N≥m, sum masses below m and subtract from 1."
-          - "If a binomial is available, compare λ=np and exact probabilities."
+          - "Calculate $P(N=k)$ using the Poisson formula."
+          - "For $N\\ge m$, sum masses for $k<m$ and subtract from $1$."
+          - "If a binomial is available, compare $\\lambda=np$ and exact probabilities."
         controles:
-          - "E[N]=Var(N)=λ."
-          - "Masses over a sufficiently wide support sum close to 1."
-          - "The approximation improves when n is large and p is small."
+          - "$E[N]=\\operatorname{Var}(N)=\\lambda$."
+          - "Masses over a sufficiently wide support sum close to $1$."
+          - "The approximation improves when $n$ is large and $p$ is small."
         erreurs:
-          - "Treat λ as a probability."
+          - "Treat $\\lambda$ as a probability."
           - "Omit k=0 and 1 when calculating a complement."
           - "Use an approximation without checking its fit."
   exemples_guides:
