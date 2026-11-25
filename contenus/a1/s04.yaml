@@ -4,13 +4,13 @@ id: a1/s04
 module: a1
 titre: "Prêts, amortissement et taux de rendement"
 en: "Loans, amortization and yield rates"
-duree: 30
+duree: 45
 taux: 0.06
 
 actu_basics:
   episode: "A1 · Financial mathematics"
   statut: "à proposer"
-  accroche_fr: "Dans une mensualité de crédit, combien sert vraiment à rembourser ?"
+  accroche_fr: "Dans un paiement de crédit, quelle part rembourse réellement le capital ?"
   accroche_en: "In a loan payment, how much actually repays the loan?"
 
 fiche:
