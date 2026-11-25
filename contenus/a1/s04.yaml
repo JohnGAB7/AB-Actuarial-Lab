@@ -38,14 +38,14 @@ fiche:
   cours_complet:
     sections:
       - titre: "1. Équation de valeur et annuité constante"
-        contenu: "Un emprunt L reçu à la date 0 et remboursé par n paiements P en fin de période au taux effectif i est valorisé à la date 0. La valeur actuelle des paiements doit égaler le montant prêté. Pour i>0, le paiement est positif et constant. Si i=0, le capital est simplement réparti sur n paiements."
+        contenu: "Un emprunt $L$ reçu à la date $0$ et remboursé par $n$ paiements $P$ en fin de période au taux effectif $i$ est valorisé à la date $0$. La valeur actuelle des paiements doit égaler le montant prêté. Pour $i>0$, le paiement est positif et constant. Si $i=0$, le capital est simplement réparti sur n paiements."
         formules:
           - formule: "L=P a_{\\overline{n}|}=P\\frac{1-(1+i)^{-n}}{i}"
             explication: "Équation de valeur pour les paiements aux dates 1,…,n."
           - formule: "P=\\frac{Li}{1-(1+i)^{-n}},\\quad i>0"
             explication: "Paiement périodique constant. Cas i=0 : P=L/n."
       - titre: "2. Décomposition du paiement et récurrence du solde"
-        contenu: "À la période k, les intérêts I_k sont calculés sur le solde au début de période B_{k-1}. Le paiement P couvre ces intérêts, puis le montant restant rembourse le principal. Le solde après paiement est le solde précédent diminué du remboursement de capital. Pour i≥0, un prêt amorti à paiements constants a des intérêts décroissants et des remboursements de capital croissants."
+        contenu: "À la période $k$, les intérêts $I_k$ sont calculés sur le solde au début de période $B_{k-1}$. Le paiement $P$ couvre ces intérêts, puis le montant restant rembourse le principal. Le solde après paiement est le solde précédent diminué du remboursement de capital. Pour $i>0$, un prêt amorti à paiements constants a des intérêts décroissants et des remboursements de capital croissants. Pour $i=0$, ils sont constants."
         formules:
           - formule: "I_k=iB_{k-1},\\quad PR_k=P-I_k"
             explication: "Intérêts de la période et remboursement de principal (PR)."
@@ -54,7 +54,7 @@ fiche:
           - formule: "PR_k=Pv^{n-k+1},\\quad i>0"
             explication: "Pour une annuité constante, la part de principal augmente géométriquement au facteur 1+i."
       - titre: "3. Solde restant dû — méthode prospective"
-        contenu: "La méthode prospective (prospective method) valorise les paiements restant à effectuer à la date du solde. Après k paiements, il reste n−k paiements, aux dates k+1,…,n. Leur valeur actuelle à la date k est le solde. À k=n, il ne reste aucun paiement et le solde est nul."
+        contenu: "La méthode prospective (prospective method) valorise les paiements restant à effectuer à la date du solde. Après $k$ paiements, il reste $n-k$ paiements, aux dates $k+1,\ldots,n$. Leur valeur actuelle à la date k est le solde. À $k=n$, il ne reste aucun paiement et le solde est nul."
         formules:
           - formule: "B_k=P a_{\\overline{n-k}|},\\quad 0\\le k\\le n"
             explication: "Valeur à la date k des paiements futurs. On définit a_0=0."
@@ -66,21 +66,21 @@ fiche:
           - formule: "s_{\\overline{k}|}=\\frac{(1+i)^k-1}{i},\\quad i>0"
             explication: "Valeur accumulée d'une annuité immédiate unitaire; si i=0, s_k=k."
       - titre: "5. Amortissement constant"
-        contenu: "Dans un plan à amortissement constant, le principal remboursé A est identique chaque période : A=L/n. Le solde décroît linéairement. Les intérêts diminuent avec le solde : les paiements totaux diminuent si i>0 et restent constants si i=0. Ce plan est différent d'un prêt à annuités constantes, où le paiement total P est fixe."
+        contenu: "Dans un plan à amortissement constant, le principal remboursé A est identique chaque période : $A=L/n$. Le solde décroît linéairement. Les intérêts diminuent avec le solde : les paiements totaux diminuent si i>0 et restent constants si i=0. Ce plan est différent d'un prêt à annuités constantes, où le paiement total P est fixe."
         formules:
           - formule: "A=\\frac{L}{n},\\quad B_k=L-kA"
             explication: "Principal constant et solde après k échéances."
           - formule: "P_k=A+iB_{k-1}"
             explication: "Paiement total à la période k : amortissement plus intérêts."
       - titre: "6. VAN et taux de rendement interne"
-        contenu: "Pour un projet, la valeur actuelle nette (VAN/NPV) actualise les flux C_t à un taux de décision j. Le taux de rendement interne (TRI/IRR) est un taux j qui annule cette VAN. La VAN permet de comparer la valeur créée à un taux cohérent avec le risque; le TRI résume un taux de rendement mais peut être ambigu si les flux changent de signe plusieurs fois. Il peut exister plusieurs TRI ou aucun TRI réel dans le domaine considéré. Pour des projets mutuellement exclusifs, le TRI peut aussi conduire à un classement différent de celui fondé sur la VAN."
+        contenu: "Pour un projet, la valeur actuelle nette (VAN/NPV) actualise les flux $C_t$ à un taux de décision $j$. Le taux de rendement interne (TRI/IRR) est un taux j qui annule cette VAN. La VAN permet de comparer la valeur créée à un taux cohérent avec le risque; le TRI résume un taux de rendement mais peut être ambigu si les flux changent de signe plusieurs fois. Il peut exister plusieurs TRI ou aucun TRI réel dans le domaine considéré. Pour des projets mutuellement exclusifs, le TRI peut aussi conduire à un classement différent de celui fondé sur la VAN."
         formules:
           - formule: "\\operatorname{VAN}(j)=\\sum_{t=0}^{m}\\frac{C_t}{(1+j)^t}"
             explication: "VAN des flux datés aux périodes t, avec j>-1 pour les puissances réelles."
           - formule: "\\operatorname{TRI}:\\quad \\operatorname{VAN}(j)=0"
             explication: "Un taux interne est une racine de l'équation de VAN; l'existence et l'unicité ne sont pas garanties."
       - titre: "7. Hypothèses, conventions et cas limites"
-        contenu: "Les formules d'annuité supposent des échéances régulières en fin de période, un taux effectif cohérent avec cette période et un paiement constant. Un taux nominal doit être converti en taux effectif périodique. Pour i=0, P=L/n, le solde B_k=L(1−k/n) et les intérêts sont nuls. En pratique, les arrondis au centime peuvent créer un petit solde final : l'échéance finale est parfois ajustée. Les frais, assurance emprunteur, dates irrégulières, taux variables, pénalités et fiscalité ne sont pas inclus. Le TRI d'un flux conventionnel (un décaissement initial puis des encaissements) est généralement unique au-dessus de −100 %, mais cette propriété ne s'étend pas à des flux non conventionnels."
+        contenu: "Les formules d'annuité supposent des échéances régulières en fin de période, un taux effectif cohérent avec cette période et un paiement constant. Un taux nominal doit être converti en taux effectif périodique. Pour $i=0$, $P=L/n$, le solde $B_k=L(1-k/n)$ et les intérêts sont nuls. En pratique, les arrondis au centime peuvent créer un petit solde final : l'échéance finale est parfois ajustée. Les frais, assurance emprunteur, dates irrégulières, taux variables, pénalités et fiscalité ne sont pas inclus. Le TRI d'un flux conventionnel (un décaissement initial puis des encaissements) est généralement unique au-dessus de −100 %, mais cette propriété ne s'étend pas à des flux non conventionnels."
         formules:
           - formule: "i=0:\\quad P=\\frac{L}{n},\\quad B_k=L\\left(1-\\frac{k}{n}\\right)"
             explication: "Cas sans intérêts : le principal est remboursé en parts égales."
@@ -139,22 +139,22 @@ fiche:
       - titre: "1. Annuité et première échéance"
         enonce: "Emprunt de 10 000 € au taux effectif annuel de 6 %, remboursé en 5 annuités en fin d'année."
         raisonnement:
-          - "Calculer a_{5|}=(1−1,06^{-5})/0,06≈4,212364."
-          - "P=10 000/4,212364≈2 373,96 €."
-          - "À la première échéance, I_1=0,06×10 000=600 €."
-          - "PR_1=2 373,96−600≈1 773,96 €; B_1≈8 226,04 €."
+          - "Calculer $a_{5|}=(1-1{,}06^{-5})/0{,}06\approx4{,}212364$."
+          - "$P=10\,000/4{,}212364\approx2\,373{,}96$ €."
+          - "À la première échéance, $I_1=0{,}06\times10\,000=600$ €."
+          - "$PR_1=2\,373{,}96-600\approx1\,773{,}96$ € ; $B_1\approx8\,226{,}04$ €."
         resultat: "Annuité ≈ 2 373,96 €; solde après la première échéance ≈ 8 226,04 €."
         interpretation: "Le premier paiement contient 600 € d'intérêts et le reste rembourse le capital. Les intérêts diminueront à mesure que le solde baisse."
         controles:
           - "La valeur actuelle des cinq paiements égale environ 10 000 €."
           - "Le paiement dépasse 10 000/5=2 000 €, car il inclut des intérêts."
       - titre: "2. Solde après deux paiements — deux méthodes"
-        enonce: "Pour le même emprunt, calculer B_2 après deux annuités."
+        enonce: "Pour le même emprunt, calculer $B_2$ après deux annuités."
         raisonnement:
-          - "Prospective : il reste trois paiements, donc B_2=P a_{3|}≈2 373,96×2,673012."
+          - "Prospective : il reste trois paiements, donc $B_2=P a_{3|}\approx2\,373{,}96\times2{,}673012$."
           - "Rétrospective : capitaliser 10 000 € pendant deux ans et retrancher la valeur accumulée des deux paiements."
           - "Les deux méthodes donnent environ 6 345,63 € (les écarts éventuels proviennent de l'arrondi des paiements affichés)."
-        resultat: "B_2≈6 345,63 €."
+        resultat: "$B_2\approx6\,345{,}63$ €."
         interpretation: "Le solde est la valeur du contrat à la date 2, pas simplement L−2P : les intérêts doivent être pris en compte."
         controles:
           - "B_2 est inférieur à B_1 et supérieur à zéro."
@@ -162,8 +162,8 @@ fiche:
       - titre: "3. VAN et TRI d'un projet simple"
         enonce: "Investir 1 000 € aujourd'hui et recevoir 600 € à la fin de l'année 1 puis 600 € à la fin de l'année 2."
         raisonnement:
-          - "VAN(j)=−1 000+600/(1+j)+600/(1+j)^2."
-          - "Le TRI est la racine de la VAN(j)=0."
+          - "$VAN(j)=-1\,000+600/(1+j)+600/(1+j)^2$."
+          - "Le TRI est la racine de $VAN(j)=0$."
           - "Le TRI numérique est environ 13,0662 %."
           - "À un taux de décision de 10 %, la VAN est positive : environ 41,32 €."
         resultat: "TRI≈13,0662 %; VAN à 10 %≈41,32 €."
