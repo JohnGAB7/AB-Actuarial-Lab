@@ -121,7 +121,7 @@ fiche:
         controles:
           - "La perpétuité due serait supérieure d'un paiement, soit 210 000."
       - titre: "Annuités arithmétiques sur dix ans"
-        enonce: "À 5 %, calculer les valeurs actuelles des paiements 1, 2, …,10 et 10,9,…,1 aux dates 1 à 10."
+        enonce: "À 5 %, calculer les valeurs actuelles des paiements 1, 2, …,10 et 10, 9, …, 1 aux dates 1 à 10."
         raisonnement:
           - "$a_{10}$=7,72173493 et $\\ddot{a}_{10}$=8,10782168."
           - "$(Ia)$=($\\ddot{a}_{10}$−10v^{10})/i."
