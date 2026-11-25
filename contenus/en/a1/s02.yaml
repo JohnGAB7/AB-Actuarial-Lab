@@ -173,7 +173,6 @@ fiche:
       - titre: "Compare loan quotations and check an instalment"
         contexte: "Two hypothetical offers may quote the same nominal rate but use different compounding frequencies. This lab isolates rate conversion; fees, insurance and a regulated APR are not modelled."
         objectif: "Compare annual effective rates, convert an effective rate to monthly nominal, and check the present value of monthly instalments."
-        outils: [excel, python]
         entrees:
           - "Offer A: nominal 6%, convertible monthly."
           - "Offer B: nominal 6%, convertible quarterly."
