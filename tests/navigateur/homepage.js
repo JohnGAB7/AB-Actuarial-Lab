@@ -257,6 +257,28 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       }
     }
 
+    // Continue notation regression coverage through the remaining A1 sessions.
+    const mathChecks = {
+      s03: ["v^n", "(1+g)^{k-1}", "i/(1+i)"],
+      s04: ["B_{k-1}", "PR_k", "P=L/n"],
+      s05: ["D_{Mac}", "D_{mod}", "Conv"]
+    };
+    for (const language of ["fr", "en"]) {
+      for (const session of ["s03", "s04", "s05"]) {
+        const path = language === "en" ? "en/a1/" + session + "/index.html" : "a1/" + session + "/index.html";
+        await page.setViewportSize({ width: 390, height: 844 });
+        await page.goto(new URL(path, BASE).toString(), { waitUntil: "domcontentloaded" });
+        await page.locator("#lesson-mode").waitFor();
+        await page.locator("#mode-reference").click();
+        await page.locator("#reference-tabs [role=tab]").nth(1).click();
+        const tex = await page.locator("#reference-panel-1 .katex annotation[encoding="application/x-tex"]").allTextContents();
+        const joined = tex.join(" ");
+        for (const token of mathChecks[session]) {
+          if (!joined.includes(token)) failures.push(language + " " + session + " should typeset " + token);
+        }
+      }
+    }
+
     // A1/S03 reference sheet is ready and must be rendered and usable in both languages.
     for (const language of ["fr", "en"]) {
       const path = language === "en" ? "en/a1/s03/index.html" : "a1/s03/index.html";
