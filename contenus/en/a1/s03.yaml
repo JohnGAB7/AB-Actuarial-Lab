@@ -100,7 +100,7 @@ fiche:
         enonce: "At 5%, find the present values of payments 1, 2, …,10 and 10, 9, …, 1 at times 1 to 10."
         raisonnement:
           - "a_10=7.72173493 and ä_10=8.10782168."
-          - "(Ia)=(ä_10−n v^n)/i."
+          - "Use the increasing-annuity formula with the annuity due and the discounted final term."
           - "(Da)=(10−a_10)/i."
           - "Check their sum using 11a_10."
         interpretation: "The decreasing annuity has a higher present value because larger payments occur earlier."
@@ -131,7 +131,7 @@ fiche:
         enonce: "At 3%, value payments 1, 2, …,8 at each year-end."
         corrige:
           - "Calculate v=1/1.03 and ä_8=(1−v^8)/d."
-          - "Use (Ia)=(ä_8−8v^8)/i."
+          - "Use Use the increasing-annuity identity and verify by a direct sum."
           - "Result: approximately 30.5003; confirm using the sum k v^k."
         feedback: "The payment increases by one each year; this is not percentage indexation."
       - titre: "Advanced — convergence"
