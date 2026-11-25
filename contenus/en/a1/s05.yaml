@@ -259,13 +259,13 @@ fiche:
           - "Recalculate by discounting coupons and redemption."
           - "At 5%, price must equal face value to numerical precision."
       - titre: "Spot-curve price and forward rates"
-        enonce: "Synthetic spot curve s_1=3 %, s_2=3.5 %, s_3=4 %. Price a 3-year bond with face value 1,000 and coupon 5%; also calculate f_1,2 and f_2,3."
+        enonce: "Synthetic spot curve s_1=3 %, s_2=3.5 %, s_3=4 %. Price a 3-year bond with face value 1,000 and coupon 5%; also calculate the forward rates from year 1 to 2, then 2 to 3."
         raisonnement:
           - "P=50/1.03+50/1.035²+1,050/1.04³."
           - "Forward rates follow from accumulation-factor equivalence."
-          - "f_1,2=(1.035²/1.03)−1≈4.0024 %."
-          - "f_2,3=(1.04³/1.035²)−1≈5.0073 %."
-        resultat: "Price≈1,028.67; f_1,2≈4.0024 %; f_2,3≈5.0073 %."
+          - "f_{1→2}=(1.035²/1.03)−1≈4.0024 %."
+          - "f_{2→3}=(1.04³/1.035²)−1≈5.0073 %."
+        resultat: "Price≈1,028.67; f_{1→2}≈4.0024 %; f_{2→3}≈5.0073 %."
         interpretation: "Spot valuation discounts each coupon at its own rate; forwards are implied rates, not guaranteed forecasts."
         controles:
           - "Check each PV individually."
