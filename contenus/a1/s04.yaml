@@ -43,28 +43,28 @@ fiche:
           - formule: "L=P a_{\\overline{n}|}=P\\frac{1-(1+i)^{-n}}{i}"
             explication: "Équation de valeur pour les paiements aux dates 1,…,n."
           - formule: "P=\\frac{Li}{1-(1+i)^{-n}},\\quad i>0"
-            explication: "Paiement périodique constant. Cas i=0 : P=L/n."
+            explication: "Paiement périodique constant. Cas $i=0$ : $P=L/n$."
       - titre: "2. Décomposition du paiement et récurrence du solde"
         contenu: "À la période $k$, les intérêts $I_k$ sont calculés sur le solde au début de période $B_{k-1}$. Le paiement $P$ couvre ces intérêts, puis le montant restant rembourse le principal. Le solde après paiement est le solde précédent diminué du remboursement de capital. Pour $i>0$, un prêt amorti à paiements constants a des intérêts décroissants et des remboursements de capital croissants. Pour $i=0$, ils sont constants."
         formules:
           - formule: "I_k=iB_{k-1},\\quad PR_k=P-I_k"
             explication: "Intérêts de la période et remboursement de principal (PR)."
           - formule: "B_k=B_{k-1}-PR_k=(1+i)B_{k-1}-P"
-            explication: "Récurrence du solde après l'échéance k, avec B_0=L."
+            explication: "Récurrence du solde après l'échéance $k$, avec $B_0=L$."
           - formule: "PR_k=Pv^{n-k+1},\\quad i>0"
             explication: "Pour une annuité constante, la part de principal augmente géométriquement au facteur 1+i."
       - titre: "3. Solde restant dû — méthode prospective"
         contenu: "La méthode prospective (prospective method) valorise les paiements restant à effectuer à la date du solde. Après $k$ paiements, il reste $n-k$ paiements, aux dates $k+1,\\ldots,n$. Leur valeur actuelle à la date k est le solde. À $k=n$, il ne reste aucun paiement et le solde est nul."
         formules:
           - formule: "B_k=P a_{\\overline{n-k}|},\\quad 0\\le k\\le n"
-            explication: "Valeur à la date k des paiements futurs. On définit a_0=0."
+            explication: "Valeur à la date $k$ des paiements futurs. On définit $a_0=0$."
       - titre: "4. Solde restant dû — méthode rétrospective"
         contenu: "La méthode rétrospective (retrospective method) capitalise l'emprunt initial jusqu'à la date k, puis retranche la valeur accumulée des paiements déjà versés. Elle donne le même solde que la méthode prospective lorsque les flux suivent le contrat et utilisent le même taux."
         formules:
           - formule: "B_k=L(1+i)^k-Ps_{\\overline{k}|}"
-            explication: "Solde rétrospectif après k paiements, avec s_0=0."
+            explication: "Solde rétrospectif après $k$ paiements, avec $s_0=0$."
           - formule: "s_{\\overline{k}|}=\\frac{(1+i)^k-1}{i},\\quad i>0"
-            explication: "Valeur accumulée d'une annuité immédiate unitaire; si i=0, s_k=k."
+            explication: "Valeur accumulée d'une annuité immédiate unitaire ; si $i=0$, $s_k=k$."
       - titre: "5. Amortissement constant"
         contenu: "Dans un plan à amortissement constant, le principal remboursé A est identique chaque période : $A=L/n$. Le solde décroît linéairement. Les intérêts diminuent avec le solde : les paiements totaux diminuent si i>0 et restent constants si i=0. Ce plan est différent d'un prêt à annuités constantes, où le paiement total P est fixe."
         formules:
@@ -104,20 +104,20 @@ fiche:
       - titre: "Construire un tableau d'amortissement"
         quand_utiliser: "Il faut détailler, période par période, le paiement, les intérêts, le principal et le solde."
         etapes:
-          - "Initialiser B_0=L."
-          - "Calculer I_k=iB_{k-1}."
-          - "Calculer PR_k=P-I_k."
-          - "Calculer B_k=B_{k-1}-PR_k."
+          - "Initialiser $B_0=L$."
+          - "Calculer $I_k=iB_{k-1$."
+          - "Calculer $PR_k=P-I_k$."
+          - "Calculer $B_k=B_{k-1}-PR_k$."
           - "Vérifier la somme des remboursements de principal et le solde final."
         controles:
-          - "I_k+PR_k=P."
-          - "B_k=B_{k-1}-PR_k."
+          - "$I_k+PR_k=P$."
+          - "$B_k=B_{k-1}-PR_k$."
           - "La somme des PR_k doit égaler L."
           - "Le solde doit décroître pour un prêt amorti à taux non négatif."
         erreurs:
           - "Calculer les intérêts sur le solde après paiement."
           - "Soustraire le paiement entier du solde."
-          - "Confondre B_k et B_{k-1}."
+          - "Confondre $B_k$ et $B_{k-1}$."
       - titre: "Calculer et interpréter un TRI"
         quand_utiliser: "Les flux d'un projet sont datés et un taux interne est demandé."
         etapes:
@@ -186,7 +186,7 @@ fiche:
         corrige:
           - "P≈2 373,96 €."
           - "B_2=P a_{3|}≈6 345,63 €."
-          - "Vérifier avec B_2=10 000(1,06)^2−P s_{2|}."
+          - "Vérifier avec $B_2=10\,000(1{,}06)^2-Ps_{\\overline{2}|$."
         feedback: "Le solde prospectif actualise les paiements restant à effectuer. La méthode rétrospective doit donner le même résultat."
       - titre: "VAN et TRI — niveau intermédiaire"
         niveau: intermediaire
@@ -238,7 +238,7 @@ fiche:
             assert abs(P - 2_373.9640043) < 1e-6
             assert abs(rows[1][3] - 6_345.6341511) < 1e-6
             ```
-          - "Tester i=0 et vérifier que le principal est remboursé en parts égales."
+          - "Tester $i=0$ et vérifier que le principal est remboursé en parts égales."
           - "Comparer les profils de paiements d'un amortissement constant et d'une annuité constante."
         sorties:
           - "Paiement périodique et total des intérêts."
@@ -256,9 +256,9 @@ fiche:
   synthese_references:
     memo:
       - "L=P a_{n|} et P=L/a_{n|}; à taux nul, P=L/n."
-      - "Paiement = intérêts iB_{k−1} + principal remboursé PR_k."
-      - "B_k=P a_{n−k|} (prospective) = L(1+i)^k−P s_{k|} (rétrospective)."
-      - "Amortissement constant : A=L/n; paiements totaux décroissants si i>0 et constants si i=0."
+      - "Paiement = intérêts $iB_{k-1}$ + principal remboursé $PR_k$."
+      - "$B_k=P a_{\\overline{n-k}|}$ (prospective) $=L(1+i)^k-Ps_{\\overline{k}|}$ (rétrospective)."
+      - "Amortissement constant : $A=L/n$; paiements totaux décroissants si $i>0$ et constants si $i=0$."
       - "VAN(j)=somme des flux actualisés; le TRI est une racine, pas nécessairement unique."
     glossaire:
       - terme_fr: "Prêt amorti"
