@@ -193,7 +193,7 @@ fiche:
         - titre: "7. Risks, conventions and limitations"
           contenu: "A bond can face interest-rate, credit/default, liquidity, reinvestment, inflation, currency and model risks. Callable or convertible bonds have option-driven cash flows: duration and convexity may differ, and convexity can be negative in some regions. A spot curve must be built from consistent instruments and conventions; rates may not be observable at every maturity. YTM is not a guaranteed realized return: the outcome depends on resale price, default and coupon reinvestment. This reference assumes annual coupons, effective rates, deterministic cash flows and no options, taxes or fees."
           formules:
-            - {explication: "YTM is a valuation measure under assumptions, not a promise of realized return."}
+            - {formule: "\\text{Realized return}\\ne\\text{Guaranteed YTM}", explication: "YTM is a valuation measure under assumptions, not a promise of realized return."}
     methodes:
       methodes:
         - titre: "Price at YTM"
