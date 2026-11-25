@@ -54,7 +54,7 @@ fiche:
           - formule: "PR_k=Pv^{n-k+1},\\quad i>0"
             explication: "Pour une annuité constante, la part de principal augmente géométriquement au facteur 1+i."
       - titre: "3. Solde restant dû — méthode prospective"
-        contenu: "La méthode prospective (prospective method) valorise les paiements restant à effectuer à la date du solde. Après $k$ paiements, il reste $n-k$ paiements, aux dates $k+1,\ldots,n$. Leur valeur actuelle à la date k est le solde. À $k=n$, il ne reste aucun paiement et le solde est nul."
+        contenu: "La méthode prospective (prospective method) valorise les paiements restant à effectuer à la date du solde. Après $k$ paiements, il reste $n-k$ paiements, aux dates $k+1,\\ldots,n$. Leur valeur actuelle à la date k est le solde. À $k=n$, il ne reste aucun paiement et le solde est nul."
         formules:
           - formule: "B_k=P a_{\\overline{n-k}|},\\quad 0\\le k\\le n"
             explication: "Valeur à la date k des paiements futurs. On définit a_0=0."
@@ -139,10 +139,10 @@ fiche:
       - titre: "1. Annuité et première échéance"
         enonce: "Emprunt de 10 000 € au taux effectif annuel de 6 %, remboursé en 5 annuités en fin d'année."
         raisonnement:
-          - "Calculer $a_{5|}=(1-1{,}06^{-5})/0{,}06\approx4{,}212364$."
-          - "$P=10\,000/4{,}212364\approx2\,373{,}96$ €."
-          - "À la première échéance, $I_1=0{,}06\times10\,000=600$ €."
-          - "$PR_1=2\,373{,}96-600\approx1\,773{,}96$ € ; $B_1\approx8\,226{,}04$ €."
+          - "Calculer $a_{5|}=(1-1{,}06^{-5})/0{,}06\\approx4{,}212364$."
+          - "$P=10\,000/4{,}212364\\approx2\,373{,}96$ €."
+          - "À la première échéance, $I_1=0{,}06\\times10\,000=600$ €."
+          - "$PR_1=2\,373{,}96-600\\approx1\,773{,}96$ € ; $B_1\\approx8\,226{,}04$ €."
         resultat: "Annuité ≈ 2 373,96 €; solde après la première échéance ≈ 8 226,04 €."
         interpretation: "Le premier paiement contient 600 € d'intérêts et le reste rembourse le capital. Les intérêts diminueront à mesure que le solde baisse."
         controles:
@@ -151,10 +151,10 @@ fiche:
       - titre: "2. Solde après deux paiements — deux méthodes"
         enonce: "Pour le même emprunt, calculer $B_2$ après deux annuités."
         raisonnement:
-          - "Prospective : il reste trois paiements, donc $B_2=P a_{3|}\approx2\,373{,}96\times2{,}673012$."
+          - "Prospective : il reste trois paiements, donc $B_2=P a_{3|}\\approx2\,373{,}96\\times2{,}673012$."
           - "Rétrospective : capitaliser 10 000 € pendant deux ans et retrancher la valeur accumulée des deux paiements."
           - "Les deux méthodes donnent environ 6 345,63 € (les écarts éventuels proviennent de l'arrondi des paiements affichés)."
-        resultat: "$B_2\approx6\,345{,}63$ €."
+        resultat: "$B_2\\approx6\,345{,}63$ €."
         interpretation: "Le solde est la valeur du contrat à la date 2, pas simplement L−2P : les intérêts doivent être pris en compte."
         controles:
           - "B_2 est inférieur à B_1 et supérieur à zéro."
