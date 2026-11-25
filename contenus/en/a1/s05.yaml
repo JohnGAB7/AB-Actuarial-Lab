@@ -263,9 +263,9 @@ fiche:
         raisonnement:
           - "$P=50/1.03+50/(1.035)^2+1,050/(1.04)^3$."
           - "Forward rates follow from accumulation-factor equivalence."
-          - "f_{1→2}=(1.035²/1.03)−1≈4.0024 %."
-          - "f_{2→3}=(1.04³/1.035²)−1≈5.0073 %."
-        resultat: "Price≈1,028.67; f_{1→2}≈4.0024 %; f_{2→3}≈5.0073 %."
+          - "$f_{1\\to2}=(1.035^2/1.03)-1\\approx4.0024\\%$."
+          - "$f_{2\\to3}=(1.04^3/(1.035)^2)-1\\approx5.0073\\%$."
+        resultat: "Price≈1,028.67; $f_{1\\to2}\\approx4.0024\\%$; $f_{2\\to3}\\approx5.0073\\%$."
         interpretation: "Spot valuation discounts each coupon at its own rate; forwards are implied rates, not guaranteed forecasts."
         controles:
           - "Check each PV individually."
