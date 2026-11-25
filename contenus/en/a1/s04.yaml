@@ -78,7 +78,7 @@ fiche:
         quand_utiliser: "Payment, interest, principal and balance must be detailed period by period."
         etapes:
           - "Set opening balance $B_0=L$."
-          - "Calculate $I_k=iB_{k-1$."
+          - "Calculate $I_k=iB_{k-1}$."
           - "Calculate $PR_k=P-I_k$."
           - "Calculate $B_k=B_{k-1}-PR_k$."
           - "Check total principal repayments and final balance."
@@ -112,7 +112,7 @@ fiche:
       - titre: "1. Level payment and first instalment"
         enonce: "Borrow €10,000 at an effective annual rate of 6%, repaid by 5 end-of-year level payments."
         raisonnement:
-          - "Calculate a_{5|}=(1−1.06^{-5})/0.06≈4.212364."
+          - "Calculate a_{\\overline{5}|}=(1−1.06^{-5})/0.06≈4.212364."
           - "$P=10,000/4.212364\\approx€2,373.96$."
           - "At the first instalment, $I_1=0.06\\times10,000=€600$."
           - "$PR_1=2,373.96-600\\approx€1,773.96$; $B_1\\approx€8,226.04$."
@@ -124,7 +124,7 @@ fiche:
       - titre: "2. Balance after two instalments — two methods"
         enonce: "For the same loan, calculate $B_2$ after two payments."
         raisonnement:
-          - "Prospective: three payments remain, so $B_2=P a_{3|}\\approx2,373.96\\times2.673012$."
+          - "Prospective: three payments remain, so $B_2=P a_{\\overline{3}|}\\approx2,373.96\\times2.673012$."
           - "Retrospective: accumulate €10,000 for two years and subtract the accumulated value of the two payments."
           - "Both methods give approximately €6,345.63 (small differences arise from rounded displayed payments)."
         resultat: "$B_2\\approx€6,345.63$."
@@ -149,14 +149,14 @@ fiche:
       - titre: "Level payment — foundation"
         enonce: "Borrow €25,000 at 3.5% effective annually over 12 years, with end-of-year payments. Calculate the payment."
         corrige:
-          - "a_{12|}=(1−1.035^{-12})/0.035≈9.663."
+          - "a_{\\overline{12}|}=(1−1.035^{-12})/0.035≈9.663."
           - "P=25,000/a_{12|}≈€2,587.10."
         feedback: "The payment contains principal and interest. A longer term generally lowers the payment but increases total interest."
       - titre: "Balance — intermediate"
         enonce: "A €10,000 loan at 6% over 5 years uses level payments. Calculate the balance after 2 payments."
         corrige:
           - "P≈€2,373.96."
-          - "B_2=P a_{3|}≈€6,345.63."
+          - "$B_2=P a_{\\overline{3}|}\\approx€6,345.63$."
           - "Check with $B_2=10,000(1.06)^2-Ps_{\\overline{2}|$."
         feedback: "The prospective balance discounts remaining payments. The retrospective method should agree."
       - titre: "NPV and IRR — intermediate"
