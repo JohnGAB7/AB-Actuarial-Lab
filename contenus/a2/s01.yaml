@@ -85,10 +85,10 @@ fiche:
       - titre: "Calculer une probabilité conditionnelle"
         quand_utiliser: "On connaît une intersection et la probabilité de l'événement qui sert de condition."
         etapes:
-          - "Identifier clairement A et B, puis écrire la question sous la forme P(A|B)."
-          - "Vérifier que P(B)>0."
-          - "Calculer ou relever P(A∩B)."
-          - "Diviser par P(B), puis interpréter comme une proportion parmi les cas B."
+          - "Identifier clairement A et B, puis écrire la question sous la forme $P(A\\mid B)$. "
+          - "Vérifier que $P(B)>0$."
+          - "Calculer ou relever $P(A\\cap B)$."
+          - "Diviser par $P(B)$, puis interpréter comme une proportion parmi les cas $B$."
         controles:
           - "Le résultat est compris entre 0 et 1."
           - "Le dénominateur correspond à la condition, pas à l'événement recherché."
@@ -99,14 +99,14 @@ fiche:
         quand_utiliser: "Le portefeuille est découpé en classes de risque et un événement est observé."
         etapes:
           - "Vérifier que les classes forment une partition."
-          - "Calculer P(A)=ΣP(A|B_j)P(B_j)."
-          - "Calculer le poids conjoint P(A∩B_j)."
-          - "Diviser ce poids par P(A) pour obtenir P(B_j|A)."
-          - "Vérifier que les probabilités a posteriori somment à 1."
+          - "Calculer $P(A)=\\sum_j P(A\\mid B_j)P(B_j)$."
+          - "Calculer le poids conjoint $P(A\\cap B_j)$."
+          - "Diviser ce poids par $P(A)$ pour obtenir $P(B_j\\mid A)$."
+          - "Vérifier que les probabilités a posteriori somment à $1$."
         controles:
           - "Le taux global est une moyenne pondérée, entre le minimum et le maximum des taux de classe."
-          - "Les posteriori somment à 1."
-          - "La somme des poids conjoints égale P(A)."
+          - "Les posteriori somment à $1$."
+          - "La somme des poids conjoints égale $P(A)$."
         erreurs:
           - "Faire une moyenne simple des taux de classe."
           - "Oublier la fréquence a priori des classes."
@@ -114,16 +114,16 @@ fiche:
       - titre: "Calculer le risque d'au moins un événement"
         quand_utiliser: "Plusieurs contrats ou unités sont modélisés comme indépendants et l'on cherche au moins un événement."
         etapes:
-          - "Définir n et la probabilité individuelle p."
-          - "Calculer la probabilité complémentaire (1−p)^n."
-          - "Soustraire de 1."
-          - "Vérifier les cas n=0 et p=0."
+          - "Définir $n$ et la probabilité individuelle $p$."
+          - "Calculer la probabilité complémentaire $(1-p)^n$."
+          - "Soustraire de $1$."
+          - "Vérifier les cas $n=0$ et $p=0$."
         controles:
-          - "Le résultat vaut 0 si n=0 ou p=0."
+          - "Le résultat vaut $0$ si $n=0$ ou $p=0$."
           - "Il augmente avec n et p."
-          - "Il reste compris entre 0 et 1."
+          - "Il reste compris entre $0$ et $1$."
         erreurs:
-          - "Utiliser np comme probabilité exacte."
+          - "Utiliser $np$ comme probabilité exacte."
           - "Supposer l'indépendance sans justification."
   exemples_guides:
     exemples:
