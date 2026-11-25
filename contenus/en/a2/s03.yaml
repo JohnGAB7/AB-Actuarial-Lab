@@ -146,7 +146,7 @@ fiche:
           - "Survival decreases with x."
           - "The 99% quantile exceeds the 50% quantile."
       - titre: "Lognormal: mean, median and tail"
-        enonce: "ln(X)~N(7,1). Calculate the median, mean and P(X>5,000)."
+        enonce: "ln(X) is normal with μ=7 and σ=1. Calculate the median, mean and P(X>5,000)."
         raisonnement:
           - "Median=e^7=€1,096.63."
           - "Mean=e^{7.5}=€1,808.04."
@@ -175,7 +175,7 @@ fiche:
           - "S(6,000)=e^{-6,000/3,000}=e^{-2}≈0.135335."
         feedback: "Use survival for an exceedance."
       - titre: "Intermediate — lognormal quantile"
-        enonce: "ln(X)~N(8,0.25). Calculate the 95% quantile and mean."
+        enonce: "ln(X) is normal with μ=8 and σ=0.5. Calculate the 95% quantile and mean."
         corrige:
           - "q_{0.95}=e^{8+0.5×1.644854}=€6,784.71."
           - "E[X]=e^{8+0.5×0.25}=€3,377.87."
