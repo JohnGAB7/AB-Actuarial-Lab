@@ -193,7 +193,7 @@ fiche:
         enonce: "Un projet coûte 2 000 € et verse 1 200 € à la fin des années 1 et 2. Calculer la VAN à 8 % et déterminer le TRI."
         corrige:
           - "$VAN(8\\%)=-2\\,000+1\\,200/1{,}08+1\\,200/(1{,}08\\times1{,}08)\\approx139{,}92$ €."
-          - "Le TRI résout −2 000+1 200/(1+j)+1 200/(1+j)²=0."
+          - "Le TRI résout $-2\\,000+1\\,200/(1+j)+1\\,200/(1+j)^2=0$."
           - "Pour deux recettes identiques, résoudre 2 000=1 200 a_{2|} : j≈13,0662 %."
         feedback: "Une VAN positive au taux de décision indique une création de valeur dans ce modèle. Le TRI est une solution de l'équation de VAN; ne pas supposer qu'il est unique pour tout calendrier de flux."
   applications_labs:
