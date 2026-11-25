@@ -179,8 +179,8 @@ fiche:
         niveau: intermediaire
         enonce: "Un taux effectif de 3 % est converti mensuellement. Calculer i^(12) et d^(12), à quatre décimales en pourcentage."
         corrige:
-          - "i^(12)=12[(1,03)^(1/12)−1]≈2,9590 %."
-          - "d^(12)=12[1−(1,03)^(−1/12)]≈2,9524 %."
+          - "i^(12)=12[(1,03)^(1/12)−1]≈2,9595 %."
+          - "d^(12)=12[1−(1,03)^(−1/12)]≈2,9522 %."
           - "δ=ln(1,03)≈2,9559 %, ce qui confirme l'encadrement."
         feedback: "La formule d'escompte utilise le facteur v^(1/12) ; ne pas remplacer le taux effectif par i/12."
       - titre: "Avancé — pension fractionnée"
