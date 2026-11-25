@@ -28,7 +28,7 @@ fiche:
         formules:
           - {formule: "A_t=C(1+i)^t", explication: "A_t is the accumulated value at time t of initial capital C. The factor (1+i)^t applies the same annual factor in each period."}
       - titre: "2. Discount factor and present value"
-        contenu: "Discounting is the inverse of accumulation. The annual discount factor v is the reciprocal of the accumulation factor: v=1/(1+i). An amount F payable at time t has value at time 0 equal to Fv^t. For a finite stream of cash flows C_t payable at dates t, present value is the sum of their individual discounted values. A receipt may be positive and a payment negative; keep the sign convention consistent."
+        contenu: "Discounting is the inverse of accumulation. The annual discount factor v is the reciprocal of the accumulation factor: $v=\\frac{1}{1+i}$. An amount F payable at time t has value at time 0 equal to $Fv^t$. For a finite stream of cash flows C_t payable at dates t, present value is the sum of their individual discounted values. A receipt may be positive and a payment negative; keep the sign convention consistent."
         formules:
           - {formule: "v=(1+i)^{-1},\\qquad VA_0(F_t)=F_t v^t=\\frac{F_t}{(1+i)^t}", explication: "For i>0 and t>0, v^t is below 1: a positive future payment is worth less at time 0."}
           - {formule: "VA_0=\\sum_{j=1}^{m} C_{t_j}v^{t_j}", explication: "The sum runs over m cash flows at dates t_j. Each flow must use its own date and a rate consistent with that maturity."}
@@ -175,7 +175,7 @@ fiche:
   synthese_references:
     memo:
       - "Accumulation: multiply by (1+i)^t; discounting: multiply by v^t."
-      - "v=1/(1+i), d=i/(1+i), δ=ln(1+i)."
+      - "$v=\\frac{1}{1+i}$, d=i/(1+i), δ=ln(1+i)."
       - "Annuity immediate: payments at 1,…,n; annuity due: payments at 0,…,n−1."
       - "ä_{n|}=(1+i)a_{n|}; at i=0, both annuity values equal n."
       - "Always state the valuation date, frequency, rate and sign convention."
