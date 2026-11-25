@@ -182,7 +182,7 @@ fiche:
           - "Flux certains, taux et croissance constants, échéances annuelles."
           - "Pas de mortalité, frais, fiscalité, risque ou changement de devise."
         procedure:
-          - "Créer $k=1,\\ldots,10$ et le flux $1\,000\\times1{,}02^{k-1$."
+          - "Créer $k=1,\\ldots,10$ et le flux $1\,000\\times1{,}02^{k-1}$."
           - "Actualiser par $(1{,}05)^k$ et sommer."
           - |
             ```python
