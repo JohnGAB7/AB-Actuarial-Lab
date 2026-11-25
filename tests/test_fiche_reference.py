@@ -236,7 +236,7 @@ def test_fiche_a1_s03_est_structuree_et_bilingue():
     fr = charger_seance("a1/s03", "fr")
     en = charger_seance("a1/s03", "en")
     overlay = yaml.safe_load((root / "contenus/en/a1/s03.yaml").read_text(encoding="utf-8"))
-    assert fr["fiche"]["statut"] == "brouillon"  # Pending independent scientific review.
+    assert fr["fiche"]["statut"] == "prete"  # Editorial readiness; independent review is disclosed in the notice.
     assert len(fr["fiche"]["cours_complet"]["sections"]) == 6
     assert len(fr["fiche"]["methodes"]["methodes"]) == 2
     assert len(fr["fiche"]["exemples_guides"]["exemples"]) == 3
