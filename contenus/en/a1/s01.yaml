@@ -24,9 +24,9 @@ fiche:
   cours_complet:
     sections:
       - titre: "1. Time convention and annual effective rate"
-        contenu: "Let t be the number of years elapsed since valuation date 0. The annual effective interest rate i is the return over one year: capital C invested for one year becomes C(1+i). The annual accumulation factor is 1+i. Unless stated otherwise, this sheet assumes i is constant, deterministic, annual and greater than -1; cash flows use the same currency unit. For an integer number of years, the capital becomes C(1+i)^t. For fractional periods, the convention must be stated: C(1+i)^t is consistent with a constant force of interest, but contractual conventions may differ."
+        contenu: "Let $t\\geq 0$ denote elapsed time in years since the valuation date $t=0$. The annual effective interest rate $i$ is the return over one year: initial capital $C_0$ invested for one year becomes $C_1=C_0(1+i)$. The annual accumulation factor is $1+i$. Unless stated otherwise, $i$ is constant, deterministic and greater than $-1$; cash flows use the same currency unit. For integer $t$, the accumulated value is $C_t=C_0(1+i)^t$. For fractional periods, the compounding convention must be stated. Under a constant force of interest $\\delta=\\ln(1+i)$, exponential accumulation gives $C_t=C_0e^{\\delta t}=C_0(1+i)^t$. Other contractual conventions may apply."
         formules:
-          - {formule: "A_t=C(1+i)^t", explication: "A_t is the accumulated value at time t of initial capital C. The factor (1+i)^t applies the same annual factor in each period."}
+          - {formule: "C_t=C_0(1+i)^t=C_0e^{\\delta t},\\qquad \\delta=\\ln(1+i)", explication: "C_0 is the initial capital at time 0 and C_t is its accumulated value at time t. The exponential form assumes a constant force of interest and a consistent fractional-period convention."}
       - titre: "2. Discount factor and present value"
         contenu: "Discounting is the inverse of accumulation. The annual discount factor v is the reciprocal of the accumulation factor: $v=\\frac{1}{1+i}$. An amount F payable at time t has value at time 0 equal to $Fv^t$. For a finite stream of cash flows C_t payable at dates t, present value is the sum of their individual discounted values. A receipt may be positive and a payment negative; keep the sign convention consistent."
         formules:
