@@ -157,7 +157,7 @@ fiche:
         corrige:
           - "P≈€2,373.96."
           - "B_2=P a_{3|}≈€6,345.63."
-          - "Check with B_2=10,000(1.06)²−P s_{2|}."
+          - "Check with B_2=10,000(1.06)^2−P s_{2|}."
         feedback: "The prospective balance discounts remaining payments. The retrospective method should agree."
       - titre: "NPV and IRR — intermediate"
         enonce: "A project costs €2,000 and pays €1,200 at the end of years 1 and 2. Calculate NPV at 8% and determine IRR."
