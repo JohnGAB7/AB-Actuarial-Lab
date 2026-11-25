@@ -197,8 +197,8 @@ fiche:
       - {titre: "Kellison, The Theory of Interest, chapters 3–4", detail: "Accumulated value, perpetuities and varying annuities. Edition and page numbers are not specified in the lesson source."}
       - {titre: "Society of Actuaries — Financial Mathematics (FM)", detail: "Official FM exam syllabus; a general reference source."}
     liens:
-      - {titre: "A1/S01 — Compound interest and certain annuities", cible: "a1/s01"}
-      - {titre: "A1/S02 — Nominal rates and fractional payments", cible: "a1/s02"}
+      - {titre: "A1/S01 — Compound interest and certain annuities"}
+      - {titre: "A1/S02 — Nominal rates and fractional payments"}
     maitrise:
       - "I distinguish present value and accumulated value."
       - "I can explain perpetuity convergence."
