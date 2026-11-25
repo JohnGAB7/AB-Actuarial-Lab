@@ -46,6 +46,33 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
     if (Number(mobile.stat) !== mobile.sessions) failures.push("session count is not data-driven");
     if (!mobile.resume) failures.push("resume action missing");
 
+    // Homepage mini-lab: controls must recalculate real outputs and render a chart in both languages.
+    await page.locator("#mini-lab").waitFor();
+    const miniDefaults = await page.evaluate(() => ({
+      capital: document.querySelector("#mini-capital-label")?.textContent,
+      rate: document.querySelector("#mini-rate-label")?.textContent,
+      years: document.querySelector("#mini-years-label")?.textContent,
+      future: document.querySelector("#mini-future")?.textContent,
+      summary: document.querySelector("#mini-chart-summary")?.textContent,
+      canvas: document.querySelector("#mini-growth")?.width > 0
+    }));
+    console.log("mini-lab defaults FR:", miniDefaults);
+    if (!miniDefaults.future || !miniDefaults.summary || !miniDefaults.canvas) failures.push("mini-lab initial outputs/chart missing");
+    await page.locator("#mini-capital").evaluate((el) => { el.value = "4000"; el.dispatchEvent(new Event("input", { bubbles: true })); });
+    await page.locator("#mini-rate").evaluate((el) => { el.value = "5"; el.dispatchEvent(new Event("input", { bubbles: true })); });
+    await page.locator("#mini-years").evaluate((el) => { el.value = "10"; el.dispatchEvent(new Event("input", { bubbles: true })); });
+    const miniChanged = await page.evaluate(() => ({
+      future: document.querySelector("#mini-future")?.textContent,
+      interest: document.querySelector("#mini-interest")?.textContent,
+      factor: document.querySelector("#mini-factor")?.textContent,
+      summary: document.querySelector("#mini-chart-summary")?.textContent
+    }));
+    console.log("mini-lab changed FR:", miniChanged);
+    const expected = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 2 }).format(4000 * Math.pow(1.05, 10));
+    if (miniChanged.future !== expected) failures.push("mini-lab future value calculation");
+    if (!miniChanged.interest || !miniChanged.factor || !miniChanged.summary.includes("10 ans")) failures.push("mini-lab updated metrics/summary");
+
+
     // Verify local progress changes the primary action without requiring an account.
     await page.evaluate(() => {
       const plan = JSON.parse(document.getElementById("plan").textContent);
@@ -75,6 +102,14 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
     if (!/Understand the idea/.test(englishMobile.title)) failures.push("English editorial content");
     if (!englishMobile.siteTitle.startsWith("Actuarial Learning Lab by ACTU-BASICS")) failures.push("English site title");
     if (!englishMobile.brand.includes("ACTUARIAL LEARNING LAB") || !englishMobile.brand.includes("BY ACTU-BASICS")) failures.push("English sub-brand lockup");
+    const miniEnglish = await page.evaluate(() => ({
+      title: document.querySelector("#mini-lab h2")?.textContent,
+      summary: document.querySelector("#mini-chart-summary")?.textContent,
+      rateLabel: document.querySelector("#mini-rate-label")?.textContent
+    }));
+    if (!/compound interest/i.test(miniEnglish.title || "")) failures.push("English mini-lab title");
+    if (!/years/.test(miniEnglish.summary || "")) failures.push("English mini-lab chart summary");
+    if (!miniEnglish.rateLabel.includes("%")) failures.push("English mini-lab rate formatting");
 
     await page.setViewportSize({ width: 1440, height: 900 });
     const desktop = await page.evaluate(() => ({
