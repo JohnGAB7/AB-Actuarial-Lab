@@ -15,7 +15,7 @@ actu_basics:
     - {id: GEJvRrnJLk8, langue: en, titre: "Actuaries: how maths helps make decisions under risk", duree: "6:55"}
 
 fiche:
-  statut: brouillon
+  statut: prete
   vue_ensemble:
     question: "Après un sinistre, comment mettre à jour la probabilité qu'un assuré appartienne à une classe de risque donnée ?"
     pourquoi: "La tarification, la sélection, l'analyse de portefeuille et la détection reposent sur le passage des probabilités a priori aux probabilités conditionnelles observées. Bayes permet de raisonner dans le bon sens, sans confondre un taux de sinistre par classe et la composition des sinistres."
