@@ -64,10 +64,10 @@ fiche:
           - "Set the valuation date and draw a cash-flow timeline."
           - "Record the amount and date of each flow; use a consistent sign convention."
           - "Check that the rate time basis matches the cash-flow maturities."
-          - "Compute v=1/(1+i), then each present value C_t v^t."
+          - "Compute $v=\\frac{1}{1+i}$, then each present value $C_t\\,v^t$."
           - "Sum the present values and state the date to which the result refers."
         controles:
-          - "A positive future flow must be below its nominal amount when i>0 and t>0."
+          - "A positive future flow must be below its nominal amount when $i>0$ and $t>0$."
           - "At a zero rate, present value equals the nominal sum of the flows."
           - "Reproduce each cash flow by accumulating its present value to its payment date."
         erreurs:
