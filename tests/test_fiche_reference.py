@@ -272,3 +272,57 @@ def test_s03_reference_examples_and_limiting_cases_are_numerically_consistent():
     # Growing perpetuity converges only if the discounted geometric ratio is below one.
     assert (1 + 0.03) / (1 + 0.05) < 1
     assert (1 + 0.03) / (1 + 0.025) >= 1
+
+def test_fiche_a1_s04_est_complete_et_bilingue():
+    from pathlib import Path
+    import yaml
+    from tools.construire import charger_seance
+    from tools.validation_contenus import verifier_overlay_traduction
+
+    root = Path(__file__).resolve().parents[1]
+    fr = charger_seance('a1/s04', 'fr')
+    en = charger_seance('a1/s04', 'en')
+    overlay = yaml.safe_load((root / 'contenus/en/a1/s04.yaml').read_text(encoding='utf-8'))
+    assert fr['fiche']['statut'] == 'brouillon'
+    assert len(fr['fiche']['cours_complet']['sections']) == 7
+    assert len(fr['fiche']['methodes']['methodes']) == 3
+    assert len(fr['fiche']['exemples_guides']['exemples']) == 3
+    assert len(fr['fiche']['exercices_corriges']['exercices']) == 3
+    assert not verifier_overlay_traduction(fr, overlay, session_id='a1/s04')
+    assert en['fiche']['cours_complet']['sections'][0]['titre'] == '1. Equation of value and level payment'
+
+
+def test_s04_loan_sheet_numerics_and_two_balance_methods_agree():
+    import math
+    L, i, n = 10_000, 0.06, 5
+    a = lambda m: (1 - (1 + i) ** (-m)) / i if m else 0
+    s = lambda m: ((1 + i) ** m - 1) / i if m else 0
+    P = L / a(n)
+    B2_prospective = P * a(n - 2)
+    B2_retrospective = L * (1 + i) ** 2 - P * s(2)
+    assert math.isclose(P, 2373.9640043118943, abs_tol=1e-9)
+    assert math.isclose(B2_prospective, 6345.634151117494, abs_tol=1e-9)
+    assert math.isclose(B2_prospective, B2_retrospective, abs_tol=1e-9)
+    interest3 = i * B2_prospective
+    principal3 = P - interest3
+    assert math.isclose(interest3, 380.73804906705, abs_tol=1e-9)
+    assert math.isclose(principal3, 1993.22595524484, abs_tol=1e-9)
+
+
+def test_s04_reference_python_lab_is_executable_and_reproducible():
+    from pathlib import Path
+    import yaml
+    root = Path(__file__).resolve().parents[1]
+    session = yaml.safe_load((root / 'contenus/a1/s04.yaml').read_text(encoding='utf-8'))
+    lab = session['fiche']['applications_labs']['applications'][0]
+    code = next(item for item in lab['procedure'] if isinstance(item, str) and 'def level_payment' in item)
+    namespace = {}
+    exec(code.split('```python', 1)[1].split('```', 1)[0], namespace)
+    payment = namespace['level_payment'](10_000, 5, 0.06)
+    schedule = namespace['amortization_schedule'](10_000, 5, 0.06)
+    assert len(schedule) == 5
+    assert abs(payment - 2373.9640043) < 1e-6
+    assert abs(schedule[1][3] - 6345.6341511) < 1e-6
+    assert abs(schedule[-1][3]) < 1e-8
+    assert abs(sum(row[2] for row in schedule) - 10_000) < 1e-8
+    assert abs(namespace['level_payment'](1200, 12, 0) - 100) < 1e-12
