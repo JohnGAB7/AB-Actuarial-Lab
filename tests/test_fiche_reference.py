@@ -277,3 +277,17 @@ def test_s03_reference_examples_and_limiting_cases_are_numerically_consistent():
     assert (1 - 0.02) / (1 + 0.0) < 1
     # A level perpetuity at zero interest does not converge.
     assert (1 + 0.0) / (1 + 0.0) == 1
+
+def test_english_overlay_preserves_nontranslatable_internal_link_targets():
+    from tools.validation_contenus import fusionner_overlay
+
+    base = {"fiche": {"synthese_references": {
+        "liens": [{"titre": "Séance suivante", "cible": "a1/s02#annuites"}]
+    }}}
+    overlay = {"fiche": {"synthese_references": {
+        "liens": [{"titre": "Next session"}]
+    }}}
+    merged = fusionner_overlay(base, overlay, "a1/s01")
+    link = merged["fiche"]["synthese_references"]["liens"][0]
+    assert link["titre"] == "Next session"
+    assert link["cible"] == "a1/s02#annuites"
