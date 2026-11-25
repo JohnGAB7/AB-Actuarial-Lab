@@ -574,7 +574,7 @@ $("#next").addEventListener("click", () => {
 });
 addEventListener("keydown", (ev) => {
   const t = ev.target;
-  if (t.closest && t.closest("input, textarea, .CodeMirror")) return;
+  if (t.closest && t.closest("input, textarea, .CodeMirror, [role=tablist]")) return;
   if (ev.key === "ArrowRight") $("#next").click();
   if (ev.key === "ArrowLeft") $("#prev").click();
 });

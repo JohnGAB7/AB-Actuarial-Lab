@@ -13,6 +13,221 @@ actu_basics:
   accroche_fr: "Pourquoi 1 € demain vaut moins que 1 € aujourd'hui ?"
   accroche_en: "Why is one euro tomorrow worth less than one euro today?"
 
+fiche:
+  statut: prete
+  vue_ensemble:
+    question: "Comment comparer correctement des montants disponibles à des dates différentes ?"
+    pourquoi: "Un euro disponible aujourd'hui peut être investi ; un euro reçu plus tard ne peut pas être utilisé entre-temps. L'intérêt composé mesure l'accumulation, tandis que l'actualisation ramène des flux futurs à une même date. Ces opérations sont la base de l'évaluation des obligations, des engagements de retraite, des primes et des provisions."
+    objectifs:
+      - "Calculer la valeur acquise et la valeur actuelle d'un capital à taux annuel effectif."
+      - "Convertir un taux annuel effectif en facteur d'actualisation, taux d'escompte et force d'intérêt."
+      - "Évaluer une annuité certaine immédiate et une annuité due, et expliquer leur différence de calendrier."
+      - "Construire et contrôler la valeur actuelle d'une suite de flux datés."
+      - "Identifier les conventions de taux, de période et les cas limites, notamment un taux nul."
+    prerequis:
+      - "Algèbre élémentaire : puissances, fractions, logarithmes et sommes finies."
+      - "Lecture d'une chronologie et distinction entre début et fin de période."
+      - "Calculatrice scientifique ou tableur ; aucune connaissance préalable en programmation n'est nécessaire."
+    carte:
+      - "Capitalisation : faire évoluer un capital vers une date future."
+      - "Actualisation : ramener un flux futur à une date d'évaluation."
+      - "Taux équivalents : exprimer une même accumulation sous plusieurs conventions."
+      - "Annuités certaines : sommer des paiements réguliers à dates connues."
+      - "Sensibilité : comprendre l'effet d'une variation de taux ou de durée."
+    duree_minutes: 35
+  cours_complet:
+    sections:
+      - titre: "1. Convention de temps et taux annuel effectif"
+        contenu: "On note t le nombre d'années écoulées depuis la date d'évaluation 0. Le taux annuel effectif i est le rendement d'une période d'un an : un capital C placé pendant une année devient C(1+i). Le facteur d'accumulation annuel est 1+i. Dans cette fiche, sauf indication contraire, i est constant, déterministe, annuel et strictement supérieur à -1 ; les flux sont exprimés dans la même unité monétaire. Pour t années entières, le capital devient C(1+i)^t. Pour une durée fractionnaire, la convention doit être annoncée : l'extrapolation C(1+i)^t correspond à une capitalisation exponentielle cohérente avec la force d'intérêt constante, mais d'autres conventions contractuelles peuvent s'appliquer."
+        formules:
+          - formule: "A_t=C(1+i)^t"
+            explication: "A_t est la valeur acquise à la date t d'un capital initial C. Le facteur (1+i)^t multiplie le capital par le même facteur annuel à chaque période."
+      - titre: "2. Facteur d'actualisation et valeur actuelle"
+        contenu: "L'actualisation est l'opération inverse de la capitalisation. Le facteur d'actualisation annuel v est l'inverse du facteur d'accumulation : v=1/(1+i). Un montant F payable à la date t a pour valeur à la date 0 la quantité Fv^t. Pour une suite finie de flux C_t payables aux dates t, la valeur actuelle est la somme des valeurs actuelles individuelles. Un flux reçu est positif et un flux payé peut être représenté négativement ; la convention de signe doit rester cohérente."
+        formules:
+          - formule: "v=(1+i)^{-1},\\qquad VA_0(F_t)=F_t v^t=\\frac{F_t}{(1+i)^t}"
+            explication: "Pour i>0 et t>0, v^t est inférieur à 1 : un paiement futur positif vaut moins à la date 0."
+          - formule: "VA_0=\\sum_{j=1}^{m} C_{t_j}v^{t_j}"
+            explication: "La somme porte sur les m flux aux dates t_j. Chaque flux doit être associé à sa propre date et au taux cohérent avec cette échéance."
+      - titre: "3. Taux d'escompte et force d'intérêt"
+        contenu: "Le taux d'escompte annuel d exprime l'intérêt rapporté à la valeur au début de la période. Pour un même facteur annuel, d=i/(1+i)=iv=1-v. Il ne faut pas confondre d avec i : le premier rapporte l'intérêt au capital initial après déduction anticipée, le second au capital prêté et rémunéré sur la période. La force d'intérêt constante δ décrit une accumulation continue. L'équivalence sur une année impose e^δ=1+i, donc δ=ln(1+i). Pour i>0, l'ordre est d<δ<i. Pour de petits taux positifs, ces trois mesures sont proches mais ne sont pas interchangeables."
+        formules:
+          - formule: "d=\\frac{i}{1+i}=iv=1-v"
+            explication: "Le taux d'escompte est la réduction relative appliquée au montant payable en fin de période lorsque l'intérêt est payé d'avance."
+          - formule: "\\delta=\\ln(1+i),\\qquad (1+i)^t=e^{\\delta t}"
+            explication: "La force δ est un taux instantané constant. Elle reproduit exactement le facteur annuel effectif après une année."
+      - titre: "4. Annuité certaine immédiate"
+        contenu: "Une annuité certaine de n paiements unitaires comporte des paiements connus, indépendants d'une condition de survie. Pour une annuité immédiate, les paiements ont lieu aux dates 1 ; 2 ; … ; n, donc en fin de période. Sa valeur actuelle est la somme v+v²+…+vⁿ. Cette somme géométrique donne (1-vⁿ)/i lorsque i n'est pas nul. Si i=0, chaque paiement vaut 1 à la date 0 et la valeur est n ; il faut traiter ce cas séparément dans une implémentation numérique."
+        formules:
+          - formule: "a_{\\overline{n}|}=\\sum_{k=1}^{n}v^k=\\frac{1-v^n}{i},\\quad i\\ne0"
+            explication: "a_{n|} désigne la valeur actuelle d'une annuité immédiate de n paiements unitaires."
+          - formule: "a_{\\overline{n}|}=n,\\quad i=0"
+            explication: "La formule fermée précédente est indéterminée en i=0 ; la somme des n facteurs égaux à 1 donne directement n."
+          - formule: "a_{\\overline{n}|}(1-v)=v(1-v^n),\\qquad 1-v=\\frac{i}{1+i}=iv"
+            explication: "En multipliant la somme v+v²+…+vⁿ par (1-v), les termes intermédiaires s'annulent : il reste v-v^{n+1}. Comme 1-v=iv, on obtient a_{n|}=(1-vⁿ)/i."
+      - titre: "5. Annuité certaine due"
+        contenu: "L'annuité due verse les mêmes n paiements unitaires aux dates 0 ; 1 ; … ; n−1 : chaque paiement est avancé d'une période par rapport à l'annuité immédiate. Sa valeur actuelle est 1+v+…+v^{n-1}. Elle vaut (1-vⁿ)/d pour d non nul, ou (1+i)a_{n|}. La relation multiplicative est un contrôle puissant : si elle échoue, les dates de paiement ou l'indexation de la somme ont probablement été mal posées."
+        formules:
+          - formule: "\\ddot{a}_{\\overline{n}|}=\\sum_{k=0}^{n-1}v^k=\\frac{1-v^n}{d}=(1+i)a_{\\overline{n}|}"
+            explication: "Le double point indique des paiements en début de période. La valeur est supérieure à l'annuité immédiate pour i>0."
+          - formule: "\\ddot{a}_{\\overline{n}|}=1+a_{\\overline{n-1}|}"
+            explication: "On isole le paiement immédiat à la date 0 ; les n−1 paiements restants forment une annuité immédiate."
+      - titre: "6. Valeur accumulée d'une annuité"
+        contenu: "La valeur accumulée à la date n d'une annuité immédiate est la somme des paiements capitalisés jusqu'à cette date. Elle est notée s_{n|} et vaut (1+i)^n a_{n|}. Cette grandeur n'est pas une valeur actuelle : elle se rapporte à la date n, tandis que a_{n|} se rapporte à la date 0. Toujours indiquer la date d'évaluation d'une valeur financière."
+        formules:
+          - formule: "s_{\\overline{n}|}=\\sum_{k=1}^{n}(1+i)^{n-k}=\\frac{(1+i)^n-1}{i}=(1+i)^n a_{\\overline{n}|}"
+            explication: "Chaque paiement est capitalisé pendant le nombre de périodes qui le sépare de la date n."
+      - titre: "7. Sensibilité et limites du modèle"
+        contenu: "Pour i>0, augmenter le taux réduit chaque facteur v^k et donc la valeur actuelle d'une annuité immédiate. Les paiements lointains sont plus sensibles car leur facteur d'actualisation dépend davantage du taux. À durée fixée, une hausse du taux diminue la valeur actuelle ; à taux positif fixé, allonger une annuité ajoute un paiement positif actualisé et augmente sa valeur. Ces conclusions supposent des flux certains et un taux déterministe constant. En pratique, il faut préciser la courbe de taux, la périodicité, les dates exactes, les conventions de jour, l'inflation, le risque et la devise. Une annuité certaine ne doit pas être confondue avec une rente viagère : cette dernière pondère les paiements par des probabilités de survie."
+        formules:
+          - formule: "\\frac{\\partial a_{\\overline{n}|}}{\\partial i}=-\\sum_{k=1}^{n}k(1+i)^{-k-1}<0,\\quad i>-1"
+            explication: "La dérivée est négative : la valeur actuelle décroît avec le taux dans le domaine où les facteurs sont définis."
+  methodes:
+    methodes:
+      - titre: "Actualiser une série de flux"
+        quand_utiliser: "Évaluer aujourd'hui des paiements ou encaissements déterministes connus à des dates futures."
+        etapes:
+          - "Fixer la date d'évaluation et tracer une chronologie des flux."
+          - "Noter le montant et la date de chaque flux ; conserver une convention de signe cohérente."
+          - "Vérifier que le taux est exprimé sur la même base de temps que les échéances."
+          - "Calculer v=1/(1+i), puis chaque valeur actuelle C_t v^t."
+          - "Additionner les valeurs actuelles et présenter la date à laquelle le résultat se rapporte."
+        controles:
+          - "Un flux positif futur doit être inférieur à sa valeur nominale lorsque i>0 et t>0."
+          - "À taux nul, la valeur actuelle est la somme nominale des flux."
+          - "Reconstituer chaque flux en capitalisant sa valeur actuelle jusqu'à sa date."
+        erreurs:
+          - "Actualiser un flux de date 0 : son facteur vaut 1."
+          - "Confondre le taux annuel effectif avec un taux mensuel sans conversion."
+          - "Actualiser tous les flux avec le même exposant."
+      - titre: "Choisir et valoriser une annuité"
+        quand_utiliser: "Les paiements sont constants, réguliers, certains et espacés d'une période."
+        etapes:
+          - "Déterminer le nombre n de paiements."
+          - "Écrire leurs dates : 1 à n pour une annuité immédiate, 0 à n−1 pour une annuité due."
+          - "Choisir la formule correspondant exactement à ces dates."
+          - "Traiter i=0 séparément si une formule contient une division par i ou d."
+          - "Comparer annuité due et immédiate avec la relation double-point=(1+i) fois immédiate."
+        controles:
+          - "Pour i>0, annuité due supérieure à annuité immédiate."
+          - "Pour i=0, les deux valeurs sont égales à n."
+          - "La somme explicite des facteurs doit retrouver la formule fermée."
+        erreurs:
+          - "Décaler les paiements d'une période en confondant début et fin."
+          - "Utiliser d au dénominateur de l'annuité immédiate."
+          - "Appliquer la formule fermée au taux nul sans limite ni cas particulier."
+  exemples_guides:
+    exemples:
+      - titre: "Comparer une annuité immédiate et une annuité due"
+        enonce: "Un contrat verse 1 unité monétaire par an pendant 3 ans. Le taux annuel effectif est i=2,5 %. Calculer la valeur à la date 0 si les versements sont faits en fin d'année, puis en début d'année."
+        raisonnement:
+          - "Calculer v=1/1,025≈0,9756098."
+          - "Fin d'année : a_{3|}=v+v²+v³≈0,9756098+0,9518144+0,9285994=2,8560236."
+          - "Début d'année : ä_{3|}=1+v+v²≈2,9274242."
+          - "Contrôle : 1,025×2,8560236≈2,9274242."
+        resultat: "Annuité immédiate : 2,8560. Annuité due : 2,9274 unités monétaires à la date 0."
+        interpretation: "Le versement dû intervient une période plus tôt ; il est donc moins actualisé. La différence ne provient pas du montant ni du nombre de paiements, mais uniquement de leur calendrier."
+        controles:
+          - "La valeur due est supérieure de 2,5 % à la valeur immédiate."
+          - "Les trois paiements sont bien représentés : dates 1 ; 2 ; 3 ou 0 ; 1 ; 2."
+      - titre: "Actualiser deux prestations futures"
+        enonce: "Une caisse doit payer 1 000 unités à la fin de l'année 5 et 500 unités à la fin de l'année 10. Au taux annuel effectif constant de 2,5 %, déterminer la valeur actuelle à la date 0."
+        raisonnement:
+          - "Écrire VA=1 000/(1,025)^5+500/(1,025)^10."
+          - "Calculer séparément les deux termes : environ 883,85 et 390,60."
+          - "Additionner les montants actualisés, sans déplacer les dates des flux."
+        resultat: "VA≈1 274,45 unités monétaires à la date 0."
+        interpretation: "La prestation de l'année 10 pèse moins aujourd'hui que celle de l'année 5, à montant nominal donné, car elle est actualisée sur une durée plus longue."
+        controles:
+          - "La valeur actuelle totale est positive et inférieure à 1 500 pour un taux positif."
+          - "Le calcul doit utiliser les exposants 5 et 10, et non 1 et 2."
+  exercices_corriges:
+    exercices:
+      - titre: "Niveau fondamental — paiement unique"
+        niveau: fondamental
+        enonce: "Calculer la valeur actuelle de 500 unités payables dans 2 ans au taux annuel effectif de 4 %."
+        corrige:
+          - "v=1/1,04≈0,9615385."
+          - "VA=500v²=500/(1,04)²≈462,2781."
+          - "Arrondir à deux décimales : 462,28 unités."
+        feedback: "Si tu obtiens plus de 500, tu as probablement capitalisé au lieu d'actualiser. Vérifie aussi que l'exposant est bien 2."
+      - titre: "Niveau intermédiaire — annuité due"
+        niveau: intermediaire
+        enonce: "Un loyer de 900 unités est payé au début de chaque année pendant 5 ans. Au taux annuel effectif de 3 %, calculer sa valeur actuelle."
+        corrige:
+          - "Les dates de paiement sont 0 ; 1 ; 2 ; 3 ; 4 : il s'agit d'une annuité due."
+          - "ä_{5|}=(1+i)a_{5|}=(1,03)×(1−1,03⁻⁵)/0,03."
+          - "La valeur actuelle est 900×ä_{5|}≈4 245,4 unités (arrondi au dixième)."
+        feedback: "Un paiement au début de la première année n'est pas actualisé. Si tu utilises a_{5|}, tu décales à tort le premier loyer d'un an."
+      - titre: "Niveau avancé — flux irréguliers"
+        niveau: avance
+        enonce: "Un régime verse 2 000 unités à t=1, 1 500 à t=4 et reçoit 300 à t=2. Calculer la valeur actuelle nette à 5 % annuel effectif."
+        corrige:
+          - "Fixer la convention : sorties positives comme prestations et entrée négative dans le coût net, ou l'inverse, mais rester cohérent."
+          - "Avec prestations positives et encaissement reçu négatif : VAN=2 000/1,05+1 500/(1,05)⁴−300/(1,05)²."
+          - "Évaluer chaque terme à sa date puis sommer ; la VAN est d'environ 2 866,7 unités."
+        feedback: "Le point déterminant est le signe du flux reçu et les dates exactes. Une somme nominale de 2 000+1 500−300 ne répond pas à la question car les flux ne sont pas simultanés."
+  applications_labs:
+    applications:
+      - titre: "Évaluer des prestations déterministes d'un régime de retraite"
+        contexte: "Une première estimation simplifiée d'un engagement de retraite peut représenter des prestations futures certaines par une liste de flux datés. Ce laboratoire n'est pas un calcul réglementaire de provision : il isole uniquement le mécanisme financier d'actualisation."
+        objectif: "Reproduire la valeur actuelle d'une série de paiements, vérifier les dates et comparer le résultat d'un tableur à une fonction Python."
+        outils: [excel, python]
+        entrees:
+          - "Flux fictifs : 1 000 à t=5 et 500 à t=10."
+          - "Taux annuel effectif constant : 2,5 %."
+          - "Date d'évaluation : t=0 ; montants dans une unité monétaire commune."
+        hypotheses:
+          - "Flux déterministes, taux plat et constant, périodes annuelles entières."
+          - "Aucun risque, inflation, frais, impôt ou probabilité de survie n'est modélisé."
+        procedure:
+          - "Dans Excel, saisir les dates 5 et 10 en A2:A3, les flux 1 000 et 500 en B2:B3 et le taux 2,5 % en E1."
+          - "En C2, entrer =B2/(1+$E$1)^A2, recopier en C3, puis calculer =SOMME(C2:C3)."
+          - |
+            ```python
+            flux = {5: 1000.0, 10: 500.0}
+            taux = 0.025
+            valeur_actuelle = sum(montant / (1 + taux) ** date for date, montant in flux.items())
+            print(f"{valeur_actuelle:.2f}")  # 1274.45
+            assert abs(valeur_actuelle - 1274.45) < 0.01
+            ```
+          - "Comparer les résultats non arrondis avant d'arrondir l'affichage."
+        sorties:
+          - "Valeur actuelle attendue : environ 1 274,45 unités."
+          - "Deux contributions actualisées, une par échéance."
+        validation:
+          - "Le résultat Excel et Python coïncide à une tolérance numérique près."
+          - "À taux nul, la fonction retourne la somme 1 500."
+          - "Augmenter le taux diminue la valeur actuelle pour ces flux positifs."
+        limites:
+          - "Une véritable évaluation actuarielle nécessite des hypothèses démographiques, économiques et contractuelles documentées."
+          - "Une courbe de taux par échéance peut remplacer le taux plat ; chaque flux doit alors utiliser le facteur adapté."
+  synthese_references:
+    memo:
+      - "Capitalisation : multiplier par (1+i)^t ; actualisation : multiplier par v^t."
+      - "v=1/(1+i), d=i/(1+i), δ=ln(1+i)."
+      - "Annuité immédiate : paiements aux dates 1,…,n ; annuité due : dates 0,…,n−1."
+      - "ä_{n|}=(1+i)a_{n|} ; pour i=0, les deux annuités valent n."
+      - "Toujours annoncer la date d'évaluation, la périodicité, le taux et la convention de signe."
+    glossaire:
+      - {terme_fr: "Intérêt composé", terme_en: "Compound interest", definition: "Intérêt calculé sur le capital augmenté des intérêts déjà accumulés."}
+      - {terme_fr: "Taux annuel effectif", terme_en: "Annual effective interest rate", definition: "Taux qui transforme le capital initial en capital final sur une période annuelle."}
+      - {terme_fr: "Facteur d'actualisation", terme_en: "Discount factor", definition: "Facteur qui convertit un montant futur en valeur à une date antérieure."}
+      - {terme_fr: "Taux d'escompte", terme_en: "Rate of discount", definition: "Taux exprimant l'intérêt rapporté à la valeur de début de période."}
+      - {terme_fr: "Force d'intérêt", terme_en: "Force of interest", definition: "Taux instantané de croissance d'un capital dans un modèle de capitalisation continue."}
+      - {terme_fr: "Annuité immédiate", terme_en: "Annuity immediate", definition: "Suite de paiements réguliers effectués en fin de période."}
+      - {terme_fr: "Annuité due", terme_en: "Annuity due", definition: "Suite de paiements réguliers effectués en début de période."}
+      - {terme_fr: "Valeur actuelle", terme_en: "Present value", definition: "Valeur d'un flux ou d'une suite de flux ramenée à une date d'évaluation."}
+    maitrise:
+      - "Je sais distinguer capitalisation et actualisation sur une chronologie."
+      - "Je sais convertir i en v, d et δ sans confondre les conventions."
+      - "Je sais identifier les dates d'une annuité immédiate et d'une annuité due."
+      - "Je sais calculer une valeur actuelle de flux irréguliers et vérifier les unités."
+      - "Je sais expliquer les hypothèses et les limites d'un taux plat déterministe."
+    references:
+      - {titre: "Kellison, The Theory of Interest, chapitres 1 à 3", detail: "Référence de théorie financière pour l'intérêt composé, les taux équivalents et les annuités certaines. Les détails d'édition et de pagination ne sont pas spécifiés dans le contenu source."}
+      - {titre: "Society of Actuaries — Financial Mathematics (FM) Exam", detail: "Le syllabus officiel situe ces notions dans le socle de mathématiques financières de l'examen.", url: "https://www.soa.org/education/exam-req/edu-exam-fm-detail/"}
+
 etapes:
   - type: quiz
     titre: "Test de positionnement"

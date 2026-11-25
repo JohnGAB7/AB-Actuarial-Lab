@@ -1,14 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
 <title id="title">Actuarial Learning Lab</title>
-<defs>
- <linearGradient id="a" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#1685D5"/><stop offset="1" stop-color="#55B4ED"/></linearGradient>
- <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#E6C16D"/><stop offset="1" stop-color="#B98224"/></linearGradient>
-</defs>
-<path d="M17 108 56 20q3-7 8 0l47 88H91L64 54 37 108Z" fill="#EEF2F7"/>
-<path d="m63 57 27 51H77L63 82 50 108H37Z" fill="url(#a)"/>
-<path d="M14 83c22 29 71 25 98-4" fill="none" stroke="url(#g)" stroke-width="5.5" stroke-linecap="round"/>
-<path d="M24 95c16 0 25-31 40-31s24 31 40 31" fill="none" stroke="#1685D5" stroke-width="3.2" stroke-linecap="round"/>
-<path d="M64 64v31" stroke="#EEF2F7" stroke-width="2.5" stroke-dasharray="4 5"/>
-<circle cx="64" cy="64" r="5.5" fill="#D6A94D" stroke="#07111F" stroke-width="1.5"/>
-<path d="M18 111h92" stroke="#EEF2F7" stroke-width="2" stroke-linecap="round"/>
+<rect width="64" height="64" rx="15" fill="#06152B"/>
+<path d="M17 15h29M17 49h29M42 15 22 32l20 17" fill="none" stroke="#EEF2F7" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M30 43c5-1 7-8 10-13s6-7 10-8" fill="none" stroke="#55B4ED" stroke-width="3.5" stroke-linecap="round"/>
+<circle cx="50" cy="22" r="3.5" fill="#D6A94D"/>
 </svg>

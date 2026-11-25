@@ -169,3 +169,23 @@ def test_legacy_session_without_reference_sheet_remains_compatible():
     legacy = _session(None)
     del legacy["fiche"]
     assert verifier_seance(legacy, session_id="a1/s01") == []
+
+
+def test_fiche_a1_s01_est_complete_et_bilingue():
+    from tools.construire import charger_seance
+    from tools.validation_contenus import verifier_overlay_traduction
+
+    fr = charger_seance("a1/s01", "fr")
+    en = charger_seance("a1/s01", "en")
+    assert fr["fiche"]["statut"] == "prete"
+    assert set(fr["fiche"]) == {
+        "statut", "vue_ensemble", "cours_complet", "methodes", "exemples_guides",
+        "exercices_corriges", "applications_labs", "synthese_references",
+    }
+    assert not verifier_overlay_traduction(
+        fr, __import__("yaml").safe_load(
+            (__import__("pathlib").Path(__file__).resolve().parents[1] / "contenus/en/a1/s01.yaml").read_text(encoding="utf-8")
+        ), session_id="a1/s01"
+    )
+    assert en["fiche"]["cours_complet"]["sections"][0]["titre"] == "1. Time convention and annual effective rate"
+    assert len(en["fiche"]["exercices_corriges"]["exercices"]) == 3
