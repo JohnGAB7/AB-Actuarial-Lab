@@ -253,7 +253,7 @@ fiche:
           - formule: 'P-F=(c-Fy)\,a_{\overline{n}|y}'
             explication: "Identité qui relie le prix au pair à l'écart entre coupon monétaire et intérêt au rendement."
       - titre: "2. Prime, décote et prix au pair"
-        contenu: "Le prix est au pair lorsque le coupon monétaire égale le rendement exigé. Si le coupon est supérieur au rendement, l'obligation vaut plus que son nominal : elle cote avec une prime. Si le coupon est inférieur au rendement, elle cote avec une décote. À flux fixes, le prix est décroissant avec le rendement; à mesure que l'échéance approche, le prix tend vers le remboursement final, sous réserve que les flux soient payés et qu'il n'y ait pas de défaut ni option."
+        contenu: "Le prix est au pair lorsque le coupon monétaire égale le rendement exigé. Si le coupon est supérieur au rendement, l'obligation vaut plus que son nominal : elle cote avec une prime. Si le coupon est inférieur au rendement, elle cote avec une décote. À flux fixes, le prix est décroissant avec le rendement $y$; à mesure que l'échéance approche, le prix tend vers le remboursement final, sous réserve que les flux soient payés et qu'il n'y ait pas de défaut ni option."
         formules:
           - formule: 'q>y\Rightarrow P>F;\qquad q=y\Rightarrow P=F;\qquad q<y\Rightarrow P<F'
             explication: "Comparaison du taux de coupon q et du rendement y pour une obligation standard."
@@ -267,7 +267,7 @@ fiche:
           - formule: 'P_{dirty}=P_{clean}+CC'
             explication: "Relation usuelle entre prix dirty et clean; CC désigne le coupon couru calculé selon la convention de marché."
       - titre: "4. Courbe spot et taux à terme"
-        contenu: "Une courbe spot est un ensemble de taux zéro-coupon par échéance. Sous capitalisation annuelle effective et absence d'arbitrage, investir jusqu'à deux ans doit avoir la même valeur qu'investir un an puis réinvestir un an au taux à terme implicite. Le forward est un taux mathématiquement implicite dans la courbe, pas nécessairement une prévision du taux futur. Les taux peuvent être interpolés pour des échéances absentes, mais la méthode d'interpolation doit être annoncée."
+        contenu: "Une courbe spot est un ensemble de taux zéro-coupon par échéance. Sous capitalisation annuelle effective et absence d'arbitrage, investir jusqu'à deux ans doit avoir la même valeur qu'investir un an puis réinvestir un an au taux à terme implicite. Le taux à terme $f_{t-1,t}$ est mathématiquement implicite dans la courbe, pas nécessairement une prévision du taux futur. Les taux peuvent être interpolés pour des échéances absentes, mais la méthode d'interpolation doit être annoncée."
         formules:
           - formule: '(1+s_2)^2=(1+s_1)(1+f_{1,2})'
             explication: "Équivalence de placements sur deux ans et d'un placement suivi d'un taux à terme."
@@ -285,7 +285,7 @@ fiche:
           - formule: '\frac{\Delta P}{P}\approx-D_{mod}\,\Delta y'
             explication: "Approximation de premier ordre : duration modifiée seule, pour une petite variation du rendement."
       - titre: "6. Convexité et approximation prix-rendement"
-        contenu: "La convexité mesure la courbure du prix par rapport au rendement. Pour des flux positifs d'une obligation standard, le prix est convexe : l'approximation par duration seule sous-estime généralement le gain quand le rendement baisse et surestime la perte quand il monte, pour des variations assez petites et comparables. Duration et convexité ne remplacent pas le recalcul exact du prix; elles sont des approximations locales."
+        contenu: "La convexité mesure la courbure du prix par rapport au rendement $y$. Pour des flux positifs d'une obligation standard, le prix est convexe : l'approximation par duration seule sous-estime généralement le gain quand le rendement baisse et surestime la perte quand il monte, pour des variations assez petites et comparables. Duration et convexité ne remplacent pas le recalcul exact du prix; elles sont des approximations locales."
         formules:
           - formule: 'Conv=\frac{1}{P}\sum_{t=1}^{n}\frac{t(t+1)C_t}{(1+y)^{t+2}}'
             explication: "Convexité conventionnelle pour capitalisation annuelle effective et flux fixes."
@@ -353,7 +353,7 @@ fiche:
         raisonnement:
           - "Coupons de 50 € aux années 1 à 5 et remboursement de 1 000 € à l'année 5."
           - "À 4 %, P≈1 044,52 € : prime."
-          - "À 5 %, P=1 000 € : au pair."
+          - "À $5\\%$, $P=1\\,000$ € : au pair."
           - "À 6 %, P≈957,88 € : décote."
         resultat: "P(4 %)≈1 044,52 €; P(5 %)=1 000 €; P(6 %)≈957,88 €."
         interpretation: "Le prix évolue en sens inverse du rendement exigé, car les flux contractuels restent fixes."
@@ -361,25 +361,25 @@ fiche:
           - "Recalculer par somme de coupons actualisés et remboursement."
           - "Le prix à 5 % doit être exactement le nominal à la précision numérique."
       - titre: "Prix par courbe spot et taux à terme"
-        enonce: "Courbe fictive s_1=3 %, s_2=3,5 %, s_3=4 %. Prix d'une obligation 3 ans, nominal 1 000 €, coupon 5 %; calculer aussi les taux à terme entre les années 1 et 2, puis 2 et 3."
+        enonce: "Courbe fictive $s_1=3\\%$, $s_2=3{,}5\\%$, $s_3=4\\%$. Prix d'une obligation 3 ans, nominal 1 000 €, coupon 5 %; calculer aussi les taux à terme entre les années 1 et 2, puis 2 et 3."
         raisonnement:
-          - "$P=50/1{,}03+50/(1{,}035)^2+1\,050/(1{,}04)^3$."
+          - "$P=50/1{,}03+50/(1{,}035)^2+1\\,050/(1{,}04)^3$."
           - "Les taux à terme découlent de l'équivalence des facteurs de capitalisation."
-          - "$f_{1\\to2}=(1{,}035^2/1{,}03)-1\\approx4{,}0024\%$."
-          - "$f_{2\\to3}=(1{,}04^3/(1{,}035)^2)-1\\approx5{,}0073\%$."
-        resultat: "Prix≈1 028,67 €; f_{1→2}≈4,0024 %; f_{2→3}≈5,0073 %."
+          - "$f_{1\\to2}=(1{,}035^2/1{,}03)-1\\approx4{,}0024\\%$."
+          - "$f_{2\\to3}=(1{,}04^3/(1{,}035)^2)-1\\approx5{,}0073\\%$."
+        resultat: "Prix≈$1\\,028{,}67$ €; $f_{1\\to2}\\approx4{,}0024\\%$; $f_{2\\to3}\\approx5{,}0073\\%$."
         interpretation: "Le prix spot actualise chaque coupon à son taux propre; les forwards sont implicites et ne constituent pas des prévisions garanties."
         controles:
           - "Vérifier chaque PV individuellement."
           - "Comparer le prix à celui d'un YTM proche de 3,9677 %."
       - titre: "Duration et convexité"
-        enonce: "Pour l'obligation 5 ans nominal 1 000 €, coupon 5 %, YTM 4 %, calculer les sensibilités."
+        enonce: "Pour l'obligation 5 ans nominal 1 000 €, coupon 5 %, YTM $4\\%$, calculer les sensibilités."
         raisonnement:
           - "Prix≈1 044,5182 €."
           - "Duration Macaulay≈4,5571 ans; duration modifiée≈4,3818."
           - "Convexité conventionnelle≈24,4766."
           - "Pour un choc de +1 point de rendement, l'approximation de second ordre donne une variation relative d'environ −4,2594 %."
-        resultat: "D_Mac≈4,5571; D_mod≈4,3818; Conv≈24,4766."
+        resultat: "$D_{Mac}\\approx4{,}5571$; $D_{mod}\\approx4{,}3818$; $Conv\\approx24{,}4766$."
         interpretation: "La duration mesure la sensibilité locale; la convexité corrige la courbure. Une repricing exacte est préférable pour un choc significatif."
         controles:
           - "Comparer l'approximation à P(5 %)−P(4 %)."
@@ -406,9 +406,9 @@ fiche:
         niveau: avance
         enonce: "À YTM 4 %, estime la variation de prix d'une obligation standard lorsque le rendement monte de 0,5 point. Utilise duration modifiée 4,3818 et convexité 24,4766."
         corrige:
-          - "Δy=0,005."
-          - "Approximation : $-4{,}3818\\times0{,}005+0{,}5\\times24{,}4766\\times0{,}005^2\\approx-2{,}1603\%$."
-          - "La duration seule donne environ $-2{,}1909\%$ ; le terme de convexité atténue la baisse."
+          - "$\\Delta y=0{,}005$."
+          - "Approximation : $-4{,}3818\\times0{,}005+0{,}5\\times24{,}4766\\times0{,}005^2\\approx-2{,}1603\\%$."
+          - "La duration seule donne environ $-2{,}1909\\%$ ; le terme de convexité atténue la baisse."
         feedback: "Le choc est exprimé en décimal. La convexité est multipliée par le carré du choc et la moitié."
   applications_labs:
     applications:
