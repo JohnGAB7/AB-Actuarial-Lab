@@ -118,7 +118,7 @@ fiche:
           - "The approximation improves when n is large and p is small."
         erreurs:
           - "Treat λ as a probability."
-          - "Omit k=0,1,… when calculating a complement."
+          - "Omit k=0 and 1 when calculating a complement."
           - "Use an approximation without checking its fit."
   exemples_guides:
     exemples:
