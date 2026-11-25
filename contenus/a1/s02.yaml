@@ -47,21 +47,21 @@ fiche:
           - formule: "i^{(m)}=m\\left[(1+i)^{1/m}-1\\right]"
             explication: "Convertir l'effectif vers le nominal lorsque la convention de m capitalisations est demandée."
       - titre: "3. Taux nominal d'escompte"
-        contenu: "Le taux nominal d'escompte d^(m) est convertible m fois par année et chaque fraction $d^{(m)}/m$ est déduite au début de la période. Le facteur de chaque fraction est $1-d^{(m)}/m$ ; après m périodes, le facteur annuel doit égaler $1/(1+i)$. Pour i positif et m supérieur à 1, les taux d'intérêt et d'escompte nominaux équivalents encadrent la force d'intérêt : $d<d^{(m)}<\delta<i^{(m)}<i$. La relation ne s'applique pas telle quelle à des taux négatifs ou à m=1."
+        contenu: "Le taux nominal d'escompte d^(m) est convertible m fois par année et chaque fraction $d^{(m)}/m$ est déduite au début de la période. Le facteur de chaque fraction est $1-d^{(m)}/m$ ; après m périodes, le facteur annuel doit égaler $1/(1+i)$. Pour i positif et m supérieur à 1, les taux d'intérêt et d'escompte nominaux équivalents encadrent la force d'intérêt : $d<d^{(m)}<\\delta<i^{(m)}<i$. La relation ne s'applique pas telle quelle à des taux négatifs ou à m=1."
         formules:
           - formule: "1+i=\\left(1-\\frac{d^{(m)}}{m}\\right)^{-m}"
             explication: "Les déductions au début des m sous-périodes donnent le même facteur annuel que l'accumulation effective."
           - formule: "d^{(m)}=m\\left[1-(1+i)^{-1/m}\\right]"
             explication: "On déduit le facteur d'escompte périodique de v^(1/m), puis on multiplie la déduction périodique par m."
       - titre: "4. Limite de capitalisation continue"
-        contenu: "Quand m tend vers l'infini à taux effectif annuel fixé, le nominal d'intérêt tend vers $\delta=\ln(1+i)$, la force d'intérêt. La limite vient de $m[(1+i)^{1/m}-1]$ et de la limite de l'exponentielle. Le nominal d'escompte tend également vers δ. À taux positif, $\delta$ est entre $d$ et $i$ ; les valeurs se rapprochent lorsque le taux devient petit, sans devenir identiques en général."
+        contenu: "Quand m tend vers l'infini à taux effectif annuel fixé, le nominal d'intérêt tend vers $\\delta=\\ln(1+i)$, la force d'intérêt. La limite vient de $m[(1+i)^{1/m}-1]$ et de la limite de l'exponentielle. Le nominal d'escompte tend également vers δ. À taux positif, $\\delta$ est entre $d$ et $i$ ; les valeurs se rapprochent lorsque le taux devient petit, sans devenir identiques en général."
         formules:
           - formule: "\\lim_{m\\to\\infty}i^{(m)}=\\delta=\\ln(1+i)"
             explication: "La capitalisation de plus en plus fréquente converge vers l'accumulation continue."
           - formule: "\\lim_{m\\to\\infty}d^{(m)}=\\delta,\\qquad e^{\\delta}=1+i"
             explication: "Les déductions fractionnées convergent vers la même force, avec un facteur annuel équivalent."
       - titre: "5. Annuités fractionnées : convention de montant"
-        contenu: "Une annuité payable $m$ fois par an, notée $a^{(m)}_{\overline{n}|}$, verse au total 1 par année, réparti en $m$ paiements de $1/m$ à la fin de chaque sous-période. Sur n années, les paiements ont lieu aux dates $k/m$, $k=1,\ldots,mn$. Ce n'est pas une série de m paiements unitaires : le montant annuel total reste 1. En utilisant le taux nominal d'intérêt convertible à la même fréquence, la valeur actuelle est $(1-v^n)/i^{(m)}$. Pour des paiements en début de sous-période, la valeur actuelle est $(1-v^n)/d^{(m)}$."
+        contenu: "Une annuité payable $m$ fois par an, notée $a^{(m)}_{\\overline{n}|}$, verse au total 1 par année, réparti en $m$ paiements de $1/m$ à la fin de chaque sous-période. Sur n années, les paiements ont lieu aux dates $k/m$, $k=1,\\ldots,mn$. Ce n'est pas une série de m paiements unitaires : le montant annuel total reste 1. En utilisant le taux nominal d'intérêt convertible à la même fréquence, la valeur actuelle est $(1-v^n)/i^{(m)}$. Pour des paiements en début de sous-période, la valeur actuelle est $(1-v^n)/d^{(m)}$."
         formules:
           - formule: "a^{(m)}_{\\overline{n}|}=\\frac{1-v^n}{i^{(m)}}"
             explication: "Valeur actuelle de n unités annuelles au total, chacune répartie en m paiements égaux de 1/m en fin de sous-période."
@@ -70,14 +70,14 @@ fiche:
           - formule: "a^{(m)}_{\\overline{n}|}=\\frac{i}{i^{(m)}}a_{\\overline{n}|},\\qquad \\ddot{a}^{(m)}_{\\overline{n}|}=\\frac{d}{d^{(m)}}\\ddot{a}_{\\overline{n}|}"
             explication: "Les rapports des taux relient la valeur fractionnée à l'annuité annuelle correspondante. Pour un taux nul, traiter la limite séparément."
       - titre: "6. Dérivation par somme géométrique et limite continue"
-        contenu: "Pour les paiements fractionnés en fin de sous-période, la somme est $\frac1m\sum_{k=1}^{mn}v^{k/m}$. Sa raison est $v^{1/m}$. La somme géométrique se simplifie car $1-v^{1/m}=i^{(m)}/m$. Pour les paiements au début, l'indice commence à $k=0$ et le dénominateur devient $d^{(m)}/m$. Lorsque m tend vers l'infini, les paiements deviennent continus et la valeur actuelle est l'intégrale de v^t sur [0,n]."
+        contenu: "Pour les paiements fractionnés en fin de sous-période, la somme est $\\frac1m\\sum_{k=1}^{mn}v^{k/m}$. Sa raison est $v^{1/m}$. La somme géométrique se simplifie car $1-v^{1/m}=i^{(m)}/m$. Pour les paiements au début, l'indice commence à $k=0$ et le dénominateur devient $d^{(m)}/m$. Lorsque m tend vers l'infini, les paiements deviennent continus et la valeur actuelle est l'intégrale de v^t sur [0,n]."
         formules:
           - formule: "a^{(m)}_{\\overline{n}|}=\\frac{1}{m}\\sum_{k=1}^{mn}v^{k/m}=\\frac{1-v^n}{m(1-v^{1/m})}"
             explication: "Écrire explicitement chaque paiement de 1/m à sa date permet de voir la somme géométrique."
           - formule: "m(1-v^{1/m})=i^{(m)}"
             explication: "L'identité provient de $v^{1/m}=(1+i)^{-1/m}$ et définit le taux nominal d'intérêt équivalent."
           - formule: "\\bar{a}_{\\overline{n}|}=\\int_0^n v^t\\,dt=\\frac{1-v^n}{\\delta}"
-            explication: "La valeur d'une annuité continue de débit 1 par année est la limite des paiements fractionnés ; $\delta=\ln(1+i)$."
+            explication: "La valeur d'une annuité continue de débit 1 par année est la limite des paiements fractionnés ; $\\delta=\\ln(1+i)$."
       - titre: "7. Hypothèses, limites et pièges"
         contenu: "Les formules supposent une année cohérente, un taux constant et déterministe, des périodes égales et une convention de paiement explicitée. Une offre de crédit peut annoncer un taux nominal sans inclure frais, assurance, taxes ou autres composantes du coût total : le taux effectif calculé ici ne représente alors que la capitalisation des intérêts. Ne pas confondre $i^{(m)}/m$ avec $i/m$, ni $a^{(m)}$ avec $ma$. Pour des taux négatifs, vérifier que les facteurs périodiques restent admissibles et que les comparaisons d'ordre usuelles ne s'appliquent pas automatiquement."
   methodes:
@@ -250,8 +250,8 @@ fiche:
     memo:
       - "Nominal d'intérêt : $i^{(m)}=m[(1+i)^{1/m}-1]$ ; nominal d'escompte : $d^{(m)}=m[1-v^{1/m}]$."
       - "Conversion nominal vers effectif : $i=(1+i^{(m)}/m)^m-1$."
-      - "À taux positif, $d<d^{(m)}<\delta<i^{(m)}<i$ pour $m>1$."
-      - "Limite continue : $i^{(m)}$ et $d^{(m)}$ tendent vers $\delta=\ln(1+i)$."
+      - "À taux positif, $d<d^{(m)}<\\delta<i^{(m)}<i$ pour $m>1$."
+      - "Limite continue : $i^{(m)}$ et $d^{(m)}$ tendent vers $\\delta=\\ln(1+i)$."
       - "Annuité fractionnée : le total annuel est réparti en m paiements de A/m ; ne pas multiplier par m."
       - "Paiements en fin de sous-période : $VA=A(1-v^n)/i^{(m)}$. En début : $VA=A(1-v^n)/d^{(m)}$."
       - "Comparer les taux sur une même période et vérifier le calendrier, le total annuel, les unités et les frais exclus."
@@ -471,9 +471,9 @@ etapes:
       - {nom: '$i^{(12)}$ vaut 0,0392849 à 4 %', expr: "abs(nominal_rate(0.04, 12) - 0.0392849) < 1e-7"}
       - {nom: '6 % mensuel vaut 6,1678 % effectif', expr: "abs(effective_rate(0.06, 12) - 0.0616778) < 1e-7"}
       - {nom: 'Aller-retour : effectif, puis nominal, puis effectif', expr: "abs(effective_rate(nominal_rate(0.07, 4), 4) - 0.07) < 1e-12"}
-      - {nom: '$a^{(12)}_{\overline{10}|}$ vaut 8,25854 à 4 %', expr: "abs(annuity_mthly(10, 0.04, 12) - 8.25854) < 0.00001"}
-      - {nom: '$\ddot{a}^{(12)}_{\overline{10}|}$ vaut 8,28558 à 4 %', expr: "abs(annuity_mthly(10, 0.04, 12, due=True) - 8.28558) < 0.00001"}
-      - {nom: 'Avec $m = 1$, on retrouve $a_{\overline{10}|} = 8{,}11090$', expr: "abs(annuity_mthly(10, 0.04, 1) - 8.11090) < 0.00001"}
+      - {nom: '$a^{(12)}_{\\overline{10}|}$ vaut 8,25854 à 4 %', expr: "abs(annuity_mthly(10, 0.04, 12) - 8.25854) < 0.00001"}
+      - {nom: '$\\ddot{a}^{(12)}_{\\overline{10}|}$ vaut 8,28558 à 4 %', expr: "abs(annuity_mthly(10, 0.04, 12, due=True) - 8.28558) < 0.00001"}
+      - {nom: 'Avec $m = 1$, on retrouve $a_{\\overline{10}|} = 8{,}11090$', expr: "abs(annuity_mthly(10, 0.04, 1) - 8.11090) < 0.00001"}
 
   - type: vocabulaire
     titre: "Vocabulary"
