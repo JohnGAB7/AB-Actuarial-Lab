@@ -179,12 +179,12 @@ fiche:
           - "A term structure may replace the constant rate in practice."
   synthese_references:
     memo:
-      - "Accumulated value: s_n=((1+i)^n−1)/i=(1+i)^n a_n; i=0: n."
-      - "Immediate perpetuity: 1/i; due: 1/d, for i>0."
-      - "Arithmetic: (Ia)=(ä−nv^n)/i; (Da)=(n−a)/i."
-      - "Check: (Ia)+(Da)=(n+1)a."
-      - "Finite geometric: [1−((1+g)/(1+i))^n]/(i−g); if i=g: nv."
-      - "Growing perpetuity: 1/(i−g), only if g<i."
+      - "Accumulated value: $s_{\\overline{n}|}=\\frac{(1+i)^n-1}{i}=(1+i)^n a_{\\overline{n}|}$; $i=0$: $n$."
+      - "Immediate perpetuity: $1/i$; due: $1/d$, for $i>0$."
+      - "Arithmetic: $(Ia)=\\frac{\\ddot{a}_{\\overline{n}|}-n v^n}{i}$; $(Da)=\\frac{n-a_{\\overline{n}|}}{i}$."
+      - "Check: $(Ia)+(Da)=(n+1)a_{\\overline{n}|}$."
+      - "Finite geometric: $\\frac{1-\\left(\\frac{1+g}{1+i}\\right)^n}{i-g}$; if $i=g$: $nv$."
+      - "Growing perpetuity: $\\frac{1}{i-g}$, only if $g<i$."
       - "Check first payment date, rate units, convergence and limiting cases."
     glossaire:
       - {definition: "Value of payments accumulated to a future date."}
