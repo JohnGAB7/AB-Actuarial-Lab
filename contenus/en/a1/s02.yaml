@@ -230,14 +230,14 @@ fiche:
       - "Month-end payments: PV=A(1−v^n)/i^(m). Month-start: PV=A(1−v^n)/d^(m)."
       - "Compare rates on the same period and check timing, annual total, units and excluded fees."
     glossaire:
-      - {terme_fr: "Taux nominal convertible m fois", terme_en: "Nominal rate convertible m-thly", definition: "Annual quoted rate whose periodic rate is the nominal divided by m and is compounded m times in a year."}
-      - {terme_fr: "Taux annuel effectif", terme_en: "Annual effective rate", definition: "Rate that produces the same annual accumulation factor after all compounding within the year."}
-      - {terme_fr: "Taux périodique", terme_en: "Periodic rate", definition: "Rate applied over one subperiod of length 1/m year."}
-      - {terme_fr: "Taux d'escompte nominal", terme_en: "Nominal discount rate", definition: "Annual quoted discount rate converted m times, with each deduction applied at the beginning of a subperiod."}
-      - {terme_fr: "Force d'intérêt", terme_en: "Force of interest", definition: "Continuous-time instantaneous accumulation rate equivalent to the annual effective rate."}
-      - {terme_fr: "Annuité fractionnée", terme_en: "M-thly annuity", definition: "An annual amount split into m equal payments within each year, at a stated timing convention."}
-      - {terme_fr: "Paiement en fin de période", terme_en: "Payment in arrears", definition: "Payment made at the end of each subperiod."}
-      - {terme_fr: "Paiement en début de période", terme_en: "Payment in advance", definition: "Payment made at the start of each subperiod."}
+      - {definition: "Annual quoted rate whose periodic rate is the nominal divided by m and is compounded m times in a year."}
+      - {definition: "Rate that produces the same annual accumulation factor after all compounding within the year."}
+      - {definition: "Rate applied over one subperiod of length 1/m year."}
+      - {definition: "Annual quoted discount rate converted m times, with each deduction applied at the beginning of a subperiod."}
+      - {definition: "Continuous-time instantaneous accumulation rate equivalent to the annual effective rate."}
+      - {definition: "An annual amount split into m equal payments within each year, at a stated timing convention."}
+      - {definition: "Payment made at the end of each subperiod."}
+      - {definition: "Payment made at the start of each subperiod."}
     maitrise:
       - "I can explain why a nominal rate is not an effective rate."
       - "I can convert both ways and check by recomposition."
