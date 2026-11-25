@@ -18,14 +18,14 @@ fiche:
       - "Payment timeline and conversion between monthly and annual periods."
     carte:
       - "Equivalent rates: one annual factor expressed under several conventions."
-      - "Nominal rate convertible m-thly: periodic rate i^(m)/m, compounded m times."
+      - "Nominal rate convertible $m$ times per year: periodic rate $i^{(m)}/m$, compounded $m$ times."
       - "Nominal discount: fractional deduction at the start of each subperiod."
       - "Continuous limit: force of interest and force of discount."
       - "Fractional annuities: same annual total, paid earlier within the year."
   cours_complet:
     sections:
       - titre: "1. Convention and definition of a nominal rate"
-        contenu: "Fix one year as the comparison period and m as a positive integer number of conversions per year. The annual nominal rate i^(m), convertible m times, is a quoted rate: the rate applied during each period of length 1/m is j=i^(m)/m. Capital is multiplied by 1+j at each conversion. The annual factor is therefore (1+i^(m)/m)^m. The annual effective rate i is the single rate that produces the same annual factor. Rates are equivalent when they produce the same annual accumulation factor, not because their quoted numbers are identical."
+        contenu: "Fix one year as the comparison period and m as a positive integer number of conversions per year. The annual nominal rate $i^{(m)}$, convertible $m$ times, is a quoted rate: the rate applied during each period of length 1/m is $j=i^{(m)}/m$. Capital is multiplied by 1+j at each conversion. The annual factor is therefore $(1+i^{(m)}/m)^m$. The annual effective rate i is the single rate that produces the same annual factor. Rates are equivalent when they produce the same annual accumulation factor, not because their quoted numbers are identical."
         formules:
           - {formule: "1+i=\\left(1+\\frac{i^{(m)}}{m}\\right)^m", explication: "The right-hand side is the accumulation factor after m equal subperiods. The effective rate i is this factor minus one."}
           - {formule: "i^{(m)}=m\\left[(1+i)^{1/m}-1\\right]", explication: "Extract the equivalent periodic rate from i, then multiply by m to obtain the annual nominal quotation."}
@@ -35,36 +35,36 @@ fiche:
           - {formule: "i=\\left(1+\\frac{i^{(m)}}{m}\\right)^m-1", explication: "Convert nominal to effective to compare offers on an annual basis."}
           - {formule: "i^{(m)}=m\\left[(1+i)^{1/m}-1\\right]", explication: "Convert the effective rate to a nominal rate when m compounding periods are specified."}
       - titre: "3. Nominal discount rate"
-        contenu: "The nominal discount rate d^(m) is convertible m times per year, with each fraction d^(m)/m deducted at the beginning of the subperiod. The factor for each subperiod is 1-d^(m)/m; after m subperiods, the annual factor must equal 1/(1+i). For i positive and m greater than 1, equivalent nominal interest and discount rates bracket the force of interest: d < d^(m) < δ < i^(m) < i. This ordering does not apply unchanged to negative rates or m=1."
+        contenu: "The nominal discount rate $d^{(m)}$ is convertible m times per year, with each fraction $d^{(m)}/m$ deducted at the beginning of the subperiod. The factor for each subperiod is $1-d^{(m)}/m$; after m subperiods, the annual factor must equal $1/(1+i)$. For i positive and m greater than 1, equivalent nominal interest and discount rates bracket the force of interest: $d<d^{(m)}<\\delta<i^{(m)}<i$. This ordering does not apply unchanged to negative rates or m=1."
         formules:
           - {formule: "1+i=\\left(1-\\frac{d^{(m)}}{m}\\right)^{-m}", explication: "Discount deductions at the start of the m subperiods produce the same annual factor as the effective accumulation."}
           - {formule: "d^{(m)}=m\\left[1-(1+i)^{-1/m}\\right]", explication: "Obtain the subperiod discount factor from v^(1/m), then multiply the subperiod deduction by m."}
       - titre: "4. Continuous compounding limit"
-        contenu: "As m tends to infinity with the annual effective rate fixed, the nominal interest rate tends to δ=ln(1+i), the force of interest. The limit follows from m[(1+i)^(1/m)-1] and the exponential limit. The nominal discount rate also tends to δ. At a positive rate, δ lies between d and i; the values become close when the rate is small, but are not generally identical."
+        contenu: "As m tends to infinity with the annual effective rate fixed, the nominal interest rate tends to $\\delta=\\ln(1+i)$, the force of interest. The limit follows from $m[(1+i)^{1/m}-1]$ and the exponential limit. The nominal discount rate also tends to δ. At a positive rate, $\\delta$ lies between $d$ and $i$; the values become close when the rate is small, but are not generally identical."
         formules:
           - {formule: "\\lim_{m\\to\\infty}i^{(m)}=\\delta=\\ln(1+i)", explication: "Increasing compounding frequency converges to continuous accumulation."}
           - {formule: "\\lim_{m\\to\\infty}d^{(m)}=\\delta,\\qquad e^{\\delta}=1+i", explication: "Fractional discount deductions converge to the same force while preserving the annual equivalent factor."}
       - titre: "5. Fractional annuities: amount convention"
-        contenu: "An annuity payable m-thly, denoted a^(m)_{n|}, pays a total of 1 per year, split into m payments of 1/m at the end of each subperiod. Over n years, payments occur at times k/m, k=1,…,mn. This is not a series of m unit payments: the annual total remains 1. Using the nominal interest rate convertible at the same frequency, its present value is (1-v^n)/i^(m). Payments at the beginning of each subperiod have present value (1-v^n)/d^(m)."
+        contenu: "An annuity payable $m$ times per year, denoted $a^{(m)}_{\\overline{n}|}$, pays a total of 1 per year, split into $m$ payments of $1/m$ at the end of each subperiod. Over n years, payments occur at times $k/m$, $k=1,\\ldots,mn$. This is not a series of m unit payments: the annual total remains 1. Using the nominal interest rate convertible at the same frequency, its present value is $(1-v^n)/i^{(m)}$. Payments at the beginning of each subperiod have present value $(1-v^n)/d^{(m)}$."
         formules:
           - {formule: "a^{(m)}_{\\overline{n}|}=\\frac{1-v^n}{i^{(m)}}", explication: "Present value of n annual units in total, split into m equal payments of 1/m at each subperiod end."}
           - {formule: "\\ddot{a}^{(m)}_{\\overline{n}|}=\\frac{1-v^n}{d^{(m)}}", explication: "The same annual total, but the fractions are paid at the start of each subperiod."}
           - {formule: "a^{(m)}_{\\overline{n}|}=\\frac{i}{i^{(m)}}a_{\\overline{n}|},\\qquad \\ddot{a}^{(m)}_{\\overline{n}|}=\\frac{d}{d^{(m)}}\\ddot{a}_{\\overline{n}|}", explication: "Rate ratios link the fractional value to its annual counterpart. At a zero rate, treat the limit separately."}
       - titre: "6. Geometric-sum derivation and continuous limit"
-        contenu: "For fractional payments in arrears, the sum is (1/m)Σ_{k=1}^{mn}v^(k/m). Its ratio is v^(1/m). The geometric sum simplifies because 1-v^(1/m)=i^(m)/m. For payments in advance, the index begins at k=0 and the denominator becomes d^(m)/m. As m tends to infinity, payments become continuous and the present value is the integral of v^t over [0,n]."
+        contenu: "For fractional payments in arrears, the sum is $\\frac1m\\sum_{k=1}^{mn}v^{k/m}$. Its ratio is $v^{1/m}$. The geometric sum simplifies because $1-v^{1/m}=i^{(m)}/m$. For payments in advance, the index begins at k=0 and the denominator becomes $d^{(m)}/m$. As m tends to infinity, payments become continuous and the present value is the integral of v^t over [0,n]."
         formules:
           - {formule: "a^{(m)}_{\\overline{n}|}=\\frac{1}{m}\\sum_{k=1}^{mn}v^{k/m}=\\frac{1-v^n}{m(1-v^{1/m})}", explication: "Writing each 1/m payment at its date reveals the geometric sum."}
           - {formule: "m(1-v^{1/m})=i^{(m)}", explication: "This identity follows from v^(1/m)=(1+i)^(-1/m) and defines the equivalent nominal interest rate."}
-          - {formule: "\\bar{a}_{\\overline{n}|}=\\int_0^n v^t\\,dt=\\frac{1-v^n}{\\delta}", explication: "The value of a continuous annuity with rate 1 per year is the limit of fractional payments; δ=ln(1+i)."}
+          - {formule: "\\bar{a}_{\\overline{n}|}=\\int_0^n v^t\\,dt=\\frac{1-v^n}{\\delta}", explication: "The value of a continuous annuity with rate 1 per year is the limit of fractional payments; $\\delta=\\ln(1+i)$."}
       - titre: "7. Assumptions, limitations and common traps"
-        contenu: "These formulas assume a consistent year, a constant deterministic rate, equal subperiods and an explicit payment convention. A loan offer may quote a nominal rate without including fees, insurance, taxes or other components of total cost: the effective rate computed here captures only interest compounding. Do not confuse i^(m)/m with i/m, or a^(m) with m a. For negative rates, check that subperiod factors remain admissible and that the usual ordering does not automatically apply."
+        contenu: "These formulas assume a consistent year, a constant deterministic rate, equal subperiods and an explicit payment convention. A loan offer may quote a nominal rate without including fees, insurance, taxes or other components of total cost: the effective rate computed here captures only interest compounding. Do not confuse $i^{(m)}/m$ with $i/m$, or $a^{(m)}$ with $ma$. For negative rates, check that subperiod factors remain admissible and that the usual ordering does not automatically apply."
   methodes:
     methodes:
       - titre: "Convert nominal to annual effective"
         quand_utiliser: "To compare quotations with different frequencies or measure the annual return of a nominal rate."
         etapes:
-          - "Identify nominal i^(m) and number of conversions m."
-          - "Calculate the periodic rate j=i^(m)/m."
+          - "Identify nominal $i^{(m)}$ and number of conversions $m$."
+          - "Calculate the periodic rate $j=i^{(m)}/m$."
           - "Accumulate for one year: factor (1+j)^m."
           - "Subtract 1 and express as a percentage if required."
         controles:
@@ -82,20 +82,20 @@ fiche:
           - "Subtract 1 to obtain the periodic rate."
           - "Multiply by m for the nominal quotation."
         controles:
-          - "Rebuild (1+i^(m)/m)^m and recover 1+i."
+          - "Rebuild $(1+i^{(m)}/m)^m$ and recover $1+i$."
           - "At a fixed effective rate, the nominal decreases as m increases."
         erreurs:
           - "Round the periodic rate before the final step."
-          - "Forget that i^(m) is an annual quotation, not the monthly rate."
+          - "Forget that $i^{(m)}$ is an annual quotation, not the monthly rate."
       - titre: "Value a fractional annuity"
         quand_utiliser: "When the annual total is fixed but paid in m equal fractions, at subperiod end or beginning."
         etapes:
           - "Fix n years, m payments per year and annual total A."
-          - "For an immediate annuity, scale the unit formula by A and use i^(m)."
-          - "For an annuity due, use d^(m) and specify that the first payment is at t=0."
+          - "For an immediate annuity, scale the unit formula by $A$ and use $i^{(m)}$."
+          - "For an annuity due, use $d^{(m)}$ and specify that the first payment is at $t=0$."
           - "Check that m payments equal A in each year."
         controles:
-          - "When m=1, recover the corresponding annual annuity."
+          - "When $m=1$, recover the corresponding annual annuity."
           - "For positive cash flows and i>0, the due value is above the immediate value."
           - "At a zero rate, the value over n years is nA."
         erreurs:
@@ -107,11 +107,11 @@ fiche:
       - titre: "Compare 6% nominal monthly and quarterly"
         enonce: "A deposit earns a nominal rate of 6%, convertible monthly or quarterly. What annual effective rate results?"
         raisonnement:
-          - "Monthly: periodic rate 0.06/12=0.005, or 0.5%."
-          - "Annual factor: (1.005)^12."
-          - "Annual effective rate: (1.005)^12−1≈0.061678, or 6.1678%."
-          - "Quarterly: periodic rate 0.06/4=0.015."
-          - "Annual effective rate: (1.015)^4−1≈0.061364, or 6.1364%."
+          - "Monthly: periodic rate $0.06/12=0.005$, or $0.5\\%$."
+          - "Annual factor: $(1.005)^{12}$."
+          - "Annual effective rate: $(1.005)^{12}-1\\approx0.061678$, or $6.1678\\%$."
+          - "Quarterly: periodic rate $0.06/4=0.015$."
+          - "Annual effective rate: $(1.015)^4-1\\approx0.061364$, or $6.1364\\%$."
         resultat: "Monthly compounding gives a slightly higher effective rate: about 6.1678% versus 6.1364%."
         interpretation: "At the same positive nominal quotation, more frequent compounding raises the effective return because interest is added to capital earlier."
         controles:
@@ -120,52 +120,52 @@ fiche:
       - titre: "Convert 4% effective to monthly nominal"
         enonce: "Find the equivalent nominal interest and discount rates convertible 12 times per year for an effective rate of 4%."
         raisonnement:
-          - "Equivalent monthly effective rate: (1.04)^(1/12)−1≈0.00327374."
-          - "Nominal interest: 12 times this rate, about 3.92849%."
-          - "Monthly discount factor: (1.04)^(−1/12)."
-          - "Nominal discount: 12[1−(1.04)^(−1/12)]≈3.91567%."
-          - "Force of interest: ln(1.04)≈3.92207%."
-        resultat: "i^(12)≈3.92849%, d^(12)≈3.91567%, δ≈3.92207%."
+          - "Equivalent monthly effective rate: $(1.04)^{1/12}-1\\approx0.00327374$."
+          - "Nominal interest: $12$ times this rate, about $3.92849\\%$."
+          - "Monthly discount factor: $(1.04)^{-1/12}$."
+          - "Nominal discount: $12[1-(1.04)^{-1/12}]\\approx3.91567\\%$."
+          - "Force of interest: $\\ln(1.04)\\approx3.92207\\%$."
+        resultat: "$i^{(12)}\\approx3.92849\\%$, $d^{(12)}\\approx3.91567\\%$, $\\delta\\approx3.92207\\%$."
         interpretation: "At a fixed annual effective rate, nominal interest and discount rates lie on either side of the force of interest."
         controles:
-          - "Recompounding the monthly nominal gives annual factor 1.04."
-          - "For i>0, d^(12)<δ<i^(12)."
+          - "Recompounding the monthly nominal gives annual factor $1.04$."
+          - "For $i>0$, $d^{(12)}<\\delta<i^{(12)}$."
       - titre: "Present value of a monthly pension"
         enonce: "A pension of 1,200 units per year is paid in 12 month-end payments of 100 for 10 years. The annual effective rate is 4%. What is its present value?"
         raisonnement:
           - "The annual total remains 1,200; each monthly payment is 1,200/12=100."
-          - "Equivalent monthly nominal: i^(12)≈0.0392849."
-          - "Unit fractional annuity: a^(12)_{10|}=(1−v^10)/i^(12)≈8.25854."
-          - "Scale by 1,200 for the pension amount."
-        resultat: "PV≈1,200×8.25854≈9,910.25 units."
+          - "Equivalent monthly nominal: $i^{(12)}\\approx0.0392849$."
+          - "Unit fractional annuity: $a^{(12)}_{\\overline{10}|}=(1-v^{10})/i^{(12)}\\approx8.25854$."
+          - "Scale by $1,200$ for the pension amount."
+        resultat: "$PV\\approx1,200\\times8.25854\\approx9,910.25$ units."
         interpretation: "Payments arrive earlier than the 1,200 annual payment at year-end; their present value is greater than that of an annual immediate annuity with an annual total of 1,200."
         controles:
           - "The 120 payments of 100 total 12,000 before discounting."
           - "Present value is positive and below nominal total for i>0."
-          - "Compare with 1,200×a_{10|}≈9,733.07; monthly fractions have a higher value."
+          - "Compare with $1,200\\times a_{\\overline{10}|}\\approx9,733.07$; monthly fractions have a higher value."
   exercices_corriges:
     exercices:
       - titre: "Fundamental — convert to effective"
         enonce: "A nominal rate of 5% convertible quarterly is applied to a capital. Calculate the annual effective rate."
         corrige:
-          - "Quarterly rate: 0.05/4=0.0125."
-          - "Annual factor: (1.0125)^4≈1.050945."
-          - "Effective rate: about 5.0945%."
+          - "Quarterly rate: $0.05/4=0.0125$."
+          - "Annual factor: $(1.0125)^4\\approx1.050945$."
+          - "Effective rate: about $5.0945\\%$."
         feedback: "Do not confuse 5% nominal with 5% effective; the quarterly rate compounds four times."
       - titre: "Intermediate — recover nominal rates"
         enonce: "An effective rate of 3% is converted monthly. Calculate i^(12) and d^(12), to four decimal places in percent."
         corrige:
-          - "i^(12)=12[(1.03)^(1/12)−1]≈2.9595%."
-          - "d^(12)=12[1−(1.03)^(−1/12)]≈2.9522%."
-          - "δ=ln(1.03)≈2.9559%, confirming the ordering."
+          - "$i^{(12)}=12[(1.03)^{1/12}-1]\\approx2.9595\\%$."
+          - "$d^{(12)}=12[1-(1.03)^{-1/12}]\\approx2.9522\\%$."
+          - "$\\delta=\\ln(1.03)\\approx2.9559\\%$, confirming the ordering."
         feedback: "The discount formula uses v^(1/12); do not replace the effective rate by i/12."
       - titre: "Advanced — fractional pension"
         enonce: "An annuity of 2,400 units per year is paid monthly in arrears for 15 years at 3% effective. Compare its present value with 2,400 paid once at each year-end."
         corrige:
-          - "Calculate i^(12)=12[(1.03)^(1/12)−1]≈0.029590."
-          - "Calculate v=(1.03)^(−1) and v^15."
-          - "Fractional PV: 2,400(1−v^15)/i^(12)."
-          - "Annual PV: 2,400(1−v^15)/0.03."
+          - "Calculate $i^{(12)}=12[(1.03)^{1/12}-1]\\approx0.029590$."
+          - "Calculate $v=(1.03)^{-1}$ and $v^{15}$."
+          - "Fractional PV: $2,400(1-v^{15})/i^{(12)}$."
+          - "Annual PV: $2,400(1-v^{15})/0.03$."
           - "The ratio is i/i^(12)>1, so the fractional value is higher."
         feedback: "The annual total is the same. The difference comes solely from payment timing, not from the nominal annual amount."
   applications_labs:
@@ -222,10 +222,10 @@ fiche:
           - "A life annuity adds mortality and contractual guarantees, which are absent here."
   synthese_references:
     memo:
-      - "Nominal interest: i^(m)=m[(1+i)^(1/m)−1]; nominal discount: d^(m)=m[1−v^(1/m)]."
-      - "Nominal to effective: i=(1+i^(m)/m)^m−1."
+      - "Nominal interest: $i^{(m)}=m[(1+i)^{1/m}-1]$; nominal discount: $d^{(m)}=m[1-v^{1/m}]$."
+      - "Nominal to effective: $i=(1+i^{(m)}/m)^m-1$."
       - "At a positive rate, d<d^(m)<δ<i^(m)<i for m>1."
-      - "Continuous limit: i^(m) and d^(m) tend to δ=ln(1+i)."
+      - "Continuous limit: $i^{(m)}$ and $d^{(m)}$ tend to $\\delta=\\ln(1+i)$."
       - "Fractional annuity: annual total is split into m payments of A/m; do not multiply by m."
       - "Month-end payments: PV=A(1−v^n)/i^(m). Month-start: PV=A(1−v^n)/d^(m)."
       - "Compare rates on the same period and check timing, annual total, units and excluded fees."
