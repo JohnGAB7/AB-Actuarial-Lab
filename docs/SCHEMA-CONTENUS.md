@@ -91,3 +91,8 @@ Implémentation canonique :
 ## État et limites de l'inventaire
 
 Inventaire réalisé sur les trois séances actuellement référencées par le plan de `main` et sur les trois overlays de la branche PR #13. Les futurs types de contenu ou champs métier devront être ajoutés explicitement avec leurs tests. Cet inventaire ne constitue pas une validation pédagogique ou actuarielle indépendante.
+
+
+## Prototype éditorial A1/S02
+
+La séance A1/S02 (« Taux nominaux et paiements mensuels ») est le second prototype de migration progressive. Sa fiche couvre les conventions nominal/effectif, les conversions d'intérêt et d'escompte, la limite continue, les annuités fractionnées et la dérivation par somme géométrique. Elle contient méthodes, exemples, exercices corrigés et laboratoire Excel/Python. La parité FR/EN est contrôlée par le validateur d'overlay ; les tests de contenu vérifient les sept onglets, le code reproductible et la structure. Comme pour A1/S01, le statut `prete` est structurel et ne remplace pas une revue actuarielle indépendante ou un test auprès d'apprenants.

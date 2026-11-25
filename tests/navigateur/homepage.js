@@ -231,7 +231,7 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       if (!(await page.locator("#stage").isVisible())) failures.push(language + " guided pathway should be restored");
     }
     await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto(new URL("a1/s02/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
+    await page.goto(new URL("a1/s03/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
     if (await page.locator("#lesson-mode").isVisible()) failures.push("sessions without a ready reference sheet should not expose the sheet switch");
 
     if (errors.length) failures.push("page errors: " + errors.join("; "));
