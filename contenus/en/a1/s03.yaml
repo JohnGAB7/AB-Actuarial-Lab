@@ -101,7 +101,7 @@ fiche:
         raisonnement:
           - "$a_{10|}=7.72173493$ and $\\ddot{a}_{10|}=8.10782168$."
           - "Use the increasing-annuity formula with the annuity due and the discounted final term."
-          - "$(Da)=(10-a_{10|})/i$."
+          - "$(Da)=(10-a_{\\overline{10}|})/i$."
           - "Check their sum using 11a_10."
         resultat: "(Ia)=39.37378280; (Da)=45.56530142; total=84.93908422."
         interpretation: "The decreasing annuity has a higher present value because larger payments occur earlier."
