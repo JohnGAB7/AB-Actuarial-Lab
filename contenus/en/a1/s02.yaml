@@ -182,7 +182,7 @@ fiche:
           - "Equal periods and constant rates; payments are at subperiod end."
           - "No fees, tax, insurance or default."
         procedure:
-          - "In Excel, enter nominal rate and m. Calculate =(nominal/m+1)^m-1 for the annual effective rate."
+          - "In Excel, enter nominal rate and m. Calculate =(1+nominal/m)^m-1 for the annual effective rate."
           - "To recover nominal from i, calculate =m*((1+i)^(1/m)-1)."
           - "For the pension, calculate i^(12), v^n and PV=A*(1-v^n)/i^(12)."
           - "Compare with the annual formula A*(1-v^n)/i."
