@@ -39,7 +39,7 @@ fiche:
           - formule: "E[X]=\\sum_k k\\,p_k"
             explication: "Theoretical mean of the distribution."
           - formule: "E[X^2]=\\sum_k k^2p_k"
-            explication: "Second moment, used to calculate variance."
+            explication: "Moment of order 2, used to calculate variance."
       - titre: "3. Variance, standard deviation and transformations"
         contenu: "Variance measures dispersion around the expected value. Standard deviation, its square root, is in the same unit as X. Adding a constant shifts the mean without changing variance; multiplying by a scales variance by a²."
         formules:
