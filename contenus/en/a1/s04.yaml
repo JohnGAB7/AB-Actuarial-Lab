@@ -278,7 +278,7 @@ etapes:
           rappel: >-
             Interest is charged on the balance, which falls. With a fixed payment, the interest share falls, so the capital share rises.
           exemple: >-
-            Year 1: €1,773.96 of capital. Year 3: €1,993.23, that is $1{,}773.96 \times 1.06²$.
+            Year 1: €1,773.96 of capital. Year 3: €1,993.23, that is $1{,}773.96 \times 1.06^{2}$.
           piege: >-
             The same capital repaid each year is another kind of loan: constant amortization, with falling payments.
       - q: 'The internal rate of return (IRR) of a project is the rate that…'
