@@ -71,10 +71,10 @@ fiche:
       - titre: "Calculate a conditional probability"
         quand_utiliser: "An intersection and the probability of the conditioning event are known."
         etapes:
-          - "Identify A and B, then write P(A|B)."
-          - "Check P(B)>0."
-          - "Calculate or read P(A∩B)."
-          - "Divide by P(B) and interpret among cases B."
+          - "Identify A and B, then write $P(A\\mid B)$."
+          - "Check $P(B)>0$."
+          - "Calculate or read $P(A\\cap B)$."
+          - "Divide by $P(B)$ and interpret among cases $B$."
         controles:
           - "The result lies between 0 and 1."
           - "The denominator is the condition."
@@ -85,14 +85,14 @@ fiche:
         quand_utiliser: "A portfolio is split into classes and an event is observed."
         etapes:
           - "Check that the classes form a partition."
-          - "Calculate the overall probability by weighted summation."
-          - "Calculate each joint weight."
-          - "Divide each joint weight by the overall probability."
-          - "Check that posterior probabilities sum to 1."
+          - "Calculate $P(A)=\\sum_j P(A\\mid B_j)P(B_j)$ by weighted summation."
+          - "Calculate each joint weight $P(A\\cap B_j)$."
+          - "Divide each joint weight by $P(A)$ to obtain $P(B_j\\mid A)$."
+          - "Check that posterior probabilities sum to $1$."
         controles:
           - "The overall rate is a weighted average."
-          - "Posterior probabilities sum to 1."
-          - "Joint weights sum to the overall probability."
+          - "Posterior probabilities sum to $1$."
+          - "Joint weights sum to $P(A)$."
         erreurs:
           - "Take a simple average of class rates."
           - "Forget prior class frequencies."
@@ -100,16 +100,16 @@ fiche:
       - titre: "Calculate the risk of at least one event"
         quand_utiliser: "Several units are independent with the same event probability."
         etapes:
-          - "Define n and individual probability p."
-          - "Calculate the complement (1−p)^n."
-          - "Subtract from 1."
-          - "Check n=0 and p=0."
+          - "Define $n$ and individual probability $p$."
+          - "Calculate the complement $(1-p)^n$."
+          - "Subtract from $1$."
+          - "Check $n=0$ and $p=0$."
         controles:
-          - "The result is 0 if n=0 or p=0."
+          - "The result is $0$ if $n=0$ or $p=0$."
           - "It increases with n and p."
-          - "It remains between 0 and 1."
+          - "It remains between $0$ and $1$."
         erreurs:
-          - "Use np as an exact probability."
+          - "Use $np$ as an exact probability."
           - "Assume independence without justification."
   exemples_guides:
     exemples:
