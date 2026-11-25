@@ -131,7 +131,7 @@ fiche:
         enonce: "At 3%, value payments 1, 2, …,8 at each year-end."
         corrige:
           - "Calculate v=1/1.03 and ä_8=(1−v^8)/d."
-          - "Use Use the increasing-annuity identity and verify by a direct sum."
+          - "Use the increasing-annuity identity and verify by a direct sum."
           - "Result: approximately 30.5003; confirm using the sum k v^k."
         feedback: "The payment increases by one each year; this is not percentage indexation."
       - titre: "Advanced — convergence"
