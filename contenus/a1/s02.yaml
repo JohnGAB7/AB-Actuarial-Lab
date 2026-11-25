@@ -25,7 +25,7 @@ fiche:
       - "Chronologie des paiements et conversion entre période mensuelle et annuelle."
     carte:
       - "Taux équivalents : un même facteur annuel sous plusieurs conventions."
-      - "Taux nominal convertible m fois : taux périodique i^(m)/m, capitalisé m fois."
+      - "Taux nominal convertible $m$ fois : taux périodique $i^{(m)}/m$, capitalisé $m$ fois."
       - "Escompte nominal : déduction fractionnée en début de période."
       - "Limite continue : force d'intérêt et force d'escompte."
       - "Annuités fractionnées : même montant total annuel, payé plus tôt dans l'année."
@@ -108,16 +108,16 @@ fiche:
           - "À effectif fixé, le nominal décroît quand $m$ augmente."
         erreurs:
           - "Arrondir le taux périodique avant la dernière étape."
-          - "Oublier que i^(m) est une cotation annuelle, pas le taux de chaque mois."
+          - "Oublier que $i^{(m)}$ est une cotation annuelle, pas le taux de chaque mois."
       - titre: "Valoriser une annuité fractionnée"
         quand_utiliser: "Lorsque le total annuel est fixé mais payé en m versements égaux, en fin ou début de sous-période."
         etapes:
           - "Fixer n années, m versements par année et le total annuel A."
-          - "Pour l'annuité immédiate, multiplier la formule unitaire par A et utiliser i^(m)."
-          - "Pour l'annuité due, utiliser d^(m) et préciser que le premier versement a lieu à t=0."
+          - "Pour l'annuité immédiate, multiplier la formule unitaire par $A$ et utiliser $i^{(m)}$."
+          - "Pour l'annuité due, utiliser $d^{(m)}$ et préciser que le premier versement a lieu à $t=0$."
           - "Vérifier que m versements valent bien A au total sur chaque année."
         controles:
-          - "Quand m=1, retrouver l'annuité annuelle correspondante."
+          - "Quand $m=1$, retrouver l'annuité annuelle correspondante."
           - "Pour des flux positifs et i>0, la valeur due est supérieure à la valeur immédiate."
           - "À taux nul, la valeur des n années est nA."
         erreurs:
@@ -129,11 +129,11 @@ fiche:
       - titre: "Comparer 6 % nominal mensuel et trimestriel"
         enonce: "Un dépôt est rémunéré au taux nominal de 6 %, convertible mensuellement ou trimestriellement. Quel taux annuel effectif est obtenu ?"
         raisonnement:
-          - "Mensuel : taux de période 0,06/12=0,005, soit 0,5 %."
-          - "Facteur annuel : (1,005)^12."
-          - "Effectif annuel : (1,005)^12−1≈0,061678, soit 6,1678 %."
-          - "Trimestriel : taux de période 0,06/4=0,015."
-          - "Effectif annuel : (1,015)^4−1≈0,061364, soit 6,1364 %."
+          - "Mensuel : taux de période $0{,}06/12=0{,}005$, soit $0{,}5\%$."
+          - "Facteur annuel : $(1{,}005)^{12}$."
+          - "Effectif annuel : $(1{,}005)^{12}-1\\approx0{,}061678$, soit $6{,}1678\%$."
+          - "Trimestriel : taux de période $0{,}06/4=0{,}015$."
+          - "Effectif annuel : $(1{,}015)^4-1\\approx0{,}061364$, soit $6{,}1364\%$."
         resultat: "La fréquence mensuelle produit un effectif légèrement supérieur : environ 6,1678 % contre 6,1364 %."
         interpretation: "À nominal identique et positif, capitaliser plus souvent augmente le rendement effectif car les intérêts s'ajoutent plus tôt au capital."
         controles:
@@ -142,56 +142,56 @@ fiche:
       - titre: "Convertir 4 % effectif en nominal mensuel"
         enonce: "Trouver le nominal d'intérêt et le nominal d'escompte convertible 12 fois par an, équivalents à 4 % effectif."
         raisonnement:
-          - "Taux mensuel effectif équivalent : (1,04)^(1/12)−1≈0,00327374."
-          - "Nominal d'intérêt : 12 fois ce taux, soit environ 3,92849 %."
-          - "Facteur mensuel d'escompte : (1,04)^(−1/12)."
-          - "Nominal d'escompte : 12[1−(1,04)^(−1/12)]≈3,91567 %."
-          - "Force d'intérêt : ln(1,04)≈3,92207 %."
+          - "Taux mensuel effectif équivalent : $(1{,}04)^{1/12}-1\\approx0{,}00327374$."
+          - "Nominal d'intérêt : $12$ fois ce taux, soit environ $3{,}92849\%$."
+          - "Facteur mensuel d'escompte : $(1{,}04)^{-1/12$."
+          - "Nominal d'escompte : $12[1-(1{,}04)^{-1/12}]\\approx3{,}91567\%$."
+          - "Force d'intérêt : $\\ln(1{,}04)\\approx3{,}92207\%$."
         resultat: "i^(12)≈3,92849 %, d^(12)≈3,91567 %, δ≈3,92207 %."
         interpretation: "À effectif annuel fixé, le nominal d'intérêt et le nominal d'escompte se situent de part et d'autre de la force d'intérêt."
         controles:
-          - "Recomposer le nominal mensuel donne un facteur annuel 1,04."
-          - "Pour i>0, d^(12)<δ<i^(12)."
+          - "Recomposer le nominal mensuel donne un facteur annuel $1{,}04$."
+          - "Pour $i>0$, $d^{(12)}<\\delta<i^{(12}$."
       - titre: "Valeur actuelle d'une pension payée mensuellement"
         enonce: "Une pension de 1 200 unités par an est versée en 12 paiements de 100 en fin de mois pendant 10 ans. Le taux annuel effectif est 4 %. Quelle est sa valeur actuelle ?"
         raisonnement:
-          - "Le montant annuel total reste 1 200 ; le paiement mensuel est 1 200/12=100."
-          - "Nominal mensuel équivalent : i^(12)≈0,0392849."
-          - "Annuité fractionnée unitaire : a^(12)_{10|}=(1−v^10)/i^(12)≈8,25854."
-          - "Multiplier par 1 200 pour l'échelle de la pension."
-        resultat: "VA≈1 200×8,25854≈9 910,25 unités."
+          - "Le montant annuel total reste $1\,200$ ; le paiement mensuel est $1\,200/12=100$."
+          - "Nominal mensuel équivalent : $i^{(12)}\\approx0{,}0392849$."
+          - "Annuité fractionnée unitaire : $a^{(12)}_{\\overline{10}|}=(1-v^{10})/i^{(12)}\\approx8{,}25854$."
+          - "Multiplier par $1\,200$ pour l'échelle de la pension."
+        resultat: "$VA\\approx1\,200\\times8{,}25854\\approx9\,910{,}25$ unités."
         interpretation: "Les versements arrivent plus tôt que 1 200 en fin d'année ; la valeur est supérieure à celle d'une annuité annuelle immédiate de 1 200."
         controles:
           - "Les 120 paiements de 100 représentent bien 12 000 unités non actualisées."
           - "La valeur actuelle est positive et inférieure au total nominal pour i>0."
-          - "Comparer avec 1 200×a_{10|}≈9 733,07 ; la fraction mensuelle vaut davantage."
+          - "Comparer avec $1\,200\\times a_{\\overline{10}|}\\approx9\,733{,}07$ ; la fraction mensuelle vaut davantage."
   exercices_corriges:
     exercices:
       - titre: "Fondamental — conversion vers l'effectif"
         niveau: fondamental
         enonce: "Un nominal de 5 % convertible trimestriellement rémunère un capital. Calculer le taux effectif annuel."
         corrige:
-          - "Taux par trimestre : 0,05/4=0,0125."
-          - "Facteur annuel : (1,0125)^4≈1,050945."
-          - "Taux effectif : environ 5,0945 %."
+          - "Taux par trimestre : $0{,}05/4=0{,}0125$."
+          - "Facteur annuel : $(1{,}0125)^4\\approx1{,}050945$."
+          - "Taux effectif : environ $5{,}0945\%$."
         feedback: "Ne pas confondre 5 % nominal et 5 % effectif ; le trimestre capitalise quatre fois dans l'année."
       - titre: "Intermédiaire — retrouver un nominal"
         niveau: intermediaire
         enonce: "Un taux effectif de 3 % est converti mensuellement. Calculer i^(12) et d^(12), à quatre décimales en pourcentage."
         corrige:
-          - "i^(12)=12[(1,03)^(1/12)−1]≈2,9595 %."
-          - "d^(12)=12[1−(1,03)^(−1/12)]≈2,9522 %."
-          - "δ=ln(1,03)≈2,9559 %, ce qui confirme l'encadrement."
+          - "$i^{(12)}=12[(1{,}03)^{1/12}-1]\\approx2{,}9595\%$."
+          - "$d^{(12)}=12[1-(1{,}03)^{-1/12}]\\approx2{,}9522\%$."
+          - "$\\delta=\\ln(1{,}03)\\approx2{,}9559\%$, ce qui confirme l'encadrement."
         feedback: "La formule d'escompte utilise le facteur v^(1/12) ; ne pas remplacer le taux effectif par i/12."
       - titre: "Avancé — pension fractionnée"
         niveau: avance
         enonce: "Une rente de 2 400 unités par année est payée mensuellement en fin de mois pendant 15 ans, à 3 % effectif. Comparer sa valeur actuelle à celle de 2 400 payées une fois en fin d'année."
         corrige:
-          - "Calculer i^(12)=12[(1,03)^(1/12)−1]≈0,029590."
-          - "Calculer v=(1,03)^(−1) et v^15."
-          - "VA fractionnée : 2 400(1−v^15)/i^(12)."
-          - "VA annuelle : 2 400(1−v^15)/0,03."
-          - "Le ratio est i/i^(12)>1 ; la valeur fractionnée est donc plus élevée."
+          - "Calculer $i^{(12)}=12[(1{,}03)^{1/12}-1]\\approx0{,}029590$."
+          - "Calculer $v=(1{,}03)^{-1}$ et $v^{15}$."
+          - "VA fractionnée : $2\,400(1-v^{15})/i^{(12)}$."
+          - "VA annuelle : $2\,400(1-v^{15})/0{,}03$."
+          - "Le ratio est $i/i^{(12)}>1$ ; la valeur fractionnée est donc plus élevée."
         feedback: "Le total annuel est identique. L'écart vient uniquement du calendrier des versements, pas du montant nominal annuel."
   applications_labs:
     applications:
@@ -241,7 +241,7 @@ fiche:
           - "Reconvertir i^(m) vers i et retrouver le taux effectif initial."
           - "Le nominal d'intérêt est supérieur à la force d'intérêt pour i>0."
           - "La pension fractionnée est supérieure à la pension annuelle à même total annuel."
-          - "À taux nul, la valeur actuelle est n fois le montant annuel."
+          - "À taux nul, la valeur actuelle est $n$ fois le montant annuel."
         limites:
           - "Ce calcul n'est pas un TAEG réglementaire et ne tient pas compte des frais ou autres coûts du crédit."
           - "Un vrai contrat peut utiliser des dates irrégulières, conventions de jours, arrondis et taux variables."
