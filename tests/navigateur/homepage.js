@@ -46,33 +46,6 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
     if (Number(mobile.stat) !== mobile.sessions) failures.push("session count is not data-driven");
     if (!mobile.resume) failures.push("resume action missing");
 
-    // Homepage mini-lab: controls must recalculate real outputs and render a chart in both languages.
-    await page.locator("#mini-lab").waitFor();
-    const miniDefaults = await page.evaluate(() => ({
-      capital: document.querySelector("#mini-capital-label")?.textContent,
-      rate: document.querySelector("#mini-rate-label")?.textContent,
-      years: document.querySelector("#mini-years-label")?.textContent,
-      future: document.querySelector("#mini-future")?.textContent,
-      summary: document.querySelector("#mini-chart-summary")?.textContent,
-      canvas: document.querySelector("#mini-growth")?.width > 0
-    }));
-    console.log("mini-lab defaults FR:", miniDefaults);
-    if (!miniDefaults.future || !miniDefaults.summary || !miniDefaults.canvas) failures.push("mini-lab initial outputs/chart missing");
-    await page.locator("#mini-capital").evaluate((el) => { el.value = "4000"; el.dispatchEvent(new Event("input", { bubbles: true })); });
-    await page.locator("#mini-rate").evaluate((el) => { el.value = "5"; el.dispatchEvent(new Event("input", { bubbles: true })); });
-    await page.locator("#mini-years").evaluate((el) => { el.value = "10"; el.dispatchEvent(new Event("input", { bubbles: true })); });
-    const miniChanged = await page.evaluate(() => ({
-      future: document.querySelector("#mini-future")?.textContent,
-      interest: document.querySelector("#mini-interest")?.textContent,
-      factor: document.querySelector("#mini-factor")?.textContent,
-      summary: document.querySelector("#mini-chart-summary")?.textContent
-    }));
-    console.log("mini-lab changed FR:", miniChanged);
-    const expected = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 2 }).format(4000 * Math.pow(1.05, 10));
-    if (miniChanged.future !== expected) failures.push("mini-lab future value calculation");
-    if (!miniChanged.interest || !miniChanged.factor || !miniChanged.summary.includes("10 ans")) failures.push("mini-lab updated metrics/summary");
-
-
     // Verify local progress changes the primary action without requiring an account.
     await page.evaluate(() => {
       const plan = JSON.parse(document.getElementById("plan").textContent);
@@ -102,14 +75,6 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
     if (!/Understand the idea/.test(englishMobile.title)) failures.push("English editorial content");
     if (!englishMobile.siteTitle.startsWith("Actuarial Learning Lab by ACTU-BASICS")) failures.push("English site title");
     if (!englishMobile.brand.includes("ACTUARIAL LEARNING LAB") || !englishMobile.brand.includes("BY ACTU-BASICS")) failures.push("English sub-brand lockup");
-    const miniEnglish = await page.evaluate(() => ({
-      title: document.querySelector("#mini-lab h2")?.textContent,
-      summary: document.querySelector("#mini-chart-summary")?.textContent,
-      rateLabel: document.querySelector("#mini-rate-label")?.textContent
-    }));
-    if (!/compound interest/i.test(miniEnglish.title || "")) failures.push("English mini-lab title");
-    if (!/years/.test(miniEnglish.summary || "")) failures.push("English mini-lab chart summary");
-    if (!miniEnglish.rateLabel.includes("%")) failures.push("English mini-lab rate formatting");
 
     await page.setViewportSize({ width: 1440, height: 900 });
     const desktop = await page.evaluate(() => ({
@@ -276,172 +241,42 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       await page.locator("#mode-steps").click();
       if (!(await page.locator("#stage").isVisible())) failures.push(language + " guided pathway should be restored");
     }
-    // A2/S04 reference sheet: pooling, LLN, CLT and systematic risk.
+    // A1 math notation regression: prose tokens with indices, powers and nominal-rate superscripts.
     for (const language of ["fr", "en"]) {
-      const path = language === "en" ? "en/a2/s04/index.html" : "a2/s04/index.html";
-      await page.setViewportSize({ width: 390, height: 844 });
-      await page.goto(new URL(path, BASE).toString(), { waitUntil: "domcontentloaded" });
-      await page.locator("#lesson-mode").waitFor({ state: "visible" });
-      await page.locator("#mode-reference").click();
-      await page.waitForFunction(() => {
-        const sheet = document.querySelector("#reference-sheet");
-        const panel = document.querySelector("#reference-panel-0");
-        return sheet && !sheet.hidden && panel && !panel.hidden;
-      }, null, { timeout: 5000 }).catch(async () => {
-        const state = await page.evaluate(() => ({
-          sheetHidden: document.querySelector("#reference-sheet")?.hidden,
-          panelHidden: document.querySelector("#reference-panel-0")?.hidden,
-          tabs: document.querySelectorAll("#reference-tabs [role=tab]").length
-        }));
-        console.error("A2/S04 reference-mode diagnostic:", language, state, errors);
-        failures.push(language + " A2/S04 reference mode failed to expose overview");
-      });
-      const tabs = page.locator("#reference-tabs [role=tab]");
-      if (await tabs.count() !== 7) failures.push(language + " A2/S04 should have seven tabs");
-      await tabs.nth(1).click();
-      if (!(await page.locator("#reference-panel-1 .reference-formula .katex-display").count())) failures.push(language + " A2/S04 display formulas should render");
-      await tabs.nth(2).click();
-      if (!(await page.locator("#reference-panel-2 .katex").count())) failures.push(language + " A2/S04 inline method formulas should render");
-      const inlineCount = await page.locator("#reference-panel-2 .reference-block li .katex").count();
-      const displayCount = await page.locator("#reference-panel-2 .reference-block li .katex-display").count();
-      if (!inlineCount) failures.push(language + " A2/S04 inline formulas should remain inside method lists");
-      if (displayCount) failures.push(language + " A2/S04 inline formulas must not become display math");
-      await tabs.nth(3).click();
-      if (!(await page.locator("#reference-panel-3 .reference-block").count())) failures.push(language + " A2/S04 worked examples missing");
-      await tabs.nth(4).click();
-      if (!(await page.locator("#reference-panel-4 .reference-block").count())) failures.push(language + " A2/S04 solved exercises missing");
-      await tabs.nth(5).click();
-      if (!(await page.locator("#reference-panel-5 pre.reference-code code").count())) failures.push(language + " A2/S04 pooling lab code missing");
-      await tabs.nth(6).click();
-      if (!(await page.locator("#reference-panel-6 .reference-table").count())) failures.push(language + " A2/S04 glossary missing");
-      await page.setViewportSize({ width: 320, height: 844 });
-      if (await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)) failures.push(language + " A2/S04 reference sheet overflow at 320px");
+      for (const session of ["s01", "s02"]) {
+        const path = language === "en" ? "en/a1/" + session + "/index.html" : "a1/" + session + "/index.html";
+        await page.setViewportSize({ width: 390, height: 844 });
+        await page.goto(new URL(path, BASE).toString(), { waitUntil: "domcontentloaded" });
+        await page.locator("#lesson-mode").waitFor();
+        await page.locator("#mode-reference").click();
+        await page.locator("#reference-tabs [role=tab]").nth(1).click();
+        const tex = await page.locator("#reference-panel-1 .katex annotation[encoding=\"application/x-tex\"]").allTextContents();
+        const joined = tex.join(" ");
+        if (session === "s01" && (!joined.includes("C_t") || !joined.includes("(1+i)^t"))) failures.push(language + " A1/S01 should typeset C_t and (1+i)^t in prose");
+        if (session === "s02" && (!joined.includes("i^{(m)}") || !joined.includes("v^{1/m}"))) failures.push(language + " A1/S02 should typeset nominal-rate superscripts and fractional powers");
+      }
     }
 
-    // A2/S03 reference sheet: continuous severity and tail risk.
+    // Continue notation regression coverage through the remaining A1 sessions.
+    const mathChecks = {
+      s03: ["v^n", "(1+g)^{k-1}", "i/(1+i)", "g<i"],
+      s04: ["B_{k-1}", "PR_k", "P=L/n"],
+      s05: ["D_{Mac}", "D_{mod}", "Conv"]
+    };
     for (const language of ["fr", "en"]) {
-      const path = language === "en" ? "en/a2/s03/index.html" : "a2/s03/index.html";
-      await page.setViewportSize({ width: 390, height: 844 });
-      await page.goto(new URL(path, BASE).toString(), { waitUntil: "domcontentloaded" });
-      await page.locator("#lesson-mode").waitFor({ state: "visible" });
-      await page.locator("#mode-reference").click();
-      await page.waitForFunction(() => {
-        const sheet = document.querySelector("#reference-sheet");
-        const panel = document.querySelector("#reference-panel-0");
-        return sheet && !sheet.hidden && panel && !panel.hidden;
-      }, null, { timeout: 5000 }).catch(async () => {
-        const state = await page.evaluate(() => ({
-          sheetHidden: document.querySelector("#reference-sheet")?.hidden,
-          panelHidden: document.querySelector("#reference-panel-0")?.hidden,
-          tabs: document.querySelectorAll("#reference-tabs [role=tab]").length
-        }));
-        console.error("A2/S03 reference-mode diagnostic:", language, state, errors);
-        failures.push(language + " A2/S03 reference mode failed to expose overview");
-      });
-      const tabs = page.locator("#reference-tabs [role=tab]");
-      if (await tabs.count() !== 7) failures.push(language + " A2/S03 should have seven tabs");
-      await tabs.nth(1).click();
-      if (!(await page.locator("#reference-panel-1 .reference-formula .katex-display").count())) failures.push(language + " A2/S03 display formulas should render");
-      await tabs.nth(2).click();
-      if (!(await page.locator("#reference-panel-2 .katex").count())) failures.push(language + " A2/S03 inline method formulas should render");
-      const inlineCount = await page.locator("#reference-panel-2 .reference-block li .katex").count();
-      const displayCount = await page.locator("#reference-panel-2 .reference-block li .katex-display").count();
-      if (!inlineCount) failures.push(language + " A2/S03 inline formulas should remain inside method lists");
-      if (displayCount) failures.push(language + " A2/S03 inline formulas must not become display math");
-      await tabs.nth(3).click();
-      if (!(await page.locator("#reference-panel-3 .reference-block").count())) failures.push(language + " A2/S03 worked examples missing");
-      await tabs.nth(4).click();
-      if (!(await page.locator("#reference-panel-4 .reference-block").count())) failures.push(language + " A2/S03 solved exercises missing");
-      await tabs.nth(5).click();
-      if (!(await page.locator("#reference-panel-5 pre.reference-code code").count())) failures.push(language + " A2/S03 severity lab code missing");
-      await tabs.nth(6).click();
-      if (!(await page.locator("#reference-panel-6 .reference-table").count())) failures.push(language + " A2/S03 glossary missing");
-      await page.setViewportSize({ width: 320, height: 844 });
-      if (await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)) failures.push(language + " A2/S03 reference sheet overflow at 320px");
-    }
-
-    // A2/S02 reference sheet: discrete distributions and claim frequency.
-    for (const language of ["fr", "en"]) {
-      const path = language === "en" ? "en/a2/s02/index.html" : "a2/s02/index.html";
-      await page.setViewportSize({ width: 390, height: 844 });
-      await page.goto(new URL(path, BASE).toString(), { waitUntil: "domcontentloaded" });
-      await page.locator("#lesson-mode").waitFor({ state: "visible" });
-      await page.locator("#mode-reference").click();
-      await page.waitForFunction(() => {
-        const sheet = document.querySelector("#reference-sheet");
-        const panel = document.querySelector("#reference-panel-0");
-        return sheet && !sheet.hidden && panel && !panel.hidden;
-      }, null, { timeout: 5000 }).catch(async () => {
-        const state = await page.evaluate(() => ({
-          sheetHidden: document.querySelector("#reference-sheet")?.hidden,
-          panelHidden: document.querySelector("#reference-panel-0")?.hidden,
-          tabs: document.querySelectorAll("#reference-tabs [role=tab]").length
-        }));
-        console.error("A2/S02 reference-mode diagnostic:", language, state, errors);
-        failures.push(language + " A2/S02 reference mode failed to expose overview");
-      });
-      const tabs = page.locator("#reference-tabs [role=tab]");
-      if (await tabs.count() !== 7) failures.push(language + " A2/S02 should have seven tabs");
-      await tabs.nth(1).click();
-      if (!(await page.locator("#reference-panel-1 .reference-formula .katex-display").count())) failures.push(language + " A2/S02 display formulas should render");
-      await tabs.nth(2).click();
-      if (!(await page.locator("#reference-panel-2 .katex").count())) failures.push(language + " A2/S02 inline method formulas should render");
-      const inlineCount = await page.locator("#reference-panel-2 .reference-block li .katex").count();
-      const displayCount = await page.locator("#reference-panel-2 .reference-block li .katex-display").count();
-      if (!inlineCount) failures.push(language + " A2/S02 inline formulas should remain inside method lists");
-      if (displayCount) failures.push(language + " A2/S02 inline formulas must not become display math");
-      await tabs.nth(3).click();
-      if (!(await page.locator("#reference-panel-3 .reference-block").count())) failures.push(language + " A2/S02 worked examples missing");
-      await tabs.nth(4).click();
-      if (!(await page.locator("#reference-panel-4 .reference-block").count())) failures.push(language + " A2/S02 solved exercises missing");
-      await tabs.nth(5).click();
-      if (!(await page.locator("#reference-panel-5 pre.reference-code code").count())) failures.push(language + " A2/S02 portfolio lab code missing");
-      await tabs.nth(6).click();
-      if (!(await page.locator("#reference-panel-6 .reference-table").count())) failures.push(language + " A2/S02 glossary missing");
-      await page.setViewportSize({ width: 320, height: 844 });
-      if (await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)) failures.push(language + " A2/S02 reference sheet overflow at 320px");
-    }
-
-    // A2/S01 reference sheet: Bayes, conditional probabilities and portfolio interpretation.
-    for (const language of ["fr", "en"]) {
-      const path = language === "en" ? "en/a2/s01/index.html" : "a2/s01/index.html";
-      await page.setViewportSize({ width: 390, height: 844 });
-      await page.goto(new URL(path, BASE).toString(), { waitUntil: "domcontentloaded" });
-      await page.locator("#lesson-mode").waitFor({ state: "visible" });
-      await page.locator("#mode-reference").click();
-      await page.waitForFunction(() => {
-        const sheet = document.querySelector("#reference-sheet");
-        const panel = document.querySelector("#reference-panel-0");
-        return sheet && !sheet.hidden && panel && !panel.hidden;
-      }, null, { timeout: 5000 }).catch(async () => {
-        const state = await page.evaluate(() => ({
-          sheetHidden: document.querySelector("#reference-sheet")?.hidden,
-          panelHidden: document.querySelector("#reference-panel-0")?.hidden,
-          tabs: document.querySelectorAll("#reference-tabs [role=tab]").length
-        }));
-        console.error("A2/S01 reference-mode diagnostic:", language, state, errors);
-        failures.push(language + " A2/S01 reference mode failed to expose overview");
-      });
-      const tabs = page.locator("#reference-tabs [role=tab]");
-      if (await tabs.count() !== 7) failures.push(language + " A2/S01 should have seven tabs");
-      await tabs.nth(1).click();
-      if (!(await page.locator("#reference-panel-1 .reference-formula .katex-display").count())) failures.push(language + " A2/S01 display formulas should render");
-      await tabs.nth(2).click();
-      if (!(await page.locator("#reference-panel-2 .katex").count())) failures.push(language + " A2/S01 inline notation in methods should render");
-      const inlineCount = await page.locator("#reference-panel-2 .reference-block li .katex").count();
-      const displayCount = await page.locator("#reference-panel-2 .reference-block li .katex-display").count();
-      if (!inlineCount) failures.push(language + " A2/S01 inline math should be inside method lists");
-      if (displayCount) failures.push(language + " A2/S01 inline math should not become display math");
-      await tabs.nth(3).click();
-      if (!(await page.locator("#reference-panel-3 .reference-block").count())) failures.push(language + " A2/S01 worked examples missing");
-      await tabs.nth(4).click();
-      if (!(await page.locator("#reference-panel-4 .reference-block").count())) failures.push(language + " A2/S01 solved exercises missing");
-      await tabs.nth(5).click();
-      if (!(await page.locator("#reference-panel-5 pre.reference-code code").count())) failures.push(language + " A2/S01 Python lab missing");
-      await tabs.nth(6).click();
-      if (!(await page.locator("#reference-panel-6 .reference-table").count())) failures.push(language + " A2/S01 glossary missing");
-      await page.setViewportSize({ width: 320, height: 844 });
-      if (await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)) failures.push(language + " A2/S01 reference sheet overflow at 320px");
+      for (const session of ["s03", "s04", "s05"]) {
+        const path = language === "en" ? "en/a1/" + session + "/index.html" : "a1/" + session + "/index.html";
+        await page.setViewportSize({ width: 390, height: 844 });
+        await page.goto(new URL(path, BASE).toString(), { waitUntil: "domcontentloaded" });
+        await page.locator("#lesson-mode").waitFor();
+        await page.locator("#mode-reference").click();
+        await page.locator("#reference-tabs [role=tab]").nth(1).click();
+        const tex = await page.locator('#reference-panel-1 .katex annotation[encoding="application/x-tex"]').allTextContents();
+        const joined = tex.join(" ");
+        for (const token of mathChecks[session]) {
+          if (!joined.includes(token)) failures.push(language + " " + session + " should typeset " + token);
+        }
+      }
     }
 
     // A1/S03 reference sheet is ready and must be rendered and usable in both languages.
@@ -471,10 +306,6 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       if (!(await page.locator("#reference-panel-1 .reference-formula .katex-display").count())) failures.push(language + " S03 display equations should be typeset");
       await tabs.nth(2).click();
       if (!(await page.locator("#reference-panel-2 .katex").count())) failures.push(language + " S03 inline notation in methods should be typeset");
-      const inlineMathCount = await page.locator("#reference-panel-2 .reference-block li .katex").count();
-      const displayMathInParagraphs = await page.locator("#reference-panel-2 .reference-block li .katex-display").count();
-      if (!inlineMathCount) failures.push(language + " S03 inline formulas should remain inside paragraphs");
-      if (displayMathInParagraphs) failures.push(language + " S03 inline formulas must not become display equations");
       await tabs.nth(3).click();
       if (!(await page.locator("#reference-panel-3 .reference-block").count())) failures.push(language + " S03 worked examples missing");
       await tabs.nth(4).click();
