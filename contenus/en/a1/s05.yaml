@@ -310,7 +310,6 @@ fiche:
       - titre: "Spot-curve, pricing and sensitivity lab"
         contexte: "Synthetic curve and bond for illustration, not market data."
         objectif: "Compare YTM pricing, spot pricing, forwards and sensitivity approximations."
-        outils: [excel, python]
         entrees:
           - "Face value 1,000, annual coupon 5%, maturity 5 years."
           - "Base YTM 4%, then shocks −1, +0.5 and +1 percentage points."
