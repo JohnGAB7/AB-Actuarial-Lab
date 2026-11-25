@@ -155,8 +155,8 @@ fiche:
       - titre: "Intermediate — recover nominal rates"
         enonce: "An effective rate of 3% is converted monthly. Calculate i^(12) and d^(12), to four decimal places in percent."
         corrige:
-          - "i^(12)=12[(1.03)^(1/12)−1]≈2.9590%."
-          - "d^(12)=12[1−(1.03)^(−1/12)]≈2.9524%."
+          - "i^(12)=12[(1.03)^(1/12)−1]≈2.9595%."
+          - "d^(12)=12[1−(1.03)^(−1/12)]≈2.9522%."
           - "δ=ln(1.03)≈2.9559%, confirming the ordering."
         feedback: "The discount formula uses v^(1/12); do not replace the effective rate by i/12."
       - titre: "Advanced — fractional pension"
