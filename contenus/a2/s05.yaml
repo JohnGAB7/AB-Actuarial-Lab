@@ -146,7 +146,7 @@ fiche:
       - titre: "Fréquence binomiale, sévérité fixe"
         enonce: "100 contrats ont chacun 10 % de probabilité de sinistre; chaque sinistre coûte 5 000 €. Calcule E[S] et Var(S)."
         raisonnement:
-          - "N~Binomiale(100,0,1); E[N]=10; Var(N)=9."
+          - "N~Binomiale(n=100; p=0,1); E[N]=10; Var(N)=9."
           - "X=5 000 est constant, donc Var(X)=0."
           - "E[S]=10×5 000=50 000 €."
           - "Var(S)=9×5 000²=225 000 000 €²; σ=15 000 €."
@@ -178,7 +178,7 @@ fiche:
         feedback: "Pour une sévérité fixe, E[X²]=c²."
       - titre: "Intermédiaire — fréquence binomiale et sévérité exponentielle"
         niveau: intermediaire
-        enonce: "N~Binomiale(50,10 %). Les sévérités sont exponentielles de moyenne 1 000 €. Calcule E[S] et Var(S)."
+        enonce: "N~Binomiale(n=50; p=10 %). Les sévérités sont exponentielles de moyenne 1 000 €. Calcule E[S] et Var(S)."
         corrige:
           - "E[N]=5; Var(N)=4,5; E[X]=1 000; Var(X)=1 000 000."
           - "E[S]=5×1 000=5 000 €."
