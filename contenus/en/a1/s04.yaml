@@ -151,7 +151,7 @@ fiche:
         enonce: "Borrow €25,000 at 3.5% effective annually over 12 years, with end-of-year payments. Calculate the payment."
         corrige:
           - "a_{12|}=(1−1.035^{-12})/0.035≈9.663."
-          - "P=25,000/a_{12|}≈€2,587.38."
+          - "P=25,000/a_{12|}≈€2,587.10."
         feedback: "The payment contains principal and interest. A longer term generally lowers the payment but increases total interest."
       - titre: "Balance — intermediate"
         niveau: intermediaire
@@ -165,7 +165,7 @@ fiche:
         niveau: intermediaire
         enonce: "A project costs €2,000 and pays €1,200 at the end of years 1 and 2. Calculate NPV at 8% and determine IRR."
         corrige:
-          - "NPV(8%)=−2,000+1,200/1.08+1,200/1.08²≈€143.12."
+          - "NPV(8%)=−2,000+1,200/1.08+1,200/1.08²≈€139.92."
           - "IRR solves −2,000+1,200/(1+j)+1,200/(1+j)^2=0."
           - "For two equal receipts, solve 2,000=P a_{2|}: j≈13.0662%."
         feedback: "Positive NPV at the decision rate indicates value creation in this model. IRR is a root of the NPV equation; do not assume uniqueness for every cash-flow pattern."
@@ -187,6 +187,29 @@ fiche:
           - "Excel: use PMT(rate,nper,pv) with a consistent sign convention, then build the schedule with interest, principal and balance formulas."
           - "Python: calculate the payment and a list of tuples (period, interest, principal, balance)."
           - "Compare the balance at time k using prospective and retrospective methods."
+          - |-
+            Python (reproducible):
+            ```python
+            def level_payment(L, n, i):
+                if n <= 0 or i <= -1:
+                    raise ValueError('n must be positive and i > -1')
+                return L / n if i == 0 else L * i / (1 - (1 + i) ** (-n))
+
+            def amortization_schedule(L, n, i):
+                P = level_payment(L, n, i)
+                B, rows = L, []
+                for k in range(1, n + 1):
+                    interest = i * B
+                    principal = P - interest
+                    B -= principal
+                    rows.append((k, interest, principal, B))
+                return rows
+
+            P = level_payment(10_000, 5, 0.06)
+            rows = amortization_schedule(10_000, 5, 0.06)
+            assert abs(P - 2_373.9640043) < 1e-6
+            assert abs(rows[1][3] - 6_345.6341511) < 1e-6
+            ```
           - "Test i=0 and check that principal is repaid in equal amounts."
           - "Compare payment profiles for constant principal and level-payment amortization."
         sorties:
