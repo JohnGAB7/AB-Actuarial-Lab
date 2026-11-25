@@ -31,7 +31,7 @@ fiche:
         contenu: "An immediate perpetuity pays $1$ at times $1,2,\\ldots$ and its present value is the limit of the annuity. For i>0, v^n tends to zero and the series converges. A due perpetuity begins at $t=0$: it is an immediate perpetuity advanced by one period. The effective discount rate is $d=i/(1+i)$."
         formules:
           - explication: "A capital 1/i earns 1 interest per period at rate i in this deterministic model."
-          - explication: "The perpetuity due includes the payment immediately at t=0."
+          - explication: "The perpetuity due includes the payment immediately at $t=0$."
       - titre: "3. Arithmetic annuities"
         contenu: "The increasing annuity pays $1,2,\\ldots,n$ at times $1,\\ldots,n$. The decreasing annuity pays $n,n-1,\\ldots,1$. Both have the same nominal total, but for i>0 the decreasing annuity has a higher present value because its larger payments occur earlier."
         formules:
@@ -68,7 +68,7 @@ fiche:
         erreurs:
           - "Confusing additive growth with a percentage."
           - "Shifting payments by one period."
-          - "Using 1/(i−g) without checking convergence."
+          - "Using $1/(i-g)$ without checking convergence."
           - "Using a formula with division by $i$ when $i=0$."
       - titre: "Verify using a cash-flow sum"
         quand_utiliser: "Check a closed form or compare annuity scenarios."
@@ -89,19 +89,19 @@ fiche:
       - titre: "Immediate perpetuity"
         enonce: "A foundation pays 10,000 per year starting in one year, forever. The annual effective rate is 5%."
         raisonnement:
-          - "The first payment is at t=1: immediate perpetuity."
+          - "The first payment is at $t=1$: immediate perpetuity."
           - "Use C/i."
           - "Calculate 10,000/0.05."
         resultat: "PV=200,000 monetary units."
-        interpretation: "The value is at t=0. A capital of 200,000 earns 10,000 interest each year at 5%."
+        interpretation: "The value is at $t=0$. A capital of $200,000$ earns $10,000$ interest each year at $5\%$."
         controles:
           - "The due perpetuity would be one payment higher, or 210,000."
       - titre: "Arithmetic annuities over ten years"
         enonce: "At 5%, find the present values of payments 1, 2, …,10 and 10, 9, …, 1 at times 1 to 10."
         raisonnement:
-          - "a_10=7.72173493 and ä_10=8.10782168."
+          - "$a_{10|}=7.72173493$ and $\\ddot{a}_{10|}=8.10782168$."
           - "Use the increasing-annuity formula with the annuity due and the discounted final term."
-          - "(Da)=(10−a_10)/i."
+          - "$(Da)=(10-a_{10|})/i$."
           - "Check their sum using 11a_10."
         resultat: "(Ia)=39.37378280; (Da)=45.56530142; total=84.93908422."
         interpretation: "The decreasing annuity has a higher present value because larger payments occur earlier."
@@ -137,9 +137,9 @@ fiche:
           - "Result: approximately $30.5003$; confirm using the sum $\\sum_{k=1}^{8}kv^k$."
         feedback: "The payment increases by one each year; this is not percentage indexation."
       - titre: "Advanced — convergence"
-        enonce: "A perpetuity pays 1 in one year and then grows by 3%. Compare i=5% and i=2.5%."
+        enonce: "A perpetuity pays $1$ in one year and then grows by $3\%$. Compare $i=5\%$ and $i=2.5\%$."
         corrige:
-          - "At 5%, g<i: PV=1/(0.05−0.03)=50."
+          - "At $5\%$, $g<i$: $PV=1/(0.05-0.03)=50$."
           - "At 2.5%, g≥i: the series diverges and has no finite value."
           - "The condition is strict: g<i."
         feedback: "Always check convergence before using the formula."
@@ -149,14 +149,14 @@ fiche:
         contexte: "Model an annual indexed payment for ten years. This illustrates indexation, with no risk or mortality."
         objectif: "Compare the closed form and direct sum, then measure the effect of indexation."
         entrees:
-          - "First payment: 1,000 at t=1."
-          - "Growth g=2%, rate i=5%, duration n=10."
+          - "First payment: $1,000$ at $t=1$."
+          - "Growth $g=2\%$, rate $i=5\%$, duration $n=10$."
         hypotheses:
           - "Certain cash flows, constant rate and growth, annual dates."
           - "No mortality, expenses, tax, risk or currency change."
         procedure:
-          - "Create k=1,…,10 and cash flow 1000×1.02^(k−1)."
-          - "Discount by (1.05)^k and sum."
+          - "Create $k=1,\\ldots,10$ and cash flow $1,000\\times1.02^{k-1$."
+          - "Discount by $(1.05)^k$ and sum."
           - |
             ```python
             n, i, g, first = 10, 0.05, 0.02, 1000.0
