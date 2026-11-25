@@ -189,7 +189,7 @@ fiche:
     glossaire:
       - {definition: "Value of payments accumulated to a future date."}
       - {definition: "A stream of payments with no final payment date."}
-      - {definition: "Payments 1, 2, …, n at successive dates."}
+      - {definition: "Payments $1;2;\\ldots;n$ at successive dates."}
       - {definition: "Payments n, n−1, …, 1 at successive dates."}
       - {definition: "Payments multiplied by 1+g from one period to the next."}
       - {definition: "Rate that multiplies payment amounts from period to period."}
