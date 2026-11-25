@@ -224,3 +224,70 @@ def test_nominal_rate_sheet_code_lab_has_reproducible_checks():
     exec(code.split("```python", 1)[1].split("```", 1)[0], namespace)
     assert namespace["effective_from_nominal"](0.06, 12) > namespace["effective_from_nominal"](0.06, 4) > 0.06
     assert abs(namespace["annuity_mthly"](10, 0.04, 12, 1200) - 9910.25) < 0.1
+
+
+def test_fiche_a1_s03_est_structuree_et_bilingue():
+    from pathlib import Path
+    import yaml
+    from tools.construire import charger_seance
+    from tools.validation_contenus import verifier_overlay_traduction
+
+    root = Path(__file__).resolve().parents[1]
+    fr = charger_seance("a1/s03", "fr")
+    en = charger_seance("a1/s03", "en")
+    overlay = yaml.safe_load((root / "contenus/en/a1/s03.yaml").read_text(encoding="utf-8"))
+    assert fr["fiche"]["statut"] == "prete"  # Editorial readiness; independent review is disclosed in the notice.
+    assert len(fr["fiche"]["cours_complet"]["sections"]) == 6
+    assert len(fr["fiche"]["methodes"]["methodes"]) == 2
+    assert len(fr["fiche"]["exemples_guides"]["exemples"]) == 3
+    assert len(fr["fiche"]["exercices_corriges"]["exercices"]) == 3
+    assert not verifier_overlay_traduction(fr, overlay, session_id="a1/s03")
+    assert en["fiche"]["cours_complet"]["sections"][0]["titre"] == "1. Accumulated value"
+
+
+def test_s03_reference_examples_and_limiting_cases_are_numerically_consistent():
+    import math
+
+    i, n = 0.05, 10
+    v = 1 / (1 + i)
+    a = (1 - v**n) / i
+    due = (1 + i) * a
+    increasing = sum(k * v**k for k in range(1, n + 1))
+    decreasing = sum((n + 1 - k) * v**k for k in range(1, n + 1))
+    assert math.isclose(increasing, 39.3737828047, abs_tol=1e-9)
+    assert math.isclose(decreasing, 45.5653014163, abs_tol=1e-9)
+    assert math.isclose(increasing + decreasing, (n + 1) * a, abs_tol=1e-10)
+
+    i, g, n = 0.05, 0.02, 10
+    direct = sum((1 + g) ** (k - 1) / (1 + i) ** k for k in range(1, n + 1))
+    closed = (1 - ((1 + g) / (1 + i)) ** n) / (i - g)
+    assert math.isclose(direct, closed, abs_tol=1e-12)
+    assert math.isclose(1000 * closed, 8388.1056524, abs_tol=1e-8)
+
+    # The special case i=g gives n discounted terms, each equal to v.
+    assert math.isclose(sum((1 + g) ** (k - 1) / (1 + g) ** k for k in range(1, n + 1)), n / (1 + g), abs_tol=1e-12)
+    # At zero interest, both arithmetic annuities equal their nominal sum.
+    assert math.isclose(sum(k for k in range(1, n + 1)), n * (n + 1) / 2)
+    assert math.isclose(sum(n + 1 - k for k in range(1, n + 1)), n * (n + 1) / 2)
+    # Growing perpetuity converges only if the discounted geometric ratio is below one.
+    assert (1 + 0.03) / (1 + 0.05) < 1
+    assert (1 + 0.03) / (1 + 0.025) >= 1
+    # At i=0, a geometrically declining perpetuity with -1<g<0 still converges.
+    assert math.isclose(sum((1 - 0.02) ** (k - 1) for k in range(1, 10000)), 50.0, abs_tol=1e-10)
+    assert (1 - 0.02) / (1 + 0.0) < 1
+    # A level perpetuity at zero interest does not converge.
+    assert (1 + 0.0) / (1 + 0.0) == 1
+
+def test_english_overlay_preserves_nontranslatable_internal_link_targets():
+    from tools.validation_contenus import fusionner_overlay
+
+    base = {"fiche": {"synthese_references": {
+        "liens": [{"titre": "Séance suivante", "cible": "a1/s02#annuites"}]
+    }}}
+    overlay = {"fiche": {"synthese_references": {
+        "liens": [{"titre": "Next session"}]
+    }}}
+    merged = fusionner_overlay(base, overlay, "a1/s01")
+    link = merged["fiche"]["synthese_references"]["liens"][0]
+    assert link["titre"] == "Next session"
+    assert link["cible"] == "a1/s02#annuites"

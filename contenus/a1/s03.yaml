@@ -13,6 +13,226 @@ actu_basics:
   accroche_fr: "Combien vaut une rente qui ne s'arrête jamais ?"
   accroche_en: "What is an income that never stops worth?"
 
+fiche:
+  statut: prete
+  vue_ensemble:
+    question: "Comment valoriser des paiements dont le montant varie ou qui se poursuivent sans échéance ?"
+    pourquoi: "Les annuités variables interviennent dans les revenus indexés, remboursements, prestations et engagements actuariels. Leur valeur dépend du calendrier, du taux d'actualisation et du mode de variation."
+    objectifs:
+      - "Distinguer valeur actuelle et valeur accumulée."
+      - "Dériver les valeurs de perpétuités immédiate et due."
+      - "Valoriser des annuités arithmétiques croissantes et décroissantes."
+      - "Valoriser une annuité géométrique finie et une perpétuité croissante."
+      - "Vérifier les conditions de convergence et les cas limites."
+    prerequis:
+      - "Intérêt composé et facteur d'actualisation."
+      - "Annuités certaines immédiates et dues."
+      - "Sommes géométriques finies et infinies."
+    carte:
+      - "Capitalisation : valeur accumulée à une date future."
+      - "Perpétuités : limite d'une annuité lorsque la durée tend vers l'infini."
+      - "Annuités arithmétiques : variation additive du montant."
+      - "Annuités géométriques : variation multiplicative du montant."
+      - "Convergence : conditions nécessaires pour une valeur finie."
+    duree_minutes: 40
+  cours_complet:
+    sections:
+      - titre: "1. Valeur accumulée"
+        contenu: "La valeur accumulée d'une annuité immédiate unitaire à la date n capitalise chaque paiement jusqu'à n. Pour $i\\ne0$, elle est égale à l'annuité actuelle multipliée par $(1+i)^n$. Si $i=0$, chaque paiement reste égal à 1 et la valeur est n."
+        formules:
+          - formule: "s_{\\overline{n}|}=\\frac{(1+i)^n-1}{i}=(1+i)^n a_{\\overline{n}|}"
+            explication: "La somme capitalisée des n paiements unitaires. Cas particulier $i=0$ : s_{n}=n."
+      - titre: "2. Perpétuités immédiate et due"
+        contenu: "La perpétuité immédiate verse 1 aux dates 1, 2, … et sa valeur actuelle est la limite de l'annuité. Pour $i>0$, $v^n$ tend vers zéro et la somme converge. La perpétuité due commence à t=0 : elle vaut une perpétuité immédiate avancée d'une période. Le taux d'escompte effectif d=i/(1+i)."
+        formules:
+          - formule: "a_{\\overline{\\infty}|}=\\frac{1}{i},\\quad i>0"
+            explication: "Un capital 1/i produit 1 d'intérêt par période au taux i, dans le modèle déterministe."
+          - formule: "\\ddot{a}_{\\overline{\\infty}|}=\\frac{1}{d}=\\frac{1+i}{i}=1+\\frac{1}{i}"
+            explication: "La perpétuité due inclut le paiement immédiat à t=0."
+      - titre: "3. Annuités arithmétiques"
+        contenu: "L'annuité croissante verse 1, 2, …,n aux dates 1,…,n. L'annuité décroissante verse n,n−1,…,1. Elles ont le même total nominal, mais pour $i>0$ la décroissante a une valeur actuelle plus grande car ses montants élevés arrivent plus tôt."
+        formules:
+          - formule: "(Ia)_{\\overline{n}|}=\\sum_{k=1}^{n}k v^k=\\frac{\\ddot{a}_{\\overline{n}|}-n v^n}{i}"
+            explication: "Formule de l'annuité croissante, pour $i\\ne0$."
+          - formule: "(Da)_{\\overline{n}|}=\\sum_{k=1}^{n}(n+1-k)v^k=\\frac{n-a_{\\overline{n}|}}{i}"
+            explication: "Formule de l'annuité décroissante, pour $i\\ne0$."
+          - formule: "(Ia)_{\\overline{n}|}+(Da)_{\\overline{n}|}=(n+1)a_{\\overline{n}|}"
+            explication: "Contrôle par les flux : à chaque date k, k+(n+1−k)=n+1."
+      - titre: "4. Annuité géométrique finie"
+        contenu: "Un paiement de montant 1 à la date 1, croissant au taux g, donne à la date k le montant $(1+g)^{k-1}$. Son terme actualisé est $(1+g)^{k-1}$v^k. Les taux i et g doivent être définis sur la même période. La formule fermée s'applique si $i\\ne g$ ; si $i=g$, tous les termes actualisés sont égaux à v."
+        formules:
+          - formule: "\\sum_{k=1}^{n}(1+g)^{k-1}v^k=\\frac{1-\\left(\\frac{1+g}{1+i}\\right)^n}{i-g},\\quad i\\ne g"
+            explication: "Somme géométrique actualisée d'une rente immédiate à croissance constante."
+          - formule: "PV=n v,\\quad i=g"
+            explication: "Cas spécial $i=g$ : la formule précédente donne 0/0 et doit être remplacée par la somme directe."
+      - titre: "5. Perpétuité croissante"
+        contenu: "La perpétuité croissante verse 1 à la date 1, puis augmente au taux g. Sa somme actualisée est une série géométrique de raison (1+g)/(1+i). Avec $i>0$ et g>-1, la convergence exige $g<i$. Si $g\\ge i$, les termes n'ont pas de limite nulle et la série diverge."
+        formules:
+          - formule: "PV=\\frac{1}{i-g},\\quad g<i"
+            explication: "Formule de croissance perpétuelle. Le premier flux est dans un an; taux et croissance sont constants et strictement compatibles avec la convergence."
+      - titre: "6. Cas limites et limites du modèle"
+        contenu: "À taux nul, les formules divisant par i sont remplacées par les sommes directes : valeur accumulée n, annuité arithmétique croissante n(n+1)/2 et décroissante n(n+1)/2. Une perpétuité de niveau à $i=0$ diverge. Une perpétuité géométrique croissante ou décroissante (avec $-1<g<0$ pour une décroissance) converge lorsque $g<i$, sous les hypothèses $i>-1$ et $g>-1$; elle peut donc converger à taux nul si $g<0$. Ces modèles supposent des flux déterministes, une périodicité cohérente et un taux constant; ils ne tiennent pas compte automatiquement de mortalité, risque, fiscalité, frais ou courbe de taux."
+        formules:
+          - formule: "s_{\\overline{n}|}=n,\\quad (Ia)_{\\overline{n}|}=(Da)_{\\overline{n}|}=\\frac{n(n+1)}{2},\\quad i=0"
+            explication: "Quand le taux est nul, actualisation et capitalisation ne changent pas les flux."
+  methodes:
+    methodes:
+      - titre: "Identifier le type de rente"
+        quand_utiliser: "Un flux périodique a un montant constant, une variation additive ou une variation proportionnelle."
+        etapes:
+          - "Fixer la date d'évaluation et dessiner la chronologie."
+          - "Écrire le montant de chaque flux et sa date."
+          - "Identifier le motif : constant, arithmétique ou géométrique."
+          - "Vérifier le taux, la période et les conditions de convergence."
+          - "Choisir la formule, calculer, puis interpréter."
+        controles:
+          - "Le paiement immédiat distingue annuité due et immédiate."
+          - "Une perpétuité croissante exige $g<i$."
+          - "Le cas $i=0$ ou $i=g$ doit être traité séparément."
+        erreurs:
+          - "Confondre croissance additive et pourcentage."
+          - "Décaler les paiements d'une période."
+          - "Appliquer 1/(i−g) sans tester la convergence."
+          - "Utiliser une formule avec division par i lorsque $i=0$."
+      - titre: "Vérifier par une somme de flux"
+        quand_utiliser: "Contrôler une formule fermée ou comparer deux scénarios de rente."
+        etapes:
+          - "Créer la liste des dates k."
+          - "Définir le flux C_k à chaque date."
+          - "Calculer C_k/(1+i)^k."
+          - "Sommer les valeurs actualisées et comparer à la formule."
+        controles:
+          - "Les deux résultats concordent à la tolérance d'arrondi."
+          - "À $i=0$, la valeur actuelle égale la somme nominale."
+          - "Pour $i>0$, un flux futur positif est inférieur à son montant nominal."
+        erreurs:
+          - "Arrondir les facteurs avant le calcul final."
+          - "Utiliser des taux effectifs de périodes différentes."
+  exemples_guides:
+    exemples:
+      - titre: "Perpétuité immédiate"
+        enonce: "Une fondation verse 10 000 par an à partir de dans un an, sans fin. Le taux annuel effectif est 5 %."
+        raisonnement:
+          - "Le premier paiement est à t=1 : perpétuité immédiate."
+          - "Utiliser C/i."
+          - "Calculer 10 000/0,05."
+        resultat: "$PV=200\\,000$ unités monétaires."
+        interpretation: "La valeur est à t=0. Le capital de 200 000 génère 10 000 d'intérêts annuels à 5 %."
+        controles:
+          - "La perpétuité due serait supérieure d'un paiement, soit 210 000."
+      - titre: "Annuités arithmétiques sur dix ans"
+        enonce: "À 5 %, calculer les valeurs actuelles des paiements 1, 2, …,10 et 10, 9, …, 1 aux dates 1 à 10."
+        raisonnement:
+          - "$a_{10}$=7,72173493 et $\\ddot{a}_{10}$=8,10782168."
+          - "Utiliser la formule de l’annuité croissante avec l’annuité due et le terme final actualisé."
+          - "$(Da)$=(10−$a_{10}$)/i."
+          - "Contrôler la somme avec $11\\,a_{\\overline{10}|}$."
+        resultat: "$(Ia)$=39,37378280 ; $(Da)$=45,56530142 ; somme=84,93908422."
+        interpretation: "La décroissante a une valeur actuelle plus élevée, car les flux les plus élevés sont plus tôt."
+        controles:
+          - "Les valeurs nominales des deux séries sont 55."
+          - "La somme des valeurs actuelles égale $11\\,a_{\\overline{10}|}$."
+      - titre: "Annuité géométrique"
+        enonce: "Un revenu de 1 000 est payé dans un an, puis croît de 2 % par an pendant dix paiements. Le taux est 5 %."
+        raisonnement:
+          - "C_1=1 000, g=2 %, i=5 %, n=10."
+          - "La croissance et l'actualisation ont la même périodicité annuelle."
+          - "Utiliser la formule finie, $i\\ne g$."
+        resultat: "$PV\\approx8\\,388{,}11$. La rente constante de 1 000 vaut environ 7 721,73."
+        interpretation: "La croissance augmente la valeur actuelle, tout en restant inférieure au total nominal des flux croissants."
+        controles:
+          - "La somme directe des dix flux actualisés confirme la formule."
+          - "La rente croissante vaut plus que la rente constante pour g>0."
+  exercices_corriges:
+    exercices:
+      - titre: "Fondamental — capitaliser une perpétuité"
+        niveau: fondamental
+        enonce: "Quel capital finance 2 400 par an, à partir de l'année prochaine, à 4 % effectif ?"
+        corrige:
+          - "Le premier versement est à t=1 : perpétuité immédiate."
+          - "$PV=\\frac{2\\,400}{0{,}04}=60\\,000$."
+          - "À 4 %, ce capital produit 2 400 d'intérêts par an."
+        feedback: "Si tu obtiens 61 500, tu as probablement traité le premier paiement comme immédiat. Vérifie la date du flux."
+      - titre: "Intermédiaire — annuité croissante"
+        niveau: intermediaire
+        enonce: "À 3 %, évaluer les paiements 1, 2, …,8 en fin d'année."
+        corrige:
+          - "Calculer v=1/1,03 et ä_8=(1−v^8)/d."
+          - "Utiliser l'identité de l'annuité croissante et vérifier par somme directe."
+          - "Résultat : environ 30,5003 ; confirmer par somme k v^k."
+        feedback: "Le montant croît d'une unité chaque année, ce n'est pas une indexation en pourcentage."
+      - titre: "Avancé — convergence"
+        niveau: avance
+        enonce: "Une perpétuité verse 1 dans un an puis croît de 3 %. Compare i=5 % et i=2,5 %."
+        corrige:
+          - "À 5 %, $g<i$ : $PV=\\frac{1}{0{,}05-0{,}03}=50$."
+          - "À 2,5 %, $g\\ge i$ : la série diverge et n'a pas de valeur finie."
+          - "Le critère est strict : $g<i$."
+        feedback: "Toujours tester la convergence avant d'utiliser la formule."
+  applications_labs:
+    applications:
+      - titre: "Prestation déterministe indexée"
+        contexte: "Modéliser un paiement annuel indexé pendant dix ans. Cet exemple illustre l'indexation, sans risque ni mortalité."
+        objectif: "Comparer formule fermée et somme directe, puis mesurer l'effet de l'indexation."
+        outils: [excel, python]
+        entrees:
+          - "Premier paiement : 1 000 à t=1."
+          - "Croissance g=2 %, taux i=5 %, durée n=10."
+        hypotheses:
+          - "Flux certains, taux et croissance constants, échéances annuelles."
+          - "Pas de mortalité, frais, fiscalité, risque ou changement de devise."
+        procedure:
+          - "Créer k=1,…,10 et le flux 1000×1,02^(k−1)."
+          - "Actualiser par (1,05)^k et sommer."
+          - |
+            ```python
+            n, i, g, first = 10, 0.05, 0.02, 1000.0
+            pv_sum = sum(first * (1 + g) ** (k - 1) / (1 + i) ** k for k in range(1, n + 1))
+            pv_closed = first * (1 - ((1 + g) / (1 + i)) ** n) / (i - g)
+            pv_level = first * (1 - (1 + i) ** -n) / i
+            assert abs(pv_sum - pv_closed) < 1e-10
+            print(round(pv_sum, 2), round(pv_level, 2))
+            ```
+          - "Comparer à une rente constante de 1 000."
+        sorties:
+          - "Valeur de la rente croissante et valeur de la rente constante."
+          - "Écart de valeur lié à l'indexation."
+        validation:
+          - "La somme et la formule fermée concordent."
+          - "La rente croissante vaut davantage que la rente constante."
+          - "Traiter séparément $i=g$."
+        limites:
+          - "Ce n'est pas une évaluation de rente viagère ou d'engagement réglementaire."
+          - "Une courbe de taux peut remplacer le taux constant en pratique."
+  synthese_references:
+    memo:
+      - "Valeur accumulée : $s_{\\overline{n}|}=\\frac{(1+i)^n-1}{i}=(1+i)^n a_{\\overline{n}|}$ ; $i=0$ : $n$."
+      - "Perpétuité immédiate : $1/i$ ; due : $1/d$, pour $i>0$."
+      - "Arithmétiques : $(Ia)=\\frac{\\ddot{a}_{\\overline{n}|}-n v^n}{i}$ ; $(Da)=\\frac{n-a_{\\overline{n}|}}{i}$."
+      - "Contrôle : $(Ia)+(Da)=(n+1)a_{\\overline{n}|}$."
+      - "Géométrique finie : $\\frac{1-\\left(\\frac{1+g}{1+i}\\right)^n}{i-g}$ ; si $i=g$ : $nv$."
+      - "Perpétuité croissante : $\\frac{1}{i-g}$, seulement si $g<i$."
+      - "Toujours vérifier la date du premier flux, les taux, la convergence et les cas limites."
+    glossaire:
+      - {terme_fr: "Valeur accumulée", terme_en: "Accumulated value", definition: "Valeur des paiements capitalisés à une date future."}
+      - {terme_fr: "Perpétuité", terme_en: "Perpetuity", definition: "Suite de paiements sans échéance finale."}
+      - {terme_fr: "Annuité arithmétique croissante", terme_en: "Increasing arithmetic annuity", definition: "Montants 1, 2, …,n versés à des dates successives."}
+      - {terme_fr: "Annuité arithmétique décroissante", terme_en: "Decreasing arithmetic annuity", definition: "Montants n,n−1,…,1 versés à des dates successives."}
+      - {terme_fr: "Annuité géométrique", terme_en: "Geometric annuity", definition: "Montants multipliés d'une période à l'autre par 1+g."}
+      - {terme_fr: "Taux de croissance", terme_en: "Growth rate", definition: "Taux multiplicatif de variation du montant des paiements."}
+    maitrise:
+      - "Je distingue valeur actuelle et valeur accumulée."
+      - "Je sais expliquer la convergence d'une perpétuité."
+      - "Je valorise les annuités arithmétiques et vérifie leur identité."
+      - "Je traite $i=g$ et $i=0$ sans division indéfinie."
+      - "Je vérifie les dates, les unités de taux et les limites du modèle."
+    references:
+      - {titre: "Kellison, The Theory of Interest, chapitres 3–4", detail: "Valeur accumulée, perpétuités et annuités variables. Édition et pages non précisées dans la séance."}
+      - {titre: "Society of Actuaries — Financial Mathematics (FM)", url: "https://www.soa.org/education/exam-req/edu-exam-fm-detail/", detail: "Syllabus officiel de l'examen FM, source générale de référence."}
+    liens:
+      - {titre: "A1/S01 — Intérêt composé et annuités certaines", cible: "a1/s01"}
+      - {titre: "A1/S02 — Taux nominaux et paiements fractionnés", cible: "a1/s02"}
+
 etapes:
   - type: quiz
     titre: "Test de positionnement"
@@ -50,7 +270,7 @@ etapes:
           rappel: >-
             Le $I$ signifie « increasing » : le paiement de l'année $k$ vaut $k$. L'annuité décroissante $(Da)_{\overline{n}|}$ verse $n$, puis $n-1$, jusqu'à 1.
           formule: |-
-            (Ia)_{\overline{n}|} = \sum_{k=1}^{n} k\,v^k = \frac{\ddot{a}_{\overline{n}|} - n\,v^n}{i}
+            $(Ia)_{\overline{n}|} = \sum_{k=1}^{n} k\,v^k = \frac{\ddot{a}_{\overline{n}|} - n\,v^n}{i}$
           exemple: >-
             À 5 % sur 10 ans : $(Ia)_{\overline{10}|} = 39{,}3738$.
           piege: >-
@@ -102,7 +322,7 @@ etapes:
           \sum_{k=1}^{n} (1+g)^{k-1} v^k = \frac{1 - \left(\frac{1+g}{1+i}\right)^{n}}{i - g} \quad (g \ne i)
           \end{gathered}
       - p: >-
-          La relation $(Ia) + (Da) = (n+1)\,a$ se lit sur les flux : chaque année, $k + (n+1-k) = n+1$. C'est un bon
+          La relation $(Ia) + (Da) = (n+1)\,a_{\overline{n}|}$ se lit sur les flux : chaque année, $k + (n+1-k) = n+1$. C'est un bon
           moyen de vérifier un calcul.
       - note: >-
           Les rentes de retraite indexées sont des annuités géométriques. Pour un régime à prestations définies, un taux
@@ -179,7 +399,11 @@ etapes:
       - {cle: geo, libelle: '$\sum_{k=1}^{10} (1+g)^{k-1}\,v^k$', valeur: 8.3881057, tolerance: 0.0015}
     solution: |
       $v^{10} = 0{,}613913$, $a_{\overline{10}|} = 7{,}7217$, $\ddot{a}_{\overline{10}|} = 8{,}1078$, $s_{\overline{10}|} = 0{,}628895 / 0{,}05 = 12{,}5779$.
-      $(Ia)_{\overline{10}|} = (8{,}1078 - 10 \times 0{,}613913) / 0{,}05 = 39{,}3738$ ; $(Da)_{\overline{10}|} = (10 - 7{,}7217) / 0{,}05 = 45{,}5653$ ; géométrique : $0{,}251643 / 0{,}03 = 8{,}3881$.
+      $$
+      (Ia)_{\overline{10}|}=\frac{8{,}1078-10\times0{,}613913}{0{,}05}=39{,}3738
+      \qquad (Da)_{\overline{10}|}=\frac{10-7{,}7217}{0{,}05}=45{,}5653
+      \qquad PV_{geo}=\frac{0{,}251643}{0{,}03}=8{,}3881
+      $$
 
   - type: code
     titre: "À toi de coder"

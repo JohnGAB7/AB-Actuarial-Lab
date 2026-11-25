@@ -19,12 +19,17 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
     const brand = await page.evaluate(() => ({
       title: document.title,
       label: document.querySelector(".brand-copy")?.textContent || "",
-      logoLoaded: Array.from(document.querySelectorAll(".brand-logo")).some((img) => img.complete && img.naturalWidth > 0)
+      logoCount: document.querySelectorAll(".brand").length,
+      eachBrandHasOneMark: Array.from(document.querySelectorAll(".brand")).every((brand) => brand.querySelectorAll(".brand-logo").length === 1),
+      logoSrc: document.querySelector(".brand-logo")?.src || "",
+      logoLoaded: Array.from(document.querySelectorAll(".brand-logo")).every((img) => img.complete && img.naturalWidth > 0)
     }));
     console.log("brand FR:", brand);
     if (!brand.title.startsWith("Laboratoire d’apprentissage actuariel par ACTU-BASICS")) failures.push("French site title");
     if (!brand.label.includes("LABORATOIRE ACTUARIEL") || !brand.label.includes("PAR ACTU-BASICS")) failures.push("French sub-brand lockup");
     if (!brand.logoLoaded) failures.push("custom Actuarial Learning Lab mark did not load");
+    if (!brand.eachBrandHasOneMark) failures.push("each brand lockup should contain exactly one mark image");
+    if (!brand.logoSrc.includes("/assets/actuarial-lab-mark.svg")) failures.push("English homepage logo should resolve to the site-root asset path");
     const mobile = await page.evaluate(() => ({
       lang: document.documentElement.lang,
       width: window.innerWidth,
@@ -94,6 +99,8 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
 
     await page.goto(new URL("en/a1/s01/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
     await page.locator(".opt").first().waitFor();
+    const englishLessonLogo = await page.locator(".brand-logo").evaluate((img) => ({ src: img.src, loaded: img.complete && img.naturalWidth > 0 }));
+    if (!englishLessonLogo.loaded || !englishLessonLogo.src.includes("/assets/actuarial-lab-mark.svg")) failures.push("English lesson logo must load from the site-root asset path");
     const englishOptions = await page.locator(".opt").allInnerTexts();
     console.log("quiz options EN:", englishOptions);
     if (!englishOptions.length || !englishOptions.every((value) => /^[A-Z]\s+(?!-)/.test(value.trim()))) failures.push("English quiz options should use letter enumeration without a dash");
@@ -206,6 +213,10 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       await page.locator("#reference-panel-1").waitFor({ state: "visible" });
       await page.waitForFunction(() => document.querySelectorAll("#reference-panel-1 .katex").length > 0);
       if (!(await page.locator("#reference-panel-1 .reference-block").count())) failures.push(language + " complete course has no sections");
+      if (!(await page.locator("#reference-panel-1 .reference-formula .katex-display").count())) failures.push(language + " display formulas should use proper fraction/exponent layout");
+      await tabs.nth(2).click();
+      await page.locator("#reference-panel-2").waitFor({ state: "visible" });
+      if (!(await page.locator("#reference-panel-2 .katex").count())) failures.push(language + " inline mathematical notation should be typeset in methods");
       await tabs.nth(1).focus();
       await page.keyboard.press("ArrowRight");
       await page.waitForFunction(() => document.querySelector("#reference-tab-2")?.getAttribute("aria-selected") === "true");
@@ -230,8 +241,50 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       await page.locator("#mode-steps").click();
       if (!(await page.locator("#stage").isVisible())) failures.push(language + " guided pathway should be restored");
     }
+    // A1/S03 reference sheet is ready and must be rendered and usable in both languages.
+    for (const language of ["fr", "en"]) {
+      const path = language === "en" ? "en/a1/s03/index.html" : "a1/s03/index.html";
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto(new URL(path, BASE).toString(), { waitUntil: "domcontentloaded" });
+      await page.locator("#lesson-mode").waitFor({ state: "visible" });
+      await page.locator("#mode-reference").click();
+      await page.waitForFunction(() => {
+        const sheet = document.querySelector("#reference-sheet");
+        const panel = document.querySelector("#reference-panel-0");
+        return sheet && !sheet.hidden && panel && !panel.hidden;
+      }, null, { timeout: 5000 }).catch(async () => {
+        const state = await page.evaluate(() => ({
+          sheetHidden: document.querySelector("#reference-sheet")?.hidden,
+          panelHidden: document.querySelector("#reference-panel-0")?.hidden,
+          modePressed: document.querySelector("#mode-reference")?.getAttribute("aria-pressed"),
+          tabs: document.querySelectorAll("#reference-tabs [role=tab]").length
+        }));
+        console.error("S03 reference-mode diagnostic:", language, state, errors);
+        failures.push(language + " reference mode failed to expose the overview panel");
+      });
+      const tabs = page.locator("#reference-tabs [role=tab]");
+      if (await tabs.count() !== 7) failures.push(language + " S03 should have seven reference tabs");
+      await tabs.nth(1).click();
+      if (!(await page.locator("#reference-panel-1 .reference-formula .katex-display").count())) failures.push(language + " S03 display equations should be typeset");
+      await tabs.nth(2).click();
+      if (!(await page.locator("#reference-panel-2 .katex").count())) failures.push(language + " S03 inline notation in methods should be typeset");
+      const inlineMathCount = await page.locator("#reference-panel-2 .reference-block li .katex").count();
+      const displayMathInParagraphs = await page.locator("#reference-panel-2 .reference-block li .katex-display").count();
+      if (!inlineMathCount) failures.push(language + " S03 inline formulas should remain inside paragraphs");
+      if (displayMathInParagraphs) failures.push(language + " S03 inline formulas must not become display equations");
+      await tabs.nth(3).click();
+      if (!(await page.locator("#reference-panel-3 .reference-block").count())) failures.push(language + " S03 worked examples missing");
+      await tabs.nth(4).click();
+      if (!(await page.locator("#reference-panel-4 .reference-block").count())) failures.push(language + " S03 corrected exercises missing");
+      await tabs.nth(5).click();
+      if (!(await page.locator("#reference-panel-5 pre.reference-code code").count())) failures.push(language + " S03 code lab missing");
+      await tabs.nth(6).click();
+      if (!(await page.locator("#reference-panel-6 .reference-table").count())) failures.push(language + " S03 bilingual glossary missing");
+      await page.setViewportSize({ width: 320, height: 844 });
+      if (await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)) failures.push(language + " S03 sheet overflow at 320px");
+    }
     await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto(new URL("a1/s03/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
+    await page.goto(new URL("a1/s04/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
     if (await page.locator("#lesson-mode").isVisible()) failures.push("sessions without a ready reference sheet should not expose the sheet switch");
 
     if (errors.length) failures.push("page errors: " + errors.join("; "));

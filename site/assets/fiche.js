@@ -67,14 +67,16 @@
   };
   const paragraph = (text) => make("p","",text);
   const formula = (text) => {
-    const node = make("div","reference-formula","$"+text+"$");
+    const node = make("div","reference-formula");
     node.setAttribute("aria-label", text);
+    if (window.katex) katex.render(text, node, {displayMode:true, throwOnError:false, strict:"ignore"});
+    else node.textContent = text;
     return node;
   };
   const renderMath = (root) => {
     if (window.renderMathInElement) {
       window.renderMathInElement(root,{
-        delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],
+        delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false},{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],
         throwOnError:false
       });
     }
@@ -197,6 +199,8 @@
         root.append(block(copy.references,content));
       });
       (data.liens||[]).forEach(link=>{
+        // Translation overlays may translate labels, but must retain navigation targets.
+        if(typeof link.cible!=="string" || !link.cible.includes("/") || typeof data.id!=="string") return;
         const a=make("a","reference-link",link.titre);
         const [target,anchor] = link.cible.split("#");
         const [targetDomain,targetSession] = target.split("/");
@@ -233,7 +237,9 @@
     tab.addEventListener("click",()=>activate(index,true));
     tabs.append(tab);panels.append(panel);tabButtons.push(tab);panelNodes.push(panel);
   });
+  let activeIndex=0;
   function activate(index,focus){
+    activeIndex=index;
     tabButtons.forEach((tab,i)=>{
       tab.setAttribute("aria-selected",i===index?"true":"false");
       tab.tabIndex=i===index?0:-1;
@@ -257,7 +263,12 @@
     steps.hidden=reference;sheetNode.hidden=!reference;
     $("#mode-steps").setAttribute("aria-pressed",reference?"false":"true");
     $("#mode-reference").setAttribute("aria-pressed",reference?"true":"false");
-    if(reference)renderMath(panelNodes[0]);
+    if(reference){
+      // Reassert the selected tab when returning to reference mode. This prevents
+      // a hidden panel from leaving the sheet blank after a mode transition.
+      panelNodes.forEach((panel,index)=>{panel.hidden=index!==activeIndex;});
+      renderMath(panelNodes[activeIndex]);
+    }
   }
   $("#mode-steps").addEventListener("click",()=>mode(false));
   $("#mode-reference").addEventListener("click",()=>mode(true));

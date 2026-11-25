@@ -20,7 +20,7 @@ fiche:
       - "Distinguer les paiements fractionnés d'une série de m paiements unitaires par an."
       - "Contrôler un calcul en retrouvant le facteur annuel et en vérifiant les dates et le montant total versé."
     prerequis:
-      - "Taux annuel effectif i, facteur v=1/(1+i), annuité immédiate et annuité due."
+      - "Taux annuel effectif i, facteur $v=\\frac{1}{1+i}$, annuité immédiate et annuité due."
       - "Puissances, racines, logarithme naturel et somme géométrique."
       - "Chronologie des paiements et conversion entre période mensuelle et annuelle."
     carte:
