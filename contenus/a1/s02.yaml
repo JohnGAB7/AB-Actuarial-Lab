@@ -7,6 +7,276 @@ en: "Nominal rates and monthly payments"
 duree: 30
 taux: 0.04
 
+fiche:
+  statut: prete
+  vue_ensemble:
+    question: "Comment comparer un taux annuel affiché et des paiements qui surviennent plusieurs fois par année ?"
+    pourquoi: "Un taux nominal n'est pas directement un rendement annuel. La fréquence de capitalisation change le facteur annuel, et la fréquence des paiements change leur valeur à une date donnée. Ces conventions sont essentielles pour comparer des prêts, placements, rentes et mensualités."
+    objectifs:
+      - "Convertir un taux annuel effectif en taux nominal convertible m fois par an, et inversement."
+      - "Comparer des offres ayant des fréquences de capitalisation différentes à l'aide du taux annuel effectif."
+      - "Calculer les taux nominaux d'intérêt et d'escompte ainsi que leurs limites continues."
+      - "Évaluer une annuité dont le montant annuel est réparti en paiements fractionnés."
+      - "Distinguer les paiements fractionnés d'une série de m paiements unitaires par an."
+      - "Contrôler un calcul en retrouvant le facteur annuel et en vérifiant les dates et le montant total versé."
+    prerequis:
+      - "Taux annuel effectif i, facteur v=1/(1+i), annuité immédiate et annuité due."
+      - "Puissances, racines, logarithme naturel et somme géométrique."
+      - "Chronologie des paiements et conversion entre période mensuelle et annuelle."
+    carte:
+      - "Taux équivalents : un même facteur annuel sous plusieurs conventions."
+      - "Taux nominal convertible m fois : taux périodique i^(m)/m, capitalisé m fois."
+      - "Escompte nominal : déduction fractionnée en début de période."
+      - "Limite continue : force d'intérêt et force d'escompte."
+      - "Annuités fractionnées : même montant total annuel, payé plus tôt dans l'année."
+    duree_minutes: 40
+  cours_complet:
+    sections:
+      - titre: "1. Convention et définition du taux nominal"
+        contenu: "On fixe une année comme période de comparaison et m comme nombre entier positif de conversions par année. Le taux nominal annuel i^(m), convertible m fois, est un taux affiché : le taux appliqué à chaque période de longueur 1/m est j=i^(m)/m. Le capital est multiplié par 1+j à chaque conversion. Le facteur annuel est donc (1+i^(m)/m)^m. Le taux effectif annuel i est le taux unique qui produit le même facteur sur une année. Les taux sont équivalents lorsqu'ils produisent le même facteur annuel, et non parce que leurs nombres affichés sont identiques."
+        formules:
+          - formule: "1+i=\\left(1+\\frac{i^{(m)}}{m}\\right)^m"
+            explication: "Le membre droit est le facteur d'accumulation après m périodes de même longueur. Le taux effectif i est ce facteur moins un."
+          - formule: "i^{(m)}=m\\left[(1+i)^{1/m}-1\\right]"
+            explication: "À partir d'un taux effectif i, on extrait le taux périodique équivalent, puis on le multiplie par m pour obtenir la cotation nominale."
+      - titre: "2. Comparer des taux affichés et conversions"
+        contenu: "Pour comparer deux placements ou crédits, convertir chaque convention vers le taux annuel effectif. À taux nominal affiché identique et positif, une fréquence plus élevée produit un taux effectif plus élevé, car les intérêts crédités peuvent eux-mêmes produire des intérêts. À taux effectif fixé, le taux nominal équivalent i^(m) diminue lorsque m augmente. La conversion exige que la périodicité et la convention de capitalisation soient précisées ; un taux mensuel ne doit pas être comparé directement à un taux annuel."
+        formules:
+          - formule: "i=\\left(1+\\frac{i^{(m)}}{m}\\right)^m-1"
+            explication: "Convertir le nominal vers l'effectif pour comparer des offres sur une année."
+          - formule: "i^{(m)}=m\\left[(1+i)^{1/m}-1\\right]"
+            explication: "Convertir l'effectif vers le nominal lorsque la convention de m capitalisations est demandée."
+      - titre: "3. Taux nominal d'escompte"
+        contenu: "Le taux nominal d'escompte d^(m) est convertible m fois par année et chaque fraction d^(m)/m est déduite au début de la période. Le facteur de chaque fraction est 1-d^(m)/m ; après m périodes, le facteur annuel doit égaler 1/(1+i). Pour i positif et m supérieur à 1, les taux d'intérêt et d'escompte nominaux équivalents encadrent la force d'intérêt : d < d^(m) < δ < i^(m) < i. La relation ne s'applique pas telle quelle à des taux négatifs ou à m=1."
+        formules:
+          - formule: "1+i=\\left(1-\\frac{d^{(m)}}{m}\\right)^{-m}"
+            explication: "Les déductions au début des m sous-périodes donnent le même facteur annuel que l'accumulation effective."
+          - formule: "d^{(m)}=m\\left[1-(1+i)^{-1/m}\\right]"
+            explication: "On déduit le facteur d'escompte périodique de v^(1/m), puis on multiplie la déduction périodique par m."
+      - titre: "4. Limite de capitalisation continue"
+        contenu: "Quand m tend vers l'infini à taux effectif annuel fixé, le nominal d'intérêt tend vers δ=ln(1+i), la force d'intérêt. La limite vient de m[(1+i)^(1/m)-1] et de la limite de l'exponentielle. Le nominal d'escompte tend également vers δ. À taux positif, δ est entre d et i ; les valeurs se rapprochent lorsque le taux devient petit, sans devenir identiques en général."
+        formules:
+          - formule: "\\lim_{m\\to\\infty}i^{(m)}=\\delta=\\ln(1+i)"
+            explication: "La capitalisation de plus en plus fréquente converge vers l'accumulation continue."
+          - formule: "\\lim_{m\\to\\infty}d^{(m)}=\\delta,\\qquad e^{\\delta}=1+i"
+            explication: "Les déductions fractionnées convergent vers la même force, avec un facteur annuel équivalent."
+      - titre: "5. Annuités fractionnées : convention de montant"
+        contenu: "Une annuité payable m-thly, notée a^(m)_{n|}, verse au total 1 par année, réparti en m paiements de 1/m à la fin de chaque sous-période. Sur n années, les paiements ont lieu aux dates k/m, k=1,…,mn. Ce n'est pas une série de m paiements unitaires : le montant annuel total reste 1. En utilisant le taux nominal d'intérêt convertible à la même fréquence, la valeur actuelle est (1-v^n)/i^(m). Pour des paiements en début de sous-période, la valeur actuelle est (1-v^n)/d^(m)."
+        formules:
+          - formule: "a^{(m)}_{\\overline{n}|}=\\frac{1-v^n}{i^{(m)}}"
+            explication: "Valeur actuelle de n unités annuelles au total, chacune répartie en m paiements égaux de 1/m en fin de sous-période."
+          - formule: "\\ddot{a}^{(m)}_{\\overline{n}|}=\\frac{1-v^n}{d^{(m)}}"
+            explication: "Même total annuel, mais les fractions sont payées au début de chaque sous-période."
+          - formule: "a^{(m)}_{\\overline{n}|}=\\frac{i}{i^{(m)}}a_{\\overline{n}|},\\qquad \\ddot{a}^{(m)}_{\\overline{n}|}=\\frac{d}{d^{(m)}}\\ddot{a}_{\\overline{n}|}"
+            explication: "Les rapports des taux relient la valeur fractionnée à l'annuité annuelle correspondante. Pour un taux nul, traiter la limite séparément."
+      - titre: "6. Dérivation par somme géométrique et limite continue"
+        contenu: "Pour les paiements fractionnés en fin de sous-période, la somme est (1/m)Σ_{k=1}^{mn}v^(k/m). Sa raison est v^(1/m). La somme géométrique se simplifie car 1-v^(1/m)=i^(m)/m. Pour les paiements au début, l'indice commence à k=0 et le dénominateur devient d^(m)/m. Lorsque m tend vers l'infini, les paiements deviennent continus et la valeur actuelle est l'intégrale de v^t sur [0,n]."
+        formules:
+          - formule: "a^{(m)}_{\\overline{n}|}=\\frac{1}{m}\\sum_{k=1}^{mn}v^{k/m}=\\frac{1-v^n}{m(1-v^{1/m})}"
+            explication: "Écrire explicitement chaque paiement de 1/m à sa date permet de voir la somme géométrique."
+          - formule: "m(1-v^{1/m})=i^{(m)}"
+            explication: "L'identité provient de v^(1/m)=(1+i)^(-1/m) et définit le taux nominal d'intérêt équivalent."
+          - formule: "\\bar{a}_{\\overline{n}|}=\\int_0^n v^t\\,dt=\\frac{1-v^n}{\\delta}"
+            explication: "La valeur d'une annuité continue de débit 1 par année est la limite des paiements fractionnés ; δ=ln(1+i)."
+      - titre: "7. Hypothèses, limites et pièges"
+        contenu: "Les formules supposent une année cohérente, un taux constant et déterministe, des périodes égales et une convention de paiement explicitée. Une offre de crédit peut annoncer un taux nominal sans inclure frais, assurance, taxes ou autres composantes du coût total : le taux effectif calculé ici ne représente alors que la capitalisation des intérêts. Ne pas confondre i^(m)/m avec i/m, ni a^(m) avec m a. Pour des taux négatifs, vérifier que les facteurs périodiques restent admissibles et que les comparaisons d'ordre usuelles ne s'appliquent pas automatiquement."
+  methodes:
+    methodes:
+      - titre: "Convertir un nominal vers l'effectif annuel"
+        quand_utiliser: "Pour comparer des cotations de fréquences différentes ou mesurer le rendement annuel d'un nominal."
+        etapes:
+          - "Identifier le nominal i^(m) et le nombre de conversions m."
+          - "Calculer le taux périodique j=i^(m)/m."
+          - "Accumuler sur une année : facteur (1+j)^m."
+          - "Soustraire 1 et exprimer le taux en pourcentage si demandé."
+        controles:
+          - "Le facteur annuel doit être positif."
+          - "Pour un nominal positif, l'effectif est supérieur au nominal lorsque m>1."
+          - "Reproduire le calcul avec une conversion inverse."
+        erreurs:
+          - "Diviser le taux effectif par m comme si les intérêts ne se capitalisaient pas."
+          - "Comparer deux taux nominaux sans convertir la fréquence."
+      - titre: "Convertir un effectif vers un nominal"
+        quand_utiliser: "Pour retrouver le taux périodique compatible avec une fréquence de capitalisation imposée."
+        etapes:
+          - "Partir du facteur annuel 1+i."
+          - "Prendre la racine m-ième : (1+i)^(1/m)."
+          - "Soustraire 1 pour obtenir le taux périodique."
+          - "Multiplier par m pour la cotation nominale."
+        controles:
+          - "Reconstruire (1+i^(m)/m)^m et retrouver 1+i."
+          - "À effectif fixé, le nominal décroît quand m augmente."
+        erreurs:
+          - "Arrondir le taux périodique avant la dernière étape."
+          - "Oublier que i^(m) est une cotation annuelle, pas le taux de chaque mois."
+      - titre: "Valoriser une annuité fractionnée"
+        quand_utiliser: "Lorsque le total annuel est fixé mais payé en m versements égaux, en fin ou début de sous-période."
+        etapes:
+          - "Fixer n années, m versements par année et le total annuel A."
+          - "Pour l'annuité immédiate, multiplier la formule unitaire par A et utiliser i^(m)."
+          - "Pour l'annuité due, utiliser d^(m) et préciser que le premier versement a lieu à t=0."
+          - "Vérifier que m versements valent bien A au total sur chaque année."
+        controles:
+          - "Quand m=1, retrouver l'annuité annuelle correspondante."
+          - "Pour des flux positifs et i>0, la valeur due est supérieure à la valeur immédiate."
+          - "À taux nul, la valeur des n années est nA."
+        erreurs:
+          - "Multiplier par m sans réduire chaque paiement à A/m."
+          - "Utiliser un taux effectif annuel au dénominateur de la formule fractionnée."
+          - "Confondre paiement en fin de mois et début de mois."
+  exemples_guides:
+    exemples:
+      - titre: "Comparer 6 % nominal mensuel et trimestriel"
+        enonce: "Un dépôt est rémunéré au taux nominal de 6 %, convertible mensuellement ou trimestriellement. Quel taux annuel effectif est obtenu ?"
+        raisonnement:
+          - "Mensuel : taux de période 0,06/12=0,005, soit 0,5 %."
+          - "Facteur annuel : (1,005)^12."
+          - "Effectif annuel : (1,005)^12−1≈0,061678, soit 6,1678 %."
+          - "Trimestriel : taux de période 0,06/4=0,015."
+          - "Effectif annuel : (1,015)^4−1≈0,061364, soit 6,1364 %."
+        resultat: "La fréquence mensuelle produit un effectif légèrement supérieur : environ 6,1678 % contre 6,1364 %."
+        interpretation: "À nominal identique et positif, capitaliser plus souvent augmente le rendement effectif car les intérêts s'ajoutent plus tôt au capital."
+        controles:
+          - "Les deux facteurs annuels sont supérieurs à 1."
+          - "Les résultats sont supérieurs au nominal de 6 %."
+      - titre: "Convertir 4 % effectif en nominal mensuel"
+        enonce: "Trouver le nominal d'intérêt et le nominal d'escompte convertible 12 fois par an, équivalents à 4 % effectif."
+        raisonnement:
+          - "Taux mensuel effectif équivalent : (1,04)^(1/12)−1≈0,00327374."
+          - "Nominal d'intérêt : 12 fois ce taux, soit environ 3,92849 %."
+          - "Facteur mensuel d'escompte : (1,04)^(−1/12)."
+          - "Nominal d'escompte : 12[1−(1,04)^(−1/12)]≈3,91567 %."
+          - "Force d'intérêt : ln(1,04)≈3,92207 %."
+        resultat: "i^(12)≈3,92849 %, d^(12)≈3,91567 %, δ≈3,92207 %."
+        interpretation: "À effectif annuel fixé, le nominal d'intérêt et le nominal d'escompte se situent de part et d'autre de la force d'intérêt."
+        controles:
+          - "Recomposer le nominal mensuel donne un facteur annuel 1,04."
+          - "Pour i>0, d^(12)<δ<i^(12)."
+      - titre: "Valeur actuelle d'une pension payée mensuellement"
+        enonce: "Une pension de 1 200 unités par an est versée en 12 paiements de 100 en fin de mois pendant 10 ans. Le taux annuel effectif est 4 %. Quelle est sa valeur actuelle ?"
+        raisonnement:
+          - "Le montant annuel total reste 1 200 ; le paiement mensuel est 1 200/12=100."
+          - "Nominal mensuel équivalent : i^(12)≈0,0392849."
+          - "Annuité fractionnée unitaire : a^(12)_{10|}=(1−v^10)/i^(12)≈8,25854."
+          - "Multiplier par 1 200 pour l'échelle de la pension."
+        resultat: "VA≈1 200×8,25854≈9 910,25 unités."
+        interpretation: "Les versements arrivent plus tôt que 1 200 en fin d'année ; la valeur est supérieure à celle d'une annuité annuelle immédiate de 1 200."
+        controles:
+          - "Les 120 paiements de 100 représentent bien 12 000 unités non actualisées."
+          - "La valeur actuelle est positive et inférieure au total nominal pour i>0."
+          - "Comparer avec 1 200×a_{10|}≈9 733,09 ; la fraction mensuelle vaut davantage."
+  exercices_corriges:
+    exercices:
+      - titre: "Fondamental — conversion vers l'effectif"
+        niveau: fondamental
+        enonce: "Un nominal de 5 % convertible trimestriellement rémunère un capital. Calculer le taux effectif annuel."
+        corrige:
+          - "Taux par trimestre : 0,05/4=0,0125."
+          - "Facteur annuel : (1,0125)^4≈1,050945."
+          - "Taux effectif : environ 5,0945 %."
+        feedback: "Ne pas confondre 5 % nominal et 5 % effectif ; le trimestre capitalise quatre fois dans l'année."
+      - titre: "Intermédiaire — retrouver un nominal"
+        niveau: intermediaire
+        enonce: "Un taux effectif de 3 % est converti mensuellement. Calculer i^(12) et d^(12), à quatre décimales en pourcentage."
+        corrige:
+          - "i^(12)=12[(1,03)^(1/12)−1]≈2,9590 %."
+          - "d^(12)=12[1−(1,03)^(−1/12)]≈2,9524 %."
+          - "δ=ln(1,03)≈2,9559 %, ce qui confirme l'encadrement."
+        feedback: "La formule d'escompte utilise le facteur v^(1/12) ; ne pas remplacer le taux effectif par i/12."
+      - titre: "Avancé — pension fractionnée"
+        niveau: avance
+        enonce: "Une rente de 2 400 unités par année est payée mensuellement en fin de mois pendant 15 ans, à 3 % effectif. Comparer sa valeur actuelle à celle de 2 400 payées une fois en fin d'année."
+        corrige:
+          - "Calculer i^(12)=12[(1,03)^(1/12)−1]≈0,029590."
+          - "Calculer v=(1,03)^(−1) et v^15."
+          - "VA fractionnée : 2 400(1−v^15)/i^(12)."
+          - "VA annuelle : 2 400(1−v^15)/0,03."
+          - "Le ratio est i/i^(12)>1 ; la valeur fractionnée est donc plus élevée."
+        feedback: "Le total annuel est identique. L'écart vient uniquement du calendrier des versements, pas du montant nominal annuel."
+  applications_labs:
+    applications:
+      - titre: "Comparer des offres de crédit et vérifier une mensualité"
+        contexte: "Deux offres fictives peuvent afficher le même nominal tout en utilisant des fréquences de capitalisation différentes. Le laboratoire isole la conversion des taux ; frais, assurance et TAEG réglementaire ne sont pas modélisés."
+        objectif: "Comparer les taux annuels effectifs, convertir un taux effectif en nominal mensuel, et contrôler la valeur actuelle d'une suite de mensualités."
+        outils: [excel, python]
+        entrees:
+          - "Offre A : nominal 6 %, convertible mensuellement."
+          - "Offre B : nominal 6 %, convertible trimestriellement."
+          - "Taux effectif de contrôle : 4 % ; durée 10 ans ; montant annuel 1 200 payé en 12 fractions."
+        hypotheses:
+          - "Taux nominal, capitalisation périodique et calendrier sont les seules composantes."
+          - "Périodes égales et taux constants ; paiements en fin de sous-période."
+          - "Aucun frais, impôt, assurance ou défaut."
+        procedure:
+          - "Dans Excel, saisir le nominal et m. Calculer =(1+nominal/m)^m-1 pour l'effectif annuel."
+          - "Pour retrouver le nominal depuis i, calculer =m*((1+i)^(1/m)-1)."
+          - "Pour la pension, calculer i^(12), v^n puis VA=A*(1-v^n)/i^(12)."
+          - "Comparer la valeur avec la formule annuelle A*(1-v^n)/i."
+          - |
+            ```python
+            def nominal_from_effective(i, m):
+                return m * ((1 + i) ** (1 / m) - 1)
+
+            def effective_from_nominal(i_m, m):
+                return (1 + i_m / m) ** m - 1
+
+            def annuity_mthly(n, i, m, annual_amount=1):
+                if i == 0:
+                    return annual_amount * n
+                i_m = nominal_from_effective(i, m)
+                v_n = (1 + i) ** (-n)
+                return annual_amount * (1 - v_n) / i_m
+
+            a = effective_from_nominal(0.06, 12)
+            b = effective_from_nominal(0.06, 4)
+            pv = annuity_mthly(10, 0.04, 12, 1200)
+            assert a > b > 0.06
+            assert abs(pv - 9910.25) < 0.1
+            ```
+        sorties:
+          - "Taux effectif A et B ; classement des deux offres."
+          - "Nominal mensuel équivalent à un effectif de 4 %."
+          - "Valeur actuelle estimée de la pension fractionnée."
+        validation:
+          - "Reconvertir i^(m) vers i et retrouver le taux effectif initial."
+          - "Le nominal d'intérêt est supérieur à la force d'intérêt pour i>0."
+          - "La pension fractionnée est supérieure à la pension annuelle à même total annuel."
+          - "À taux nul, la valeur actuelle est n fois le montant annuel."
+        limites:
+          - "Ce calcul n'est pas un TAEG réglementaire et ne tient pas compte des frais ou autres coûts du crédit."
+          - "Un vrai contrat peut utiliser des dates irrégulières, conventions de jours, arrondis et taux variables."
+          - "Une rente viagère ajoute la mortalité et les garanties contractuelles, absentes ici."
+  synthese_references:
+    memo:
+      - "Nominal d'intérêt : i^(m)=m[(1+i)^(1/m)−1] ; nominal d'escompte : d^(m)=m[1−v^(1/m)]."
+      - "Conversion nominal vers effectif : i=(1+i^(m)/m)^m−1."
+      - "À taux positif, d<d^(m)<δ<i^(m)<i pour m>1."
+      - "Limite continue : i^(m) et d^(m) tendent vers δ=ln(1+i)."
+      - "Annuité fractionnée : le total annuel est réparti en m paiements de A/m ; ne pas multiplier par m."
+      - "Paiements en fin de sous-période : VA=A(1−v^n)/i^(m). En début : VA=A(1−v^n)/d^(m)."
+      - "Comparer les taux sur une même période et vérifier le calendrier, le total annuel, les unités et les frais exclus."
+    glossaire:
+      - {terme_fr: "Taux nominal convertible m fois", terme_en: "Nominal rate convertible m-thly", definition: "Annual quoted rate whose periodic rate is the nominal divided by m and is compounded m times in a year."}
+      - {terme_fr: "Taux annuel effectif", terme_en: "Annual effective rate", definition: "Rate that produces the same annual accumulation factor after all compounding within the year."}
+      - {terme_fr: "Taux périodique", terme_en: "Periodic rate", definition: "Rate applied over one subperiod of length 1/m year."}
+      - {terme_fr: "Taux d'escompte nominal", terme_en: "Nominal discount rate", definition: "Annual quoted discount rate converted m times, with each deduction applied at the beginning of a subperiod."}
+      - {terme_fr: "Force d'intérêt", terme_en: "Force of interest", definition: "Continuous-time instantaneous accumulation rate equivalent to the annual effective rate."}
+      - {terme_fr: "Annuité fractionnée", terme_en: "M-thly annuity", definition: "An annual amount split into m equal payments within each year, at a stated timing convention."}
+      - {terme_fr: "Paiement en fin de période", terme_en: "Payment in arrears", definition: "Payment made at the end of each subperiod."}
+      - {terme_fr: "Paiement en début de période", terme_en: "Payment in advance", definition: "Payment made at the start of each subperiod."}
+    maitrise:
+      - "Je sais expliquer pourquoi un nominal n'est pas un taux effectif."
+      - "Je sais convertir dans les deux sens et vérifier par recomposition."
+      - "Je sais comparer des fréquences de capitalisation à taux affiché égal."
+      - "Je sais distinguer nominal d'intérêt et nominal d'escompte."
+      - "Je sais dériver la formule d'une annuité fractionnée et interpréter son calendrier."
+      - "Je sais identifier les frais et hypothèses exclus d'un calcul de taux."
+    references:
+      - {titre: "Kellison, The Theory of Interest, chapitres 1 et 4", detail: "Taux nominaux, taux équivalents, annuités fractionnées et annuités continues. Les détails d'édition et de pagination ne sont pas spécifiés dans le contenu source."}
+      - {titre: "Society of Actuaries — Financial Mathematics (FM) Exam", detail: "Le syllabus officiel situe les taux équivalents, la capitalisation et les annuités dans le socle de mathématiques financières.", url: "https://www.soa.org/education/exam-req/edu-exam-fm-detail/"}
+    liens:
+      - {titre: "Rappel — intérêt composé et annuités certaines", cible: "a1/s01"}
+
 actu_basics:
   episode: "A1 · Financial mathematics"
   statut: "à proposer"
