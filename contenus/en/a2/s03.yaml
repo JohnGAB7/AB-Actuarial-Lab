@@ -144,7 +144,7 @@ fiche:
         interpretation: "About 8.21% of amounts exceed €5,000; 1% exceed €9,210.34."
         controles:
           - "Survival decreases with x."
-          - "The 99th quantile exceeds the 50th quantile."
+          - "The 99% quantile exceeds the 50% quantile."
       - titre: "Lognormal: mean, median and tail"
         enonce: "ln(X)~N(7,1). Calculate the median, mean and P(X>5,000)."
         raisonnement:
