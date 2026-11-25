@@ -178,7 +178,7 @@ fiche:
         enonce: "Emprunter 25 000 € à 3,5 % effectif annuel sur 12 ans, avec paiements annuels en fin d'année. Calculer le paiement."
         corrige:
           - "a_{12|}=(1−1,035^{-12})/0,035≈9,663."
-          - "P=25 000/a_{12|}≈2 587,38 €."
+          - "P=25 000/a_{12|}≈2 587,10 €."
         feedback: "Le paiement comprend principal et intérêts. Une durée plus longue réduit généralement le paiement, mais augmente le total des intérêts."
       - titre: "Solde — niveau intermédiaire"
         niveau: intermediaire
@@ -192,7 +192,7 @@ fiche:
         niveau: intermediaire
         enonce: "Un projet coûte 2 000 € et verse 1 200 € à la fin des années 1 et 2. Calculer la VAN à 8 % et déterminer le TRI."
         corrige:
-          - "VAN(8%)=−2 000+1 200/1,08+1 200/1,08²≈143,12 €."
+          - "VAN(8%)=−2 000+1 200/1,08+1 200/1,08²≈139,92 €."
           - "Le TRI résout −2 000+1 200/(1+j)+1 200/(1+j)²=0."
           - "Pour deux recettes identiques, résoudre 2 000=P a_{2|} : j≈13,0662 %."
         feedback: "Une VAN positive au taux de décision indique une création de valeur dans ce modèle. Le TRI est une solution de l'équation de VAN; ne pas supposer qu'il est unique pour tout calendrier de flux."
@@ -215,6 +215,29 @@ fiche:
           - "Excel : utiliser PMT(rate,nper,pv) en respectant la convention de signe, puis construire le solde avec les formules intérêts, principal et solde."
           - "Python : calculer le paiement et la liste des tuples (période, intérêts, principal, solde)."
           - "Comparer le solde à la date k par méthode prospective et rétrospective."
+          - |-
+            Python (reproducible):
+            ```python
+            def level_payment(L, n, i):
+                if n <= 0 or i <= -1:
+                    raise ValueError('n must be positive and i > -1')
+                return L / n if i == 0 else L * i / (1 - (1 + i) ** (-n))
+
+            def amortization_schedule(L, n, i):
+                P = level_payment(L, n, i)
+                B, rows = L, []
+                for k in range(1, n + 1):
+                    interest = i * B
+                    principal = P - interest
+                    B -= principal
+                    rows.append((k, interest, principal, B))
+                return rows
+
+            P = level_payment(10_000, 5, 0.06)
+            rows = amortization_schedule(10_000, 5, 0.06)
+            assert abs(P - 2_373.9640043) < 1e-6
+            assert abs(rows[1][3] - 6_345.6341511) < 1e-6
+            ```
           - "Tester i=0 et vérifier que le principal est remboursé en parts égales."
           - "Comparer les profils de paiements d'un amortissement constant et d'une annuité constante."
         sorties:
