@@ -13,7 +13,7 @@ fiche:
       - "Distinguish fractional payments from a series of m unit payments each year."
       - "Check a calculation by recovering the annual factor and verifying dates and total annual payment."
     prerequis:
-      - "Annual effective rate i, discount factor v=1/(1+i), annuity immediate and annuity due."
+      - "Annual effective rate i, discount factor $v=\\frac{1}{1+i}$, annuity immediate and annuity due."
       - "Powers, roots, natural logarithm and geometric sums."
       - "Payment timeline and conversion between monthly and annual periods."
     carte:
