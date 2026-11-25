@@ -248,7 +248,20 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       await page.goto(new URL(path, BASE).toString(), { waitUntil: "domcontentloaded" });
       await page.locator("#lesson-mode").waitFor({ state: "visible" });
       await page.locator("#mode-reference").click();
-      await page.locator("#reference-panel-0").waitFor({ state: "visible" });
+      await page.waitForFunction(() => {
+        const sheet = document.querySelector("#reference-sheet");
+        const panel = document.querySelector("#reference-panel-0");
+        return sheet && !sheet.hidden && panel && !panel.hidden;
+      }, null, { timeout: 5000 }).catch(async () => {
+        const state = await page.evaluate(() => ({
+          sheetHidden: document.querySelector("#reference-sheet")?.hidden,
+          panelHidden: document.querySelector("#reference-panel-0")?.hidden,
+          modePressed: document.querySelector("#mode-reference")?.getAttribute("aria-pressed"),
+          tabs: document.querySelectorAll("#reference-tabs [role=tab]").length
+        }));
+        console.error("S03 reference-mode diagnostic:", language, state, errors);
+        failures.push(language + " reference mode failed to expose the overview panel");
+      });
       const tabs = page.locator("#reference-tabs [role=tab]");
       if (await tabs.count() !== 7) failures.push(language + " S03 should have seven reference tabs");
       await tabs.nth(1).click();
