@@ -130,7 +130,7 @@ fiche:
           - "L'approximation est meilleure lorsque n est grand et p faible."
         erreurs:
           - "Interpréter λ comme une probabilité."
-          - "Oublier les événements k=0,1,… dans le complément."
+          - "Oublier les événements k=0 et 1 dans le complément."
           - "Utiliser l'approximation sans vérifier son adéquation."
   exemples_guides:
     exemples:
