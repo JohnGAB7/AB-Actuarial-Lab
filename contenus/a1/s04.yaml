@@ -105,7 +105,7 @@ fiche:
         quand_utiliser: "Il faut détailler, période par période, le paiement, les intérêts, le principal et le solde."
         etapes:
           - "Initialiser $B_0=L$."
-          - "Calculer $I_k=iB_{k-1$."
+          - "Calculer $I_k=iB_{k-1}$."
           - "Calculer $PR_k=P-I_k$."
           - "Calculer $B_k=B_{k-1}-PR_k$."
           - "Vérifier la somme des remboursements de principal et le solde final."
@@ -139,10 +139,10 @@ fiche:
       - titre: "1. Annuité et première échéance"
         enonce: "Emprunt de 10 000 € au taux effectif annuel de 6 %, remboursé en 5 annuités en fin d'année."
         raisonnement:
-          - "Calculer $a_{5|}=(1-1{,}06^{-5})/0{,}06\\approx4{,}212364$."
-          - "$P=10\,000/4{,}212364\\approx2\,373{,}96$ €."
-          - "À la première échéance, $I_1=0{,}06\\times10\,000=600$ €."
-          - "$PR_1=2\,373{,}96-600\\approx1\,773{,}96$ € ; $B_1\\approx8\,226{,}04$ €."
+          - "Calculer $a_{\\overline{5}|}=(1-1{,}06^{-5})/0{,}06\\approx4{,}212364$."
+          - "$P=10\\,000/4{,}212364\\approx2\\,373{,}96$ €."
+          - "À la première échéance, $I_1=0{,}06\\times10\\,000=600$ €."
+          - "$PR_1=2\\,373{,}96-600\\approx1\\,773{,}96$ € ; $B_1\\approx8\\,226{,}04$ €."
         resultat: "Annuité ≈ 2 373,96 €; solde après la première échéance ≈ 8 226,04 €."
         interpretation: "Le premier paiement contient 600 € d'intérêts et le reste rembourse le capital. Les intérêts diminueront à mesure que le solde baisse."
         controles:
@@ -151,10 +151,10 @@ fiche:
       - titre: "2. Solde après deux paiements — deux méthodes"
         enonce: "Pour le même emprunt, calculer $B_2$ après deux annuités."
         raisonnement:
-          - "Prospective : il reste trois paiements, donc $B_2=P a_{3|}\\approx2\,373{,}96\\times2{,}673012$."
+          - "Prospective : il reste trois paiements, donc $B_2=P a_{\\overline{3}|}\\approx2\\,373{,}96\\times2{,}673012$."
           - "Rétrospective : capitaliser 10 000 € pendant deux ans et retrancher la valeur accumulée des deux paiements."
           - "Les deux méthodes donnent environ 6 345,63 € (les écarts éventuels proviennent de l'arrondi des paiements affichés)."
-        resultat: "$B_2\\approx6\,345{,}63$ €."
+        resultat: "$B_2\\approx6\\,345{,}63$ €."
         interpretation: "Le solde est la valeur du contrat à la date 2, pas simplement L−2P : les intérêts doivent être pris en compte."
         controles:
           - "B_2 est inférieur à B_1 et supérieur à zéro."
@@ -162,7 +162,7 @@ fiche:
       - titre: "3. VAN et TRI d'un projet simple"
         enonce: "Investir 1 000 € aujourd'hui et recevoir 600 € à la fin de l'année 1 puis 600 € à la fin de l'année 2."
         raisonnement:
-          - "$VAN(j)=-1\,000+600/(1+j)+600/(1+j)^2$."
+          - "$VAN(j)=-1\\,000+600/(1+j)+600/(1+j)^2$."
           - "Le TRI est la racine de $VAN(j)=0$."
           - "Le TRI numérique est environ 13,0662 %."
           - "À un taux de décision de 10 %, la VAN est positive : environ 41,32 €."
@@ -177,7 +177,7 @@ fiche:
         niveau: fondamental
         enonce: "Emprunter 25 000 € à 3,5 % effectif annuel sur 12 ans, avec paiements annuels en fin d'année. Calculer le paiement."
         corrige:
-          - "a_{12|}=(1−1,035^{-12})/0,035≈9,663."
+          - "a_{\\overline{12}|}=(1−1,035^{-12})/0,035≈9,663."
           - "P=25 000/a_{12|}≈2 587,10 €."
         feedback: "Le paiement comprend principal et intérêts. Une durée plus longue réduit généralement le paiement, mais augmente le total des intérêts."
       - titre: "Solde — niveau intermédiaire"
@@ -185,8 +185,8 @@ fiche:
         enonce: "Un prêt de 10 000 € à 6 % sur 5 ans est remboursé par annuités constantes. Calculer le solde après 2 paiements."
         corrige:
           - "P≈2 373,96 €."
-          - "B_2=P a_{3|}≈6 345,63 €."
-          - "Vérifier avec $B_2=10\,000(1{,}06)^2-Ps_{\\overline{2}|$."
+          - "$B_2=P a_{\\overline{3}|}\\approx6\\,345{,}63$ €."
+          - "Vérifier avec $B_2=10\\,000(1{,}06)^2-Ps_{\\overline{2}|$."
         feedback: "Le solde prospectif actualise les paiements restant à effectuer. La méthode rétrospective doit donner le même résultat."
       - titre: "VAN et TRI — niveau intermédiaire"
         niveau: intermediaire
