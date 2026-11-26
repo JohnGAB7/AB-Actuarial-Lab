@@ -160,7 +160,7 @@ fiche:
         enonce: "N~Poisson(20) and each claim costs €3,000. Calculate E[S], Var(S) and σ_S."
         corrige:
           - "E[S]=20×3 000=€60 000."
-          - "Var(S)=20×3 000²=€180 000 000²."
+          - "Var(S)=20×3 000²=180 000 000 €²."
           - "σ_S=√180 000 000≈€13 416.41."
         feedback: "For fixed severity, E[X²]=c²."
       - titre: "Intermediate — binomial frequency and exponential severity"
