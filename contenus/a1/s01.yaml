@@ -50,7 +50,7 @@ fiche:
           - formule: "VA_0=\\sum_{j=1}^{m} C_{t_j}v^{t_j}"
             explication: "La somme porte sur les m flux aux dates t_j. Chaque flux doit être associé à sa propre date et au taux cohérent avec cette échéance."
       - titre: "3. Taux d'escompte et force d'intérêt"
-        contenu: "Le taux d'escompte annuel d exprime l'intérêt rapporté à la valeur au début de la période. Pour un même facteur annuel, d=i/(1+i)=iv=1-v. Il ne faut pas confondre d avec i : le premier rapporte l'intérêt au capital initial après déduction anticipée, le second au capital prêté et rémunéré sur la période. La force d'intérêt constante δ décrit une accumulation continue. L'équivalence sur une année impose e^δ=1+i, donc δ=ln(1+i). Pour i>0, l'ordre est d<δ<i. Pour de petits taux positifs, ces trois mesures sont proches mais ne sont pas interchangeables."
+        contenu: "Le taux d'escompte annuel \\(d\\) exprime l'intérêt rapporté à la valeur au début de la période. Pour un même facteur annuel, \\(d=\\frac{i}{1+i}=iv=1-v\\). Il ne faut pas confondre \\(d\\) avec \\(i\\) : le premier rapporte l'intérêt au capital initial après déduction anticipée, le second au capital prêté et rémunéré sur la période. La force d'intérêt constante \\(\\delta\\) décrit une accumulation continue. L'équivalence sur une année impose \\(e^\\delta=1+i\\), donc \\(\\delta=\\ln(1+i)\\). Pour \\(i>0\\), l'ordre est \\(d<\\delta<i\\). Pour de petits taux positifs, ces trois mesures sont proches mais ne sont pas interchangeables."
         formules:
           - formule: "d=\\frac{i}{1+i}=iv=1-v"
             explication: "Le taux d'escompte est la réduction relative appliquée au montant payable en fin de période lorsque l'intérêt est payé d'avance."
