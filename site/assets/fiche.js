@@ -66,7 +66,7 @@
     return node;
   };
       // Auto-wrap equation-like fragments in all ordinary text nodes, across every content component.
-  const BARE_MATH = /(?<![A-Za-z0-9_])(?:[A-Za-zδΔ][A-Za-z0-9δΔ_{}]*|\d+(?:[.,]\d+)?)(?:\s*(?:=|<|>|≤|≥|≈|≠|∼|∝|\+|−|-|×|÷|\/|\^|\\(?:approx|le|ge|neq))\s*(?:[A-Za-zδΔ][A-Za-z0-9δΔ_{}]*(?:\([^)]*\))?|\d+(?:[.,]\d+)?|\([^)]*\))+/g;
+  const BARE_MATH = /(?<![\p{L}\d_])(?:[A-Za-zδΔ][\p{L}\d_{}]*|\d+(?:[.,]\d+)?)(?:\s*(?:=|<|>|≤|≥|≈|≠|\+|−|-|×|÷|\/|\^)\s*(?:[A-Za-zδΔ][\p{L}\d_{}]*|\d+(?:[.,]\d+)?|\([^)]*\)))+/gu;
   function inlineNotation(value) {
     return String(value ?? "").split(/(\$\$[\s\S]*?\$\$|\$[^$]*\$|\\\([^)]*\\\)|\\\[[\s\S]*?\\\])/g).map((part,index) => {
       if (index % 2 === 1) return part;
