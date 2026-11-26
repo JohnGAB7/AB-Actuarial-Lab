@@ -12,6 +12,263 @@ actu_basics:
   accroche_fr: "Combien de sinistres, et combien chacun : comment l'assureur combine les deux."
   accroche_en: "How many claims, and how much each: how an insurer combines the two."
 
+fiche:
+  statut: brouillon
+  vue_ensemble:
+    question: "Comment combiner le nombre aléatoire de sinistres et leur montant pour calculer la charge totale ?"
+    pourquoi: "Le coût total d'un portefeuille dépend de deux sources de risque : la fréquence des sinistres et leur sévérité. Le modèle de somme aléatoire permet d'agréger ces deux dimensions et d'estimer la moyenne, la variance et les probabilités de pertes importantes."
+    objectifs:
+      - "Définir la charge agrégée S comme une somme aléatoire de sévérités."
+      - "Calculer E[S] par conditionnement."
+      - "Calculer Var(S) avec la formule de variance totale."
+      - "Utiliser les formules du modèle Poisson composé."
+      - "Calculer les moments d'une sévérité exponentielle."
+      - "Interpréter la probabilité d'une charge nulle et les hypothèses du modèle."
+    prerequis:
+      - "Espérance, variance et conditionnement."
+      - "Lois binomiale, Poisson et exponentielle."
+      - "Indépendance entre fréquence et sévérité."
+    carte:
+      - "Charge totale : S=X₁+…+X_N."
+      - "Fréquence N : nombre aléatoire de sinistres."
+      - "Sévérité X : coût d'un sinistre."
+      - "Espérance : E[N]E[X]."
+      - "Variance : E[N]Var(X)+Var(N)(E[X])²."
+      - "Poisson composé : E[S]=λE[X], Var(S)=λE[X²]."
+    duree_minutes: 45
+  cours_complet:
+    sections:
+      - titre: "1. Somme aléatoire de sévérités"
+        contenu: "La charge totale S est la somme des montants X_i pour un nombre N aléatoire de sinistres. On suppose ici que N est indépendant des sévérités, et que les X_i sont indépendantes et de même loi. Conditionnellement à N=n, S est une somme de n sévérités."
+        formules:
+          - formule: "S=\\sum_{i=1}^{N}X_i"
+            explication: "Charge agrégée du portefeuille."
+          - formule: "E[S\\mid N]=N E[X],\\quad \\operatorname{Var}(S\\mid N)=N\\operatorname{Var}(X)"
+            explication: "Moments conditionnels sachant le nombre de sinistres."
+      - titre: "2. Espérance de la charge totale"
+        contenu: "Par la loi de l'espérance totale, l'espérance de la charge agrégée est le nombre moyen de sinistres multiplié par le coût moyen d'un sinistre. Cette identité est souvent appelée formule fréquence × sévérité."
+        formules:
+          - formule: "E[S]=E[N]E[X]"
+            explication: "Espérance de la somme aléatoire, sous indépendance de N et des sévérités."
+      - titre: "3. Variance de la charge totale"
+        contenu: "La variance totale combine l'incertitude sur le montant de chaque sinistre et l'incertitude sur le nombre de sinistres. Le premier terme reflète la sévérité; le second la fréquence. Ne pas omettre le terme Var(N)(E[X])²."
+        formules:
+          - formule: "\\operatorname{Var}(S)=E[N]\\operatorname{Var}(X)+\\operatorname{Var}(N)(E[X])^2"
+            explication: "Formule générale pour une somme aléatoire sous indépendance."
+          - formule: "E[X^2]=\\operatorname{Var}(X)+(E[X])^2"
+            explication: "Identité permettant de passer du second moment à la variance."
+      - titre: "4. Poisson composé"
+        contenu: "Si N suit une Poisson de paramètre λ, alors E[N]=Var(N)=λ. La variance de la charge totale se simplifie en λE[X²]. La sévérité peut être quelconque avec un second moment fini; le modèle ne suppose pas que X soit exponentielle."
+        formules:
+          - formule: "N\\sim\\operatorname{Poisson}(\\lambda):\\quad E[S]=\\lambda E[X]"
+            explication: "Espérance de la charge agrégée."
+          - formule: "\\operatorname{Var}(S)=\\lambda E[X^2]"
+            explication: "Variance du Poisson composé."
+          - formule: "P(S=0)=P(N=0)=e^{-\\lambda}"
+            explication: "Si les sévérités sont strictement positives, charge nulle équivaut à aucun sinistre."
+      - titre: "5. Sévérité exponentielle"
+        contenu: "Si X suit une exponentielle de moyenne θ, alors Var(X)=θ² et E[X²]=2θ². Ces moments permettent de calculer directement les moments d'une charge Poisson composée. Attention : θ est la moyenne, et non le taux 1/θ."
+        formules:
+          - formule: "E[X]=\\theta,\\quad \\operatorname{Var}(X)=\\theta^2"
+            explication: "Moyenne et variance."
+          - formule: "E[X^2]=2\\theta^2"
+            explication: "Second moment."
+          - formule: "S\\text{ Poisson composé : }E[S]=\\lambda\\theta,\\quad \\operatorname{Var}(S)=2\\lambda\\theta^2"
+            explication: "Moments agrégés avec sévérité exponentielle."
+      - titre: "6. Fréquence et sévérité séparées"
+        contenu: "Le modèle sépare deux mécanismes. La fréquence dépend du nombre de contrats, de l'exposition et des caractéristiques du risque. La sévérité dépend notamment des coûts, de l'inflation, des franchises et des limites. Cette séparation aide à comprendre les changements de portefeuille et à construire des modèles plus flexibles."
+        formules:
+          - formule: "E[S]=E[N]E[X]"
+            explication: "Le coût attendu est le produit des deux composantes."
+      - titre: "7. Hypothèses et limites"
+        contenu: "La formule suppose N indépendant des sévérités, et des montants indépendants de même loi. En pratique, l'hétérogénéité des assurés, la dépendance, les catastrophes, les franchises, les plafonds, la censure et l'inflation peuvent invalider ces hypothèses. Le modèle de moments ne décrit pas à lui seul la distribution complète de S."
+        formules:
+          - formule: "\\text{Indépendance de }N\\text{ et }X_i\\text{ : condition de la formule classique}"
+            explication: "Si fréquence et sévérité dépendent l'une de l'autre, il faut adapter le modèle."
+  methodes:
+    methodes:
+      - titre: "Calculer les moments d'une somme aléatoire"
+        quand_utiliser: "La fréquence N et la sévérité X sont caractérisées par leurs moments."
+        etapes:
+          - "Identifier E[N], Var(N), E[X] et Var(X)."
+          - "Calculer E[S]=E[N]E[X]."
+          - "Calculer Var(S)=E[N]Var(X)+Var(N)(E[X])²."
+          - "Prendre la racine pour obtenir l'écart-type."
+        controles:
+          - "Le premier terme de variance correspond à la sévérité."
+          - "Le second terme correspond à la fréquence."
+          - "La variance est non négative."
+        erreurs:
+          - "Oublier Var(N)(E[X])²."
+          - "Confondre E[X²] et Var(X)."
+      - titre: "Utiliser le Poisson composé"
+        quand_utiliser: "N~Poisson(λ) et les sévérités ont un second moment fini."
+        etapes:
+          - "Identifier λ, E[X] et E[X²]."
+          - "Calculer E[S]=λE[X]."
+          - "Calculer Var(S)=λE[X²]."
+          - "Si les montants sont strictement positifs, calculer P(S=0)=e^{-λ}."
+        controles:
+          - "Var(S) utilise le second moment de X."
+          - "La charge nulle correspond à N=0 si X>0."
+          - "L'écart-type est la racine de la variance."
+        erreurs:
+          - "Utiliser λVar(X) au lieu de λE[X²]."
+          - "Appliquer P(S=0)=e^{-λ} si un paiement nul peut survenir malgré un sinistre."
+      - titre: "Comparer deux portefeuilles fréquence–sévérité"
+        quand_utiliser: "Deux portefeuilles ont des fréquences et des montants moyens différents."
+        etapes:
+          - "Calculer E[N] et E[X] séparément."
+          - "Comparer la charge moyenne E[S]."
+          - "Calculer la variance agrégée avec les moments appropriés."
+          - "Interpréter fréquence, sévérité et volatilité sans confondre leurs effets."
+        controles:
+          - "Les unités de E[S] sont monétaires."
+          - "La variance est en unités monétaires au carré."
+          - "Une fréquence plus élevée n'implique pas nécessairement une sévérité plus élevée."
+        erreurs:
+          - "Comparer uniquement les fréquences."
+          - "Ignorer le second moment de sévérité."
+  exemples_guides:
+    exemples:
+      - titre: "Poisson composé avec sévérité exponentielle"
+        enonce: "N~Poisson(50) et X suit une exponentielle de moyenne 2 000 €. Calcule la charge moyenne, sa variance et son écart-type."
+        raisonnement:
+          - "E[X]=2 000; Var(X)=4 000 000; E[X²]=8 000 000."
+          - "E[S]=50×2 000=100 000 €."
+          - "Var(S)=50×8 000 000=400 000 000 €²."
+          - "σ_S=√400 000 000=20 000 €."
+        resultat: "Charge moyenne 100 000 €; variance 400 millions €²; écart-type 20 000 €."
+        interpretation: "La fréquence moyenne et le montant moyen déterminent l'espérance; la variance utilise le second moment de sévérité."
+        controles:
+          - "E[S]=λE[X]."
+          - "Var(S)=λE[X²], et non λVar(X)."
+      - titre: "Fréquence binomiale, sévérité fixe"
+        enonce: "100 contrats ont chacun 10 % de probabilité de sinistre; chaque sinistre coûte 5 000 €. Calcule E[S] et Var(S)."
+        raisonnement:
+          - "N~Binomiale(n=100; p=0,1); E[N]=10; Var(N)=9."
+          - "X=5 000 est constant, donc Var(X)=0."
+          - "E[S]=10×5 000=50 000 €."
+          - "Var(S)=9×5 000²=225 000 000 €²; σ=15 000 €."
+        resultat: "Espérance 50 000 €; variance 225 millions €²; écart-type 15 000 €."
+        interpretation: "Avec sévérité fixe, toute la variance de la charge provient de la fréquence."
+        controles:
+          - "Var(X)=0 pour un coût fixe."
+          - "Var(S)=Var(N)(E[X])²."
+      - titre: "Poisson composé avec sévérité discrète"
+        enonce: "N~Poisson(10). Chaque sinistre vaut 1 ou 2 unités, avec probabilité 50 % pour chaque valeur. Calcule E[S] et Var(S)."
+        raisonnement:
+          - "E[X]=(1+2)/2=1,5; E[X²]=(1+4)/2=2,5."
+          - "E[S]=10×1,5=15."
+          - "Var(S)=10×2,5=25; σ=5."
+        resultat: "Espérance 15; variance 25; écart-type 5."
+        interpretation: "La variance agrégée utilise E[X²], qui tient compte de la variabilité des montants."
+        controles:
+          - "Les moments de X sont calculés à partir de ses deux valeurs."
+          - "La variance Poisson composée vaut λE[X²]."
+  exercices_corriges:
+    exercices:
+      - titre: "Fondamental — sévérité fixe"
+        niveau: fondamental
+        enonce: "N~Poisson(20) et chaque sinistre coûte 3 000 €. Calcule E[S], Var(S) et σ_S."
+        corrige:
+          - "E[S]=20×3 000=60 000 €."
+          - "Var(S)=20×3 000²=180 000 000 €²."
+          - "σ_S=√180 000 000≈13 416,41 €."
+        feedback: "Pour une sévérité fixe, E[X²]=c²."
+      - titre: "Intermédiaire — fréquence binomiale et sévérité exponentielle"
+        niveau: intermediaire
+        enonce: "N~Binomiale(n=50; p=10 %). Les sévérités sont exponentielles de moyenne 1 000 €. Calcule E[S] et Var(S)."
+        corrige:
+          - "E[N]=5; Var(N)=4,5; E[X]=1 000; Var(X)=1 000 000."
+          - "E[S]=5×1 000=5 000 €."
+          - "Var(S)=5×1 000 000+4,5×1 000²=9 500 000 €²."
+        feedback: "Utilise la formule générale, car N n'est pas Poisson."
+      - titre: "Avancé — second moment"
+        niveau: avance
+        enonce: "N~Poisson(10); X vaut 1 ou 2 avec probabilités égales. Calcule P(S=0), E[S] et Var(S)."
+        corrige:
+          - "P(S=0)=e^{-10}≈0,0000454."
+          - "E[X]=1,5; E[X²]=2,5."
+          - "E[S]=15; Var(S)=25."
+        feedback: "La probabilité de charge nulle est celle de zéro sinistre si les sévérités sont positives."
+  applications_labs:
+    applications:
+      - titre: "Calculer les moments d'un Poisson composé"
+        contexte: "Un portefeuille fictif suit une fréquence Poisson et des sévérités exponentielles. Les moments agrégés sont calculés à partir des paramètres."
+        objectif: "Calculer E[S], Var(S), σ_S et P(S=0), puis vérifier les identités."
+        outils: [python, excel]
+        entrees:
+          - "λ=50 sinistres attendus."
+          - "Sévérité exponentielle de moyenne θ=2 000 €."
+          - "E[X²]=2θ²."
+        hypotheses:
+          - "N est indépendant des sévérités."
+          - "Les sévérités sont indépendantes, de même loi et strictement positives."
+          - "Le second moment de sévérité est fini."
+        procedure:
+          - "Calculer E[X], Var(X) et E[X²]."
+          - "Appliquer E[S]=λE[X] et Var(S)=λE[X²]."
+          - "Calculer l'écart-type et P(S=0)."
+          - |
+            ```python
+            import math
+
+            lam, theta = 50, 2000
+            ex = theta
+            var_x = theta**2
+            ex2 = var_x + ex**2
+            mean_s = lam * ex
+            var_s = lam * ex2
+            sd_s = math.sqrt(var_s)
+            p_zero = math.exp(-lam)
+            print(mean_s, var_s, sd_s, p_zero)
+            assert mean_s == 100000
+            assert var_s == 400000000
+            assert sd_s == 20000
+            ```
+          - "Interpréter la contribution fréquence et sévérité."
+        sorties:
+          - "Charge totale moyenne."
+          - "Variance et écart-type de la charge."
+          - "Probabilité de charge nulle."
+        validation:
+          - "La variance est λE[X²]."
+          - "La charge nulle est e^{-λ} si les sévérités sont positives."
+          - "Les unités de variance sont €²."
+        limites:
+          - "Le modèle ne représente pas explicitement la dépendance, l'hétérogénéité ni les plafonds contractuels."
+  synthese_references:
+    memo:
+      - "S=Σ_{i=1}^N X_i, fréquence N et sévérité X."
+      - "E[S]=E[N]E[X]."
+      - "Var(S)=E[N]Var(X)+Var(N)(E[X])²."
+      - "Poisson composé : E[S]=λE[X]; Var(S)=λE[X²]."
+      - "Exponentielle moyenne θ : E[X]=θ; Var(X)=θ²; E[X²]=2θ²."
+      - "Si X>0, P(S=0)=P(N=0)=e^{-λ} pour N Poisson."
+      - "Séparer fréquence et sévérité; vérifier l'indépendance."
+    glossaire:
+      - {terme_fr: "Charge agrégée", terme_en: "Aggregate loss", definition: "Sum of claim amounts over a random number of claims."}
+      - {terme_fr: "Fréquence", terme_en: "Claim frequency", definition: "Number of claims during a defined period or exposure."}
+      - {terme_fr: "Sévérité", terme_en: "Claim severity", definition: "Amount paid for one claim."}
+      - {terme_fr: "Poisson composé", terme_en: "Compound Poisson", definition: "Random sum with Poisson claim count and independent severities."}
+      - {terme_fr: "Second moment", terme_en: "Second moment", definition: "Expected square E[X²], not the variance."}
+      - {terme_fr: "Indépendance", terme_en: "Independence", definition: "Frequency and severity do not influence each other in the model."}
+      - {terme_fr: "Fréquence–sévérité", terme_en: "Frequency–severity model", definition: "Separate models for claim count and claim amount."}
+    maitrise:
+      - "I define aggregate loss as a random sum."
+      - "I calculate aggregate expectation by conditioning."
+      - "I use the total variance formula."
+      - "I apply compound Poisson moments."
+      - "I calculate severity moments and aggregate them."
+      - "I explain the model assumptions and limitations."
+    references:
+      - {titre: "Klugman, Panjer & Willmot, Loss Models, aggregate loss chapter", detail: "Random sums, frequency–severity models and compound distributions."}
+      - {titre: "Ross, A First Course in Probability, random sums", detail: "Expectation and variance of random sums."}
+      - {titre: "Society of Actuaries — Exam P Probability", url: "https://www.soa.org/education/exam-req/edu-exam-p-detail/", detail: "Probability exam syllabus."}
+    liens:
+      - {titre: "A2/S04 — Pooling and aggregate risk", cible: "a2/s04"}
+
 etapes:
   - type: quiz
     titre: "Test de positionnement"
