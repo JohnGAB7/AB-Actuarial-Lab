@@ -91,7 +91,7 @@ function sourceUrl(value) {
 }
 // Convert common bare mathematical notation to KaTeX delimiters in prose.
 // Preserve expressions that already use explicit TeX delimiters.
-function inlineNotation (value) => {
+function inlineNotation(value) {
     const pattern = /\b[A-Za-z]\([^()]{1,24}\)\^[A-Za-z0-9]+|\b[A-Za-z]_[A-Za-z0-9]+|\b[A-Za-z0-9)\]}]\^[A-Za-z0-9]+|\b[A-Za-z]\([^()]{1,24}\)/g;
     return String(value ?? "").split(/(\$[^$]*\$|\\\([^)]*\\\))/g).map((part,index) => {
       if (index % 2 === 1) return part;
