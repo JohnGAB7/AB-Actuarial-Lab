@@ -126,7 +126,7 @@ fiche:
           - "E[S]=50×2 000=100 000 €."
           - "Var(S)=50×8 000 000=400 000 000 €²."
           - "σ_S=√400 000 000=20 000 €."
-        resultat: "Mean €100 000; variance €400 million²; standard deviation €20 000."
+        resultat: "Mean 100 000 €; variance 400 million €²; standard deviation 20 000 €."
         interpretation: "Expected loss uses frequency and mean severity; variance uses the second severity moment."
         controles:
           - "E[S]=λE[X]."
@@ -138,7 +138,7 @@ fiche:
           - "X=5 000 is constant, so Var(X)=0."
           - "E[S]=10×5 000=50 000 €."
           - "Var(S)=9×5 000²=225 000 000 €²; σ=15 000 €."
-        resultat: "Mean €50 000; variance €225 million²; standard deviation €15 000."
+        resultat: "Mean 50 000 €; variance 225 million €²; standard deviation 15 000 €."
         interpretation: "With fixed severity, all aggregate variance comes from frequency."
         controles:
           - "Var(X)=0 for a fixed cost."
@@ -159,16 +159,16 @@ fiche:
       - titre: "Fundamental — fixed severity"
         enonce: "N~Poisson(20) and each claim costs €3,000. Calculate E[S], Var(S) and σ_S."
         corrige:
-          - "E[S]=20×3 000=€60 000."
+          - "E[S]=20×3 000=60 000 €."
           - "Var(S)=20×3 000²=180 000 000 €²."
-          - "σ_S=√180 000 000≈€13 416.41."
+          - "σ_S=√180 000 000≈13 416.41 €."
         feedback: "For fixed severity, E[X²]=c²."
       - titre: "Intermediate — binomial frequency and exponential severity"
         enonce: "N~Binomial(n=50; p=10%). Severities are exponential with mean €1,000. Calculate E[S] and Var(S)."
         corrige:
           - "E[N]=5; Var(N)=4.5; E[X]=1 000; Var(X)=1 000 000."
-          - "E[S]=5×1 000=€5 000."
-          - "Var(S)=5×1 000 000+4.5×1 000²=€9 500 000²."
+          - "E[S]=5×1 000=5 000 €."
+          - "Var(S)=5×1 000 000+4.5×1 000²=9 500 000 €²."
         feedback: "Use the general formula because N is not Poisson."
       - titre: "Advanced — second moment"
         enonce: "N~Poisson(10); X is 1 or 2 with equal probabilities. Calculate P(S=0), E[S] and Var(S)."
