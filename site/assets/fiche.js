@@ -65,15 +65,33 @@
     if (content) node.append(content);
     return node;
   };
-  // Materialize common bare mathematical notation in prose, while preserving explicit TeX.
-  const inlineNotation = (value) => {
-    const pattern = /\b[A-Za-z]\([^()]{1,24}\)\^[A-Za-z0-9]+|\b[A-Za-z]_[A-Za-z0-9]+|\b[A-Za-z0-9)\]}]\^[A-Za-z0-9]+|\b[A-Za-z]\([^()]{1,24}\)/g;
-    return String(value ?? "").split(/(\$[^$]*\$|\\\([^)]*\\\))/g).map((part,index) => {
+      // Auto-wrap equation-like fragments in all ordinary text nodes, across every content component.
+  const BARE_MATH = /(?<![\p{L}\d_])(?:[A-Za-zδΔ][\p{L}\d_{}]*|\d+(?:[.,]\d+)?)(?:\s*(?:=|<|>|≤|≥|≈|≠|\+|−|-|×|÷|\/|\^)\s*(?:[A-Za-zδΔ][\p{L}\d_{}]*|\d+(?:[.,]\d+)?|\([^)]*\)))+/gu;
+  function inlineNotation(value) {
+    return String(value ?? "").split(/(\$\$[\s\S]*?\$\$|\$[^$]*\$|\\\([^)]*\\\)|\\\[[\s\S]*?\\\])/g).map((part,index) => {
       if (index % 2 === 1) return part;
-      return part.replace(pattern, (match) => "$" + match + "$");
+      return part.replace(BARE_MATH, (match) => "$" + match.trim() + "$");
     }).join("");
-  };
-  const paragraph = (text) => make("p","",inlineNotation(text));
+  }
+  function prepareMathText(root) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (!node.nodeValue || !node.nodeValue.trim()) continue;
+      if (node.parentElement?.closest("code, pre, script, style, kbd, .katex, .math-rendered")) continue;
+      nodes.push(node);
+    }
+    nodes.forEach(node => {
+      const text = inlineNotation(node.nodeValue);
+      if (text === node.nodeValue) return;
+      const span = document.createElement("span");
+      span.className = "math-notation-source";
+      span.textContent = text;
+      node.replaceWith(span);
+    });
+  }
+const paragraph = (text) => make("p","",inlineNotation(text));
   const formula = (text) => {
     const node = make("div","reference-formula");
     node.setAttribute("aria-label", text);
@@ -82,6 +100,7 @@
     return node;
   };
   const renderMath = (root) => {
+    prepareMathText(root);
     if (window.renderMathInElement) {
       window.renderMathInElement(root,{
         delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false},{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],

@@ -51,9 +51,20 @@ jobs:
       - run: python -m pip install -r requirements.txt
       - run: python tools/construire.py
       - run: npm install --no-save playwright@1.63.0 && npx playwright install --with-deps chromium
-      - run: |
-          (cd _site && python -m http.server 8765 >/dev/null 2>&1 &)
-          sleep 2
+      - name: Serve generated site and wait for readiness
+        run: |
+          python -m http.server 8765 --directory _site > /tmp/site-server.log 2>&1 &
+          echo $! > /tmp/site-server.pid
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8765/a1/s01/index.html >/dev/null; then
+              echo "Site server is ready"
+              break
+            fi
+            sleep 1
+          done
+          curl --fail http://127.0.0.1:8765/a1/s01/index.html >/dev/null
+      - name: Run browser tests
+        run: |
           node tests/navigateur/python_worker.js
           node tests/navigateur/render_security.js
           node tests/navigateur/homepage.js

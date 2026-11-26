@@ -13,7 +13,7 @@ const BASE = process.env.SITE_URL || 'http://localhost:8765/';
     let body = await response.text();
     body = body.replace(
       'À un taux annuel',
-      "<img src=x onerror='window.__xss=1'>À un taux annuel",
+      "<img src=x onerror='window.__xss=1'>À un taux annuel d=i/(1+i)=iv=1-v et e^δ=1+i",
     );
     body = body.replace(
       'Quatre questions avant le cours.',
@@ -35,6 +35,8 @@ const BASE = process.env.SITE_URL || 'http://localhost:8765/';
     question: document.querySelector('#stage h3')?.textContent || '',
     activeElements: document.querySelectorAll('#stage img, #stage svg, #stage script').length,
     xss: window.__xss,
+    mathCount: document.querySelectorAll('#stage .katex').length,
+    mathText: [...document.querySelectorAll('#stage .katex')].map(node => node.textContent).join(' '),
   }));
 
   await page.locator('#stage .opt').first().click();
@@ -59,6 +61,10 @@ const BASE = process.env.SITE_URL || 'http://localhost:8765/';
     xss: window.__xss,
   }));
   await page.locator('#mode-reference').click();
+  const referenceMath = await page.evaluate(() => ({
+    count: document.querySelectorAll('#reference-sheet .katex').length,
+    text: [...document.querySelectorAll('#reference-sheet .katex')].map(node => node.textContent).join(' '),
+  }));
   const referenceSources = await page.evaluate(() => ({
     javascriptLinks: document.querySelectorAll('#reference-sheet a[href^="javascript:"]').length,
     links: document.querySelectorAll('#reference-sheet .reference-reference a').length,
@@ -98,6 +104,8 @@ const BASE = process.env.SITE_URL || 'http://localhost:8765/';
   if (!introAndQuestion.question.includes('À un taux annuel')) failures.push('question text lost');
   if (introAndQuestion.activeElements !== 0) failures.push('active elements inserted from intro/question');
   if (introAndQuestion.xss !== undefined) failures.push('intro/question payload executed');
+  if (introAndQuestion.mathCount < 2) failures.push('bare inline equations in ordinary prose were not rendered');
+  if (!introAndQuestion.mathText.includes('d') || !introAndQuestion.mathText.includes('δ')) failures.push('equation fragments were not rendered with math symbols');
   if (!explanation.text.includes("Le taux d'escompte")) failures.push('explanation text lost');
   if (explanation.activeElements !== 0) failures.push('active elements inserted from explanation');
   if (explanation.xss !== undefined) failures.push('explanation payload executed');
@@ -105,6 +113,7 @@ const BASE = process.env.SITE_URL || 'http://localhost:8765/';
   if (sources.plainSourceLabels !== 2) failures.push('unsafe source labels not retained as plain text');
   if (sources.bold === 0 || sources.italic === 0) failures.push('allowed bold/italic formatting was lost');
   if (sources.xss !== undefined) failures.push('source URL payload executed');
+  if (referenceMath.count === 0) failures.push('reference sheet did not render inline math globally');
   if (referenceSources.javascriptLinks !== 0 || referenceSources.links !== 0) failures.push('unsafe reference-sheet URL became a link');
   if (referenceSources.labels === 0) failures.push('reference-sheet source label was lost');
   if (referenceSources.xss !== undefined) failures.push('reference-sheet source URL payload executed');
@@ -115,7 +124,7 @@ const BASE = process.env.SITE_URL || 'http://localhost:8765/';
   if (english.xss !== undefined) failures.push('English content payload executed');
   if (errors.length) failures.push('page errors: ' + errors.join('; '));
 
-  console.log(JSON.stringify({ introAndQuestion, explanation, sources, english, errors }, null, 2));
+  console.log(JSON.stringify({ introAndQuestion, explanation, referenceMath, sources, english, errors }, null, 2));
   await browser.close();
   if (failures.length) {
     console.error('FAILED:', failures.join('; '));

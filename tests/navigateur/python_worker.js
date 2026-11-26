@@ -20,8 +20,21 @@ const types = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 
   const out = {};
   const errs = []; p.on('pageerror', (e) => errs.push(e.message)); p.on('console', (m) => { if (m.type() === 'error' && !/Refused to connect/.test(m.text())) errs.push('console: ' + m.text()); });
   const setCode = async (code) => p.evaluate((c) => { document.querySelector('.CodeMirror').CodeMirror.setValue(c); }, code);
-  await p.goto(BASE + 'a1/s01/index.html#etape-6'); await p.waitForTimeout(800);
-  const clickRun = () => p.locator('.row .btn').first().click();
+  const response = await p.goto(BASE + 'a1/s01/index.html#etape-6');
+  await p.waitForTimeout(800);
+  const pageDiagnostic = async () => p.evaluate(() => ({
+    url: location.href,
+    title: document.title,
+    stageText: document.querySelector('#stage')?.innerText || null,
+    stageHTML: document.querySelector('#stage')?.innerHTML?.slice(0, 1200) || null,
+    buttons: [...document.querySelectorAll('#stage button')].map(b => ({text:b.innerText, class:b.className, disabled:b.disabled})),
+    scripts: [...document.scripts].map(s => s.src).filter(Boolean),
+  }));
+  if (!await p.locator('#stage .CodeMirror').count()) {
+    console.error('PYTHON_WORKER_PAGE_DIAGNOSTIC', JSON.stringify({status:response?.status(), errors:errs, page:await pageDiagnostic()}));
+    await p.waitForSelector('#stage .CodeMirror', {timeout: 30000});
+  }
+  const clickRun = () => p.locator('#stage .row .btn').first().click();
   const summary = () => p.locator('.res-sum').textContent();
   // 1. skeleton: todo
   await clickRun(); await p.waitForFunction(() => !document.querySelector('.row .btn').disabled, null, { timeout: 60000 });

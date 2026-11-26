@@ -89,14 +89,31 @@ function sourceUrl(value) {
     return null;
   }
 }
-// Convert common bare mathematical notation to KaTeX delimiters in prose.
-// Preserve expressions that already use explicit TeX delimiters.
+// Auto-wrap equation-like fragments in all ordinary text nodes, across every content component.
+const BARE_MATH = /(?<![\p{L}\d_])(?:[A-Za-zδΔ][\p{L}\d_{}]*|\d+(?:[.,]\d+)?)(?:\s*(?:=|<|>|≤|≥|≈|≠|\+|−|-|×|÷|\/|\^)\s*(?:[A-Za-zδΔ][\p{L}\d_{}]*|\d+(?:[.,]\d+)?|\([^)]*\)))+/gu;
 function inlineNotation(value) {
-    const pattern = /\b[A-Za-z]\([^()]{1,24}\)\^[A-Za-z0-9]+|\b[A-Za-z]_[A-Za-z0-9]+|\b[A-Za-z0-9)\]}]\^[A-Za-z0-9]+|\b[A-Za-z]\([^()]{1,24}\)/g;
-    return String(value ?? "").split(/(\$[^$]*\$|\\\([^)]*\\\))/g).map((part,index) => {
-      if (index % 2 === 1) return part;
-      return part.replace(pattern, (match) => "$" + match + "$");
-    }).join("");
+  return String(value ?? "").split(/(\$\$[\s\S]*?\$\$|\$[^$]*\$|\\\([^)]*\\\)|\\\[[\s\S]*?\\\])/g).map((part,index) => {
+    if (index % 2 === 1) return part;
+    return part.replace(BARE_MATH, (match) => "$" + match.trim() + "$");
+  }).join("");
+}
+function prepareMathText(root) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) {
+    const node = walker.currentNode;
+    if (!node.nodeValue || !node.nodeValue.trim()) continue;
+    if (node.parentElement?.closest("code, pre, script, style, kbd, .katex, .math-rendered")) continue;
+    nodes.push(node);
+  }
+  nodes.forEach(node => {
+    const text = inlineNotation(node.nodeValue);
+    if (text === node.nodeValue) return;
+    const span = document.createElement("span");
+    span.className = "math-notation-source";
+    span.textContent = text;
+    node.replaceWith(span);
+  });
 }
 const el = (tag, attrs = {}, ...kids) => {
   const e = document.createElement(tag);
@@ -116,6 +133,7 @@ const N = S.etapes.length;
 const fr = (v, d) => v.toLocaleString(UI.locale, { minimumFractionDigits: d, maximumFractionDigits: d });
 
 function math(node) {
+  prepareMathText(node);
   if (window.renderMathInElement) {
     renderMathInElement(node, {
       delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }],
