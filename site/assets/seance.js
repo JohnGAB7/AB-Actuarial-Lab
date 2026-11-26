@@ -89,15 +89,125 @@ function sourceUrl(value) {
     return null;
   }
 }
-// Convert common bare mathematical notation to KaTeX delimiters in prose.
-// Preserve expressions that already use explicit TeX delimiters.
+// Detect equation-like fragments in ordinary prose, not only explicitly delimited TeX.
+const BARE_MATH = /(?<![\\p{L}\\p{N}_])(?:[A-Za-zδΔ\\p{L}][\\p{L}\\p{N}_{}]*|\\d+(?:[.,]\\d+)?)(?:\\s*(?:=|<|>|≤|≥|≈|≠|∼|∝|\\+|−|-|×|÷|\\/|\\^|\\\\(?:approx|le|ge|neq))\\s*(?:[A-Za-zδΔ\\p{L}][\\p{L}\\p{N}_{}]*(?:\\([^)]*\\))?|\\d+(?:[.,]\\d+)?|\\([^)]*\\))+/gu;
 function inlineNotation(value) {
-    const pattern = /\b[A-Za-z]\([^()]{1,24}\)\^[A-Za-z0-9]+|\b[A-Za-z]_[A-Za-z0-9]+|\b[A-Za-z0-9)\]}]\^[A-Za-z0-9]+|\b[A-Za-z]\([^()]{1,24}\)/g;
-    return String(value ?? "").split(/(\$[^$]*\$|\\\([^)]*\\\))/g).map((part,index) => {
-      if (index % 2 === 1) return part;
-      return part.replace(pattern, (match) => "$" + match + "$");
-    }).join("");
+  return String(value ?? "").split(/(\\$\\$[^$]*\\$\\$|\\$[^$]*\\$|\\\\\\([^)]*\\\\\\)|\\\\\\[[^]*?\\\\\\])/g).map((part,index) => {
+    if (index % 2 === 1) return part;
+    return part.replace(BARE_MATH, (match) => `${match.trim()}// Affiche une séance une étape à la fois. Le contenu vient du JSON intégré à la page (généré depuis contenus/*.yaml).
+// Formules : KaTeX. Éditeur : CodeMirror 5. Python : Pyodide, chargé au premier lancement des tests.
+const S = JSON.parse(document.getElementById("seance").textContent);
+// Interface en français ou en anglais selon <html lang>. Les textes des séances viennent déjà traduits du JSON.
+const LANG = document.documentElement.lang === "en" ? "en" : "fr";
+const UI = {
+  fr: {
+    step: (j, t) => `Étape ${j} : ${t}`, stepOf: (i, n, m) => `Étape ${i} sur ${n} · ${m} min`,
+    prev: "← Précédente", next: "Suivante →", finish: "Terminer",
+    labAria: "Force de mortalité de la table MK selon l'âge, échelle logarithmique", age: "Âge", years: " ans",
+    labEyebrow: "Manipule", labHint: "Fais glisser l'âge : la table MK de ton simulateur répond.",
+    videoSoon: "Vidéo en préparation", subtitles: "Français", play: "Regarder", otherLang: "en anglais", job: "Dans ton métier", further: "Pour aller plus loin",
+    recap: "Rappel", example: "Exemple", pitfall: "Piège", right: "Juste.", wrong: "Pas tout à fait.",
+    score: (k, n) => `${k} sur ${n}`, scoreLbl: "Score",
+    check: "Vérifier", toFill: "à remplir", good: "juste", bad: "à revoir", solution: "Voir la solution", placeholder: "0,0000",
+    codeAria: "Ton code Python", runHint: "Lance les tests quand ta fonction est prête.", run: "Lancer les tests",
+    reset: "Code de départ", stop: "Arrêter", loading: "Chargement de Python… (quelques secondes la première fois)", running: "Exécution…",
+    todo: "fonction pas encore écrite", unexpected: "valeur inattendue",
+    allPass: (n) => `Les ${n} tests passent. Bravo.`, somePass: (k, n) => `${k} test${k > 1 ? "s" : ""} sur ${n} passe${k > 1 ? "nt" : ""}.`,
+    repo: "Même exercice dans le dépôt : ", repoEnd: ". Les tests y tournent aussi sur GitHub Actions.",
+    flip: "Voir l'anglais →",
+    stopped: "Exécution arrêtée. Python se rechargera au prochain lancement.",
+    timeout: (s) => `Arrêt après ${s} secondes : boucle infinie ou calcul trop long ?`,
+    loadFail: "Python n'a pas pu se charger. Vérifie ta connexion, ou lance les tests du dépôt avec pytest.",
+    badReply: "Réponse invalide du moteur Python.", unreadable: "Réponse illisible du moteur Python.",
+    loadTimeout: (s) => `Le chargement de Python a dépassé ${s} secondes.`, cantSend: "Impossible d'envoyer le code au moteur Python.",
+    locale: "fr-BE",
+  },
+  en: {
+    step: (j, t) => `Step ${j}: ${t}`, stepOf: (i, n, m) => `Step ${i} of ${n} · ${m} min`,
+    prev: "← Previous", next: "Next →", finish: "Finish",
+    labAria: "Force of mortality of the MK table by age, log scale", age: "Age", years: " years",
+    labEyebrow: "Try it", labHint: "Drag the age: the MK table from your simulator responds.",
+    videoSoon: "Video in preparation", subtitles: "English", play: "Watch", otherLang: "in French", job: "On the job", further: "Further reading",
+    recap: "Recap", example: "Example", pitfall: "Pitfall", right: "Correct.", wrong: "Not quite.",
+    score: (k, n) => `${k} of ${n}`, scoreLbl: "Score",
+    check: "Check", toFill: "to fill in", good: "correct", bad: "try again", solution: "Show the solution", placeholder: "0.0000",
+    codeAria: "Your Python code", runHint: "Run the tests when your function is ready.", run: "Run the tests",
+    reset: "Starter code", stop: "Stop", loading: "Loading Python… (a few seconds the first time)", running: "Running…",
+    todo: "function not written yet", unexpected: "unexpected value",
+    allPass: (n) => `All ${n} tests pass. Well done.`, somePass: (k, n) => `${k} of ${n} test${n > 1 ? "s" : ""} pass${k === 1 ? "es" : ""}.`,
+    repo: "Same exercise in the repository: ", repoEnd: ". The tests also run there on GitHub Actions.",
+    flip: "See the French →",
+    stopped: "Run stopped. Python will reload next time.",
+    timeout: (s) => `Stopped after ${s} seconds: infinite loop or a computation that is too long?`,
+    loadFail: "Python could not load. Check your connection, or run the repository tests with pytest.",
+    badReply: "Invalid reply from the Python engine.", unreadable: "Unreadable reply from the Python engine.",
+    loadTimeout: (s) => `Loading Python took more than ${s} seconds.`, cantSend: "Could not send the code to the Python engine.",
+    locale: "en-GB",
+  },
+}[LANG];
+const SCRIPT_URL = document.currentScript ? document.currentScript.src : location.href;
+const $ = (s, r = document) => r.querySelector(s);
+
+// YAML text is untrusted at the rendering boundary. Keep only the small inline
+// formatting vocabulary used by the course; discard attributes and active nodes.
+const RICH_TAGS = new Set(["B", "STRONG", "I", "EM", "SUB", "SUP", "CODE", "BR"]);
+const DROP_TAGS = new Set([
+  "SCRIPT", "STYLE", "SVG", "MATH", "IFRAME", "OBJECT", "EMBED", "TEMPLATE",
+  "NOSCRIPT", "IMG", "VIDEO", "AUDIO", "FORM", "INPUT", "LINK", "META", "BASE",
+]);
+function rich(value) {
+  const template = document.createElement("template");
+  template.innerHTML = String(value ?? "").replace(/(<(?:strong|b)>[A-Z]<\/(?:strong|b)>)\s*[-–—]\s*(?=<)/g, "$1 ");
+  const fragment = document.createDocumentFragment();
+  const copy = (node, parent) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      parent.append(document.createTextNode(node.nodeValue || ""));
+      return;
+    }
+    if (node.nodeType !== Node.ELEMENT_NODE || DROP_TAGS.has(node.tagName)) return;
+    if (RICH_TAGS.has(node.tagName)) {
+      const safe = document.createElement(node.tagName.toLowerCase());
+      parent.append(safe);
+      node.childNodes.forEach((child) => copy(child, safe));
+      return;
+    }
+    node.childNodes.forEach((child) => copy(child, parent));
+  };
+  template.content.childNodes.forEach((node) => copy(node, fragment));
+  return fragment;
 }
+function sourceUrl(value) {
+  if (typeof value !== "string" || !value.trim()) return null;
+  try {
+    const url = new URL(value, location.href);
+    return url.protocol === "https:" && !url.username && !url.password ? url.href : null;
+  } catch {
+    return null;
+  }
+}
+);
+  }).join("");
+}
+function prepareMathText(root) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) {
+    const node = walker.currentNode;
+    if (!node.nodeValue || !node.nodeValue.trim()) continue;
+    if (node.parentElement?.closest("code, pre, script, style, kbd, .katex, .math-rendered")) continue;
+    nodes.push(node);
+  }
+  nodes.forEach(node => {
+    const text = inlineNotation(node.nodeValue);
+    if (text !== node.nodeValue) {
+      const span = document.createElement("span");
+      span.className = "math-notation-source";
+      span.innerHTML = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+      node.replaceWith(span);
+    }
+  });
+}
+
 const el = (tag, attrs = {}, ...kids) => {
   const e = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) {
@@ -116,6 +226,7 @@ const N = S.etapes.length;
 const fr = (v, d) => v.toLocaleString(UI.locale, { minimumFractionDigits: d, maximumFractionDigits: d });
 
 function math(node) {
+  prepareMathText(node);
   if (window.renderMathInElement) {
     renderMathInElement(node, {
       delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }],
