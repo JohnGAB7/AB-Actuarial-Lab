@@ -486,6 +486,8 @@ etapes:
       - {nom: 'Les parts de capital somment au prêt', expr: "abs(sum(r[2] for r in amortization_schedule(25000, 12, 0.035)) - 25000) < 1e-6"}
       - {nom: 'Taux de rendement interne de 13,066 %', expr: "abs(irr({0: -1000, 1: 600, 2: 600}) - 0.130662) < 1e-6"}
       - {nom: 'Le taux de rendement interne d''un prêt est son taux', expr: "abs(irr({0: -10000, **{k: level_payment(10000, 5, 0.06) for k in range(1, 6)}}) - 0.06) < 1e-8"}
+      - {nom: 'Annuité à taux nul : capital divisé par n', expr: "level_payment(12000, 6, 0.0) == 2000"}
+      - {nom: 'Amortissement à taux nul : principal constant et solde final nul', expr: "all(abs(row[1]) < 1e-12 and abs(row[2] - 2000) < 1e-12 for row in amortization_schedule(12000, 6, 0.0)) and abs(amortization_schedule(12000, 6, 0.0)[-1][3]) < 1e-12"}
 
   - type: vocabulaire
     titre: "Vocabulary"
