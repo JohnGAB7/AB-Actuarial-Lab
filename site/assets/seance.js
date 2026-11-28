@@ -136,7 +136,7 @@ function math(node) {
   prepareMathText(node);
   if (window.renderMathInElement) {
     renderMathInElement(node, {
-      delimiters: [{ left: "\\[", right: "\\]", display: true }, { left: "\\(", right: "\\)", display: false }, { left: "$", right: "$", display: true }, { left: "$", right: "$", display: false }],
+      delimiters: [{ left: "\\[", right: "\\]", display: true }, { left: "\\(", right: "\\)", display: false }, { left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }],
       throwOnError: false,
     });
   }
