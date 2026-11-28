@@ -53,7 +53,7 @@ fiche:
       - titre: "6. Geometric-sum derivation and continuous limit"
         contenu: "For fractional payments in arrears, the sum is (1/m)Σ_{k=1}^{mn}v^(k/m). Its ratio is v^(1/m). The geometric sum is v^(1/m)(1-v^n)/[m(1-v^(1/m))], equivalently (1-v^n)/i^(m), since i^(m)=m(v^(-1/m)-1). For payments in advance, the index begins at k=0 and the denominator becomes d^(m)/m, where d^(m)=m(1-v^(1/m)). As m tends to infinity, payments become continuous and the present value is the integral of v^t over [0,n]."
         formules:
-          - {formule: "a^{(m)}_{\\overline{n}|}=\\frac{1}{m}\\sum_{k=1}^{mn}v^{k/m}=\\frac{v^{1/m}(1-v^n)}{m(1-v^{1/m})}=\\frac{1-v^n}{m(v^{-1/m}-1)}}", explication: "The geometric sum is now shown with the correct factor v^(1/m), and its denominator is identified with the nominal interest rate i^(m)."}
+          - {formule: "a^{(m)}_{\\overline{n}|}=\\frac{1}{m}\\sum_{k=1}^{mn}v^{k/m}=\\frac{v^{1/m}(1-v^n)}{m(1-v^{1/m})}=\\frac{1-v^n}{m(v^{-1/m}-1)}", explication: "The geometric sum is now shown with the correct factor v^(1/m), and its denominator is identified with the nominal interest rate i^(m)."}
           - {formule: "m(v^{-1/m}-1)=i^{(m)},\\qquad m(1-v^{1/m})=d^{(m)}", explication: "This identity follows from v^(1/m)=(1+i)^(-1/m) and defines the equivalent nominal interest rate."}
           - {formule: "\\bar{a}_{\\overline{n}|}=\\int_0^n v^t\\,dt=\\frac{1-v^n}{\\delta}", explication: "The value of a continuous annuity with rate 1 per year is the limit of fractional payments; δ=ln(1+i)."}
       - titre: "7. Assumptions, limitations and common traps"
