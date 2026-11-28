@@ -11,7 +11,8 @@
   function wrapNotation(value) {
     return String(value || "").split(DELIMITED).map((part, index) => {
       if (index % 2) return part;
-      return part.replace(BARE_EQUATION, (match) => "$" + match.trim() + "$")
+      // A bare fragment becomes math only with a relation or a product: "01 / 24" or "LEARN / MODEL" stays text.
+      return part.replace(BARE_EQUATION, (match) => (/[=<>≤≥≈≠×^]|\\cdot|\\times/.test(match) ? "$" + match.trim() + "$" : match))
         .replace(BARE_INDEXED, (match) => "$" + match.trim() + "$");
     }).join("");
   }
