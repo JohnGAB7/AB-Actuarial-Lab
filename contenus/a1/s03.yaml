@@ -427,13 +427,71 @@ etapes:
           """First payment 1 at time 1, then growing by g a year; n payments in all."""
           raise NotImplementedError
     tests:
-      - {nom: '$s_{\overline{10}|}$ vaut 12,57789 à 5 %', expr: "abs(accumulated_value(10, 0.05) - 12.57789) < 0.00001"}
-      - {nom: '$(Ia)_{\overline{10}|}$ vaut 39,37378 à 5 %', expr: "abs(increasing_annuity(10, 0.05) - 39.37378) < 0.00001"}
-      - {nom: '$(Da)_{\overline{10}|}$ vaut 45,56530 à 5 %', expr: "abs(decreasing_annuity(10, 0.05) - 45.56530) < 0.00001"}
-      - {nom: '$(Ia) + (Da) = (n+1)\,a_{\overline{n}|}$', expr: "abs(increasing_annuity(25, 0.03) + decreasing_annuity(25, 0.03) - 26 * (1 - 1.03 ** -25) / 0.03) < 1e-9"}
-      - {nom: 'Géométrique à 2 % : 8,38811', expr: "abs(geometric_annuity(10, 0.05, 0.02) - 8.38811) < 0.00001"}
-      - {nom: 'Cas $g = i$ : $n\,v
+      - {nom: '$s_{\\overline{10}|}$ vaut 12,57789 à 5 %', expr: "abs(accumulated_value(10, 0.05) - 12.57789) < 0.00001"}
+      - {nom: '$(Ia)_{\\overline{10}|}$ vaut 39,37378 à 5 %', expr: "abs(increasing_annuity(10, 0.05) - 39.37378) < 0.00001"}
+      - {nom: '$(Da)_{\\overline{10}|}$ vaut 45,56530 à 5 %', expr: "abs(decreasing_annuity(10, 0.05) - 45.56530) < 0.00001"}
+      - {nom: '$(Ia) + (Da) = (n+1)\\,a_{\\overline{n}|}
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Valeur accumulée", "accumulated value", "The accumulated value of the deposits after ten years is 12,578 euros."]
+      - ["Perpétuité", "perpetuity", "A perpetuity of 1 is worth one over i."]
+      - ["Annuité croissante", "increasing annuity", "The benefit follows an increasing annuity of one unit a year."]
+      - ["Annuité décroissante", "decreasing annuity", "Term insurance on a loan often looks like a decreasing annuity."]
+      - ["Annuité géométrique", "geometric annuity, compound increasing annuity", "Indexed pensions are valued as a geometric annuity."]
+      - ["Taux d'indexation", "indexation rate, cost-of-living adjustment", "A 2% indexation rate increases the liability significantly."]
+, expr: "abs(geometric_annuity(10, 0.05, 0.05) - 10 / 1.05) < 1e-9"}
+      - {nom: 'Valeur accumulée à taux nul', expr: "accumulated_value(10, 0.0) == 10"}
+      - {nom: 'Annuités arithmétiques à taux nul', expr: "increasing_annuity(10, 0.0) == 55 and decreasing_annuity(10, 0.0) == 55"}
+      - {nom: 'Annuité géométrique à taux et croissance nuls', expr: "geometric_annuity(10, 0.0, 0.0) == 10"}
 
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Valeur accumulée", "accumulated value", "The accumulated value of the deposits after ten years is 12,578 euros."]
+      - ["Perpétuité", "perpetuity", "A perpetuity of 1 is worth one over i."]
+      - ["Annuité croissante", "increasing annuity", "The benefit follows an increasing annuity of one unit a year."]
+      - ["Annuité décroissante", "decreasing annuity", "Term insurance on a loan often looks like a decreasing annuity."]
+      - ["Annuité géométrique", "geometric annuity, compound increasing annuity", "Indexed pensions are valued as a geometric annuity."]
+      - ["Taux d'indexation", "indexation rate, cost-of-living adjustment", "A 2% indexation rate increases the liability significantly."]
+, expr: "abs(increasing_annuity(25, 0.03) + decreasing_annuity(25, 0.03) - 26 * (1 - 1.03 ** -25) / 0.03) < 1e-9"}
+      - {nom: 'Géométrique à 2 % : 8,38811', expr: "abs(geometric_annuity(10, 0.05, 0.02) - 8.38811) < 0.00001"}
+      - {nom: 'Cas $g = i$ : $n\\,v
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Valeur accumulée", "accumulated value", "The accumulated value of the deposits after ten years is 12,578 euros."]
+      - ["Perpétuité", "perpetuity", "A perpetuity of 1 is worth one over i."]
+      - ["Annuité croissante", "increasing annuity", "The benefit follows an increasing annuity of one unit a year."]
+      - ["Annuité décroissante", "decreasing annuity", "Term insurance on a loan often looks like a decreasing annuity."]
+      - ["Annuité géométrique", "geometric annuity, compound increasing annuity", "Indexed pensions are valued as a geometric annuity."]
+      - ["Taux d'indexation", "indexation rate, cost-of-living adjustment", "A 2% indexation rate increases the liability significantly."]
+, expr: "abs(geometric_annuity(10, 0.05, 0.05) - 10 / 1.05) < 1e-9"}
+      - {nom: 'Valeur accumulée à taux nul', expr: "accumulated_value(10, 0.0) == 10"}
+      - {nom: 'Annuités arithmétiques à taux nul', expr: "increasing_annuity(10, 0.0) == 55 and decreasing_annuity(10, 0.0) == 55"}
+      - {nom: 'Annuité géométrique à taux et croissance nuls', expr: "geometric_annuity(10, 0.0, 0.0) == 10"}
+
+  - type: vocabulaire
+    titre: "Vocabulary"
+    minutes: 1
+    intro: "Clique sur une carte : le terme anglais et une phrase d'entretien d'embauche."
+    cartes:
+      - ["Valeur accumulée", "accumulated value", "The accumulated value of the deposits after ten years is 12,578 euros."]
+      - ["Perpétuité", "perpetuity", "A perpetuity of 1 is worth one over i."]
+      - ["Annuité croissante", "increasing annuity", "The benefit follows an increasing annuity of one unit a year."]
+      - ["Annuité décroissante", "decreasing annuity", "Term insurance on a loan often looks like a decreasing annuity."]
+      - ["Annuité géométrique", "geometric annuity, compound increasing annuity", "Indexed pensions are valued as a geometric annuity."]
+      - ["Taux d'indexation", "indexation rate, cost-of-living adjustment", "A 2% indexation rate increases the liability significantly."]
+, expr: "abs(geometric_annuity(10, 0.05, 0.05) - 10 / 1.05) < 1e-9"}
+      - {nom: 'Valeur accumulée à taux nul', expr: "accumulated_value(10, 0.0) == 10"}
+      - {nom: 'Annuités arithmétiques à taux nul', expr: "increasing_annuity(10, 0.0) == 55 and decreasing_annuity(10, 0.0) == 55"}
+      - {nom: 'Annuité géométrique à taux et croissance nuls', expr: "geometric_annuity(10, 0.0, 0.0) == 10"}
   - type: vocabulaire
     titre: "Vocabulary"
     minutes: 1
