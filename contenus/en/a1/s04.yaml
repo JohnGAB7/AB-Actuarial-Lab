@@ -383,6 +383,5 @@ etapes:
       - {nom: 'The internal rate of return of a loan is its rate'}
       - {nom: 'Zero-rate payment: principal divided by n'}
       - {nom: 'Zero-rate amortization: constant principal and zero final balance'}
-
   - titre: "Vocabulary"
     intro: "Tap a card: the French term and a job-interview sentence."
