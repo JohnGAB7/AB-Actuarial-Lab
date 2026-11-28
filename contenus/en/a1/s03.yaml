@@ -338,7 +338,14 @@ etapes:
       - {nom: '$(Da)_{\overline{10}|}$ is 45.56530 at 5%'}
       - {nom: '$(Ia) + (Da) = (n+1)\,a_{\overline{n}|}$'}
       - {nom: 'Geometric at 2%: 8.38811'}
-      - {nom: 'Case $g = i$: $n\,v$'}
+      - {nom: 'Case $g = i$: $n\,v
+
+  - titre: "Vocabulary"
+    intro: "Tap a card: the French term and a job-interview sentence."
+}
+      - {nom: 'Accumulated value at zero interest'}
+      - {nom: 'Arithmetic annuities at zero interest'}
+      - {nom: 'Geometric annuity with zero interest and growth'}
 
   - titre: "Vocabulary"
     intro: "Tap a card: the French term and a job-interview sentence."
