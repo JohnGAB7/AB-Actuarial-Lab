@@ -12,6 +12,214 @@ actu_basics:
   accroche_fr: "Huit sinistres observés : que peut-on dire de tous les autres ?"
   accroche_en: "Eight claims observed: what can we say about all the others?"
 
+fiche:
+  statut: prete
+  vue_ensemble:
+    question: "Comment passer de quelques sinistres observés à une loi de sinistres utilisable ?"
+    pourquoi: "L'actuaire n'observe jamais la vraie loi des sinistres, seulement un échantillon. Pour tarifer ou provisionner, il doit estimer des paramètres et dire à quel point ces estimations sont fiables. La méthode des moments est la façon la plus directe de le faire."
+    objectifs:
+      - "Distinguer paramètre, estimateur et estimation."
+      - "Juger un estimateur par son biais, sa variance et son erreur quadratique moyenne."
+      - "Calculer la moyenne et la variance empiriques, et l'erreur type de la moyenne."
+      - "Ajuster une loi exponentielle et une loi gamma par la méthode des moments."
+      - "Expliquer pourquoi peu de sinistres donnent une estimation imprécise."
+    prerequis:
+      - "Espérance et variance (A2)."
+      - "Lois exponentielle et gamma."
+    carte:
+      - "Estimateur : formule appliquée à un échantillon aléatoire."
+      - "Biais : E[θ̂] − θ."
+      - "EQM = variance + biais²."
+      - "s² divise par n − 1 ; se(x̄) = s / √n."
+      - "Moments : moyenne et variance théoriques = observées."
+      - "Gamma : θ̂ = σ̂² / x̄ et α̂ = x̄² / σ̂²."
+    duree_minutes: 40
+  cours_complet:
+    sections:
+      - titre: "1. Paramètre, estimateur, estimation"
+        contenu: "Le paramètre θ est une caractéristique fixe et inconnue de la loi. Un estimateur θ̂ est une formule appliquée à l'échantillon : comme l'échantillon est aléatoire, l'estimateur est une variable aléatoire. L'estimation est la valeur obtenue sur les données observées."
+        formules:
+          - formule: "\\hat{\\theta}=g(X_1,\\dots,X_n)"
+            explication: "Un estimateur est une fonction de l'échantillon."
+      - titre: "2. Biais, variance et erreur quadratique moyenne"
+        contenu: "Un estimateur sans biais est juste en moyenne sur tous les échantillons possibles. Mais un estimateur sans biais peut être très dispersé. L'erreur quadratique moyenne combine les deux défauts : un léger biais peut valoir la peine s'il réduit beaucoup la variance."
+        formules:
+          - formule: "\\text{biais}(\\hat{\\theta})=E[\\hat{\\theta}]-\\theta"
+            explication: "Écart moyen à la vraie valeur."
+          - formule: "\\text{EQM}(\\hat{\\theta})=\\operatorname{Var}(\\hat{\\theta})+\\text{biais}(\\hat{\\theta})^2"
+            explication: "Erreur quadratique moyenne."
+      - titre: "3. Moyenne et variance empiriques"
+        contenu: "La moyenne empirique estime sans biais l'espérance. La variance empirique divise par n − 1 : les écarts sont mesurés à la moyenne de l'échantillon, qui colle aux données, et diviser par n sous-estimerait la variance en moyenne."
+        formules:
+          - formule: "\\bar{X}=\\frac{1}{n}\\sum_{i=1}^{n}X_i"
+            explication: "Moyenne empirique, sans biais pour E[X]."
+          - formule: "s^2=\\frac{1}{n-1}\\sum_{i=1}^{n}(X_i-\\bar{X})^2"
+            explication: "Variance empirique, sans biais pour Var(X)."
+          - formule: "E\\Big[\\tfrac{1}{n}\\sum (X_i-\\bar{X})^2\\Big]=\\tfrac{n-1}{n}\\,\\sigma^2"
+            explication: "Diviser par n donne un estimateur biaisé vers le bas."
+      - titre: "4. Erreur type"
+        contenu: "L'erreur type est l'écart-type d'un estimateur : elle dit de combien l'estimation varierait d'un échantillon à l'autre. Pour la moyenne, elle décroît comme 1/√n : diviser l'erreur type par 2 demande 4 fois plus de données."
+        formules:
+          - formule: "\\operatorname{se}(\\bar{X})=\\frac{s}{\\sqrt{n}}"
+            explication: "Erreur type de la moyenne empirique."
+      - titre: "5. La méthode des moments"
+        contenu: "On écrit autant d'équations que de paramètres en égalant les moments théoriques de la loi aux moments de l'échantillon, puis on résout. Par convention, la variance de l'échantillon y est divisée par n, notée σ̂²."
+        formules:
+          - formule: "E[X]=\\theta\\;\\Rightarrow\\;\\hat{\\theta}=\\bar{x}"
+            explication: "Exponentielle : un paramètre, une équation."
+          - formule: "\\alpha\\theta=\\bar{x},\\quad \\alpha\\theta^2=\\hat{\\sigma}^2\\;\\Rightarrow\\;\\hat{\\theta}=\\frac{\\hat{\\sigma}^2}{\\bar{x}},\\quad \\hat{\\alpha}=\\frac{\\bar{x}^2}{\\hat{\\sigma}^2}"
+            explication: "Gamma : deux paramètres, deux équations."
+      - titre: "6. Choisir entre deux lois"
+        contenu: "L'exponentielle impose un écart-type égal à la moyenne. Si l'écart-type observé est nettement plus petit, une gamma avec α > 1 colle mieux ; s'il est plus grand, il faut une loi à queue plus épaisse. Les tests d'adéquation de la séance A2b.04 rendent cette comparaison rigoureuse."
+        formules:
+          - formule: "\\text{exponentielle : } \\frac{\\sigma}{\\mu}=1,\\qquad \\text{gamma : } \\frac{\\sigma}{\\mu}=\\frac{1}{\\sqrt{\\alpha}}"
+            explication: "Coefficient de variation de chaque loi."
+      - titre: "7. Limites"
+        contenu: "La méthode des moments est simple et donne de bons points de départ, mais elle est souvent moins précise que le maximum de vraisemblance, surtout pour les lois à queue épaisse dont les moments élevés sont instables. Avec peu de sinistres, l'erreur type est grande : c'est l'idée de la crédibilité."
+        formules:
+          - formule: "\\operatorname{se}(\\bar{X})\\propto\\frac{1}{\\sqrt{n}}"
+            explication: "La précision ne croît qu'avec la racine de la taille de l'échantillon."
+  methodes:
+    methodes:
+      - titre: "Résumer un échantillon de sinistres"
+        quand_utiliser: "On dispose de n montants observés et on veut leur centre, leur dispersion et la précision de la moyenne."
+        etapes:
+          - "Calculer x̄ = Σ x_i / n."
+          - "Calculer la somme des carrés des écarts Σ (x_i − x̄)²."
+          - "Diviser par n − 1 pour s², puis prendre la racine pour s."
+          - "Calculer l'erreur type s / √n."
+        controles:
+          - "s² est positif, et nul seulement si toutes les valeurs sont égales."
+          - "L'erreur type est plus petite que s dès que n > 1."
+        erreurs:
+          - "Diviser par n au lieu de n − 1 pour s²."
+          - "Prendre s pour la précision de la moyenne."
+      - titre: "Ajuster une gamma par les moments"
+        quand_utiliser: "La sévérité est positive et asymétrique, et on veut deux paramètres simples à obtenir."
+        etapes:
+          - "Calculer x̄ et σ̂² = Σ (x_i − x̄)² / n."
+          - "Poser θ̂ = σ̂² / x̄."
+          - "Poser α̂ = x̄² / σ̂²."
+        controles:
+          - "α̂ θ̂ = x̄ : la moyenne ajustée reproduit la moyenne observée."
+          - "α̂ θ̂² = σ̂² : la variance ajustée reproduit σ̂²."
+        erreurs:
+          - "Inverser α̂ et 1 / α̂."
+          - "Mélanger s² et σ̂² dans les deux équations."
+  exemples_guides:
+    exemples:
+      - titre: "Huit sinistres : moyenne, dispersion, erreur type"
+        enonce: "Montants fictifs (€) : 1 200, 800, 3 500, 600, 2 100, 950, 1 700, 4 200. Calcule x̄, s et l'erreur type de x̄."
+        raisonnement:
+          - "Somme 15 050, donc x̄ = 15 050 / 8 = 1 881,25 €."
+          - "Σ (x_i − x̄)² = 12 219 687,5."
+          - "s² = 12 219 687,5 / 7 = 1 745 669,64, donc s = 1 321,24 €."
+          - "se(x̄) = 1 321,24 / √8 = 467,13 €."
+        resultat: "x̄ = 1 881,25 €, s = 1 321,24 € et se(x̄) = 467,13 €."
+        interpretation: "L'erreur type vaut un quart de la moyenne : avec 8 sinistres, la moyenne est encore très incertaine."
+        controles:
+          - "La médiane, 1 450 €, est sous la moyenne : la queue à droite tire la moyenne vers le haut."
+          - "Diviser par 7 au lieu de 8 augmente la variance de 14,3 %."
+      - titre: "Gamma par la méthode des moments"
+        enonce: "Même échantillon. Ajuste une loi gamma par la méthode des moments."
+        raisonnement:
+          - "σ̂² = 12 219 687,5 / 8 = 1 527 460,94."
+          - "θ̂ = 1 527 460,94 / 1 881,25 = 811,94 €."
+          - "α̂ = 1 881,25² / 1 527 460,94 = 3 539 101,56 / 1 527 460,94 = 2,3170."
+        resultat: "α̂ = 2,3170 et θ̂ = 811,94 €."
+        interpretation: "Avec α̂ > 1, la densité a une forme de cloche asymétrique : elle colle mieux que l'exponentielle, dont l'écart-type égalerait la moyenne."
+        controles:
+          - "α̂ θ̂ = 2,3170 × 811,94 = 1 881,25."
+          - "L'écart-type observé, 1 321 €, est bien plus petit que la moyenne."
+  exercices_corriges:
+    exercices:
+      - titre: "Fondamental — petit échantillon"
+        niveau: fondamental
+        enonce: "Observations : 3, 7, 1, 9, 4. Calcule x̄, s² et l'erreur type de x̄."
+        corrige:
+          - "x̄ = 24 / 5 = 4,8."
+          - "Σ (x_i − x̄)² = 40,8, donc s² = 40,8 / 4 = 10,2."
+          - "se(x̄) = √(10,2 / 5) = 1,43."
+        feedback: "Avec n − 1 = 4 au dénominateur, s² vaut 10,2 ; diviser par 5 donnerait 8,16, biaisé vers le bas."
+      - titre: "Intermédiaire — gamma à partir de deux moments"
+        niveau: intermediaire
+        enonce: "Un portefeuille a une sévérité moyenne de 1 000 € et une variance (divisée par n) de 500 000. Ajuste une gamma par les moments."
+        corrige:
+          - "θ̂ = 500 000 / 1 000 = 500 €."
+          - "α̂ = 1 000² / 500 000 = 2."
+        feedback: "Vérifie : α̂ θ̂ = 1 000 et α̂ θ̂² = 500 000."
+      - titre: "Avancé — taille d'échantillon"
+        niveau: avance
+        enonce: "Avec 8 sinistres, l'erreur type de la moyenne vaut 467 €. Combien de sinistres de même dispersion faut-il pour l'abaisser vers 234 € ?"
+        corrige:
+          - "L'erreur type décroît comme 1 / √n."
+          - "Pour la diviser par 2, il faut 4 fois plus de sinistres, soit 32."
+          - "1 321,24 / √32 = 233,56 €."
+        feedback: "Changer de convention de calcul ne rend pas les données plus informatives : seul n compte."
+  applications_labs:
+    applications:
+      - titre: "Estimer une sévérité gamma"
+        contexte: "Un échantillon fictif de 8 sinistres sert à ajuster une loi de sévérité pour la tarification."
+        objectif: "Calculer x̄, s, l'erreur type et les paramètres gamma par la méthode des moments, puis vérifier les identités."
+        outils: [python, excel]
+        entrees:
+          - "Montants : 1 200, 800, 3 500, 600, 2 100, 950, 1 700, 4 200 €."
+        hypotheses:
+          - "Sinistres indépendants et de même loi."
+          - "Sévérité gamma."
+        procedure:
+          - "Calculer les moments de l'échantillon."
+          - "Résoudre les deux équations des moments."
+          - |
+            ```python
+            import math
+
+            xs = [1200, 800, 3500, 600, 2100, 950, 1700, 4200]
+            n = len(xs)
+            mean = sum(xs) / n
+            ss = sum((x - mean) ** 2 for x in xs)
+            s = math.sqrt(ss / (n - 1))
+            se = s / math.sqrt(n)
+            var_n = ss / n
+            alpha, theta = mean**2 / var_n, var_n / mean
+            print(round(mean, 2), round(s, 2), round(se, 2), round(alpha, 4), round(theta, 2))
+            assert abs(alpha * theta - mean) < 1e-9
+            ```
+          - "Comparer l'écart-type observé à la moyenne pour choisir entre exponentielle et gamma."
+        sorties:
+          - "Moyenne, écart-type et erreur type."
+          - "Paramètres gamma α̂ et θ̂."
+        validation:
+          - "α̂ θ̂ = x̄ et α̂ θ̂² = σ̂²."
+          - "se(x̄) = s / √n."
+        limites:
+          - "Huit sinistres ne disent presque rien de la queue de la loi."
+  synthese_references:
+    memo:
+      - "Un estimateur est une variable aléatoire ; on le juge par son biais et sa variance."
+      - "EQM = variance + biais²."
+      - "s² divise par n − 1 ; se(x̄) = s / √n."
+      - "Méthode des moments : égaler moments théoriques et observés."
+      - "Exponentielle : θ̂ = x̄. Gamma : θ̂ = σ̂² / x̄, α̂ = x̄² / σ̂²."
+      - "Diviser l'erreur type par 2 demande 4 fois plus de données."
+    glossaire:
+      - {terme_fr: "Échantillon", terme_en: "Sample", definition: "Observed data drawn from an unknown distribution."}
+      - {terme_fr: "Estimateur", terme_en: "Estimator", definition: "Formula applied to a random sample to estimate a parameter."}
+      - {terme_fr: "Biais", terme_en: "Bias", definition: "Expected value of the estimator minus the true parameter."}
+      - {terme_fr: "Erreur type", terme_en: "Standard error", definition: "Standard deviation of an estimator."}
+      - {terme_fr: "Erreur quadratique moyenne", terme_en: "Mean squared error", definition: "Variance plus squared bias."}
+      - {terme_fr: "Méthode des moments", terme_en: "Method of moments", definition: "Estimation by equating theoretical and sample moments."}
+    maitrise:
+      - "I distinguish a parameter, an estimator and an estimate."
+      - "I compute the sample mean, variance and standard error."
+      - "I explain why the sample variance divides by n − 1."
+      - "I fit exponential and gamma distributions by the method of moments."
+    references:
+      - {titre: "Hogg, McKean et Craig, Introduction to Mathematical Statistics, chap. 4", detail: "Estimateurs, biais, méthode des moments."}
+      - {titre: "Klugman, Panjer et Willmot, Loss Models, chap. 12 et 13", detail: "Estimation des lois de fréquence et de sévérité."}
+    liens:
+      - {titre: "A2b/S02 — Le maximum de vraisemblance", cible: "a2b/s02"}
+
 etapes:
   - type: quiz
     titre: "Test de positionnement"

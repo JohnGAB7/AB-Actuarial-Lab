@@ -1,6 +1,206 @@
 # English texts for session A2b.04. Numbers, answers and tests live in contenus/a2b/s04.yaml.
 titre: "Does the distribution fit the data? Goodness-of-fit tests"
 
+fiche:
+  vue_ensemble:
+    question: "Does the fitted distribution really match the observed claims?"
+    pourquoi: "A well-estimated parameter in the wrong distribution gives a wrong premium or capital. Before using a model, the actuary checks that it reproduces the data and compares the candidate distributions. Goodness-of-fit tests and the AIC provide this check, without replacing judgement about the tail."
+    objectifs:
+      - "Calculate the expected counts of a fitted distribution."
+      - "Run a chi-square test with the right number of degrees of freedom."
+      - "Calculate the Kolmogorov-Smirnov statistic."
+      - "Compare two distributions with the AIC."
+      - "Say what a test cannot see, especially in the tail."
+    prerequis:
+      - "Maximum likelihood (A2b.02)."
+      - "Poisson and exponential distributions (A2)."
+      - "Distribution function."
+    carte:
+      - "χ² = Σ (O − E)² / E."
+      - "df = k − 1 − p; each E ≥ 5."
+      - "With 2 df: critical value 5.99 and p = e^(−χ²/2)."
+      - "D = max |F_n(x) − F(x)|."
+      - "AIC = 2p − 2ℓ: the smallest wins."
+      - "Few claims: no test can see the tail."
+  cours_complet:
+    sections:
+      - titre: "1. A fitted distribution is still an assumption"
+        contenu: "Maximum likelihood gives the best parameter within a chosen family, not proof that the family is right. A goodness-of-fit test states the null hypothesis \"the data follow this distribution\" and measures the gap. Not rejecting does not prove the distribution is true."
+        formules:
+          - formule: "H_0 : X\\sim F_{\\hat{\\theta}}\\qquad\\text{against}\\qquad H_1 : X\\not\\sim F_{\\hat{\\theta}}"
+            explication: "Hypotheses of a goodness-of-fit test."
+      - titre: "2. The chi-square test"
+        contenu: "We split the observations into k classes and compare the observed counts O with the expected counts E under the fitted distribution. Classes are grouped so that each expected count exceeds 5. Each estimated parameter removes one degree of freedom."
+        formules:
+          - formule: "\\chi^2=\\sum_{j=1}^{k}\\frac{(O_j-E_j)^2}{E_j},\\qquad \\text{df}=k-1-p"
+            explication: "Chi-square statistic and degrees of freedom."
+      - titre: "3. Reading the result"
+        contenu: "We reject the distribution if the statistic exceeds the critical value of the chi-square distribution. With 2 degrees of freedom, the 5% critical value is 5.99 and the p-value has a simple form. Looking at the contribution of each class shows where the distribution breaks down."
+        formules:
+          - formule: "\\text{2 df: } p\\text{-value}=e^{-\\chi^2/2},\\qquad \\chi^2_{2;\\,0{,}95}=5{,}99"
+            explication: "Critical value and p-value with 2 degrees of freedom."
+      - titre: "4. The Kolmogorov-Smirnov test"
+        contenu: "For continuous amounts, we compare the empirical distribution function with that of the fitted distribution. The largest gap is looked for just before and just after each sorted point. The 5% critical value is about 1.36 / √n, but it is too lenient when the parameters are estimated on the same data."
+        formules:
+          - explication: "Kolmogorov-Smirnov distance over the sorted points."
+      - titre: "5. Comparing two distributions with the AIC"
+        contenu: "The Akaike information criterion rewards the likelihood and penalizes the number of parameters. It is used to rank candidate distributions, even non-nested ones: the smallest value wins. A small AIC gap does not really separate two distributions."
+        formules:
+          - explication: "p is the number of estimated parameters."
+      - titre: "6. The QQ plot"
+        contenu: "The QQ plot sets the observed quantiles against the quantiles of the fitted distribution. Points lined up on the diagonal signal a good fit; points drifting away at the top right show an observed tail heavier than the model."
+        formules:
+          - explication: "Coordinates of the points of a QQ plot."
+      - titre: "7. Limits"
+        contenu: "With a few claims, no test has the power to see the tail: an exponential can pass every test and badly underestimate large claims. The actuary's judgement, market data and prudence count as much as the p-value."
+        formules:
+          - formule: "\\text{not rejecting}\\;H_0\\;\\neq\\;\\text{proving}\\;H_0"
+            explication: "A test never validates a distribution."
+  methodes:
+    methodes:
+      - titre: "Run a chi-square test"
+        quand_utiliser: "We have grouped data, such as claim counts, and a fitted distribution."
+        etapes:
+          - "Calculate each expected count: total count × probability of the class."
+          - "Group the classes whose expected count is below 5."
+          - "Calculate Σ (O − E)² / E."
+          - "Take df = k − 1 − p and compare with the critical value."
+        controles:
+          - "The expected counts add up to the total count."
+          - "The last class groups the whole tail."
+        erreurs:
+          - "Forgetting to remove one degree of freedom per estimated parameter."
+          - "Dividing by O instead of E."
+      - titre: "Choose between two distributions"
+        quand_utiliser: "Several candidate distributions have been fitted to the same claims."
+        etapes:
+          - "Fit each distribution by maximum likelihood and record ℓ(θ̂)."
+          - "Calculate AIC = 2p − 2ℓ for each."
+          - "Keep the smallest AIC, then check the tail with a QQ plot and business judgement."
+        controles:
+          - "The log-likelihoods are calculated on exactly the same data."
+          - "An AIC gap of a few units remains small."
+        erreurs:
+          - "Keeping the largest AIC."
+          - "Choosing the lightest distribution for reinsurance on the AIC alone."
+  exemples_guides:
+    exemples:
+      - titre: "Chi-square for a Poisson distribution"
+        enonce: "1,000 fictional policies: 610 with no claim, 300 with 1, 70 with 2, 20 with 3. The observed mean is λ̂ = 0.5. Test the Poisson distribution at 5%."
+        raisonnement:
+          - "Expected counts: 606.53, 303.27, 75.82 and, for N ≥ 3, 1,000 − 985.61 = 14.39."
+          - "Contributions: 0.0198 + 0.0352 + 0.4462 + 2.1892 = 2.6905."
+          - "df = 4 − 1 − 1 = 2, critical value 5.99."
+          - "p-value = e^(−2.6905 / 2) = 0.2605."
+        resultat: "χ² = 2.6905 < 5.99: we do not reject the Poisson distribution (p = 0.26)."
+        interpretation: "The \"3 or more\" class brings almost all of the statistic: that is where overdispersion would show."
+        controles:
+          - "The expected counts add up to 1,000."
+          - "All expected counts exceed 5."
+      - titre: "Kolmogorov-Smirnov and AIC on 8 claims"
+        enonce: "The 8 claims of session A2b.01 against the exponential with mean €1,881.25, then against the Pareto with known θ = €2,000 and α̂ = 1.6216."
+        raisonnement:
+          - "Just before €600, F_n = 0 and F(600) = 1 − e^(−600 / 1,881.25) = 0.2731: this is the largest gap, D = 0.2731."
+          - "Approximate critical value: 1.36 / √8 = 0.481, so we do not reject the exponential."
+          - "Exponential AIC: 2 × 1 − 2 × (−68.3175) = 138.64."
+          - "Pareto AIC: ℓ = −69.8736, so 2 × 1 − 2 × (−69.8736) = 141.75."
+        resultat: "D = 0.2731 below the critical value; the AIC prefers the exponential, 138.64 against 141.75."
+        interpretation: "The exponential describes these 8 points better, but they say nothing about the tail: for reinsurance, the Pareto remains the prudent choice."
+        controles:
+          - "At the last point, €4,200, the gap is 0.1073, smaller than D."
+          - "Both distributions have one estimated parameter: the AIC comes down to comparing log-likelihoods."
+  exercices_corriges:
+    exercices:
+      - titre: "Fundamental — AIC"
+        enonce: "Distribution A: 1 parameter, ℓ = −120.4. Distribution B: 2 parameters, ℓ = −118.9. Which one does the AIC prefer?"
+        corrige:
+          - "AIC A = 2 × 1 + 240.8 = 242.8."
+          - "AIC B = 2 × 2 + 237.8 = 241.8."
+          - "B has the smallest AIC."
+        feedback: "B's likelihood gain, 1.5, exceeds the penalty for its extra parameter, 1."
+      - titre: "Intermediate — chi-square with no estimated parameter"
+        enonce: "A distribution fixed in advance predicts 45, 35 and 20 observations in three classes; we observe 50, 30 and 20. Calculate χ², the degrees of freedom and the p-value."
+        corrige:
+          - "χ² = 25 / 45 + 25 / 35 + 0 = 0.5556 + 0.7143 = 1.2698."
+          - "No estimated parameter: df = 3 − 1 = 2."
+          - "p-value = e^(−1.2698 / 2) = 0.5300."
+        feedback: "1.27 is well below the critical value of 5.99: the gaps are consistent with chance."
+      - titre: "Advanced — Kolmogorov-Smirnov by hand"
+        enonce: "Observations 0.1, 0.4, 0.6, 0.9 against the uniform distribution on [0; 1]. Calculate D and compare with the critical value 1.36 / √n."
+        corrige:
+          - "Gaps after each point: 0.25 − 0.1, 0.5 − 0.4, 0.75 − 0.6, 1 − 0.9, that is 0.15, 0.1, 0.15, 0.1."
+          - "Gaps before each point: 0.1, 0.15, 0.1, 0.15."
+          - "D = 0.15, and the critical value is 1.36 / √4 = 0.68."
+        feedback: "Look on both sides of each jump of F_n: one side alone can miss the largest gap."
+  applications_labs:
+    applications:
+      - titre: "Validate a frequency and a severity distribution"
+        contexte: "A fictional tariff relies on a Poisson frequency and an exponential severity; both are checked before use."
+        objectif: "Calculate the Poisson chi-square, the exponential Kolmogorov-Smirnov statistic and the AIC against the Pareto."
+        entrees:
+          - "Claim counts: 610, 300, 70, 20 policies with 0, 1, 2, 3 claims."
+          - "Amounts: €1,200, 800, 3,500, 600, 2,100, 950, 1,700, 4,200."
+        hypotheses:
+          - "Independent policies and claims."
+          - "Parameters estimated by maximum likelihood."
+        procedure:
+          - "Calculate the expected counts and the chi-square."
+          - "Calculate D on the sorted amounts."
+          - |
+            ```python
+            import math
+
+            observed = [610, 300, 70, 20]
+            lam = 0.5
+            expected = [1000 * math.exp(-lam) * lam**k / math.factorial(k) for k in range(3)]
+            expected.append(1000 - sum(expected))
+            chi2 = sum((o - e) ** 2 / e for o, e in zip(observed, expected))
+            xs = sorted([1200, 800, 3500, 600, 2100, 950, 1700, 4200])
+            n, mean = len(xs), sum(xs) / len(xs)
+            cdf = [1 - math.exp(-x / mean) for x in xs]
+            d = max(max((i + 1) / n - f, f - i / n) for i, f in enumerate(cdf))
+            aic_exp = 2 - 2 * (-n * math.log(mean) - n)
+            print(round(chi2, 4), round(math.exp(-chi2 / 2), 4), round(d, 4), round(aic_exp, 2))
+            assert chi2 < 5.99
+            ```
+          - "Compare the exponential AIC with the Pareto's, 141.75."
+        sorties:
+          - "χ², p-value and decision for the Poisson."
+          - "D and AIC for the severity."
+        validation:
+          - "The expected counts add up to 1,000."
+          - "χ² = 2.6905, D = 0.2731 and AIC = 138.64."
+        limites:
+          - "Eight claims cannot judge the tail: the choice for reinsurance stays prudent."
+  synthese_references:
+    memo:
+      - "A goodness-of-fit test can reject a distribution, never prove it."
+      - "χ² = Σ (O − E)² / E, with df = k − 1 − p and E ≥ 5."
+      - "At 2 df: critical value 5.99 and p = e^(−χ²/2)."
+      - "D = largest gap between F_n and F, on both sides of each point."
+      - "AIC = 2p − 2ℓ: the smallest wins."
+      - "The tail is also judged with a QQ plot and business judgement."
+    glossaire:
+      - {definition: "Test of whether data are consistent with a given distribution."}
+      - {definition: "Test comparing observed and expected counts by class."}
+      - {definition: "Number of classes minus one minus the number of estimated parameters."}
+      - {definition: "Test based on the largest gap between empirical and fitted distribution functions."}
+      - {definition: "Twice the number of parameters minus twice the maximized log-likelihood."}
+      - {definition: "Plot of observed quantiles against fitted quantiles."}
+      - {definition: "Probability, under the model, of a gap at least as large as the one observed."}
+    maitrise:
+      - "I compute the expected counts of a fitted distribution."
+      - "I run a chi-square test with the right degrees of freedom."
+      - "I compute the Kolmogorov-Smirnov statistic."
+      - "I compare two distributions with the AIC and know its limits in the tail."
+    references:
+      - {titre: "Klugman, Panjer and Willmot, Loss Models, chap. 16", detail: "Model selection, chi-square, Kolmogorov-Smirnov, AIC."}
+      - {titre: "CAS, MAS-I (Modern Actuarial Statistics I)", detail: "Hypothesis tests and goodness of fit."}
+    liens:
+      - {titre: "A2b/S02 — Maximum likelihood"}
+      - {titre: "A2b/S03 — Confidence intervals"}
+
+
 etapes:
   - titre: "Placement check"
     intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."

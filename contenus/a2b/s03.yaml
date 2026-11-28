@@ -12,6 +12,211 @@ actu_basics:
   accroche_fr: "6 % de sinistres : à un point près, ou à trois points près ?"
   accroche_en: "A 6% claim rate: give or take one point, or three?"
 
+fiche:
+  statut: prete
+  vue_ensemble:
+    question: "À quel point peut-on se fier à une fréquence ou à une moyenne estimée ?"
+    pourquoi: "Une estimation sans marge d'erreur ne permet pas de décider. L'actuaire doit dire si 6 % de fréquence observée veut dire 5 % ou 7 % en vrai, et combien de contrats il faut pour réduire ce doute. C'est la base de la crédibilité et du dimensionnement d'une étude."
+    objectifs:
+      - "Interpréter correctement un intervalle de confiance."
+      - "Construire un intervalle pour une proportion, une moyenne et une fréquence de Poisson."
+      - "Choisir entre la loi normale et la loi de Student."
+      - "Calculer la taille d'échantillon pour une marge d'erreur donnée."
+      - "Reconnaître quand l'approximation normale ne suffit plus."
+    prerequis:
+      - "Erreur type (A2b.01)."
+      - "Maximum de vraisemblance et erreur type de Poisson (A2b.02)."
+      - "Loi normale et ses quantiles."
+    carte:
+      - "IC = estimation ± quantile × erreur type."
+      - "Proportion : p̂ ± 1,96 √(p̂(1 − p̂)/n)."
+      - "Moyenne, petit n : x̄ ± t(n − 1) s/√n."
+      - "Poisson : λ̂ ± 1,96 √(λ̂/n)."
+      - "n ≥ z² p(1 − p) / e²."
+      - "Diviser la marge par 2 demande 4 fois plus de données."
+    duree_minutes: 40
+  cours_complet:
+    sections:
+      - titre: "1. Ce que dit un intervalle de confiance"
+        contenu: "Un intervalle de confiance à 95 % est une méthode qui, appliquée à de nombreux échantillons, encadre le vrai paramètre 95 fois sur 100. Une fois les données observées, l'intervalle est fixe : il contient le paramètre ou non. On ne dit pas que le paramètre a 95 % de chances d'y être."
+        formules:
+          - formule: "P\\big(\\hat{\\theta}-z\\,\\operatorname{se}\\le\\theta\\le\\hat{\\theta}+z\\,\\operatorname{se}\\big)\\approx 1-\\alpha"
+            explication: "La probabilité porte sur les bornes, qui sont aléatoires."
+      - titre: "2. Intervalle pour une proportion"
+        contenu: "Une fréquence de sinistres par contrat est une proportion. Pour un grand portefeuille, p̂ suit à peu près une loi normale centrée sur p, d'erreur type √(p̂(1 − p̂)/n). La demi-largeur de l'intervalle est la marge d'erreur."
+        formules:
+          - formule: "\\hat{p}\\pm z\\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n}},\\qquad z_{95\\%}=1{,}96,\\quad z_{99\\%}=2{,}576"
+            explication: "Approximation normale pour une proportion."
+      - titre: "3. Intervalle pour une moyenne"
+        contenu: "Pour la moyenne des sinistres, l'erreur type s/√n utilise un écart-type estimé. Avec peu de données, ce doute supplémentaire se paie : on remplace 1,96 par le quantile de la loi de Student à n − 1 degrés de liberté, plus grand."
+        formules:
+          - formule: "\\bar{x}\\pm t_{n-1;\\,0{,}975}\\,\\frac{s}{\\sqrt{n}}"
+            explication: "Intervalle de Student pour une moyenne."
+      - titre: "4. Intervalle pour une fréquence de Poisson"
+        contenu: "Pour un nombre de sinistres annuel de Poisson observé sur n années, le MLE est la moyenne et son erreur type vient de l'information de Fisher. Une borne négative signale que l'approximation normale est mauvaise."
+        formules:
+          - formule: "\\hat{\\lambda}\\pm 1{,}96\\sqrt{\\frac{\\hat{\\lambda}}{n}}"
+            explication: "Intervalle de Wald pour Poisson."
+      - titre: "5. Taille d'échantillon"
+        contenu: "On renverse la formule : on fixe la marge e voulue et on cherche n. Comme la marge décroît en 1/√n, diviser la marge par 2 demande 4 fois plus de contrats. On arrondit toujours au-dessus."
+        formules:
+          - formule: "n\\ge\\frac{z^2\\,p(1-p)}{e^2}"
+            explication: "Nombre de contrats pour une marge e."
+      - titre: "6. Niveau de confiance et largeur"
+        contenu: "Plus de confiance demande un intervalle plus large : passer de 95 % à 99 % multiplie la largeur par 2,576 / 1,96 = 1,31. Seul un échantillon plus grand rend l'intervalle à la fois étroit et sûr."
+        formules:
+          - formule: "\\frac{z_{99\\%}}{z_{95\\%}}=\\frac{2{,}576}{1{,}96}=1{,}31"
+            explication: "Rapport des largeurs à 99 % et à 95 %."
+      - titre: "7. Limites et crédibilité"
+        contenu: "Ces formules reposent sur l'approximation normale : bonne pour une fréquence sur un grand portefeuille, mauvaise pour quelques gros sinistres à queue épaisse. Le bootstrap rééchantillonne alors les données. Pour un petit portefeuille, la crédibilité mélange son expérience avec celle du marché."
+        formules:
+          - formule: "\\hat{\\mu}_{\\text{crédibilité}}=Z\\,\\bar{x}+(1-Z)\\,\\mu_{\\text{marché}},\\qquad 0\\le Z\\le 1"
+            explication: "Plus l'expérience est précise, plus son poids Z est grand."
+  methodes:
+    methodes:
+      - titre: "Construire un intervalle de confiance"
+        quand_utiliser: "On a une estimation et on veut dire à quel point on s'y fie."
+        etapes:
+          - "Calculer l'estimation : p̂, x̄ ou λ̂."
+          - "Calculer son erreur type."
+          - "Choisir le quantile : z = 1,96 à 95 %, ou Student si n est petit et l'écart-type estimé."
+          - "Écrire estimation ± quantile × erreur type."
+        controles:
+          - "L'intervalle est centré sur l'estimation."
+          - "Une borne négative pour une fréquence signale une approximation inadaptée."
+        erreurs:
+          - "S'arrêter à une erreur type, ce qui donne un intervalle à 68 %."
+          - "Utiliser l'écart-type d'une observation au lieu de l'erreur type de la moyenne."
+      - titre: "Dimensionner un échantillon"
+        quand_utiliser: "On prépare une étude et on veut une marge d'erreur donnée."
+        etapes:
+          - "Fixer le niveau de confiance et la marge e."
+          - "Prendre une valeur plausible de p."
+          - "Calculer z² p(1 − p) / e² et arrondir au-dessus."
+        controles:
+          - "Avec le n obtenu, la marge recalculée est inférieure ou égale à e."
+          - "Diviser e par 2 multiplie n par environ 4."
+        erreurs:
+          - "Oublier de mettre z au carré."
+          - "Arrondir au-dessous."
+  exemples_guides:
+    exemples:
+      - titre: "Fréquence d'un portefeuille"
+        enonce: "Portefeuille fictif : 120 sinistres sur 2 000 contrats. Donne l'intervalle à 95 % de la fréquence, puis le nombre de contrats pour une marge de ±1 point."
+        raisonnement:
+          - "p̂ = 120 / 2 000 = 6 %."
+          - "se = √(0,06 × 0,94 / 2 000) = 0,00531."
+          - "Marge : 1,96 × 0,00531 = 0,0104, donc l'intervalle est [4,96 % ; 7,04 %]."
+          - "n ≥ 1,96² × 0,06 × 0,94 / 0,01² = 2 166,7, soit 2 167 contrats."
+        resultat: "Intervalle [4,96 % ; 7,04 %] ; 2 167 contrats pour ±1 point."
+        interpretation: "Les 2 000 contrats donnent une marge de 1,04 point, à peine au-dessus de la cible."
+        controles:
+          - "À 99 %, l'intervalle devient [4,63 % ; 7,37 %], 1,31 fois plus large."
+          - "Pour ±0,5 point, il faudrait 8 667 contrats, environ 4 fois plus."
+      - titre: "Moyenne de 8 sinistres et fréquence de Poisson"
+        enonce: "Les 8 sinistres de la séance A2b.01 ont x̄ = 1 881,25 € et s / √8 = 467,13 €. Donne l'intervalle à 95 % de la moyenne, puis celui de λ pour 25 sinistres en 10 ans."
+        raisonnement:
+          - "Student à 7 degrés de liberté : t = 2,3646."
+          - "1 881,25 ± 2,3646 × 467,13 = 1 881,25 ± 1 104,6, soit [777 € ; 2 986 €]."
+          - "Poisson : λ̂ = 2,5 et se = 0,5, donc 2,5 ± 1,96 × 0,5 = [1,52 ; 3,48]."
+        resultat: "Moyenne entre 777 € et 2 986 € ; λ entre 1,52 et 3,48 sinistres par an."
+        interpretation: "Avec 8 sinistres, la sévérité moyenne est connue à plus ou moins 59 % près : c'est trop peu pour tarifer seul."
+        controles:
+          - "Avec 1,96 au lieu de 2,3646, on trouverait [966 € ; 2 797 €], trop étroit."
+          - "Prendre √2,5 au lieu de 0,5 donnerait une borne négative, signe d'une erreur."
+  exercices_corriges:
+    exercices:
+      - titre: "Fondamental — intervalle d'une proportion"
+        niveau: fondamental
+        enonce: "45 sinistres sur 1 500 contrats. Donne l'intervalle à 95 % de la fréquence."
+        corrige:
+          - "p̂ = 45 / 1 500 = 3 %."
+          - "se = √(0,03 × 0,97 / 1 500) = 0,0044."
+          - "3 % ± 1,96 × 0,0044 = [2,14 % ; 3,86 %]."
+        feedback: "La marge, 0,86 point, vaut presque un tiers de la fréquence : le portefeuille est petit."
+      - titre: "Intermédiaire — taille d'échantillon"
+        niveau: intermediaire
+        enonce: "Avec p ≈ 3 %, combien de contrats faut-il pour une marge de ±0,5 point à 95 % ?"
+        corrige:
+          - "n ≥ 1,96² × 0,03 × 0,97 / 0,005² = 4 471,6."
+          - "On arrondit au-dessus : 4 472 contrats."
+        feedback: "Arrondir au-dessous donnerait une marge légèrement trop grande."
+      - titre: "Avancé — petit échantillon"
+        niveau: avance
+        enonce: "Observations 3, 7, 1, 9, 4, avec s = 3,1937. Donne l'intervalle à 95 % de la moyenne avec t₄ = 2,7764."
+        corrige:
+          - "se = 3,1937 / √5 = 1,4283."
+          - "Marge : 2,7764 × 1,4283 = 3,9655."
+          - "4,8 ± 3,9655 = [0,83 ; 8,77]."
+        feedback: "Avec 1,96, la marge serait 2,80 : l'intervalle de Student est 42 % plus large car 5 observations estiment mal l'écart-type."
+  applications_labs:
+    applications:
+      - titre: "Marge d'erreur d'une étude de fréquence"
+        contexte: "Un portefeuille fictif de 2 000 contrats a 120 sinistres ; on veut savoir si l'étude est assez grande."
+        objectif: "Calculer l'intervalle de la fréquence, la taille d'échantillon pour ±1 point et l'intervalle de la sévérité moyenne."
+        outils: [python, excel]
+        entrees:
+          - "120 sinistres sur 2 000 contrats."
+          - "Montants : 1 200, 800, 3 500, 600, 2 100, 950, 1 700, 4 200 €."
+          - "Quantiles : z = 1,96 et t₇ = 2,364624."
+        hypotheses:
+          - "Contrats indépendants, même probabilité de sinistre."
+          - "Approximation normale pour la fréquence."
+        procedure:
+          - "Calculer p̂, son erreur type et l'intervalle."
+          - "Résoudre la taille d'échantillon pour e = 0,01."
+          - |
+            ```python
+            import math
+
+            p, n = 120 / 2000, 2000
+            se_p = math.sqrt(p * (1 - p) / n)
+            low, high = p - 1.96 * se_p, p + 1.96 * se_p
+            needed = math.ceil(1.96**2 * p * (1 - p) / 0.01**2)
+            xs = [1200, 800, 3500, 600, 2100, 950, 1700, 4200]
+            mean = sum(xs) / len(xs)
+            s = math.sqrt(sum((x - mean) ** 2 for x in xs) / (len(xs) - 1))
+            half = 2.364624 * s / math.sqrt(len(xs))
+            print(round(low, 4), round(high, 4), needed, round(mean - half, 2), round(mean + half, 2))
+            assert needed == 2167
+            ```
+          - "Comparer la marge obtenue à la marge visée."
+        sorties:
+          - "Intervalle de la fréquence et taille d'échantillon."
+          - "Intervalle de la sévérité moyenne."
+        validation:
+          - "L'intervalle de la fréquence est [0,0496 ; 0,0704]."
+          - "L'intervalle de la moyenne est [776,67 € ; 2 985,83 €]."
+        limites:
+          - "Pour 8 sinistres à queue épaisse, l'intervalle de Student est fragile ; le bootstrap est plus sûr."
+  synthese_references:
+    memo:
+      - "IC = estimation ± quantile × erreur type."
+      - "Le 95 % porte sur la méthode, pas sur un intervalle observé."
+      - "Proportion : p̂ ± 1,96 √(p̂(1 − p̂)/n)."
+      - "Petit n et écart-type estimé : loi de Student."
+      - "n ≥ z² p(1 − p) / e², arrondi au-dessus."
+      - "Passer de 95 % à 99 % élargit l'intervalle de 31 %."
+    glossaire:
+      - {terme_fr: "Intervalle de confiance", terme_en: "Confidence interval", definition: "Range built from the data that covers the parameter with a given probability."}
+      - {terme_fr: "Niveau de confiance", terme_en: "Confidence level", definition: "Share of samples for which the method covers the parameter."}
+      - {terme_fr: "Marge d'erreur", terme_en: "Margin of error", definition: "Half-width of the confidence interval."}
+      - {terme_fr: "Loi de Student", terme_en: "t distribution", definition: "Distribution used instead of the normal when the standard deviation is estimated."}
+      - {terme_fr: "Taille d'échantillon", terme_en: "Sample size", definition: "Number of observations needed for a target margin."}
+      - {terme_fr: "Bootstrap", terme_en: "Bootstrap", definition: "Resampling the data to estimate an interval without assuming a distribution."}
+      - {terme_fr: "Crédibilité", terme_en: "Credibility", definition: "Weight given to a portfolio's own experience against the market."}
+    maitrise:
+      - "I interpret a confidence interval correctly."
+      - "I build intervals for a proportion, a mean and a Poisson frequency."
+      - "I choose between the normal and the t distribution."
+      - "I compute the sample size for a target margin of error."
+    references:
+      - {titre: "Hogg, McKean et Craig, Introduction to Mathematical Statistics, chap. 4", detail: "Intervalles de confiance, loi de Student."}
+      - {titre: "Klugman, Panjer et Willmot, Loss Models, chap. 13", detail: "Variance des estimateurs, intervalles pour les paramètres."}
+    liens:
+      - {titre: "A2b/S02 — Le maximum de vraisemblance", cible: "a2b/s02"}
+      - {titre: "A2b/S04 — Tests d'adéquation", cible: "a2b/s04"}
+
 etapes:
   - type: quiz
     titre: "Test de positionnement"
@@ -138,7 +343,7 @@ etapes:
           rappel: >-
             Petit échantillon, écart-type estimé : quantile de Student à 7 degrés de liberté.
           formule: |-
-            1\,881{,}25 \pm 2{,}365 \times 467{,}13 = 1\,881{,}25 \pm 1\,104{,}6
+            1\,881{,}25 \pm 2{,}3646 \times 467{,}13 = 1\,881{,}25 \pm 1\,104{,}6
           exemple: >-
             La moyenne vraie se situe plausiblement entre 777 € et 2 986 € : avec 8 sinistres, on sait peu de choses.
           piege: >-

@@ -1,6 +1,201 @@
 # English texts for session A2b.01. Numbers, answers and tests live in contenus/a2b/s01.yaml.
 titre: "Estimating a claim distribution: the method of moments"
 
+fiche:
+  vue_ensemble:
+    question: "How do we go from a few observed claims to a usable claim distribution?"
+    pourquoi: "An actuary never observes the true claim distribution, only a sample. To price or reserve, they must estimate parameters and say how reliable those estimates are. The method of moments is the most direct way to do it."
+    objectifs:
+      - "Distinguish a parameter, an estimator and an estimate."
+      - "Judge an estimator by its bias, its variance and its mean squared error."
+      - "Calculate the sample mean and variance, and the standard error of the mean."
+      - "Fit an exponential and a gamma distribution by the method of moments."
+      - "Explain why few claims give an imprecise estimate."
+    prerequis:
+      - "Expected value and variance (A2)."
+      - "Exponential and gamma distributions."
+    carte:
+      - "Estimator: a formula applied to a random sample."
+      - "Bias: E[θ̂] − θ."
+      - "MSE = variance + bias²."
+      - "s² divides by n − 1; se(x̄) = s / √n."
+      - "Moments: theoretical mean and variance = observed ones."
+      - "Gamma: θ̂ = σ̂² / x̄ and α̂ = x̄² / σ̂²."
+  cours_complet:
+    sections:
+      - titre: "1. Parameter, estimator, estimate"
+        contenu: "The parameter θ is a fixed, unknown feature of the distribution. An estimator θ̂ is a formula applied to the sample: since the sample is random, the estimator is a random variable. The estimate is the value obtained on the observed data."
+        formules:
+          - explication: "An estimator is a function of the sample."
+      - titre: "2. Bias, variance and mean squared error"
+        contenu: "An unbiased estimator is right on average over all possible samples. But an unbiased estimator can be very spread out. The mean squared error combines both flaws: a small bias can be worth it if it cuts the variance a lot."
+        formules:
+          - formule: "\\text{bias}(\\hat{\\theta})=E[\\hat{\\theta}]-\\theta"
+            explication: "Average gap to the true value."
+          - formule: "\\text{MSE}(\\hat{\\theta})=\\operatorname{Var}(\\hat{\\theta})+\\text{bias}(\\hat{\\theta})^2"
+            explication: "Mean squared error."
+      - titre: "3. Sample mean and variance"
+        contenu: "The sample mean is an unbiased estimator of the expected value. The sample variance divides by n − 1: deviations are measured from the sample mean, which sticks to the data, and dividing by n would underestimate the variance on average."
+        formules:
+          - explication: "Sample mean, unbiased for E[X]."
+          - explication: "Sample variance, unbiased for Var(X)."
+          - explication: "Dividing by n gives an estimator biased downwards."
+      - titre: "4. Standard error"
+        contenu: "The standard error is the standard deviation of an estimator: it says how much the estimate would vary from one sample to another. For the mean, it decreases like 1/√n: dividing the standard error by 2 takes 4 times as much data."
+        formules:
+          - explication: "Standard error of the sample mean."
+      - titre: "5. The method of moments"
+        contenu: "Write as many equations as there are parameters by equating the theoretical moments of the distribution with the sample moments, then solve. By convention, the sample variance there is divided by n, written σ̂²."
+        formules:
+          - explication: "Exponential: one parameter, one equation."
+          - explication: "Gamma: two parameters, two equations."
+      - titre: "6. Choosing between two distributions"
+        contenu: "The exponential forces the standard deviation to equal the mean. If the observed standard deviation is clearly smaller, a gamma with α > 1 fits better; if it is larger, a heavier-tailed distribution is needed. The goodness-of-fit tests of session A2b.04 make this comparison rigorous."
+        formules:
+          - formule: "\\text{exponential: } \\frac{\\sigma}{\\mu}=1,\\qquad \\text{gamma: } \\frac{\\sigma}{\\mu}=\\frac{1}{\\sqrt{\\alpha}}"
+            explication: "Coefficient of variation of each distribution."
+      - titre: "7. Limits"
+        contenu: "The method of moments is simple and gives good starting values, but it is often less precise than maximum likelihood, especially for heavy-tailed distributions whose higher moments are unstable. With few claims, the standard error is large: this is the idea behind credibility."
+        formules:
+          - explication: "Precision only grows with the square root of the sample size."
+  methodes:
+    methodes:
+      - titre: "Summarize a sample of claims"
+        quand_utiliser: "We have n observed amounts and want their centre, their spread and the precision of the mean."
+        etapes:
+          - "Calculate x̄ = Σ x_i / n."
+          - "Calculate the sum of squared deviations Σ (x_i − x̄)²."
+          - "Divide by n − 1 for s², then take the square root for s."
+          - "Calculate the standard error s / √n."
+        controles:
+          - "s² is positive, and zero only if all values are equal."
+          - "The standard error is smaller than s as soon as n > 1."
+        erreurs:
+          - "Dividing by n instead of n − 1 for s²."
+          - "Taking s for the precision of the mean."
+      - titre: "Fit a gamma by the moments"
+        quand_utiliser: "Severity is positive and skewed, and we want two parameters that are easy to get."
+        etapes:
+          - "Calculate x̄ and σ̂² = Σ (x_i − x̄)² / n."
+          - "Set θ̂ = σ̂² / x̄."
+          - "Set α̂ = x̄² / σ̂²."
+        controles:
+          - "α̂ θ̂ = x̄: the fitted mean reproduces the observed mean."
+          - "α̂ θ̂² = σ̂²: the fitted variance reproduces σ̂²."
+        erreurs:
+          - "Swapping α̂ and 1 / α̂."
+          - "Mixing s² and σ̂² in the two equations."
+  exemples_guides:
+    exemples:
+      - titre: "Eight claims: mean, spread, standard error"
+        enonce: "Fictional amounts (€): 1,200, 800, 3,500, 600, 2,100, 950, 1,700, 4,200. Calculate x̄, s and the standard error of x̄."
+        raisonnement:
+          - "Sum 15,050, so x̄ = 15,050 / 8 = €1,881.25."
+          - "Σ (x_i − x̄)² = 12,219,687.5."
+          - "s² = 12,219,687.5 / 7 = 1,745,669.64, so s = €1,321.24."
+          - "se(x̄) = 1,321.24 / √8 = €467.13."
+        resultat: "x̄ = €1,881.25, s = €1,321.24 and se(x̄) = €467.13."
+        interpretation: "The standard error is a quarter of the mean: with 8 claims, the mean is still very uncertain."
+        controles:
+          - "The median, €1,450, is below the mean: the right tail pulls the mean up."
+          - "Dividing by 7 instead of 8 raises the variance by 14.3%."
+      - titre: "Gamma by the method of moments"
+        enonce: "Same sample. Fit a gamma distribution by the method of moments."
+        raisonnement:
+          - "σ̂² = 12,219,687.5 / 8 = 1,527,460.94."
+          - "θ̂ = 1,527,460.94 / 1,881.25 = €811.94."
+          - "α̂ = 1,881.25² / 1,527,460.94 = 3,539,101.56 / 1,527,460.94 = 2.3170."
+        resultat: "α̂ = 2.3170 and θ̂ = €811.94."
+        interpretation: "With α̂ > 1, the density is a skewed bell: it fits better than the exponential, whose standard deviation would equal the mean."
+        controles:
+          - "α̂ θ̂ = 2.3170 × 811.94 = 1,881.25."
+          - "The observed standard deviation, €1,321, is well below the mean."
+  exercices_corriges:
+    exercices:
+      - titre: "Fundamental — small sample"
+        enonce: "Observations: 3, 7, 1, 9, 4. Calculate x̄, s² and the standard error of x̄."
+        corrige:
+          - "x̄ = 24 / 5 = 4.8."
+          - "Σ (x_i − x̄)² = 40.8, so s² = 40.8 / 4 = 10.2."
+          - "se(x̄) = √(10.2 / 5) = 1.43."
+        feedback: "With n − 1 = 4 in the denominator, s² is 10.2; dividing by 5 would give 8.16, biased downwards."
+      - titre: "Intermediate — gamma from two moments"
+        enonce: "A portfolio has a mean severity of €1,000 and a variance (divided by n) of 500,000. Fit a gamma by the moments."
+        corrige:
+          - "θ̂ = 500,000 / 1,000 = €500."
+          - "α̂ = 1,000² / 500,000 = 2."
+        feedback: "Check: α̂ θ̂ = 1,000 and α̂ θ̂² = 500,000."
+      - titre: "Advanced — sample size"
+        enonce: "With 8 claims, the standard error of the mean is €467. How many claims of the same spread are needed to bring it down to about €234?"
+        corrige:
+          - "The standard error decreases like 1 / √n."
+          - "To divide it by 2, we need 4 times as many claims, that is 32."
+          - "1,321.24 / √32 = €233.56."
+        feedback: "Changing the calculation convention does not make the data more informative: only n counts."
+  applications_labs:
+    applications:
+      - titre: "Estimate a gamma severity"
+        contexte: "A fictional sample of 8 claims is used to fit a severity distribution for pricing."
+        objectif: "Calculate x̄, s, the standard error and the gamma parameters by the method of moments, then check the identities."
+        entrees:
+          - "Amounts: €1,200, 800, 3,500, 600, 2,100, 950, 1,700, 4,200."
+        hypotheses:
+          - "Independent, identically distributed claims."
+          - "Gamma severity."
+        procedure:
+          - "Calculate the sample moments."
+          - "Solve the two moment equations."
+          - |
+            ```python
+            import math
+
+            xs = [1200, 800, 3500, 600, 2100, 950, 1700, 4200]
+            n = len(xs)
+            mean = sum(xs) / n
+            ss = sum((x - mean) ** 2 for x in xs)
+            s = math.sqrt(ss / (n - 1))
+            se = s / math.sqrt(n)
+            var_n = ss / n
+            alpha, theta = mean**2 / var_n, var_n / mean
+            print(round(mean, 2), round(s, 2), round(se, 2), round(alpha, 4), round(theta, 2))
+            assert abs(alpha * theta - mean) < 1e-9
+            ```
+          - "Compare the observed standard deviation with the mean to choose between exponential and gamma."
+        sorties:
+          - "Mean, standard deviation and standard error."
+          - "Gamma parameters α̂ and θ̂."
+        validation:
+          - "α̂ θ̂ = x̄ and α̂ θ̂² = σ̂²."
+          - "se(x̄) = s / √n."
+        limites:
+          - "Eight claims say almost nothing about the tail of the distribution."
+  synthese_references:
+    memo:
+      - "An estimator is a random variable; it is judged by its bias and its variance."
+      - "MSE = variance + bias²."
+      - "s² divides by n − 1; se(x̄) = s / √n."
+      - "Method of moments: equate theoretical and observed moments."
+      - "Exponential: θ̂ = x̄. Gamma: θ̂ = σ̂² / x̄, α̂ = x̄² / σ̂²."
+      - "Dividing the standard error by 2 takes 4 times as much data."
+    glossaire:
+      - {definition: "Observed data drawn from an unknown distribution."}
+      - {definition: "Formula applied to a random sample to estimate a parameter."}
+      - {definition: "Expected value of the estimator minus the true parameter."}
+      - {definition: "Standard deviation of an estimator."}
+      - {definition: "Variance plus squared bias."}
+      - {definition: "Estimation by equating theoretical and sample moments."}
+    maitrise:
+      - "I distinguish a parameter, an estimator and an estimate."
+      - "I compute the sample mean, variance and standard error."
+      - "I explain why the sample variance divides by n − 1."
+      - "I fit exponential and gamma distributions by the method of moments."
+    references:
+      - {titre: "Hogg, McKean and Craig, Introduction to Mathematical Statistics, chap. 4", detail: "Estimators, bias, method of moments."}
+      - {titre: "Klugman, Panjer and Willmot, Loss Models, chap. 12 and 13", detail: "Estimating frequency and severity distributions."}
+    liens:
+      - {titre: "A2b/S02 — Maximum likelihood"}
+
+
 etapes:
   - titre: "Placement check"
     intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."

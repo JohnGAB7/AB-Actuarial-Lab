@@ -12,6 +12,212 @@ actu_basics:
   accroche_fr: "Quelle valeur du paramètre rend nos sinistres les plus probables ?"
   accroche_en: "Which parameter value makes our claims the most likely?"
 
+fiche:
+  statut: prete
+  vue_ensemble:
+    question: "Quelle valeur du paramètre rend les sinistres observés les plus probables ?"
+    pourquoi: "Le maximum de vraisemblance est la méthode d'estimation de référence en actuariat : il utilise toute l'information de l'échantillon, donne une erreur type par l'information de Fisher et fournit directement l'estimation de toute grandeur dérivée, comme une probabilité de queue ou une prime."
+    objectifs:
+      - "Écrire la vraisemblance et la log-vraisemblance d'un échantillon indépendant."
+      - "Obtenir le MLE de Poisson, de l'exponentielle et de la Pareto à θ connu."
+      - "Calculer une erreur type avec l'information de Fisher."
+      - "Utiliser l'invariance pour estimer une probabilité ou un quantile."
+      - "Voir comment le choix de la loi change la queue estimée."
+    prerequis:
+      - "Estimateurs, biais et erreur type (A2b.01)."
+      - "Lois de Poisson, exponentielle et Pareto (A2)."
+      - "Dérivée et logarithme."
+    carte:
+      - "L(θ) = Π f(x_i ; θ)."
+      - "ℓ(θ) = Σ ln f(x_i ; θ), maximum où ℓ′(θ̂) = 0."
+      - "Poisson et exponentielle : le MLE est x̄."
+      - "Pareto, θ connu : α̂ = n / Σ ln(1 + x_i/θ)."
+      - "Var(θ̂) ≈ 1 / I(θ)."
+      - "Invariance : le MLE de g(θ) est g(θ̂)."
+    duree_minutes: 40
+  cours_complet:
+    sections:
+      - titre: "1. La vraisemblance"
+        contenu: "La vraisemblance est la densité des données observées, lue comme une fonction du paramètre. Avec des observations indépendantes, la densité jointe est un produit. Ce n'est pas une probabilité sur θ : elle ne somme pas à 1 quand θ varie."
+        formules:
+          - formule: "L(\\theta)=\\prod_{i=1}^{n} f(x_i;\\theta)"
+            explication: "Vraisemblance d'un échantillon indépendant."
+      - titre: "2. La log-vraisemblance et le score"
+        contenu: "Le logarithme est croissant : L et ln L ont leur maximum au même endroit. La somme se dérive bien mieux qu'un produit et évite que le produit de nombreuses petites densités tombe à 0 en machine. On annule la dérivée, appelée score."
+        formules:
+          - formule: "\\ell(\\theta)=\\sum_{i=1}^{n}\\ln f(x_i;\\theta),\\qquad \\ell'(\\hat{\\theta})=0"
+            explication: "Log-vraisemblance et condition du maximum."
+      - titre: "3. Trois MLE à connaître"
+        contenu: "Pour Poisson, ℓ(λ) = −nλ + Σ x_i ln λ − Σ ln x_i!, et le score s'annule en λ̂ = x̄. Pour l'exponentielle de moyenne θ, on trouve aussi θ̂ = x̄. Pour la Pareto à θ connu, ℓ(α) = n ln α + nα ln θ − (α + 1) Σ ln(θ + x_i) donne une formule fermée."
+        formules:
+          - formule: "\\text{Poisson : }\\hat{\\lambda}=\\bar{x},\\qquad \\text{exponentielle : }\\hat{\\theta}=\\bar{x}"
+            explication: "Les deux MLE sont la moyenne empirique."
+          - formule: "\\hat{\\alpha}=\\frac{n}{\\sum_{i=1}^{n}\\ln(1+x_i/\\theta)}"
+            explication: "MLE de α pour la Pareto quand θ est connu."
+      - titre: "4. Erreur type et information de Fisher"
+        contenu: "Pour un grand échantillon, le MLE est presque sans biais et à peu près normal. Sa variance est l'inverse de l'information de Fisher, qui mesure la courbure de la log-vraisemblance : plus le pic est pointu, plus l'estimation est précise."
+        formules:
+          - formule: "I(\\theta)=-E[\\ell''(\\theta)],\\qquad \\operatorname{se}(\\hat{\\theta})\\approx\\frac{1}{\\sqrt{I(\\hat{\\theta})}}"
+            explication: "Information de Fisher et erreur type."
+          - formule: "\\text{Poisson : }\\operatorname{se}(\\hat{\\lambda})=\\sqrt{\\hat{\\lambda}/n},\\qquad \\text{Pareto : }\\operatorname{se}(\\hat{\\alpha})=\\hat{\\alpha}/\\sqrt{n}"
+            explication: "Deux erreurs types fermées."
+      - titre: "5. La propriété d'invariance"
+        contenu: "Le MLE d'une fonction du paramètre est cette fonction appliquée au MLE. On obtient ainsi sans nouveau calcul la probabilité de zéro sinistre, un quantile ou une prime pure. La fréquence observée d'années sans sinistre, elle, n'utilise pas le modèle."
+        formules:
+          - formule: "\\widehat{g(\\theta)}=g(\\hat{\\theta}),\\qquad \\widehat{P(N=0)}=e^{-\\hat{\\lambda}}"
+            explication: "Invariance appliquée à la probabilité de zéro sinistre."
+      - titre: "6. Le choix de la queue"
+        contenu: "Deux lois ajustées aux mêmes sinistres peuvent diverger fortement au-delà des données. La Pareto, à queue épaisse, donne bien plus de poids aux gros sinistres que l'exponentielle. C'est ce qui compte pour la réassurance et le capital ; la séance A2b.04 compare les ajustements."
+        formules:
+          - formule: "\\text{exponentielle : }P(X>x)=e^{-x/\\theta},\\qquad \\text{Pareto : }P(X>x)=\\Big(\\frac{\\theta}{\\theta+x}\\Big)^{\\alpha}"
+            explication: "Queue décroissant exponentiellement ou comme une puissance."
+      - titre: "7. Limites"
+        contenu: "Le MLE dépend du modèle choisi : une mauvaise loi donne une estimation précise d'une mauvaise chose. Les propriétés asymptotiques demandent beaucoup de données, et plusieurs lois n'ont pas de formule fermée, ce qui impose une optimisation numérique."
+        formules:
+          - formule: "\\hat{\\theta}=\\arg\\max_{\\theta}\\,\\ell(\\theta)"
+            explication: "Sans formule fermée, on maximise numériquement."
+  methodes:
+    methodes:
+      - titre: "Trouver un MLE"
+        quand_utiliser: "On a choisi une loi pour les données et on veut le paramètre qui les rend les plus probables."
+        etapes:
+          - "Écrire ln f(x_i ; θ) pour une observation."
+          - "Sommer sur l'échantillon pour obtenir ℓ(θ)."
+          - "Dériver, annuler le score et résoudre en θ."
+          - "Vérifier que ℓ″(θ̂) < 0, donc qu'il s'agit d'un maximum."
+        controles:
+          - "ℓ(θ̂) est plus grand que ℓ en quelques valeurs voisines."
+          - "Pour Poisson et l'exponentielle, θ̂ = x̄."
+        erreurs:
+          - "Maximiser la somme des densités au lieu de leur produit."
+          - "Oublier le terme en n quand on dérive."
+      - titre: "Estimer une grandeur dérivée par invariance"
+        quand_utiliser: "On veut une probabilité, un quantile ou une prime à partir d'un modèle ajusté."
+        etapes:
+          - "Estimer le paramètre par le maximum de vraisemblance."
+          - "Écrire la grandeur comme une fonction g du paramètre."
+          - "Calculer g(θ̂)."
+        controles:
+          - "Le résultat respecte les bornes de la grandeur, par exemple une probabilité entre 0 et 1."
+          - "Le résultat est proche de sa version empirique quand l'échantillon est grand."
+        erreurs:
+          - "Remplacer le modèle par la fréquence observée."
+          - "Appliquer g à la moyenne des données au lieu du paramètre estimé."
+  exemples_guides:
+    exemples:
+      - titre: "Poisson sur dix ans"
+        enonce: "Nombres de sinistres fictifs sur 10 ans : 3, 1, 4, 2, 0, 5, 2, 3, 1, 4. Estime λ, son erreur type et la probabilité d'une année sans sinistre."
+        raisonnement:
+          - "Total 25 sinistres, donc λ̂ = 25 / 10 = 2,5 par an."
+          - "se(λ̂) = √(2,5 / 10) = 0,5."
+          - "Invariance : P(N = 0) estimée = e^−2,5 = 0,0821."
+        resultat: "λ̂ = 2,5, se(λ̂) = 0,5 et P(N = 0) ≈ 8,2 %."
+        interpretation: "Avec ce modèle, environ une année sur douze est sans sinistre, alors que l'échantillon en montre une sur dix."
+        controles:
+          - "√2,5 = 1,58 est l'écart-type d'une année, pas la précision de la moyenne."
+          - "La fréquence empirique 10 % ignore l'hypothèse de Poisson."
+      - titre: "Pareto contre exponentielle"
+        enonce: "Les 8 sinistres de la séance A2b.01 : 1 200, 800, 3 500, 600, 2 100, 950, 1 700, 4 200 €. Ajuste une Pareto à θ = 2 000 € connu et une exponentielle, puis compare P(X > 5 000)."
+        raisonnement:
+          - "Σ ln(1 + x_i / 2 000) = 4,9335, donc α̂ = 8 / 4,9335 = 1,6216."
+          - "Pareto : P(X > 5 000) = (2 000 / 7 000)^1,6216 = 0,1311."
+          - "Exponentielle : θ̂ = x̄ = 1 881,25 €, et P(X > 5 000) = e^(−5 000 / 1 881,25) = 0,0701."
+          - "Log-vraisemblance de l'exponentielle : −8 ln 1 881,25 − 8 = −68,3175."
+        resultat: "La Pareto donne 13,1 % au-delà de 5 000 €, l'exponentielle 7,0 %."
+        interpretation: "Mêmes données, et presque deux fois plus de gros sinistres avec la Pareto : la queue dépend surtout du choix de la loi."
+        controles:
+          - "La moyenne de la Pareto ajustée vaut 2 000 / 0,6216 = 3 218 €, bien au-dessus de x̄."
+          - "se(α̂) = 1,6216 / √8 = 0,5733 : la queue est mal connue avec 8 sinistres."
+  exercices_corriges:
+    exercices:
+      - titre: "Fondamental — Poisson"
+        niveau: fondamental
+        enonce: "Nombres de sinistres sur 8 ans : 2, 0, 1, 3, 1, 0, 2, 1. Calcule λ̂, son erreur type et P(N = 0) estimée."
+        corrige:
+          - "λ̂ = 10 / 8 = 1,25."
+          - "se(λ̂) = √(1,25 / 8) = 0,3953."
+          - "P(N = 0) = e^−1,25 = 0,2865."
+        feedback: "La part observée d'années sans sinistre vaut 2 / 8 = 25 % ; le modèle donne 28,65 %."
+      - titre: "Intermédiaire — Pareto à θ connu"
+        niveau: intermediaire
+        enonce: "Montants 500, 1 500, 1 000, 3 000 €, Pareto avec θ = 1 000 € connu. Calcule α̂."
+        corrige:
+          - "Σ ln(1 + x_i / 1 000) = ln 1,5 + ln 2,5 + ln 2 + ln 4 = 3,4012."
+          - "α̂ = 4 / 3,4012 = 1,1761."
+        feedback: "Avec α̂ proche de 1, la moyenne θ / (α − 1) devient très grande : la queue est très épaisse."
+      - titre: "Avancé — invariance"
+        niveau: avance
+        enonce: "Une sévérité exponentielle a pour MLE θ̂ = 1 500 €. Donne le MLE de la médiane et de P(X > 5 000)."
+        corrige:
+          - "La médiane vaut θ ln 2, donc son MLE est 1 500 × ln 2 = 1 039,72 €."
+          - "P(X > 5 000) = e^(−5 000 / 1 500) = 0,0357."
+        feedback: "Aucune nouvelle optimisation : l'invariance applique la formule au paramètre estimé."
+  applications_labs:
+    applications:
+      - titre: "Comparer deux queues ajustées"
+        contexte: "Le tarif d'une couverture au-delà de 5 000 € dépend de la loi de sévérité retenue pour 8 sinistres fictifs."
+        objectif: "Ajuster une exponentielle et une Pareto à θ connu par maximum de vraisemblance, puis comparer leurs probabilités de queue."
+        outils: [python, excel]
+        entrees:
+          - "Montants : 1 200, 800, 3 500, 600, 2 100, 950, 1 700, 4 200 €."
+          - "Pareto : θ = 2 000 € connu."
+        hypotheses:
+          - "Sinistres indépendants et de même loi."
+          - "θ de la Pareto fixé à l'avance."
+        procedure:
+          - "Calculer θ̂ = x̄ pour l'exponentielle et sa log-vraisemblance."
+          - "Calculer α̂ de la Pareto avec la formule fermée."
+          - |
+            ```python
+            import math
+
+            xs = [1200, 800, 3500, 600, 2100, 950, 1700, 4200]
+            n = len(xs)
+            theta_exp = sum(xs) / n
+            loglik = -n * math.log(theta_exp) - sum(xs) / theta_exp
+            alpha = n / sum(math.log(1 + x / 2000) for x in xs)
+            tail_pareto = (2000 / (2000 + 5000)) ** alpha
+            tail_exp = math.exp(-5000 / theta_exp)
+            print(round(loglik, 4), round(alpha, 4), round(tail_pareto, 4), round(tail_exp, 4))
+            assert tail_pareto > tail_exp
+            ```
+          - "Comparer les deux probabilités au-delà de 5 000 €."
+        sorties:
+          - "θ̂, ℓ(θ̂) et α̂."
+          - "P(X > 5 000) sous chaque loi."
+        validation:
+          - "ℓ est plus faible en θ = 1 500 et θ = 2 500 qu'en θ̂."
+          - "α̂ = 1,6216 et P(X > 5 000) = 0,1311 pour la Pareto."
+        limites:
+          - "Avec 8 sinistres, l'erreur type de α̂ est d'environ 0,57 : la queue reste incertaine."
+  synthese_references:
+    memo:
+      - "La vraisemblance est la densité des données, vue comme fonction du paramètre."
+      - "On maximise ℓ(θ) = Σ ln f(x_i ; θ) en annulant le score."
+      - "Poisson et exponentielle : MLE = x̄."
+      - "Pareto à θ connu : α̂ = n / Σ ln(1 + x_i/θ)."
+      - "se(θ̂) ≈ 1 / √I(θ̂) ; Poisson : √(λ̂/n)."
+      - "Invariance : le MLE de g(θ) est g(θ̂)."
+    glossaire:
+      - {terme_fr: "Vraisemblance", terme_en: "Likelihood", definition: "Density of the observed data, read as a function of the parameter."}
+      - {terme_fr: "Log-vraisemblance", terme_en: "Log-likelihood", definition: "Logarithm of the likelihood, a sum over the observations."}
+      - {terme_fr: "Score", terme_en: "Score", definition: "Derivative of the log-likelihood with respect to the parameter."}
+      - {terme_fr: "Estimateur du maximum de vraisemblance", terme_en: "Maximum likelihood estimator (MLE)", definition: "Parameter value that maximizes the likelihood."}
+      - {terme_fr: "Information de Fisher", terme_en: "Fisher information", definition: "Minus the expected second derivative of the log-likelihood."}
+      - {terme_fr: "Propriété d'invariance", terme_en: "Invariance property", definition: "The MLE of a function of the parameter is that function of the MLE."}
+      - {terme_fr: "Queue épaisse", terme_en: "Heavy tail", definition: "Tail that decreases slowly, like a power, giving weight to large claims."}
+    maitrise:
+      - "I write the likelihood and log-likelihood of an independent sample."
+      - "I derive the Poisson, exponential and Pareto MLEs."
+      - "I compute a standard error from the Fisher information."
+      - "I use invariance to estimate a probability or a quantile."
+    references:
+      - {titre: "Klugman, Panjer et Willmot, Loss Models, chap. 13", detail: "Maximum de vraisemblance pour les lois de sinistres."}
+      - {titre: "Hogg, McKean et Craig, Introduction to Mathematical Statistics, chap. 6", detail: "Vraisemblance, information de Fisher, invariance."}
+    liens:
+      - {titre: "A2b/S01 — Estimateurs et méthode des moments", cible: "a2b/s01"}
+      - {titre: "A2b/S03 — Intervalles de confiance", cible: "a2b/s03"}
+
 etapes:
   - type: quiz
     titre: "Test de positionnement"

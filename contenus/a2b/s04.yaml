@@ -12,6 +12,214 @@ actu_basics:
   accroche_fr: "Une loi ajustée n'est pas une loi juste : comment le vérifier ?"
   accroche_en: "A fitted distribution is not a right one: how do we check?"
 
+fiche:
+  statut: prete
+  vue_ensemble:
+    question: "La loi ajustée colle-t-elle vraiment aux sinistres observés ?"
+    pourquoi: "Un paramètre bien estimé dans une mauvaise loi donne un tarif ou un capital faux. Avant d'utiliser un modèle, l'actuaire vérifie qu'il reproduit les données et compare les lois candidates. Les tests d'adéquation et l'AIC donnent ce contrôle, sans remplacer le jugement sur la queue."
+    objectifs:
+      - "Calculer les effectifs attendus d'une loi ajustée."
+      - "Mener un test du khi-deux avec le bon nombre de degrés de liberté."
+      - "Calculer la statistique de Kolmogorov-Smirnov."
+      - "Comparer deux lois avec l'AIC."
+      - "Dire ce qu'un test ne voit pas, notamment dans la queue."
+    prerequis:
+      - "Maximum de vraisemblance (A2b.02)."
+      - "Lois de Poisson et exponentielle (A2)."
+      - "Fonction de répartition."
+    carte:
+      - "χ² = Σ (O − E)² / E."
+      - "ddl = k − 1 − p ; chaque E ≥ 5."
+      - "Avec 2 ddl : seuil 5,99 et p = e^(−χ²/2)."
+      - "D = max |F_n(x) − F(x)|."
+      - "AIC = 2p − 2ℓ : le plus petit gagne."
+      - "Peu de sinistres : aucun test ne voit la queue."
+    duree_minutes: 40
+  cours_complet:
+    sections:
+      - titre: "1. Une loi ajustée reste une hypothèse"
+        contenu: "Le maximum de vraisemblance donne le meilleur paramètre dans une famille choisie, pas la preuve que la famille convient. Un test d'adéquation pose l'hypothèse nulle « les données suivent cette loi » et mesure l'écart. Ne pas rejeter ne prouve pas que la loi est vraie."
+        formules:
+          - formule: "H_0 : X\\sim F_{\\hat{\\theta}}\\qquad\\text{contre}\\qquad H_1 : X\\not\\sim F_{\\hat{\\theta}}"
+            explication: "Hypothèses d'un test d'adéquation."
+      - titre: "2. Le test du khi-deux"
+        contenu: "On répartit les observations en k classes, on compare les effectifs observés O aux effectifs attendus E sous la loi ajustée. On regroupe les classes pour que chaque effectif attendu dépasse 5. Chaque paramètre estimé retire un degré de liberté."
+        formules:
+          - formule: "\\chi^2=\\sum_{j=1}^{k}\\frac{(O_j-E_j)^2}{E_j},\\qquad \\text{ddl}=k-1-p"
+            explication: "Statistique du khi-deux et degrés de liberté."
+      - titre: "3. Lire le résultat"
+        contenu: "On rejette la loi si la statistique dépasse le seuil de la loi du khi-deux. Avec 2 degrés de liberté, le seuil à 5 % vaut 5,99 et la p-valeur a une forme simple. Regarder les contributions par classe montre où la loi décroche."
+        formules:
+          - formule: "\\text{2 ddl : } p\\text{-valeur}=e^{-\\chi^2/2},\\qquad \\chi^2_{2;\\,0{,}95}=5{,}99"
+            explication: "Seuil et p-valeur à 2 degrés de liberté."
+      - titre: "4. Le test de Kolmogorov-Smirnov"
+        contenu: "Pour des montants continus, on compare la fonction de répartition empirique à celle de la loi ajustée. L'écart maximal se cherche juste avant et juste après chaque point trié. Le seuil à 5 % vaut environ 1,36 / √n, mais il est trop indulgent quand les paramètres sont estimés sur les mêmes données."
+        formules:
+          - formule: "D=\\max_i\\Big(\\frac{i}{n}-F(x_{(i)}),\\;F(x_{(i)})-\\frac{i-1}{n}\\Big)"
+            explication: "Distance de Kolmogorov-Smirnov sur les points triés."
+      - titre: "5. Comparer deux lois avec l'AIC"
+        contenu: "Le critère d'information d'Akaike récompense la vraisemblance et pénalise le nombre de paramètres. On l'utilise pour classer des lois candidates, même non emboîtées : la plus petite valeur gagne. Un petit écart d'AIC ne départage pas vraiment deux lois."
+        formules:
+          - formule: "\\text{AIC}=2p-2\\,\\ell(\\hat{\\theta})"
+            explication: "p est le nombre de paramètres estimés."
+      - titre: "6. Le QQ-plot"
+        contenu: "Le QQ-plot place les quantiles observés face aux quantiles de la loi ajustée. Les points alignés sur la diagonale signalent un bon ajustement ; des points qui s'écartent en haut à droite montrent une queue observée plus épaisse que le modèle."
+        formules:
+          - formule: "\\Big(F_{\\hat{\\theta}}^{-1}\\big(\\tfrac{i-0{,}5}{n}\\big),\\;x_{(i)}\\Big)"
+            explication: "Coordonnées des points d'un QQ-plot."
+      - titre: "7. Limites"
+        contenu: "Avec quelques sinistres, aucun test n'a la puissance de voir la queue : une exponentielle peut passer tous les tests et sous-estimer gravement les gros sinistres. Le jugement de l'actuaire, les données de marché et la prudence comptent autant que la p-valeur."
+        formules:
+          - formule: "\\text{ne pas rejeter}\\;H_0\\;\\neq\\;\\text{prouver}\\;H_0"
+            explication: "Un test ne valide jamais une loi."
+  methodes:
+    methodes:
+      - titre: "Mener un test du khi-deux"
+        quand_utiliser: "On a des données groupées, comme des nombres de sinistres, et une loi ajustée."
+        etapes:
+          - "Calculer chaque effectif attendu : effectif total × probabilité de la classe."
+          - "Regrouper les classes dont l'effectif attendu est inférieur à 5."
+          - "Calculer Σ (O − E)² / E."
+          - "Prendre ddl = k − 1 − p et comparer au seuil."
+        controles:
+          - "Les effectifs attendus somment à l'effectif total."
+          - "La dernière classe regroupe toute la queue."
+        erreurs:
+          - "Oublier de retirer un degré de liberté par paramètre estimé."
+          - "Diviser par O au lieu de E."
+      - titre: "Choisir entre deux lois"
+        quand_utiliser: "Plusieurs lois candidates ont été ajustées sur les mêmes sinistres."
+        etapes:
+          - "Ajuster chaque loi par maximum de vraisemblance et noter ℓ(θ̂)."
+          - "Calculer AIC = 2p − 2ℓ pour chacune."
+          - "Retenir le plus petit AIC, puis vérifier la queue avec un QQ-plot et le jugement métier."
+        controles:
+          - "Les log-vraisemblances sont calculées sur exactement les mêmes données."
+          - "Un écart d'AIC de quelques unités reste faible."
+        erreurs:
+          - "Retenir le plus grand AIC."
+          - "Choisir la loi la plus légère pour la réassurance sur la seule foi de l'AIC."
+  exemples_guides:
+    exemples:
+      - titre: "Khi-deux pour une loi de Poisson"
+        enonce: "1 000 contrats fictifs : 610 sans sinistre, 300 avec 1, 70 avec 2, 20 avec 3. La moyenne observée est λ̂ = 0,5. Teste la loi de Poisson à 5 %."
+        raisonnement:
+          - "Effectifs attendus : 606,53, 303,27, 75,82 et, pour N ≥ 3, 1 000 − 985,61 = 14,39."
+          - "Contributions : 0,0198 + 0,0352 + 0,4462 + 2,1892 = 2,6905."
+          - "ddl = 4 − 1 − 1 = 2, seuil 5,99."
+          - "p-valeur = e^(−2,6905 / 2) = 0,2605."
+        resultat: "χ² = 2,6905 < 5,99 : on ne rejette pas la loi de Poisson (p = 0,26)."
+        interpretation: "La classe « 3 ou plus » apporte presque toute la statistique : c'est là qu'une surdispersion apparaîtrait."
+        controles:
+          - "Les effectifs attendus somment à 1 000."
+          - "Tous les effectifs attendus dépassent 5."
+      - titre: "Kolmogorov-Smirnov et AIC sur 8 sinistres"
+        enonce: "Les 8 sinistres de la séance A2b.01 face à l'exponentielle de moyenne 1 881,25 €, puis face à la Pareto à θ = 2 000 € connu et α̂ = 1,6216."
+        raisonnement:
+          - "Juste avant 600 €, F_n = 0 et F(600) = 1 − e^(−600 / 1 881,25) = 0,2731 : c'est l'écart maximal, D = 0,2731."
+          - "Seuil approché : 1,36 / √8 = 0,481, donc on ne rejette pas l'exponentielle."
+          - "AIC exponentielle : 2 × 1 − 2 × (−68,3175) = 138,64."
+          - "AIC Pareto : ℓ = −69,8736, donc 2 × 1 − 2 × (−69,8736) = 141,75."
+        resultat: "D = 0,2731 sous le seuil ; l'AIC préfère l'exponentielle, 138,64 contre 141,75."
+        interpretation: "L'exponentielle décrit mieux ces 8 points, mais ils ne disent rien de la queue : pour la réassurance, la Pareto reste la prudence."
+        controles:
+          - "Au dernier point, 4 200 €, l'écart vaut 0,1073, plus petit que D."
+          - "Les deux lois ont un seul paramètre estimé : l'AIC revient à comparer les log-vraisemblances."
+  exercices_corriges:
+    exercices:
+      - titre: "Fondamental — AIC"
+        niveau: fondamental
+        enonce: "Loi A : 1 paramètre, ℓ = −120,4. Loi B : 2 paramètres, ℓ = −118,9. Laquelle l'AIC préfère-t-il ?"
+        corrige:
+          - "AIC A = 2 × 1 + 240,8 = 242,8."
+          - "AIC B = 2 × 2 + 237,8 = 241,8."
+          - "B a le plus petit AIC."
+        feedback: "Le gain de vraisemblance de B, 1,5, dépasse la pénalité de son paramètre en plus, 1."
+      - titre: "Intermédiaire — khi-deux sans paramètre estimé"
+        niveau: intermediaire
+        enonce: "Une loi fixée à l'avance prévoit 45, 35 et 20 observations dans trois classes ; on observe 50, 30 et 20. Calcule χ², les degrés de liberté et la p-valeur."
+        corrige:
+          - "χ² = 25 / 45 + 25 / 35 + 0 = 0,5556 + 0,7143 = 1,2698."
+          - "Aucun paramètre estimé : ddl = 3 − 1 = 2."
+          - "p-valeur = e^(−1,2698 / 2) = 0,5300."
+        feedback: "1,27 est loin sous le seuil 5,99 : les écarts sont compatibles avec le hasard."
+      - titre: "Avancé — Kolmogorov-Smirnov à la main"
+        niveau: avance
+        enonce: "Observations 0,1, 0,4, 0,6, 0,9 face à la loi uniforme sur [0 ; 1]. Calcule D et compare au seuil 1,36 / √n."
+        corrige:
+          - "Écarts après chaque point : 0,25 − 0,1, 0,5 − 0,4, 0,75 − 0,6, 1 − 0,9, soit 0,15, 0,1, 0,15, 0,1."
+          - "Écarts avant chaque point : 0,1, 0,15, 0,1, 0,15."
+          - "D = 0,15, et le seuil vaut 1,36 / √4 = 0,68."
+        feedback: "Il faut regarder des deux côtés de chaque saut de F_n : un seul côté peut manquer l'écart maximal."
+  applications_labs:
+    applications:
+      - titre: "Valider une loi de fréquence et une loi de sévérité"
+        contexte: "Un tarif fictif repose sur une fréquence de Poisson et une sévérité exponentielle ; on vérifie les deux avant de l'utiliser."
+        objectif: "Calculer le khi-deux de la Poisson, la statistique de Kolmogorov-Smirnov de l'exponentielle et l'AIC face à la Pareto."
+        outils: [python, excel]
+        entrees:
+          - "Nombres de sinistres : 610, 300, 70, 20 contrats avec 0, 1, 2, 3 sinistres."
+          - "Montants : 1 200, 800, 3 500, 600, 2 100, 950, 1 700, 4 200 €."
+        hypotheses:
+          - "Contrats et sinistres indépendants."
+          - "Paramètres estimés par maximum de vraisemblance."
+        procedure:
+          - "Calculer les effectifs attendus et le khi-deux."
+          - "Calculer D sur les montants triés."
+          - |
+            ```python
+            import math
+
+            observed = [610, 300, 70, 20]
+            lam = 0.5
+            expected = [1000 * math.exp(-lam) * lam**k / math.factorial(k) for k in range(3)]
+            expected.append(1000 - sum(expected))
+            chi2 = sum((o - e) ** 2 / e for o, e in zip(observed, expected))
+            xs = sorted([1200, 800, 3500, 600, 2100, 950, 1700, 4200])
+            n, mean = len(xs), sum(xs) / len(xs)
+            cdf = [1 - math.exp(-x / mean) for x in xs]
+            d = max(max((i + 1) / n - f, f - i / n) for i, f in enumerate(cdf))
+            aic_exp = 2 - 2 * (-n * math.log(mean) - n)
+            print(round(chi2, 4), round(math.exp(-chi2 / 2), 4), round(d, 4), round(aic_exp, 2))
+            assert chi2 < 5.99
+            ```
+          - "Comparer l'AIC de l'exponentielle à celui de la Pareto, 141,75."
+        sorties:
+          - "χ², p-valeur et décision pour la Poisson."
+          - "D et AIC pour la sévérité."
+        validation:
+          - "Les effectifs attendus somment à 1 000."
+          - "χ² = 2,6905, D = 0,2731 et AIC = 138,64."
+        limites:
+          - "Huit sinistres ne permettent pas de juger la queue : le choix pour la réassurance reste prudent."
+  synthese_references:
+    memo:
+      - "Un test d'adéquation peut rejeter une loi, jamais la prouver."
+      - "χ² = Σ (O − E)² / E, avec ddl = k − 1 − p et E ≥ 5."
+      - "À 2 ddl : seuil 5,99 et p = e^(−χ²/2)."
+      - "D = plus grand écart entre F_n et F, de part et d'autre de chaque point."
+      - "AIC = 2p − 2ℓ : le plus petit gagne."
+      - "La queue se juge aussi avec un QQ-plot et le jugement métier."
+    glossaire:
+      - {terme_fr: "Test d'adéquation", terme_en: "Goodness-of-fit test", definition: "Test of whether data are consistent with a given distribution."}
+      - {terme_fr: "Khi-deux", terme_en: "Chi-square test", definition: "Test comparing observed and expected counts by class."}
+      - {terme_fr: "Degrés de liberté", terme_en: "Degrees of freedom", definition: "Number of classes minus one minus the number of estimated parameters."}
+      - {terme_fr: "Kolmogorov-Smirnov", terme_en: "Kolmogorov-Smirnov test", definition: "Test based on the largest gap between empirical and fitted distribution functions."}
+      - {terme_fr: "Critère d'information d'Akaike", terme_en: "Akaike information criterion (AIC)", definition: "Twice the number of parameters minus twice the maximized log-likelihood."}
+      - {terme_fr: "QQ-plot", terme_en: "QQ plot", definition: "Plot of observed quantiles against fitted quantiles."}
+      - {terme_fr: "p-valeur", terme_en: "p-value", definition: "Probability, under the model, of a gap at least as large as the one observed."}
+    maitrise:
+      - "I compute the expected counts of a fitted distribution."
+      - "I run a chi-square test with the right degrees of freedom."
+      - "I compute the Kolmogorov-Smirnov statistic."
+      - "I compare two distributions with the AIC and know its limits in the tail."
+    references:
+      - {titre: "Klugman, Panjer et Willmot, Loss Models, chap. 16", detail: "Sélection de modèle, khi-deux, Kolmogorov-Smirnov, AIC."}
+      - {titre: "CAS, MAS-I (Modern Actuarial Statistics I)", detail: "Tests d'hypothèses et adéquation."}
+    liens:
+      - {titre: "A2b/S02 — Le maximum de vraisemblance", cible: "a2b/s02"}
+      - {titre: "A2b/S03 — Intervalles de confiance", cible: "a2b/s03"}
+
 etapes:
   - type: quiz
     titre: "Test de positionnement"

@@ -1,6 +1,201 @@
 # English texts for session A2b.02. Numbers, answers and tests live in contenus/a2b/s02.yaml.
 titre: "Maximum likelihood"
 
+fiche:
+  vue_ensemble:
+    question: "Which parameter value makes the observed claims the most likely?"
+    pourquoi: "Maximum likelihood is the reference estimation method in actuarial work: it uses all the information in the sample, gives a standard error through the Fisher information and directly provides the estimate of any derived quantity, such as a tail probability or a premium."
+    objectifs:
+      - "Write the likelihood and log-likelihood of an independent sample."
+      - "Obtain the Poisson, exponential and known-θ Pareto MLEs."
+      - "Calculate a standard error with the Fisher information."
+      - "Use invariance to estimate a probability or a quantile."
+      - "See how the choice of distribution changes the estimated tail."
+    prerequis:
+      - "Estimators, bias and standard error (A2b.01)."
+      - "Poisson, exponential and Pareto distributions (A2)."
+      - "Derivative and logarithm."
+    carte:
+      - "L(θ) = Π f(x_i ; θ)."
+      - "ℓ(θ) = Σ ln f(x_i ; θ), maximum where ℓ′(θ̂) = 0."
+      - "Poisson and exponential: the MLE is x̄."
+      - "Pareto, known θ: α̂ = n / Σ ln(1 + x_i/θ)."
+      - "Var(θ̂) ≈ 1 / I(θ)."
+      - "Invariance: the MLE of g(θ) is g(θ̂)."
+  cours_complet:
+    sections:
+      - titre: "1. The likelihood"
+        contenu: "The likelihood is the density of the observed data, read as a function of the parameter. With independent observations, the joint density is a product. It is not a probability on θ: it does not sum to 1 as θ varies."
+        formules:
+          - explication: "Likelihood of an independent sample."
+      - titre: "2. The log-likelihood and the score"
+        contenu: "The logarithm is increasing: L and ln L have their maximum at the same place. A sum is much easier to differentiate than a product, and it stops the product of many small densities from falling to 0 on a computer. We set the derivative, called the score, to zero."
+        formules:
+          - explication: "Log-likelihood and the condition for the maximum."
+      - titre: "3. Three MLEs to know"
+        contenu: "For the Poisson, ℓ(λ) = −nλ + Σ x_i ln λ − Σ ln x_i!, and the score is zero at λ̂ = x̄. For the exponential with mean θ, we also find θ̂ = x̄. For the Pareto with known θ, ℓ(α) = n ln α + nα ln θ − (α + 1) Σ ln(θ + x_i) gives a closed formula."
+        formules:
+          - formule: "\\text{Poisson: }\\hat{\\lambda}=\\bar{x},\\qquad \\text{exponential: }\\hat{\\theta}=\\bar{x}"
+            explication: "Both MLEs are the sample mean."
+          - explication: "MLE of α for the Pareto when θ is known."
+      - titre: "4. Standard error and Fisher information"
+        contenu: "For a large sample, the MLE is almost unbiased and roughly normal. Its variance is the inverse of the Fisher information, which measures the curvature of the log-likelihood: the sharper the peak, the more precise the estimate."
+        formules:
+          - explication: "Fisher information and standard error."
+          - formule: "\\text{Poisson: }\\operatorname{se}(\\hat{\\lambda})=\\sqrt{\\hat{\\lambda}/n},\\qquad \\text{Pareto: }\\operatorname{se}(\\hat{\\alpha})=\\hat{\\alpha}/\\sqrt{n}"
+            explication: "Two closed-form standard errors."
+      - titre: "5. The invariance property"
+        contenu: "The MLE of a function of the parameter is that function applied to the MLE. This gives the probability of no claim, a quantile or a pure premium without any new calculation. The observed share of claim-free years, on the other hand, does not use the model."
+        formules:
+          - explication: "Invariance applied to the probability of no claim."
+      - titre: "6. Choosing the tail"
+        contenu: "Two distributions fitted to the same claims can diverge sharply beyond the data. The heavy-tailed Pareto gives much more weight to large claims than the exponential. This is what matters for reinsurance and capital; session A2b.04 compares the fits."
+        formules:
+          - formule: "\\text{exponential: }P(X>x)=e^{-x/\\theta},\\qquad \\text{Pareto: }P(X>x)=\\Big(\\frac{\\theta}{\\theta+x}\\Big)^{\\alpha}"
+            explication: "A tail decreasing exponentially or like a power."
+      - titre: "7. Limits"
+        contenu: "The MLE depends on the chosen model: a wrong distribution gives a precise estimate of the wrong thing. The asymptotic properties need a lot of data, and several distributions have no closed formula, which calls for numerical optimization."
+        formules:
+          - explication: "Without a closed formula, we maximize numerically."
+  methodes:
+    methodes:
+      - titre: "Find an MLE"
+        quand_utiliser: "We have chosen a distribution for the data and want the parameter that makes them the most likely."
+        etapes:
+          - "Write ln f(x_i ; θ) for one observation."
+          - "Sum over the sample to get ℓ(θ)."
+          - "Differentiate, set the score to zero and solve for θ."
+          - "Check that ℓ″(θ̂) < 0, so that it is a maximum."
+        controles:
+          - "ℓ(θ̂) is larger than ℓ at a few nearby values."
+          - "For the Poisson and the exponential, θ̂ = x̄."
+        erreurs:
+          - "Maximizing the sum of the densities instead of their product."
+          - "Forgetting the term in n when differentiating."
+      - titre: "Estimate a derived quantity by invariance"
+        quand_utiliser: "We want a probability, a quantile or a premium from a fitted model."
+        etapes:
+          - "Estimate the parameter by maximum likelihood."
+          - "Write the quantity as a function g of the parameter."
+          - "Calculate g(θ̂)."
+        controles:
+          - "The result respects the bounds of the quantity, for example a probability between 0 and 1."
+          - "The result is close to its empirical version when the sample is large."
+        erreurs:
+          - "Replacing the model with the observed frequency."
+          - "Applying g to the mean of the data instead of the estimated parameter."
+  exemples_guides:
+    exemples:
+      - titre: "Poisson over ten years"
+        enonce: "Fictional claim counts over 10 years: 3, 1, 4, 2, 0, 5, 2, 3, 1, 4. Estimate λ, its standard error and the probability of a claim-free year."
+        raisonnement:
+          - "25 claims in total, so λ̂ = 25 / 10 = 2.5 per year."
+          - "se(λ̂) = √(2.5 / 10) = 0.5."
+          - "Invariance: estimated P(N = 0) = e^−2.5 = 0.0821."
+        resultat: "λ̂ = 2.5, se(λ̂) = 0.5 and P(N = 0) ≈ 8.2%."
+        interpretation: "With this model, about one year in twelve is claim-free, while the sample shows one in ten."
+        controles:
+          - "√2.5 = 1.58 is the standard deviation of one year, not the precision of the mean."
+          - "The empirical frequency of 10% ignores the Poisson assumption."
+      - titre: "Pareto against exponential"
+        enonce: "The 8 claims of session A2b.01: €1,200, 800, 3,500, 600, 2,100, 950, 1,700, 4,200. Fit a Pareto with known θ = €2,000 and an exponential, then compare P(X > 5,000)."
+        raisonnement:
+          - "Σ ln(1 + x_i / 2,000) = 4.9335, so α̂ = 8 / 4.9335 = 1.6216."
+          - "Pareto: P(X > 5,000) = (2,000 / 7,000)^1.6216 = 0.1311."
+          - "Exponential: θ̂ = x̄ = €1,881.25, and P(X > 5,000) = e^(−5,000 / 1,881.25) = 0.0701."
+          - "Exponential log-likelihood: −8 ln 1,881.25 − 8 = −68.3175."
+        resultat: "The Pareto gives 13.1% above €5,000, the exponential 7.0%."
+        interpretation: "Same data, and almost twice as many large claims with the Pareto: the tail depends mostly on the choice of distribution."
+        controles:
+          - "The mean of the fitted Pareto is 2,000 / 0.6216 = €3,218, well above x̄."
+          - "se(α̂) = 1.6216 / √8 = 0.5733: the tail is poorly known with 8 claims."
+  exercices_corriges:
+    exercices:
+      - titre: "Fundamental — Poisson"
+        enonce: "Claim counts over 8 years: 2, 0, 1, 3, 1, 0, 2, 1. Calculate λ̂, its standard error and the estimated P(N = 0)."
+        corrige:
+          - "λ̂ = 10 / 8 = 1.25."
+          - "se(λ̂) = √(1.25 / 8) = 0.3953."
+          - "P(N = 0) = e^−1.25 = 0.2865."
+        feedback: "The observed share of claim-free years is 2 / 8 = 25%; the model gives 28.65%."
+      - titre: "Intermediate — Pareto with known θ"
+        enonce: "Amounts €500, 1,500, 1,000, 3,000, Pareto with known θ = €1,000. Calculate α̂."
+        corrige:
+          - "Σ ln(1 + x_i / 1,000) = ln 1.5 + ln 2.5 + ln 2 + ln 4 = 3.4012."
+          - "α̂ = 4 / 3.4012 = 1.1761."
+        feedback: "With α̂ close to 1, the mean θ / (α − 1) becomes very large: the tail is very heavy."
+      - titre: "Advanced — invariance"
+        enonce: "An exponential severity has MLE θ̂ = €1,500. Give the MLE of the median and of P(X > 5,000)."
+        corrige:
+          - "The median is θ ln 2, so its MLE is 1,500 × ln 2 = €1,039.72."
+          - "P(X > 5,000) = e^(−5,000 / 1,500) = 0.0357."
+        feedback: "No new optimization: invariance applies the formula to the estimated parameter."
+  applications_labs:
+    applications:
+      - titre: "Compare two fitted tails"
+        contexte: "The price of a cover above €5,000 depends on the severity distribution chosen for 8 fictional claims."
+        objectif: "Fit an exponential and a known-θ Pareto by maximum likelihood, then compare their tail probabilities."
+        entrees:
+          - "Amounts: €1,200, 800, 3,500, 600, 2,100, 950, 1,700, 4,200."
+          - "Pareto: known θ = €2,000."
+        hypotheses:
+          - "Independent, identically distributed claims."
+          - "The Pareto θ is fixed in advance."
+        procedure:
+          - "Calculate θ̂ = x̄ for the exponential and its log-likelihood."
+          - "Calculate the Pareto α̂ with the closed formula."
+          - |
+            ```python
+            import math
+
+            xs = [1200, 800, 3500, 600, 2100, 950, 1700, 4200]
+            n = len(xs)
+            theta_exp = sum(xs) / n
+            loglik = -n * math.log(theta_exp) - sum(xs) / theta_exp
+            alpha = n / sum(math.log(1 + x / 2000) for x in xs)
+            tail_pareto = (2000 / (2000 + 5000)) ** alpha
+            tail_exp = math.exp(-5000 / theta_exp)
+            print(round(loglik, 4), round(alpha, 4), round(tail_pareto, 4), round(tail_exp, 4))
+            assert tail_pareto > tail_exp
+            ```
+          - "Compare the two probabilities above €5,000."
+        sorties:
+          - "θ̂, ℓ(θ̂) and α̂."
+          - "P(X > 5,000) under each distribution."
+        validation:
+          - "ℓ is lower at θ = 1,500 and θ = 2,500 than at θ̂."
+          - "α̂ = 1.6216 and P(X > 5,000) = 0.1311 for the Pareto."
+        limites:
+          - "With 8 claims, the standard error of α̂ is about 0.57: the tail remains uncertain."
+  synthese_references:
+    memo:
+      - "The likelihood is the density of the data, seen as a function of the parameter."
+      - "We maximize ℓ(θ) = Σ ln f(x_i ; θ) by setting the score to zero."
+      - "Poisson and exponential: MLE = x̄."
+      - "Pareto with known θ: α̂ = n / Σ ln(1 + x_i/θ)."
+      - "se(θ̂) ≈ 1 / √I(θ̂); Poisson: √(λ̂/n)."
+      - "Invariance: the MLE of g(θ) is g(θ̂)."
+    glossaire:
+      - {definition: "Density of the observed data, read as a function of the parameter."}
+      - {definition: "Logarithm of the likelihood, a sum over the observations."}
+      - {definition: "Derivative of the log-likelihood with respect to the parameter."}
+      - {definition: "Parameter value that maximizes the likelihood."}
+      - {definition: "Minus the expected second derivative of the log-likelihood."}
+      - {definition: "The MLE of a function of the parameter is that function of the MLE."}
+      - {definition: "Tail that decreases slowly, like a power, giving weight to large claims."}
+    maitrise:
+      - "I write the likelihood and log-likelihood of an independent sample."
+      - "I derive the Poisson, exponential and Pareto MLEs."
+      - "I compute a standard error from the Fisher information."
+      - "I use invariance to estimate a probability or a quantile."
+    references:
+      - {titre: "Klugman, Panjer and Willmot, Loss Models, chap. 13", detail: "Maximum likelihood for claim distributions."}
+      - {titre: "Hogg, McKean and Craig, Introduction to Mathematical Statistics, chap. 6", detail: "Likelihood, Fisher information, invariance."}
+    liens:
+      - {titre: "A2b/S01 — Estimators and the method of moments"}
+      - {titre: "A2b/S03 — Confidence intervals"}
+
+
 etapes:
   - titre: "Placement check"
     intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."

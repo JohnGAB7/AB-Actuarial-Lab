@@ -503,7 +503,8 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       if (await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)) failures.push(language + " S03 sheet overflow at 320px");
     }
     await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto(new URL("a1/s04/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
+    // Every Fondamentaux session now has a ready sheet; A3/S01 has none yet.
+    await page.goto(new URL("a3/s01/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
     if (await page.locator("#lesson-mode").isVisible()) failures.push("sessions without a ready reference sheet should not expose the sheet switch");
 
     if (errors.length) failures.push("page errors: " + errors.join("; "));
