@@ -146,12 +146,14 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
     await page.goto(new URL("en/a1/s01/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
     await page.locator(".opt").first().waitFor();
     const englishLessonLogo = await page.locator(".brand-logo").evaluate((img) => ({ src: img.src, loaded: img.complete && img.naturalWidth > 0 }));
-    const englishLessonFooterLogo = await page.locator(".pied .brand-logo").evaluate((img) => ({ src: img.src, loaded: img.complete && img.naturalWidth > 0 }));
     if (!englishLessonLogo.loaded || !englishLessonLogo.src.includes("/assets/actuarial-lab-mark.svg")) failures.push("English lesson header logo must load from the site-root asset path");
-    if (!englishLessonFooterLogo.loaded || !englishLessonFooterLogo.src.includes("/assets/actuarial-lab-mark.svg")) failures.push("English lesson footer logo must load from the site-root asset path");
     const englishOptions = await page.locator(".opt").allInnerTexts();
     console.log("quiz options EN:", englishOptions);
     if (!englishOptions.length || !englishOptions.every((value) => /^[A-Z]\s+(?!-)/.test(value.trim()))) failures.push("English quiz options should use letter enumeration without a dash");
+
+    await page.goto(new URL("en/a1/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
+    const nestedFooterLogo = await page.locator(".pied .brand-logo").evaluate((img) => ({ src: img.src, loaded: img.complete && img.naturalWidth > 0 }));
+    if (!nestedFooterLogo.loaded || !nestedFooterLogo.src.includes("/assets/actuarial-lab-mark.svg")) failures.push("English nested-page footer logo must load from the site-root asset path");
 
 
     // Wide lesson workspace: the progress rail stays visible and the canvas uses the available desktop width.
