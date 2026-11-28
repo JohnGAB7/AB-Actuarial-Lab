@@ -23,6 +23,7 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
       window.renderActuarialMath(node);
       return { rendered: node.querySelectorAll(".katex").length, source: node.textContent };
     });
+    console.log("global notation check:", notationCheck);
     if (notationCheck.rendered < 4) failures.push("global KaTeX should render indexed variables, bare equations, inline delimiters and display delimiters outside lesson components");
 
     const brand = await page.evaluate(() => ({
