@@ -4,9 +4,9 @@
   if (!window.renderMathInElement) return;
 
   const EXCLUDED = "code, pre, script, style, kbd, .katex, .math-rendered, .math-notation-source";
-  const BARE_EQUATION = /(?<![\\p{L}\\d_])(?:[A-Za-zδΔ][\\p{L}\\d_{}]*|\\d+(?:[.,]\\d+)?)(?:\\s*(?:=|<|>|≤|≥|≈|≠|\\+|−|-|×|÷|\\/|\\^|\\\\cdot|\\\\times)\\s*(?:[A-Za-zδΔ][\\p{L}\\d_{}]*|\\d+(?:[.,]\\d+)?|\\([^)]*\\)))+/gu;
-  const BARE_INDEXED = /(?<![\\p{L}\\d])(?:[A-Za-zδΔ][\\p{L}\\d]*)(?:_(?:\\{[^{}]+\\}|[\\p{L}\\d]+)|\\^(?:\\{[^{}]+\\}|[\\p{L}\\d]+))+(?![\\p{L}\\d])/gu;
-  const DELIMITED = /(\\$\\$[\\s\\S]*?\\$\\$|\\$[^$]*\\$|\\\\\\([^)]*\\\\\\)|\\\\\\[[\\s\\S]*?\\\\\\])/g;
+  const BARE_EQUATION = /(?<![\p{L}\d_])(?:[A-Za-zδΔ][\p{L}\d_{}]*|\d+(?:[.,]\d+)?)(?:\s*(?:=|<|>|≤|≥|≈|≠|\+|−|-|×|÷|\/|\^|\\cdot|\\times)\s*(?:[A-Za-zδΔ][\p{L}\d_{}]*|\d+(?:[.,]\d+)?|\([^)]*\)))+/gu;
+  const BARE_INDEXED = /(?<![\p{L}\d])(?:[A-Za-zδΔ][\p{L}\d]*)(?:_(?:\{[^{}]+\}|[\p{L}\d]+)|\^(?:\{[^{}]+\}|[\p{L}\d]+))+(?![\p{L}\d])/gu;
+  const DELIMITED = /(\$\$[\s\S]*?\$\$|\$[^$]*\$|\\\([^)]*\\\)|\\\[[\s\S]*?\\\])/g;
 
   function wrapNotation(value) {
     return String(value || "").split(DELIMITED).map((part, index) => {
@@ -39,8 +39,8 @@
     prepare(root);
     window.renderMathInElement(root, {
       delimiters: [
-        { left: "\\\\[", right: "\\\\]", display: true },
-        { left: "\\\\(", right: "\\\\)", display: false },
+        { left: "\\[", right: "\\]", display: true },
+        { left: "\\(", right: "\\)", display: false },
         { left: "$$", right: "$$", display: true },
         { left: "$", right: "$", display: false }
       ],
