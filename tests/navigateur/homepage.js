@@ -102,6 +102,8 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
     if (!/Understand the idea/.test(englishMobile.title)) failures.push("English editorial content");
     if (!englishMobile.siteTitle.startsWith("Actuarial Learning Lab by ACTU-BASICS")) failures.push("English site title");
     if (!englishMobile.brand.includes("ACTUARIAL LEARNING LAB") || !englishMobile.brand.includes("BY ACTU-BASICS")) failures.push("English sub-brand lockup");
+    const footerLogoEN = await page.locator(".pied .brand-logo").evaluate((img) => ({ src: img.src, loaded: img.complete && img.naturalWidth > 0 }));
+    if (!footerLogoEN.loaded || !footerLogoEN.src.includes("/assets/actuarial-lab-mark.svg")) failures.push("English homepage footer logo must load from the site-root asset path");
     const miniEnglish = await page.evaluate(() => ({
       title: document.querySelector("#mini-lab h2")?.textContent,
       summary: document.querySelector("#mini-chart-summary")?.textContent,
@@ -135,7 +137,9 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
     await page.goto(new URL("en/a1/s01/index.html", BASE).toString(), { waitUntil: "domcontentloaded" });
     await page.locator(".opt").first().waitFor();
     const englishLessonLogo = await page.locator(".brand-logo").evaluate((img) => ({ src: img.src, loaded: img.complete && img.naturalWidth > 0 }));
-    if (!englishLessonLogo.loaded || !englishLessonLogo.src.includes("/assets/actuarial-lab-mark.svg")) failures.push("English lesson logo must load from the site-root asset path");
+    const englishLessonFooterLogo = await page.locator(".pied .brand-logo").evaluate((img) => ({ src: img.src, loaded: img.complete && img.naturalWidth > 0 }));
+    if (!englishLessonLogo.loaded || !englishLessonLogo.src.includes("/assets/actuarial-lab-mark.svg")) failures.push("English lesson header logo must load from the site-root asset path");
+    if (!englishLessonFooterLogo.loaded || !englishLessonFooterLogo.src.includes("/assets/actuarial-lab-mark.svg")) failures.push("English lesson footer logo must load from the site-root asset path");
     const englishOptions = await page.locator(".opt").allInnerTexts();
     console.log("quiz options EN:", englishOptions);
     if (!englishOptions.length || !englishOptions.every((value) => /^[A-Z]\s+(?!-)/.test(value.trim()))) failures.push("English quiz options should use letter enumeration without a dash");
