@@ -381,6 +381,8 @@ etapes:
       - {nom: 'The capital shares add up to the loan'}
       - {nom: 'Internal rate of return of 13.066%'}
       - {nom: 'The internal rate of return of a loan is its rate'}
+      - {nom: 'Zero-rate payment: principal divided by n'}
+      - {nom: 'Zero-rate amortization: constant principal and zero final balance'}
 
   - titre: "Vocabulary"
     intro: "Tap a card: the French term and a job-interview sentence."
