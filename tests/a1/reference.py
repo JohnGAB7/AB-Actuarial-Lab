@@ -52,6 +52,8 @@ def geometric_annuity(n, i, g):
 
 # Session a1/s04
 def level_payment(loan, n, i):
+    if i == 0:
+        return loan / n
     return loan * i / (1 - (1 + i) ** -n)
 
 
