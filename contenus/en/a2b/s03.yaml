@@ -1,6 +1,200 @@
 # English texts for session A2b.03. Numbers, answers and tests live in contenus/a2b/s03.yaml.
 titre: "Confidence intervals: how precise is a claim frequency?"
 
+fiche:
+  vue_ensemble:
+    question: "How far can we trust an estimated frequency or mean?"
+    pourquoi: "An estimate without a margin of error does not support a decision. The actuary must say whether an observed frequency of 6% really means 5% or 7%, and how many policies are needed to reduce that doubt. This is the basis of credibility and of sizing a study."
+    objectifs:
+      - "Interpret a confidence interval correctly."
+      - "Build an interval for a proportion, a mean and a Poisson frequency."
+      - "Choose between the normal and the t distribution."
+      - "Calculate the sample size for a given margin of error."
+      - "Recognize when the normal approximation is no longer enough."
+    prerequis:
+      - "Standard error (A2b.01)."
+      - "Maximum likelihood and the Poisson standard error (A2b.02)."
+      - "The normal distribution and its quantiles."
+    carte:
+      - "CI = estimate ± quantile × standard error."
+      - "Proportion: p̂ ± 1.96 √(p̂(1 − p̂)/n)."
+      - "Mean, small n: x̄ ± t(n − 1) s/√n."
+      - "Poisson: λ̂ ± 1.96 √(λ̂/n)."
+      - "n ≥ z² p(1 − p) / e²."
+      - "Dividing the margin by 2 takes 4 times as much data."
+  cours_complet:
+    sections:
+      - titre: "1. What a confidence interval says"
+        contenu: "A 95% confidence interval is a method that, applied to many samples, covers the true parameter 95 times out of 100. Once the data are observed, the interval is fixed: it contains the parameter or it does not. We do not say the parameter has a 95% chance of being in it."
+        formules:
+          - explication: "The probability is about the bounds, which are random."
+      - titre: "2. Interval for a proportion"
+        contenu: "A claim frequency per policy is a proportion. For a large portfolio, p̂ is roughly normal, centred on p, with standard error √(p̂(1 − p̂)/n). The half-width of the interval is the margin of error."
+        formules:
+          - explication: "Normal approximation for a proportion."
+      - titre: "3. Interval for a mean"
+        contenu: "For the mean claim, the standard error s/√n uses an estimated standard deviation. With few data, this extra doubt has a cost: 1.96 is replaced by the larger quantile of the t distribution with n − 1 degrees of freedom."
+        formules:
+          - explication: "Student interval for a mean."
+      - titre: "4. Interval for a Poisson frequency"
+        contenu: "For a Poisson annual claim count observed over n years, the MLE is the mean and its standard error comes from the Fisher information. A negative bound signals that the normal approximation is poor."
+        formules:
+          - explication: "Wald interval for the Poisson."
+      - titre: "5. Sample size"
+        contenu: "We turn the formula around: we set the target margin e and solve for n. Since the margin decreases like 1/√n, dividing the margin by 2 takes 4 times as many policies. We always round up."
+        formules:
+          - explication: "Number of policies for a margin e."
+      - titre: "6. Confidence level and width"
+        contenu: "More confidence calls for a wider interval: going from 95% to 99% multiplies the width by 2.576 / 1.96 = 1.31. Only a larger sample makes the interval both narrow and reliable."
+        formules:
+          - explication: "Ratio of the widths at 99% and 95%."
+      - titre: "7. Limits and credibility"
+        contenu: "These formulas rely on the normal approximation: good for a frequency on a large portfolio, poor for a few heavy-tailed large claims. The bootstrap then resamples the data. For a small portfolio, credibility blends its own experience with the market's."
+        formules:
+          - formule: "\\hat{\\mu}_{\\text{credibility}}=Z\\,\\bar{x}+(1-Z)\\,\\mu_{\\text{market}},\\qquad 0\\le Z\\le 1"
+            explication: "The more precise the experience, the larger its weight Z."
+  methodes:
+    methodes:
+      - titre: "Build a confidence interval"
+        quand_utiliser: "We have an estimate and want to say how far we can trust it."
+        etapes:
+          - "Calculate the estimate: p̂, x̄ or λ̂."
+          - "Calculate its standard error."
+          - "Choose the quantile: z = 1.96 at 95%, or Student if n is small and the standard deviation is estimated."
+          - "Write estimate ± quantile × standard error."
+        controles:
+          - "The interval is centred on the estimate."
+          - "A negative bound for a frequency signals an unsuitable approximation."
+        erreurs:
+          - "Stopping at one standard error, which gives a 68% interval."
+          - "Using the standard deviation of one observation instead of the standard error of the mean."
+      - titre: "Size a sample"
+        quand_utiliser: "We are preparing a study and want a given margin of error."
+        etapes:
+          - "Set the confidence level and the margin e."
+          - "Take a plausible value of p."
+          - "Calculate z² p(1 − p) / e² and round up."
+        controles:
+          - "With the n obtained, the recalculated margin is less than or equal to e."
+          - "Dividing e by 2 multiplies n by about 4."
+        erreurs:
+          - "Forgetting to square z."
+          - "Rounding down."
+  exemples_guides:
+    exemples:
+      - titre: "A portfolio frequency"
+        enonce: "Fictional portfolio: 120 claims on 2,000 policies. Give the 95% interval for the frequency, then the number of policies for a margin of ±1 point."
+        raisonnement:
+          - "p̂ = 120 / 2,000 = 6%."
+          - "se = √(0.06 × 0.94 / 2,000) = 0.00531."
+          - "Margin: 1.96 × 0.00531 = 0.0104, so the interval is [4.96%; 7.04%]."
+          - "n ≥ 1.96² × 0.06 × 0.94 / 0.01² = 2,166.7, that is 2,167 policies."
+        resultat: "Interval [4.96%; 7.04%]; 2,167 policies for ±1 point."
+        interpretation: "The 2,000 policies give a margin of 1.04 points, just above the target."
+        controles:
+          - "At 99%, the interval becomes [4.63%; 7.37%], 1.31 times as wide."
+          - "For ±0.5 point, 8,667 policies would be needed, about 4 times as many."
+      - titre: "Mean of 8 claims and Poisson frequency"
+        enonce: "The 8 claims of session A2b.01 have x̄ = €1,881.25 and s / √8 = €467.13. Give the 95% interval for the mean, then the one for λ with 25 claims in 10 years."
+        raisonnement:
+          - "Student with 7 degrees of freedom: t = 2.3646."
+          - "1,881.25 ± 2.3646 × 467.13 = 1,881.25 ± 1,104.6, that is [€777; €2,986]."
+          - "Poisson: λ̂ = 2.5 and se = 0.5, so 2.5 ± 1.96 × 0.5 = [1.52; 3.48]."
+        resultat: "Mean between €777 and €2,986; λ between 1.52 and 3.48 claims per year."
+        interpretation: "With 8 claims, the mean severity is known only to within about 59%: too little to price on its own."
+        controles:
+          - "With 1.96 instead of 2.3646, we would find [€966; €2,797], too narrow."
+          - "Taking √2.5 instead of 0.5 would give a negative bound, a sign of an error."
+  exercices_corriges:
+    exercices:
+      - titre: "Fundamental — interval for a proportion"
+        enonce: "45 claims on 1,500 policies. Give the 95% interval for the frequency."
+        corrige:
+          - "p̂ = 45 / 1,500 = 3%."
+          - "se = √(0.03 × 0.97 / 1,500) = 0.0044."
+          - "3% ± 1.96 × 0.0044 = [2.14%; 3.86%]."
+        feedback: "The margin, 0.86 point, is almost a third of the frequency: the portfolio is small."
+      - titre: "Intermediate — sample size"
+        enonce: "With p ≈ 3%, how many policies are needed for a margin of ±0.5 point at 95%?"
+        corrige:
+          - "n ≥ 1.96² × 0.03 × 0.97 / 0.005² = 4,471.6."
+          - "Round up: 4,472 policies."
+        feedback: "Rounding down would give a margin slightly too large."
+      - titre: "Advanced — small sample"
+        enonce: "Observations 3, 7, 1, 9, 4, with s = 3.1937. Give the 95% interval for the mean with t₄ = 2.7764."
+        corrige:
+          - "se = 3.1937 / √5 = 1.4283."
+          - "Margin: 2.7764 × 1.4283 = 3.9655."
+          - "4.8 ± 3.9655 = [0.83; 8.77]."
+        feedback: "With 1.96, the margin would be 2.80: the Student interval is 42% wider because 5 observations estimate the standard deviation poorly."
+  applications_labs:
+    applications:
+      - titre: "Margin of error of a frequency study"
+        contexte: "A fictional portfolio of 2,000 policies has 120 claims; we want to know if the study is large enough."
+        objectif: "Calculate the frequency interval, the sample size for ±1 point and the interval for the mean severity."
+        entrees:
+          - "120 claims on 2,000 policies."
+          - "Amounts: €1,200, 800, 3,500, 600, 2,100, 950, 1,700, 4,200."
+          - "Quantiles: z = 1.96 and t₇ = 2.364624."
+        hypotheses:
+          - "Independent policies with the same claim probability."
+          - "Normal approximation for the frequency."
+        procedure:
+          - "Calculate p̂, its standard error and the interval."
+          - "Solve the sample size for e = 0.01."
+          - |
+            ```python
+            import math
+
+            p, n = 120 / 2000, 2000
+            se_p = math.sqrt(p * (1 - p) / n)
+            low, high = p - 1.96 * se_p, p + 1.96 * se_p
+            needed = math.ceil(1.96**2 * p * (1 - p) / 0.01**2)
+            xs = [1200, 800, 3500, 600, 2100, 950, 1700, 4200]
+            mean = sum(xs) / len(xs)
+            s = math.sqrt(sum((x - mean) ** 2 for x in xs) / (len(xs) - 1))
+            half = 2.364624 * s / math.sqrt(len(xs))
+            print(round(low, 4), round(high, 4), needed, round(mean - half, 2), round(mean + half, 2))
+            assert needed == 2167
+            ```
+          - "Compare the margin obtained with the target margin."
+        sorties:
+          - "Frequency interval and sample size."
+          - "Interval for the mean severity."
+        validation:
+          - "The frequency interval is [0.0496; 0.0704]."
+          - "The interval for the mean is [€776.67; €2,985.83]."
+        limites:
+          - "For 8 heavy-tailed claims, the Student interval is fragile; the bootstrap is safer."
+  synthese_references:
+    memo:
+      - "CI = estimate ± quantile × standard error."
+      - "The 95% is about the method, not about one observed interval."
+      - "Proportion: p̂ ± 1.96 √(p̂(1 − p̂)/n)."
+      - "Small n and estimated standard deviation: t distribution."
+      - "n ≥ z² p(1 − p) / e², rounded up."
+      - "Going from 95% to 99% widens the interval by 31%."
+    glossaire:
+      - {definition: "Range built from the data that covers the parameter with a given probability."}
+      - {definition: "Share of samples for which the method covers the parameter."}
+      - {definition: "Half-width of the confidence interval."}
+      - {definition: "Distribution used instead of the normal when the standard deviation is estimated."}
+      - {definition: "Number of observations needed for a target margin."}
+      - {definition: "Resampling the data to estimate an interval without assuming a distribution."}
+      - {definition: "Weight given to a portfolio's own experience against the market."}
+    maitrise:
+      - "I interpret a confidence interval correctly."
+      - "I build intervals for a proportion, a mean and a Poisson frequency."
+      - "I choose between the normal and the t distribution."
+      - "I compute the sample size for a target margin of error."
+    references:
+      - {titre: "Hogg, McKean and Craig, Introduction to Mathematical Statistics, chap. 4", detail: "Confidence intervals, the t distribution."}
+      - {titre: "Klugman, Panjer and Willmot, Loss Models, chap. 13", detail: "Variance of estimators, intervals for parameters."}
+    liens:
+      - {titre: "A2b/S02 — Maximum likelihood"}
+      - {titre: "A2b/S04 — Goodness-of-fit tests"}
+
+
 etapes:
   - titre: "Placement check"
     intro: "Four questions before the lesson. If you get them all right, skim the recap and go straight to the calculation."
