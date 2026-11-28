@@ -67,12 +67,21 @@ def amortization_schedule(loan, n, i):
 
 
 def irr(cash_flows, low=-0.99, high=1.0, tol=1e-10):
+    if low <= -1 or high <= -1 or low >= high:
+        raise ValueError("IRR search bounds must satisfy -1 < low < high.")
     npv = lambda j: sum(c * (1 + j) ** -t for t, c in cash_flows.items())
-    f_low = npv(low)
+    f_low, f_high = npv(low), npv(high)
+    if f_low == 0:
+        return low
+    if f_high == 0:
+        return high
+    if f_low * f_high > 0:
+        raise ValueError("IRR is not bracketed: NPV must change sign over the search interval.")
     while high - low > tol:
         mid = (low + high) / 2
-        if (npv(mid) > 0) == (f_low > 0):
-            low, f_low = mid, npv(mid)
+        f_mid = npv(mid)
+        if (f_mid > 0) == (f_low > 0):
+            low, f_low = mid, f_mid
         else:
             high = mid
     return (low + high) / 2

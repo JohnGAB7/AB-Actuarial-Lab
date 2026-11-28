@@ -27,3 +27,14 @@ def test_ton_code(t):
     except NotImplementedError:
         pytest.skip("Fonction pas encore écrite : à toi de jouer.")
     assert resultat, t["nom"]
+
+
+def test_reference_irr_rejects_unbracketed_cashflows():
+    """Bisection must not return a boundary when no IRR is bracketed."""
+    with pytest.raises(ValueError, match="IRR is not bracketed"):
+        ref.irr({0: -1000, 1: -100})
+
+
+def test_reference_irr_rejects_invalid_bounds():
+    with pytest.raises(ValueError, match="bounds"):
+        ref.irr({0: -1000, 1: 1200}, low=-1.0, high=1.0)
