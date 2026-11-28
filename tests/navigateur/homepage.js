@@ -16,6 +16,15 @@ const BASE = process.env.SITE_URL || "http://localhost:8765/";
     const shortLabels = await page.locator(".dom-t").allInnerTexts();
     if (!shortLabels.length || shortLabels.some((label) => label.trim().length > 18)) failures.push("homepage domain labels should stay concise");
     await page.waitForFunction(() => Array.from(document.querySelectorAll(".brand-logo")).some((img) => img.complete && img.naturalWidth > 0), null, { timeout: 15000 });
+    const notationCheck = await page.evaluate(() => {
+      const node = document.createElement("p");
+      node.textContent = "Notation : c_t et x = y.";
+      document.body.append(node);
+      window.renderActuarialMath(node);
+      return { rendered: node.querySelectorAll(".katex").length, source: node.textContent };
+    });
+    if (notationCheck.rendered < 2) failures.push("global KaTeX should render indexed variables and bare equations outside lesson components");
+
     const brand = await page.evaluate(() => ({
       title: document.title,
       label: document.querySelector(".brand-copy")?.textContent || "",
